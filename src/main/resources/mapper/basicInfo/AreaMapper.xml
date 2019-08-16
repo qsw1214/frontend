@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.basicInfo.mapper.AreaMapper">
+
+    <resultMap id="area" type="cc.mrbird.febs.basicInfo.entity.Area">
+        <id column="area_code" jdbcType="VARCHAR" property="areaCode"/>
+        <result column="province" jdbcType="VARCHAR" property="province"/>
+        <result column="city" jdbcType="VARCHAR" property="city"/>
+        <result column="country" jdbcType="VARCHAR" property="country"/>
+    </resultMap>
+</mapper>

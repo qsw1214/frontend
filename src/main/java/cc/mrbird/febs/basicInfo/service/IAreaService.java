@@ -1,6 +1,6 @@
-package cc.mrbird.febs.basicInfo.area.service;
+package cc.mrbird.febs.basicInfo.service;
 
-import cc.mrbird.febs.basicInfo.area.entity.Area;
+import cc.mrbird.febs.basicInfo.entity.Area;
 
 import cc.mrbird.febs.common.entity.QueryRequest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -12,7 +12,7 @@ import java.util.List;
  *  Service接口
  *
  * @author psy
- * @date 2019-08-15 21:34:16
+ * @date 2019-08-16 08:37:08
  */
 public interface IAreaService extends IService<Area> {
     /**

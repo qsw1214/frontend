@@ -1,4 +1,4 @@
-package cc.mrbird.febs.basicInfo.area.controller;
+package cc.mrbird.febs.basicInfo.controller;
 
 import cc.mrbird.febs.common.annotation.Log;
 import cc.mrbird.febs.common.utils.FebsUtil;
@@ -7,8 +7,8 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
-import cc.mrbird.febs.basicInfo.area.entity.Area;
-import cc.mrbird.febs.basicInfo.area.service.IAreaService;
+import cc.mrbird.febs.basicInfo.entity.Area;
+import cc.mrbird.febs.basicInfo.service.IAreaService;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -28,7 +28,7 @@ import java.util.Map;
  *  Controller
  *
  * @author psy
- * @date 2019-08-15 21:34:16
+ * @date 2019-08-16 08:37:08
  */
 @Slf4j
 @Validated
@@ -40,7 +40,6 @@ public class AreaController extends BaseController {
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "area")
     private String areaIndex(){
-
         return FebsUtil.view("area/area");
     }
 

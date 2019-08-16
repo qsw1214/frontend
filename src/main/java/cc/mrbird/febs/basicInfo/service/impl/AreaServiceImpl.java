@@ -1,8 +1,8 @@
-package cc.mrbird.febs.basicInfo.area.service.impl;
+package cc.mrbird.febs.basicInfo.service.impl;
 
-import cc.mrbird.febs.basicInfo.area.entity.Area;
-import cc.mrbird.febs.basicInfo.area.mapper.AreaMapper;
-import cc.mrbird.febs.basicInfo.area.service.IAreaService;
+import cc.mrbird.febs.basicInfo.entity.Area;
+import cc.mrbird.febs.basicInfo.mapper.AreaMapper;
+import cc.mrbird.febs.basicInfo.service.IAreaService;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +20,7 @@ import java.util.List;
  *  Service实现
  *
  * @author psy
- * @date 2019-08-15 21:34:16
+ * @date 2019-08-16 08:37:08
  */
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
@@ -33,7 +33,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
     public IPage<Area> findAreas(QueryRequest request, Area area) {
         LambdaQueryWrapper<Area> queryWrapper = new LambdaQueryWrapper<>();
         // TODO 设置查询条件
-        Page<Area> page = new Page<Area>(request.getPageNum(), request.getPageSize());
+        Page<Area> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
     }
 

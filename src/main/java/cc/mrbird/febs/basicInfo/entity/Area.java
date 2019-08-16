@@ -1,4 +1,4 @@
-package cc.mrbird.febs.basicInfo.area.entity;
+package cc.mrbird.febs.basicInfo.entity;
 
 
 import lombok.Data;
@@ -11,7 +11,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
  *  Entity
  *
  * @author psy
- * @date 2019-08-15 21:34:16
+ * @date 2019-08-16 08:37:08
  */
 @Data
 @TableName("jcc_area")
