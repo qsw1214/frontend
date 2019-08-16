@@ -64,6 +64,7 @@ public class AreaController extends BaseController {
     @RequiresPermissions("area:add")
     public FebsResponse addArea(@Valid Area area) throws FebsException {
         try {
+            area.setProvince("湖南省");
             this.areaService.createArea(area);
             return new FebsResponse().success();
         } catch (Exception e) {
