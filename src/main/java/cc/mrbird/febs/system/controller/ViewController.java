@@ -141,6 +141,16 @@ public class ViewController extends BaseController {
         return FebsUtil.view("index");
     }
 
+    /**
+     * 数据管理
+     * @return
+     */
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/area")
+    @RequiresPermissions("area:view")
+    public String basicInfoArea() {
+        return FebsUtil.view("basicInfo/area/area");
+    }
+
     @GetMapping(FebsConstant.VIEW_PREFIX + "404")
     public String error404() {
         return FebsUtil.view("error/404");
