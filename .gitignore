@@ -2,3 +2,10 @@
 log/
 target/
 *.iml
+/.apt_generated/
+
+.settings/
+.apt_generated/
+.classpath
+.project
+.factorypath

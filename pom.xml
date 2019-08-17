@@ -58,7 +58,7 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- 任务调度 -->
+        <!-- 任务调度-->
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
@@ -179,6 +179,15 @@
             <artifactId>jsoup</artifactId>
             <version>1.9.2</version>
         </dependency>
+        
+        <dependency>  
+          <groupId>com.sun</groupId>  
+          <artifactId>tools</artifactId>  
+          <version>1.8.0</version>  
+          <scope>system</scope>         
+          <systemPath>C:/Program Files/Java/jdk1.8.0_101/lib/tools.jar</systemPath>  
+     	</dependency>
+
     </dependencies>
 
     <repositories>
