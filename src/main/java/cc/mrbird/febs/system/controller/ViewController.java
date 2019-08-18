@@ -135,11 +135,17 @@ public class ViewController extends BaseController {
     public String systemDept() {
         return FebsUtil.view("system/dept/dept");
     }
+    
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/dict")
+    @RequiresPermissions("dict:view")
+    private String dictIndex(){
+        return FebsUtil.view("system/dict/dict");
+    }
 
     @RequestMapping(FebsConstant.VIEW_PREFIX + "index")
     public String pageIndex() {
         return FebsUtil.view("index");
-    }
+    } 
 
     /**
      * 数据管理

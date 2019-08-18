@@ -815,3 +815,189 @@ INSERT INTO `t_user_role` VALUES ('5', '79');
 INSERT INTO `t_user_role` VALUES ('7', '78');
 INSERT INTO `t_user_role` VALUES ('7', '79');
 INSERT INTO `t_user_role` VALUES ('7', '80');
+
+
+-- ----------------------------
+-- Table structure for t_dict
+-- ----------------------------
+DROP TABLE IF EXISTS `t_dict`;
+CREATE TABLE `t_dict` (
+  `dict_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '字典ID',
+  `k` varchar(30) NOT NULL COMMENT '键',
+  `v` varchar(100) NOT NULL COMMENT '值',
+  `field` varchar(100) NOT NULL COMMENT '字段名称',
+  PRIMARY KEY (`dict_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
+-- Records of t_dict
+-- ----------------------------
+INSERT INTO `t_dict` VALUES (null, '1', '中班', 'grade');
+INSERT INTO `t_dict` VALUES (null, '2', '大班', 'grade');
+INSERT INTO `t_dict` VALUES (null, '3', '一年级', 'grade');
+INSERT INTO `t_dict` VALUES (null, '4', '二年级', 'grade');
+INSERT INTO `t_dict` VALUES (null, '5', '三年级', 'grade');
+INSERT INTO `t_dict` VALUES (null, '6', '四年级', 'grade');
+INSERT INTO `t_dict` VALUES (null, '7', '五年级', 'grade');
+INSERT INTO `t_dict` VALUES (null, '8', '六年级', 'grade');
+INSERT INTO `t_dict` VALUES (null, '9', '初一', 'grade');
+INSERT INTO `t_dict` VALUES (null, '10', '初二', 'grade');
+INSERT INTO `t_dict` VALUES (null, '11', '初三', 'grade');
+INSERT INTO `t_dict` VALUES (null, '12', '高一', 'grade');
+INSERT INTO `t_dict` VALUES (null, '13', '高二', 'grade');
+INSERT INTO `t_dict` VALUES (null, '14', '高三', 'grade');
+INSERT INTO `t_dict` VALUES (null, '1', '语文', 'subject');
+INSERT INTO `t_dict` VALUES (null, '2', '数学', 'subject');
+INSERT INTO `t_dict` VALUES (null, '3', '英语', 'subject');
+INSERT INTO `t_dict` VALUES (null, '4', '物理', 'subject');
+INSERT INTO `t_dict` VALUES (null, '5', '化学', 'subject');
+INSERT INTO `t_dict` VALUES (null, '6', '生物', 'subject');
+INSERT INTO `t_dict` VALUES (null, '7', '地理', 'subject');
+INSERT INTO `t_dict` VALUES (null, '8', '政治', 'subject');
+INSERT INTO `t_dict` VALUES (null, '9', '历史', 'subject');
+INSERT INTO `t_dict` VALUES (null, 'avi', '视频文件', 'file_type');
+INSERT INTO `t_dict` VALUES (null, 'doc', 'word文档', 'file_type');
+INSERT INTO `t_dict` VALUES (null, 'pdf', 'pdf文档', 'file_type');
+INSERT INTO `t_dict` VALUES (null, 'xls', 'excel表', 'file_type');
+INSERT INTO `t_dict` VALUES (null, 'txt', '文本文档', 'file_type');
+INSERT INTO `t_dict` VALUES (null, 'zip', '压缩包', 'file_type');
+INSERT INTO `t_dict` VALUES (null, 'image', '图片', 'file_type');
+
+-- ----------------------------
+-- Table structure for r_category
+-- ----------------------------
+DROP TABLE IF EXISTS `r_category`;
+CREATE TABLE `r_category` (
+  `category_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '类别ID',
+  `parent_id` bigint(20) NOT NULL COMMENT '上级类别ID',
+  `category_name` varchar(50) NOT NULL COMMENT '类别名称',
+  `icon` varchar(255) DEFAULT NULL COMMENT '图标',
+  `order_num` bigint(20) DEFAULT NULL COMMENT '排序',
+  `show_status` int(1) DEFAULT 1 COMMENT '显示状态：0->不显示；1->显示',
+  PRIMARY KEY (`category_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='类别表';
+
+-- ----------------------------
+-- Records of r_category
+-- ----------------------------
+INSERT INTO `r_category` VALUES ('1', '0', '基础学科', '', '0', '1');
+INSERT INTO `r_category` VALUES ('2', '0', '职业考试', '', '0', '1');
+INSERT INTO `r_category` VALUES ('3', '0', '编程语言', '', '0', '1');
+INSERT INTO `r_category` VALUES ('4', '0', '艺术特长', '', '0', '1');
+INSERT INTO `r_category` VALUES ('5', '0', '课外资源', '', '0', '1');
+INSERT INTO `r_category` VALUES ('11', '1', '名师课堂', '', '0', '1');
+INSERT INTO `r_category` VALUES ('12', '1', '同步课程', '', '0', '1');
+INSERT INTO `r_category` VALUES ('22', '2', '计算机类认证', '', '0', '1');
+INSERT INTO `r_category` VALUES ('23', '2', '金融会计考试', '', '0', '1');
+INSERT INTO `r_category` VALUES ('31', '3', 'Java', '', '0', '1');
+INSERT INTO `r_category` VALUES ('32', '3', 'C', '', '0', '1');
+INSERT INTO `r_category` VALUES ('33', '3', 'C++', '', '0', '1');
+INSERT INTO `r_category` VALUES ('34', '3', 'Python', '', '0', '1');
+INSERT INTO `r_category` VALUES ('41', '4', '美术', '', '0', '1');
+INSERT INTO `r_category` VALUES ('42', '4', '音乐', '', '0', '1');
+INSERT INTO `r_category` VALUES ('43', '4', '体育', '', '0', '1');
+INSERT INTO `r_category` VALUES ('44', '4', '舞蹈', '', '0', '1');
+INSERT INTO `r_category` VALUES ('51', '5', '小说', '', '0', '1');
+INSERT INTO `r_category` VALUES ('52', '5', '电影', '', '0', '1');
+INSERT INTO `r_category` VALUES ('53', '5', '旅游', '', '0', '1');
+
+-- ----------------------------
+-- Table structure for r_resource
+-- ----------------------------
+DROP TABLE IF EXISTS `r_resource`;
+CREATE TABLE `r_resource` (
+  `resource_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '资源ID',
+  `resource_name` varchar(255) NOT NULL COMMENT '资源名称',
+  `creator` varchar(50) NOT NULL COMMENT '创建人',
+  `avatar` varchar(255) DEFAULT NULL COMMENT '创建人头像',
+  `school` varchar(50) DEFAULT NULL COMMENT '学校',
+  `grade` varchar(50) DEFAULT NULL COMMENT '年级',
+  `subject` varchar(50) DEFAULT NULL COMMENT '科目',
+  `category_id` bigint(20) DEFAULT NULL COMMENT '类别ID',
+  `category_name` varchar(50) DEFAULT NULL COMMENT '类别名称',
+  `file_type` varchar(30) DEFAULT NULL COMMENT '文件类型',
+  `pic` varchar(255) DEFAULT NULL COMMENT '资源图片',
+  `url` varchar(500) NOT NULL COMMENT '资源地址',
+  `description` varchar(500) DEFAULT NULL COMMENT '资源介绍',
+  `read_count` int(11) DEFAULT NULL COMMENT '阅读数',
+  `comment_count` int(11) DEFAULT NULL COMMENT '评论数',
+  `star` int(3) DEFAULT NULL COMMENT '评分：0->5',
+  `order_num` bigint(20) DEFAULT NULL COMMENT '排序',
+  `status` int(1) DEFAULT 0 COMMENT '审核状态：0->未审核；1->审核通过；2->审核不通过',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`resource_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='资源表';
+
+-- ----------------------------
+-- Records of r_resource
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for r_subject
+-- ----------------------------
+DROP TABLE IF EXISTS `r_subject`;
+CREATE TABLE `r_subject` (
+  `subject_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '专题ID',
+  `subject_name` varchar(255) NOT NULL COMMENT '专题名称',
+  `creator` varchar(50) NOT NULL COMMENT '创建人',
+  `avatar` varchar(255) DEFAULT NULL COMMENT '创建人头像',
+  `description` varchar(1000) DEFAULT NULL COMMENT '专题描述',
+  `category_id` bigint(20) DEFAULT NULL COMMENT '类别ID',
+  `category_name` varchar(50) DEFAULT NULL COMMENT '类别名称',
+  `read_count` int(11) DEFAULT NULL COMMENT '阅读数',
+  `pic` varchar(255) DEFAULT NULL COMMENT '专题图片',
+  `order_num` bigint(20) DEFAULT NULL COMMENT '排序',
+  `show_status` int(1) DEFAULT NULL COMMENT '显示状态：0->不显示；1->显示',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`subject_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='专题表';
+
+-- ----------------------------
+-- Records of r_subject
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for r_subject_resource
+-- ----------------------------
+DROP TABLE IF EXISTS `r_subject_resource`;
+CREATE TABLE `r_subject_resource` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `subject_id` bigint(20) DEFAULT NULL,
+  `resource_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 COMMENT='专题资源关系表';
+
+-- ----------------------------
+-- Table structure for r_comment
+-- ----------------------------
+DROP TABLE IF EXISTS `r_comment`;
+CREATE TABLE `r_comment` (
+  `comment_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '评论ID',
+  `resource_id` bigint(20) NOT NULL COMMENT '资源ID',
+  `resource_name` varchar(255) NOT NULL COMMENT '资源名称',
+  `user_name` varchar(50) NOT NULL COMMENT '评论人',
+  `user_ip` varchar(64) DEFAULT NULL COMMENT '评价的ip',
+  `user_avatar` varchar(255) DEFAULT NULL COMMENT '评论人头像',
+  `star` int(3) DEFAULT NULL COMMENT '评分：0->5',
+  `content` varchar(1000) NOT NULL COMMENT '评论内容',
+  `show_status` int(1) DEFAULT NULL COMMENT '显示状态：0->不显示；1->显示',
+  `replay_count` int(11) DEFAULT NULL COMMENT '回复数量',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`comment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='资源评价表';
+
+-- ----------------------------
+-- Table structure for r_comment_replay
+-- ----------------------------
+DROP TABLE IF EXISTS `r_comment_replay`;
+CREATE TABLE `r_comment_replay` (
+  `comment_replay_id` bigint(20) NOT NULL AUTO_INCREMENT  COMMENT '回复ID',
+  `comment_id` bigint(20) DEFAULT NULL COMMENT '评论ID',
+  `user_name` varchar(50) DEFAULT NULL COMMENT '回复人',
+  `user_avatar` varchar(255) DEFAULT NULL COMMENT '回复人头像',
+  `content` varchar(1000) DEFAULT NULL COMMENT '回复内容',
+  `create_time` datetime DEFAULT NULL COMMENT '回复时间',
+  PRIMARY KEY (`comment_replay_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='资源评价回复表';
