@@ -117,7 +117,7 @@
                 febs.alert.warn('数据未作任何修改！');
                 return false;
             }
-            febs.post(ctx + 'school/update', data.field, function () {
+            febs.post(ctx + 'basicInfo/school/update', data.field, function () {
                 layer.closeAll();
                 febs.alert.success(' 学校信息修改成功');
                 $('#febs-user').find('#query').click();

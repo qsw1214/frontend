@@ -10,10 +10,10 @@ import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.basicInfo.entity.School;
 import cc.mrbird.febs.basicInfo.service.ISchoolService;
 
+import cc.mrbird.febs.system.service.IRoleService;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,25 +45,33 @@ public class SchoolController extends BaseController {
     @Autowired
     private ISchoolService schoolService;
 
-    @GetMapping(FebsConstant.VIEW_PREFIX + "school")
+    @Autowired
+    private IRoleService roleService;
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/school")
     private String schoolIndex(){
-        return FebsUtil.view("school/school");
+        return FebsUtil.view("basicInfo/school/school");
     }
     
     
-    @GetMapping(FebsConstant.VIEW_PREFIX +  "school/schoolAdd")
+    @GetMapping(FebsConstant.VIEW_PREFIX +  "basicInfo/school/schoolAdd")
 //  @RequiresPermissions("school:add")
     public String schoolAdd() {
-        return FebsUtil.view("school/schoolAdd");
+        return FebsUtil.view("basicInfo/school/schoolAdd");
     }
 
   
-    @GetMapping(FebsConstant.VIEW_PREFIX + "school/detail/{schoolId}")
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/school/detail/{schoolId}")
 //  @RequiresPermissions("schoolInfo:view")
     public String systemUserDetail(@PathVariable Long schoolId, Model model) {
         resolveSchoolrModel(schoolId,model, true);
-        return FebsUtil.view("school/schoolDetail");
+        return FebsUtil.view("basicInfo/school/schoolDetail");
     }
+
+/*    @GetMapping
+    public FebsResponse getAllSchool(School school) {
+        return new FebsResponse().success().data(schoolService.findSchools(school));
+    }*/
 
     //根据id查询
 	@GetMapping("school/{schoolId}")
@@ -72,11 +80,11 @@ public class SchoolController extends BaseController {
 		return this.schoolService.getById(schoolId);
 	}
   
-    @GetMapping(FebsConstant.VIEW_PREFIX + "school/update/{schoolId}")
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/school/update/{schoolId}")
   //@RequiresPermissions("schoolInfo:update")
     public String systemUserUpdate(@PathVariable Long schoolId, Model model) {
         resolveSchoolrModel(schoolId,model, true);
-        return FebsUtil.view("school/schoolUpdate");
+        return FebsUtil.view("basicInfo/school/schoolUpdate");
     }
 
     @GetMapping("school")

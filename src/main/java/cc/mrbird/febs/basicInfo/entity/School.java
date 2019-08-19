@@ -15,7 +15,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
  * @date 2019-08-18 01:39:43
  */
 @Data
-@TableName("t_school")
+@TableName("jcc_school_info")
 public class School {
 
     /**
