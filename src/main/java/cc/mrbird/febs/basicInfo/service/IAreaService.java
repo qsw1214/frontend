@@ -51,5 +51,5 @@ public interface IAreaService extends IService<Area> {
      *
      * @param area area
      */
-    void deleteArea(Area area);
+    void deleteArea(String areaCodes);
 }

@@ -3,3 +3,12 @@ log/
 target/
 *.iml
 /.apt_generated/
+<<<<<<< HEAD
+=======
+
+.settings/
+.apt_generated/
+.classpath
+.project
+.factorypath
+>>>>>>> 54eb14a7cdcd58f5a687afb2b87ac865f6ab8468

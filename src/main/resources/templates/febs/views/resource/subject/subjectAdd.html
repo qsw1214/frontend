@@ -1,0 +1,81 @@
+<style>
+    #subject-add {
+        padding: 20px 25px 25px 0;
+    }
+    #subject-add .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="subject-add">
+    <form class="layui-form" action="" lay-filter="subject-add-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">专题名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="subjectName" minlength="2" maxlength="100" lay-verify="range|subjectName"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">专题图片：</label>
+            <div class="layui-input-block">
+                <input type="text" name="pic" maxlength="255" lay-verify="range|subjectName"
+                	   autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">类别：</label>
+            <div class="layui-input-block">
+                <input type="text" name="categoryId" id="subject-add-category" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">是否显示：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="showStatus" value="0" title="不显示">
+                <input type="radio" name="showStatus" value="1" title="显示" checked="">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">专题介绍：</label>
+            <div class="layui-input-block">
+                <textarea name="description" maxlength="500" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="subject-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['febs', 'form', 'validate', 'treeSelect'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            treeSelect = layui.treeSelect,
+            form = layui.form,
+            $view = $('#subject-add'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        treeSelect.render({
+            elem: $view.find('#subject-add-category'),
+            type: 'get',
+            data: ctx + 'category/select/tree',
+            placeholder: '请选择',
+            search: false
+        });
+        
+        form.on('submit(subject-add-form-submit)', function (data) {
+            febs.post(ctx + 'subject', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('新增专题成功');
+                $('#febs-subject').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

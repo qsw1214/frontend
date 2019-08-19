@@ -20,7 +20,7 @@ public class Area {
     /**
      * 
      */
-    @TableId(value = "area_code", type = IdType.AUTO)
+    @TableId(value = "area_code")
     private String areaCode;
 
     /**

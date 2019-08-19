@@ -135,10 +135,26 @@ public class ViewController extends BaseController {
     public String systemDept() {
         return FebsUtil.view("system/dept/dept");
     }
+    
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/dict")
+    @RequiresPermissions("dict:view")
+    private String dictIndex(){
+        return FebsUtil.view("system/dict/dict");
+    }
 
     @RequestMapping(FebsConstant.VIEW_PREFIX + "index")
     public String pageIndex() {
         return FebsUtil.view("index");
+    } 
+
+    /**
+     * 数据管理
+     * @return
+     */
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/area")
+    @RequiresPermissions("area:view")
+    public String basicInfoArea() {
+        return FebsUtil.view("basicInfo/area/area");
     }
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "404")

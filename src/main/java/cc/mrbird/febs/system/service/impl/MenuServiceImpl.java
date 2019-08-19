@@ -104,7 +104,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
             MenuTree<Menu> tree = new MenuTree<>();
             tree.setId(String.valueOf(menu.getMenuId()));
             tree.setParentId(String.valueOf(menu.getParentId()));
-            tree.setTitle(menu.getMenuName());
+            tree.setName(menu.getMenuName());
             tree.setIcon(menu.getIcon());
             tree.setHref(menu.getUrl());
             tree.setData(menu);

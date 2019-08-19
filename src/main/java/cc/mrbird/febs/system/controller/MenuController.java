@@ -45,7 +45,7 @@ public class MenuController extends BaseController {
     public FebsResponse getMenuTree(Menu menu) throws FebsException {
         try {
             MenuTree<Menu> menus = this.menuService.findMenus(menu);
-            return new FebsResponse().success().data(menus.getChilds());
+            return new FebsResponse().success().data(menus.getChildren());
         } catch (Exception e) {
             String message = "获取菜单树失败";
             log.error(message, e);

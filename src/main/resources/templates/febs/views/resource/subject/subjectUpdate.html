@@ -1,0 +1,107 @@
+<style>
+    #subject-update {
+        padding: 20px 25px 25px 0;
+    }
+
+    #subject-update .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="subject-update">
+    <form class="layui-form" action="" lay-filter="subject-update-form">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">专题id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="subjectId" data-th-value="${subject.subjectId}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">专题名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="subjectName" minlength="2" maxlength="100" lay-verify="range|subjectName"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">专题图片：</label>
+            <div class="layui-input-block">
+                <input type="text" name="pic" maxlength="255" lay-verify="range|subjectName"
+                	   autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">类别：</label>
+            <div class="layui-input-block">
+                <input type="text" name="categoryId" id="subject-add-category" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">是否显示：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="showStatus" value="0" title="不显示">
+                <input type="radio" name="showStatus" value="1" title="显示" checked="">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">专题介绍：</label>
+            <div class="layui-input-block">
+                <textarea name="description" maxlength="500" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="subject-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'validate', 'treeSelect'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            treeSelect = layui.treeSelect,
+            form = layui.form,
+            subject = [[${subject}]],
+            $view = $('#subject-update'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        initResourceValue();
+
+        treeSelect.render({
+            elem: $view.find('#subject-update-category'),
+            type: 'get',
+            data: ctx + 'category/select/tree',
+            placeholder: '请选择',
+            search: false,
+            success: function () {
+                treeSelect.checkNode('subject-update-category', subject.categoryId);
+            }
+        });
+        
+        function initResourceValue() {
+            form.val("subject-update-form", {
+                "subjectName": subject.subjectName,
+                "pic": subject.pic,
+                "categoryId": subject.categoryId,
+                "showStatus": subject.showStatus,
+                "description": subject.description
+            });
+        }
+
+        form.on('submit(subject-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, subject)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'subject/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('专题数据修改成功');
+                $('#febs-subject').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

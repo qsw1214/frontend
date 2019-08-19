@@ -28,7 +28,7 @@ public class DeptTree<T> implements Serializable {
     private boolean hasParent = false;
     private boolean hasChild = false;
 
-    private Dept data;
+    private T data;
 
     public void initChildren(){
         this.children = new ArrayList<>();

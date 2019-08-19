@@ -1,0 +1,186 @@
+<style>
+    #resource-add {
+        padding: 20px 25px 25px 0;
+    }
+    #resource-add .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="resource-add">
+    <form class="layui-form" action="" lay-filter="resource-add-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">资源名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="resourceName" minlength="2" maxlength="100" lay-verify="range|resourceName"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">资源地址：</label>
+            <div class="layui-input-block">
+                <input type="text" name="url" minlength="2" maxlength="255" lay-verify="range|resourceName"
+                	   autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">展示图片：</label>
+            <div class="layui-input-block">
+                <input type="text" name="pic" maxlength="255" lay-verify="range|resourceName"
+                	   autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">资源格式：</label>
+            <div class="layui-input-block">
+                <select name="fileType"
+                        xm-select-radio
+                        xm-select-direction="down"
+                        xm-select="resource-add-fileType"
+                        xm-select-skin="default">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">适用年级：</label>
+            <div class="layui-input-block">
+                <select name="grade"
+                		xm-select-radio
+                        xm-select-direction="down"
+                        xm-select="resource-add-grade"
+                        xm-select-skin="default">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">科目：</label>
+            <div class="layui-input-block">
+                <select name="subject"
+                		xm-select-radio
+                        xm-select-direction="down"
+                        xm-select="resource-add-subject"
+                        xm-select-skin="default">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">类别：</label>
+            <div class="layui-input-block">
+                <input type="text" name="categoryId" id="resource-add-category" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">资源介绍：</label>
+            <div class="layui-input-block">
+                <textarea name="description" maxlength="500" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="resource-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            treeSelect = layui.treeSelect,
+            form = layui.form,
+            $view = $('#resource-add'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        formSelects.render();
+
+        treeSelect.render({
+            elem: $view.find('#resource-add-category'),
+            type: 'get',
+            data: ctx + 'category/select/tree',
+            placeholder: '请选择',
+            search: false
+        });
+        
+        formSelects.config('resource-add-fileType', {
+            searchUrl: ctx + 'dict?field=file_type',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].v,
+                        value: data[i].k
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取文件类型列表失败');
+            }
+        });
+
+        formSelects.config('resource-add-grade', {
+            searchUrl: ctx + 'dict?field=grade',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].v,
+                        value: data[i].v
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取年级列表失败');
+            }
+        });
+        
+        formSelects.config('resource-add-subject', {
+            searchUrl: ctx + 'dict?field=subject',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].v,
+                        value: data[i].v
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取科目列表失败');
+            }
+        });
+
+        form.on('submit(resource-add-form-submit)', function (data) {
+            febs.post(ctx + 'resource', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('新增资源成功');
+                $('#febs-resource').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

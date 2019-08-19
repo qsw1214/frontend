@@ -1,6 +1,5 @@
 package cc.mrbird.febs.common.entity;
 
-import cc.mrbird.febs.system.entity.Menu;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -19,15 +18,13 @@ public class MenuTree<T> implements Serializable {
     private String id;
     private String icon;
     private String href;
-    private String title;
-    private Map<String, Object> state;
+    private String name;
     private boolean checked = false;
-    private Map<String, Object> attributes;
-    private List<MenuTree<T>> childs = new ArrayList<>();
+    private List<MenuTree<T>> children = new ArrayList<>();
     private String parentId;
     private boolean hasParent = false;
     private boolean hasChild = false;
 
-    private Menu data;
+    private T data;
 
 }

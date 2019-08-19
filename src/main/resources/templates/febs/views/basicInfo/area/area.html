@@ -1,4 +1,5 @@
-<div class="layui-fluid layui-anim febs-anim" id="febs-area" lay-title="地区管理">
+<div class="layui-fluid layui-anim febs-anim" id="febs-area" lay-title="地区管理"
+     xmlns:shiro="http://www.w3.org/1999/xhtml">
     <div class="layui-row layui-col-space8 febs-container">
         <div class="layui-col-md7 layui-col-sm6 layui-col-xs12">
             <div class="layui-card">
@@ -38,10 +39,18 @@
                 <div class="layui-card-header" id="form-header">新增地区</div>
                 <div class="layui-card-body febs-table-full">
                     <form class="layui-form layui-table-form" action="" lay-filter="area-form">
-                        <div class="layui-form-item febs-hide">
+                        <div class="layui-form-item">
                             <label class="layui-form-label febs-form-item-require">地区编码：</label>
                             <div class="layui-input-block">
-                                <input type="text" name="areaCode" class="layui-input">
+                                <input type="text" name="areaCode" autocomplete="off" class="layui-input" minlength="2"
+                                       maxlength="10" lay-verify="range">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label febs-form-item-require">省级名称：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="province" autocomplete="off" class="layui-input" minlength="2"
+                                       maxlength="10" lay-verify="range">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -81,8 +90,8 @@
 </script>
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'laydate', 'febs', 'form', 'eleTree', 'table', 'validate'], function () {
-        var $ = layui.jquery,
-            laydate = layui.laydate,
+        var laydate = layui.laydate,
+            $ = layui.jquery,
             febs = layui.febs,
             form = layui.form,
             table = layui.table,
@@ -143,11 +152,11 @@
                         febs.alert.warn('请选择需要删除的地区');
                     } else {
                         febs.modal.confirm('删除地区', '确定删除所选地区？', function () {
-                            var areaIds = [];
+                            var areaCodes = [];
                             layui.each(checkStatus.data, function (key, item) {
-                                areaIds.push(item.areaId);
+                                areaIds.push(item.areaCode);
                             });
-                            deleteAreas(areaIds.join(','));
+                            deleteAreas(areaCodes.join(','));
                         });
                     }
                 }
@@ -180,14 +189,15 @@
                 $header.text('修改地区');
                 form.val("area-form", {
                     "areaCode": data.areaCode,
+                    "province": data.province,
                     "city": data.city,
                     "country": data.country
                 });
-                if (data.menuIds) {
+                /*if (data.menuIds) {
                     menuTree.setChecked(data.menuIds.split(','), true);
                 } else {
                     menuTree.setChecked([], true);
-                }
+                }*/
             }
             if (layEvent === 'del') {
                 febs.modal.confirm('删除地区', '确定删除该地区？', function () {
@@ -229,7 +239,7 @@
 
         function getQueryParams() {
             return {
-                areaName: $searchForm.find('input[name="city"]').val().trim(),
+                city: $searchForm.find('input[name="city"]').val().trim(),
                 invalidate_ie_cache: new Date()
             };
         }
@@ -246,16 +256,16 @@
             return false;
         });
 
-        function deleteAreas(areaIds) {
-            febs.delete(ctx + 'area/delete/' + areaIds, null, function () {
+        function deleteAreas(areaCodes) {
+            febs.get(ctx + 'area/delete/' + areaCodes, null, function () {
                 febs.alert.success('删除地区成功');
                 $query.trigger('click');
             })
         }
 
         var addOrUpdateArea = function (data) {
-            if (data.areaId && $header.text() === '修改地区') {
-                febs.put(ctx + 'area/update', data, function () {
+            if (data.areaCode && $header.text() === '修改地区') {
+                febs.post(ctx + 'area/update', data, function () {
                     febs.alert.success('修改地区成功');
                     $query.trigger('click');
                 });
