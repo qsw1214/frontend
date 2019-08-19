@@ -3,7 +3,9 @@ package cc.mrbird.febs.basicInfo.service.impl;
 import cc.mrbird.febs.basicInfo.entity.DeviceInfo;
 import cc.mrbird.febs.basicInfo.mapper.DeviceInfoMapper;
 import cc.mrbird.febs.basicInfo.service.IDeviceInfoService;
+import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.utils.SortUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import org.apache.commons.lang3.StringUtils;
@@ -32,14 +34,9 @@ public class DeviceInfoServiceImpl extends ServiceImpl<DeviceInfoMapper, DeviceI
 
     @Override
     public IPage<DeviceInfo> findDeviceInfos(QueryRequest request, DeviceInfo deviceInfo) {
-        QueryWrapper<DeviceInfo> queryWrapper = new QueryWrapper<>();
-        // TODO 设置查询条件
-        if (deviceInfo.getState() != null)
-            queryWrapper.lambda().eq(DeviceInfo::getState, deviceInfo.getState());
-        if (StringUtils.isNotBlank(deviceInfo.getDeviceName()))
-            queryWrapper.lambda().eq(DeviceInfo::getDeviceName, deviceInfo.getDeviceName());
         Page<DeviceInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
-        return this.page(page, queryWrapper);
+        SortUtil.handlePageSort(request, page, "device_id", FebsConstant.ORDER_ASC, false);
+        return this.baseMapper.findDeviceDetailInfos(page, deviceInfo);
     }
 
     @Override

@@ -2,16 +2,55 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.basicInfo.mapper.DeviceInfoMapper">
 
-    <resultMap id="deviceInfo" type="cc.mrbird.febs.basicInfo.entity.DeviceInfo">
+    <resultMap id="deviceInfoMap" type="cc.mrbird.febs.basicInfo.entity.DeviceInfo">
         <id column="device_id" jdbcType="INTEGER" property="deviceId"/>
         <result column="device_name" jdbcType="VARCHAR" property="deviceName"/>
         <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
         <result column="username" jdbcType="VARCHAR" property="username"/>
         <result column="buyt_time" jdbcType="DATE" property="buytTime"/>
         <result column="device_type" jdbcType="VARCHAR" property="deviceType"/>
-        <result column="firm_id" jdbcType="INTEGER" property="firmId"/>
+        <result column="firm_name" jdbcType="INTEGER" property="firmName"/>
         <result column="classroom_id" jdbcType="INTEGER" property="classroomId"/>
         <result column="state" jdbcType="INTEGER" property="state"/>
         <result column="num" jdbcType="INTEGER" property="num"/>
     </resultMap>
+    <sql id="findDeviceInfoDetailSql">
+        SELECT
+        d.device_id,
+        d.device_name,
+        d.username,
+        d.device_type,
+        d.buyt_time,
+        s.school_id,
+        s.school_name schoolName,
+        d.firm_name,
+        d.classroom_id,
+        d.state,
+        d.num
+        FROM
+        jcc_device_info d
+        LEFT JOIN jcc_school_info s ON (s.school_id = d.school_id)
+        WHERE 1 = 1
+        <if test="deviceInfo.deviceName != null and deviceInfo.deviceName != ''">
+            AND d.device_name = #{deviceInfo.deviceName}
+        </if>
+        <if test="deviceInfo.schoolName != null and deviceInfo.schoolName != ''">
+            AND s.school_name like CONCAT('%','${deviceInfo.schoolName}','%')
+        </if>
+        <if test="deviceInfo.state != null and deviceInfo.state != ''">
+            AND d.state = #{deviceInfo.state}
+        </if>
+        <if test="deviceInfo.deviceType != null and deviceInfo.deviceType != ''">
+            AND d.device_type = #{deviceInfo.deviceType}
+        </if>
+        <if test="deviceInfo.buytTimeFrom != null and deviceInfo.buytTimeFrom !=''">
+            And d.buyt_time &gt; #{deviceInfo.buytTimeFrom}
+        </if>
+        <if test="deviceInfo.buytTimeTo!= null and deviceInfo.buytTimeTo !=''">
+            And d.buyt_time &lt; #{deviceInfo.buytTimeTo}
+        </if>
+    </sql>
+    <select id="findDeviceDetailInfos" parameterType="cc.mrbird.febs.basicInfo.entity.DeviceInfo" resultMap="deviceInfoMap">
+        <include refid="findDeviceInfoDetailSql"/>
+    </select>
 </mapper>

@@ -92,7 +92,7 @@
         formSelects.render();
 
         formSelects.config('deviceInfo-update-school', {
-            searchUrl: ctx + 'school',
+            searchUrl: ctx + 'school/getAllSchools',
             response: {
                 statusCode: 200
             },
@@ -109,7 +109,7 @@
                 return result;
             },
             success: function () {
-                formSelects.value('deviceInfo-update-school', deviceInfo.schoolId.split(','));
+                formSelects.value('deviceInfo-update-school', [deviceInfo.schoolId]);
             },
             error: function (id, url, searchVal, err) {
                 console.error(err);
@@ -118,13 +118,15 @@
         });
 
         function initDeviceInfoValue() {
-            alert(deviceInfo.buytTime);
+            //alert(deviceInfo.buytTime);
             form.val("deviceInfo-update-form", {
                 "deviceName": deviceInfo.deviceName,
                 "username": deviceInfo.username,
                 "type": deviceInfo.type,
                 "state": deviceInfo.state,
                 "num": deviceInfo.num,
+                'firmName': deviceInfo.firmName,
+                'schoolId':deviceInfo.schoolId,
                 "buytTime": buytTime
             });
         }

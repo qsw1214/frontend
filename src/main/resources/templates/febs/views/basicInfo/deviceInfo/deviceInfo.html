@@ -38,7 +38,7 @@
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">所属学校</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="school" id="school" lay-filter="school"
+                                            <input type="text" name="schoolName" id="schoolName" lay-filter="schoolName"
                                                    class="layui-input">
                                         </div>
                                     </div>
@@ -168,13 +168,13 @@
             }]
         });
 
-        treeSelect.render({
+        /*treeSelect.render({
             elem: $view.find('#dept'),
             type: 'get',
             data: ctx + 'dept/select/tree',
             placeholder: '请选择',
             search: false
-        });
+        });*/
 
         table.on('tool(deviceInfoTable)', function (obj) {
             var data = obj.data,
@@ -217,7 +217,7 @@
 
         $reset.on('click', function () {
             $searchForm[0].reset();
-            treeSelect.revokeNode('dept');
+            //treeSelect.revokeNode('dept');
             sortObject.type = 'null';
             tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
         });
@@ -257,8 +257,8 @@
                 deviceName: $searchForm.find('input[name="deviceName"]').val().trim(),
                 state: $searchForm.find("select[name='state']").val(),
                 deviceType: $searchForm.find("input[name='deviceType']").val().trim(),
-                schoolId: $searchForm.find("input[name='school']").val().trim(),
-                firmId: $searchForm.find("input[name='firm']").val().trim(),
+                schoolName: $searchForm.find("input[name='schoolName']").val().trim(),
+                firmName: $searchForm.find("input[name='firmName']").val().trim(),
                 invalidate_ie_cache: new Date()
             };
         }

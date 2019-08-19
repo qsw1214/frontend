@@ -39,7 +39,7 @@ import java.util.Map;
  */
 @Slf4j
 @Validated
-@Controller
+@Controller("school")
 public class SchoolController extends BaseController {
 
     @Autowired
@@ -87,9 +87,9 @@ public class SchoolController extends BaseController {
         return FebsUtil.view("basicInfo/school/schoolUpdate");
     }
 
-    @GetMapping("school")
+    @GetMapping("school/getAllSchools")
     @ResponseBody
-//    @RequiresPermissions("school:list")
+//    @RequiresPermissions("school:getAllSchools")
     public FebsResponse getAllSchools(School school) {
         return new FebsResponse().success().data(schoolService.findSchools(school));
     }

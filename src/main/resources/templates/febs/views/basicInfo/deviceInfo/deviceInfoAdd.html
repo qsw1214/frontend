@@ -35,17 +35,17 @@
                        class="layui-input">
             </div>
         </div>
-        <!--<div class="layui-form-item">
+        <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">所属学校：</label>
             <div class="layui-input-block">
                 <select name="schoolId"
                         lay-verify="required"
                         xm-select-direction="down"
-                        xm-select="device-add-school"
+                        xm-select="deviceInfo-add-school"
                         xm-select-skin="default">
                 </select>
             </div>
-        </div>-->
+        </div>
         <div class="layui-form-item">
             <label class="layui-form-label">负责人：</label>
             <div class="layui-input-block">
@@ -91,8 +91,8 @@
             search: false
         });*/
 
-        /*formSelects.config('deviceInfo-add-firm', {
-            searchUrl: ctx + 'firm',
+        formSelects.config('deviceInfo-add-school', {
+            searchUrl: ctx + 'school/getAllSchools',
             response: {
                 statusCode: 200
             },
@@ -101,8 +101,8 @@
                 var tranData = [];
                 for (var i = 0; i < data.length; i++) {
                     tranData.push({
-                        name: data[i].firmName,
-                        value: data[i].firmId
+                        name: data[i].schoolName,
+                        value: data[i].schoolId
                     })
                 }
                 result.data = tranData;
@@ -110,9 +110,9 @@
             },
             error: function (id, url, searchVal, err) {
                 console.error(err);
-                febs.alert.error('获取厂商列表失败');
+                febs.alert.error('获取学校列表失败');
             }
-        });*/
+        });
 
         form.on('submit(deviceInfo-add-form-submit)', function (data) {
             //alert("xxx");
@@ -120,7 +120,7 @@
             febs.post(ctx + 'deviceInfo', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('新增设备成功！');
-                $('#febs-device').find('#query').click();
+                $('#febs-deviceInfo').find('#query').click();
             });
             return false;
         });

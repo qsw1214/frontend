@@ -1,5 +1,6 @@
 package cc.mrbird.febs.basicInfo.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.wuwenze.poi.annotation.ExcelField;
@@ -17,7 +18,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
  */
 @Data
 @TableName("jcc_device_info")
-public class DeviceInfo {
+public class DeviceInfo implements Serializable {
 
     /**
      * 
@@ -60,7 +61,7 @@ public class DeviceInfo {
     @TableField("classroom_id")
     private Integer classroomId;
 
-    @TableField( "厂商名称")
+    @TableField( "firm_name")
     private String firmName;
 
     /**
