@@ -730,8 +730,8 @@ INSERT INTO `t_user_role` VALUES (7, 80);
 -- ----------------------------
 -- Records of jcc_school_info
 -- ----------------------------
-DROP TABLE IF EXISTS `jcc_school`;
-CREATE TABLE `jcc_school`  (
+DROP TABLE IF EXISTS `t_school`;
+CREATE TABLE `t_school`  (
   `school_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '学校ID',
   `school_name` varchar(30)  CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '学校名',
   `introduce` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '介绍',
@@ -753,3 +753,7 @@ CREATE TABLE `jcc_school`  (
   `create_time` date DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`school_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '学校表' ROW_FORMAT = Dynamic;
+
+
+
+
