@@ -1,7 +1,6 @@
 package cc.mrbird.febs.basicInfo.service.impl;
 
 import cc.mrbird.febs.basicInfo.entity.School;
-import cc.mrbird.febs.basicInfo.entity.SchoolInfo;
 import cc.mrbird.febs.basicInfo.mapper.SchoolMapper;
 import cc.mrbird.febs.basicInfo.service.ISchoolService;
 import cc.mrbird.febs.common.entity.QueryRequest;

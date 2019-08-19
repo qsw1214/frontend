@@ -8,7 +8,6 @@ import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.basicInfo.entity.School;
-import cc.mrbird.febs.basicInfo.entity.SchoolInfo;
 import cc.mrbird.febs.basicInfo.service.ISchoolService;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
