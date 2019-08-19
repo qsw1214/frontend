@@ -99,7 +99,7 @@
             click: function (name, elem, event) {
                 var checkStatus = table.checkStatus('schoolTable');
                 if (name === 'add') {
-                    febs.modal.open('新增学校', 'school/schoolAdd', {
+                    febs.modal.open('新增学校', 'basicInfo/school/schoolAdd', {
                         btn: ['提交', '重置'],
                         area: $(window).width() <= 750 ? '95%' : '50%',
                         yes: function (index, layero) {
@@ -163,7 +163,7 @@
             var data = obj.data,
                 layEvent = obj.event;
             if (layEvent === 'detail') {
-                febs.modal.view('学校信息', 'school/detail/' + data.schoolId, {
+                febs.modal.view('学校信息', 'basicInfo/school/detail/' + data.schoolId, {
                     area: $(window).width() <= 750 ? '95%' : '660px'
                 });
             }
@@ -173,7 +173,7 @@
                 });
             }
             if (layEvent === 'edit') {
-                febs.modal.open('修改学校', 'school/update/' + data.schoolId, {
+                febs.modal.open('修改学校', 'basicInfo/school/update/' + data.schoolId, {
                     area: $(window).width() <= 750 ? '90%' : '50%',
                     btn: ['提交', '取消'],
                     yes: function (index, layero) {
@@ -236,7 +236,7 @@
         }
 
         function deleteUsers(schoolIds) {
-            febs.get(ctx + 'school/delete/' + schoolIds, null, function () {
+            febs.get(ctx + 'basicInfo/school/delete/' + schoolIds, null, function () {
                 febs.alert.success('删除用户成功');
                 $query.click();
             });

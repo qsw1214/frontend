@@ -1,0 +1,147 @@
+<style>
+    #deviceInfo-update {
+        padding: 20px 25px 25px 0;
+    }
+
+    #deviceInfo-update .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="deviceInfo-update">
+    <form class="layui-form" action="" lay-filter="deviceInfo-update-form">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">设备ID：</label>
+            <div class="layui-input-block">
+                <input type="text" name="deviceId" data-th-value="${deviceInfo.deviceId}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">设备名：</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" name="deviceName" autocomplete="off">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">购买时间：</label>
+            <div class="layui-input-block">
+                <input type="date" name="buytTime" lay-verify="buytTime" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require" >负责人：</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" lay-verify="username" maxlength="50" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require" >厂商名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="firmName" lay-verify="firmName" maxlength="50" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">所属学校：</label>
+            <div class="layui-input-block">
+                <select name="schoolId"
+                        lay-verify="required"
+                        xm-select-direction="down"
+                        xm-select="deviceInfo-update-school"
+                        xm-select-skin="default">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">状态：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="state" value="1" title="启用">
+                <input type="radio" name="state" value="0" title="关闭" checked="">  <!--此处若没有checked属性，打开不会选中、、-->
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">使用次数：</label>
+            <div class="layui-input-block">
+                <input type="text" name="num" lay-verify="num" maxlength="50" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="deviceInfo-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            treeSelect = layui.treeSelect,
+            form = layui.form,
+            deviceInfo = [[${deviceInfo}]],
+            $view = $('#deviceInfo-update'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        initDeviceInfoValue();
+
+        formSelects.render();
+
+        formSelects.config('deviceInfo-update-school', {
+            searchUrl: ctx + 'school',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].schoolName,
+                        value: data[i].schoolId
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            success: function () {
+                formSelects.value('deviceInfo-update-school', deviceInfo.schoolId.split(','));
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取学校列表失败');
+            }
+        });
+
+        function initDeviceInfoValue() {
+            alert(deviceInfo.buytTime);
+            form.val("deviceInfo-update-form", {
+                "deviceName": deviceInfo.deviceName,
+                "username": deviceInfo.username,
+                "type": deviceInfo.type,
+                "state": deviceInfo.state,
+                "num": deviceInfo.num,
+                "buytTime": buytTime
+            });
+        }
+
+        form.on('submit(deviceInfo-update-form-submit)', function (data) {
+            //alert("xxx23");
+            if (febs.nativeEqual(data.field, deviceInfo)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            data.field.buytTime = new Date(data.field.buytTime);
+            febs.post(ctx + 'deviceInfo/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success(data.field.deviceName + ' 设备数据修改成功');
+                $('#febs-deviceInfo').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

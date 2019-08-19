@@ -116,7 +116,7 @@
             range: true
         });
 
-        var menuTree = eleTree.render({
+        /*var menuTree = eleTree.render({
             elem: '.menu-tree',
             url: ctx + 'menu/tree',
             showCheckbox: true,
@@ -139,7 +139,7 @@
                 dataName: "data"
             }
         });
-
+*/
         dropdown.render({
             elem: $view.find('.action-more'),
             click: function (name, elem, event) {
@@ -247,8 +247,8 @@
         function resetAreaForm() {
             $view.find('#reset-form').trigger('click');
             $header.text('新增地区');
-            menuTree.setChecked([], true);
-            menuTree.unExpandAll();
+            //menuTree.setChecked([], true);
+            //menuTree.unExpandAll();
         }
 
         form.on('submit(area-form-submit)', function (data) {

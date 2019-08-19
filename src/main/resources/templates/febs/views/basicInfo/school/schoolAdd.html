@@ -138,7 +138,7 @@
 
         form.on('submit(user-add-form-submit)', function (data) {
             data.field.createTime=new Date(data.field.createTime);
-            febs.post(ctx+'school', data.field, function () {
+            febs.post(ctx+'basicInfo/school', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('新增学校成功');
                 $('#febs-user').find('#query').click();

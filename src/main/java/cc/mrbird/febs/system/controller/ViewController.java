@@ -1,5 +1,7 @@
 package cc.mrbird.febs.system.controller;
 
+import cc.mrbird.febs.basicInfo.entity.DeviceInfo;
+import cc.mrbird.febs.basicInfo.service.IDeviceInfoService;
 import cc.mrbird.febs.common.authentication.ShiroHelper;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsConstant;
@@ -29,6 +31,9 @@ public class ViewController extends BaseController {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private IDeviceInfoService deviceInfoService;
     @Autowired
     private ShiroHelper shiroHelper;
 
@@ -135,17 +140,11 @@ public class ViewController extends BaseController {
     public String systemDept() {
         return FebsUtil.view("system/dept/dept");
     }
-    
-    @GetMapping(FebsConstant.VIEW_PREFIX + "system/dict")
-    @RequiresPermissions("dict:view")
-    private String dictIndex(){
-        return FebsUtil.view("system/dict/dict");
-    }
 
     @RequestMapping(FebsConstant.VIEW_PREFIX + "index")
     public String pageIndex() {
         return FebsUtil.view("index");
-    } 
+    }
 
     /**
      * 数据管理
@@ -155,6 +154,27 @@ public class ViewController extends BaseController {
     @RequiresPermissions("area:view")
     public String basicInfoArea() {
         return FebsUtil.view("basicInfo/area/area");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/deviceInfo")
+    @RequiresPermissions("deviceInfo:view")
+    public String basicInfoDeviceInfo() {
+
+        return FebsUtil.view("basicInfo/deviceInfo/deviceInfo");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/deviceInfo/add")
+    @RequiresPermissions("deviceInfo:add")
+    public String basicInfoDeviceInfoAdd() {
+
+        return FebsUtil.view("basicInfo/deviceInfo/deviceInfoAdd");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/deviceInfo/update/{deviceId}")
+    @RequiresPermissions("deviceInfo:update")
+    public String basicInfoDeviceInfoUpdate(@PathVariable Integer deviceId, Model model) {
+        resolveDeviceModel(deviceId, model, false);
+        return FebsUtil.view("basicInfo/deviceInfo/deviceInfoUpdate");
     }
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "404")
@@ -183,5 +203,13 @@ public class ViewController extends BaseController {
         }
         if (user.getLastLoginTime() != null)
             model.addAttribute("lastLoginTime", DateUtil.getDateFormat(user.getLastLoginTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
+    }
+
+    private void resolveDeviceModel(Integer deviceId, Model model, Boolean transform) {
+        DeviceInfo deviceInfo = deviceInfoService.findDeviceById(deviceId);
+        model.addAttribute("deviceInfo", deviceInfo);
+
+        if (deviceInfo.getBuytTime() != null)
+            model.addAttribute("buytTime", DateUtil.getDateFormat(deviceInfo.getBuytTime(), DateUtil.FULL_TIME_PATTERN_NO_DETAIL));
     }
 }

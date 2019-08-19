@@ -1,0 +1,128 @@
+<style>
+    #deviceInfo-add {
+        padding: 20px 25px 25px 0;
+    }
+    #deviceInfo-add .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="deviceInfo-add">
+    <form class="layui-form" action="" lay-filter="deviceInfo-add-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">设备名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="deviceName" minlength="2" maxlength="10" lay-verify="range|deviceName"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">购买时间：</label>
+            <div class="layui-input-block">
+                <input type="date" name="buytTime" lay-verify="buytTime" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">厂商名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="firmName" lay-verify="firmName" maxlength="50" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备类型：</label>
+            <div class="layui-input-block">
+                <input type="text" name="deviceType" lay-verify="deviceType" maxlength="50" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <!--<div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">所属学校：</label>
+            <div class="layui-input-block">
+                <select name="schoolId"
+                        lay-verify="required"
+                        xm-select-direction="down"
+                        xm-select="device-add-school"
+                        xm-select-skin="default">
+                </select>
+            </div>
+        </div>-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">负责人：</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" lay-verify="username" maxlength="50" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">状态：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="1" title="未使用" checked="">
+                <input type="radio" name="status" value="0" title="启用">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="deviceInfo-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            treeSelect = layui.treeSelect,
+            form = layui.form,
+            $view = $('#deviceInfo-add'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        formSelects.render();
+
+        /*treeSelect.render({
+            elem: $view.find('#deviceInfo-add-school'),
+            type: 'get',
+            data: ctx + 'school/select/tree',
+            placeholder: '请选择',
+            search: false
+        });*/
+
+        /*formSelects.config('deviceInfo-add-firm', {
+            searchUrl: ctx + 'firm',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].firmName,
+                        value: data[i].firmId
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取厂商列表失败');
+            }
+        });*/
+
+        form.on('submit(deviceInfo-add-form-submit)', function (data) {
+            //alert("xxx");
+            data.field.buytTime = new Date(data.field.buytTime);
+            febs.post(ctx + 'deviceInfo', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('新增设备成功！');
+                $('#febs-device').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>
