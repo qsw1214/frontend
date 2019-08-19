@@ -149,6 +149,7 @@
         }
 
         form.on('submit(user-update-form-submit)', function (data) {
+        	console.log("2222222222");
             if (febs.nativeEqual(data.field, user)) {
                 febs.alert.warn('数据未作任何修改！');
                 return false;

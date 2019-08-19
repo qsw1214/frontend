@@ -43,13 +43,14 @@ public class LoginController extends BaseController {
     public FebsResponse login(
             @NotBlank(message = "{required}") String username,
             @NotBlank(message = "{required}") String password,
-            @NotBlank(message = "{required}") String verifyCode,
+//            @NotBlank(message = "{required}") String verifyCode,
             boolean rememberMe, HttpServletRequest request) throws FebsException {
-        if (!CaptchaUtil.verify(verifyCode, request)) {
-            throw new FebsException("验证码错误！");
-        }
+//        if (!CaptchaUtil.verify(verifyCode, request)) {
+//            throw new FebsException("验证码错误！");
+//        }
         password = MD5Util.encrypt(username.toLowerCase(), password);
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password, rememberMe);
+        //UsernamePasswordToken token = new UsernamePasswordToken(username, password, rememberMe);
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         try {
             super.login(token);
             // 保存登录日志

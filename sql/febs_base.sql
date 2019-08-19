@@ -727,3 +727,29 @@ INSERT INTO `t_user_role` VALUES (7, 78);
 INSERT INTO `t_user_role` VALUES (7, 79);
 INSERT INTO `t_user_role` VALUES (7, 80);
 
+-- ----------------------------
+-- Records of jcc_school_info
+-- ----------------------------
+DROP TABLE IF EXISTS `jcc_school`;
+CREATE TABLE `jcc_school`  (
+  `school_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '学校ID',
+  `school_name` varchar(30)  CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '学校名',
+  `introduce` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '介绍',
+  `school_type` varchar(30) NULL DEFAULT NULL COMMENT '学校类型',
+  `link_man` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '联系人',
+  `link_phone` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '联系电话',
+  `post_code` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '邮编',
+  `address` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '地址',
+  `lng` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '经度',
+  `lat` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '纬度',
+  `province` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '省',
+  `city` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '市',
+  `conunty` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '县',
+  `certificate_book` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '资质证明',
+  `city_leader_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '市领导',
+  `province_leader_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '省领导',
+  `city_date` date DEFAULT NULL COMMENT '市审核时间',
+  `province_date` date DEFAULT NULL COMMENT '省审核时间',
+  `create_time` date DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`school_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '学校表' ROW_FORMAT = Dynamic;

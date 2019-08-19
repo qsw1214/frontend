@@ -1,0 +1,132 @@
+<style>
+    #school-update {
+        padding: 20px 25px 25px 0;
+    }
+
+    #school-update .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="school-update">
+    <form class="layui-form" action="" lay-filter="school-update-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">学校名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="schoolName" minlength="4" maxlength="10"
+                        autocomplete="off" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">学校简介：</label>
+            <div class="layui-input-block">
+                <textarea name="introduce" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">学校类别：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="schoolType" value="主校" title="主校">
+                <input type="radio" name="schoolType" value="分校" title="分校">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">主负责人：</label>
+            <div class="layui-input-block">
+                <input type="text" name="linkMan" minlength="2" maxlength="10"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系电话：</label>
+            <div class="layui-input-block">
+                <input type="tel" name="linkPhone" lay-verify="phone" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮编：</label>
+            <div class="layui-input-block">
+                <input type="text" name="postCode"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">地区编码：</label>
+            <div class="layui-input-block">
+                <input type="text" name="areaCode"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">学校地址：</label>
+            <div class="layui-input-block">
+                <input type="text" name="address"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-label-sm">创建时间:</label>
+            <div class="layui-input-inline">
+                <input type="text" name="createTime" class="layui-input" id="test1">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="school-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'formSelects', 'laydate','validate', 'treeSelect'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            treeSelect = layui.treeSelect,
+            laydate = layui.laydate,
+            form = layui.form,
+            schoolInfo = [[${schoolInfo}]],
+            $view = $('#school-update'),
+            validate = layui.validate;
+        laydate.render({
+            elem: '#test1'
+//            range: true,
+//            trigger: 'click'
+        });
+        form.verify(validate);
+        form.render();
+
+        initUserValue();
+
+
+
+ 
+
+        function initUserValue() {
+            form.val("school-update-form", {
+                "schoolName": schoolInfo.schoolName,
+                "introduce": schoolInfo.introduce,
+                "schoolType": schoolInfo.schoolType,
+                "linkMan": schoolInfo.linkman,
+                "linkPhone": schoolInfo.linkphone,
+                "postCode": schoolInfo.postcode,
+                "areaCode":schoolInfo.areaCode,
+                "address":schoolInfo.address,
+                "createTime":schoolInfo.createTime
+            });
+        }
+
+        form.on('submit(school-update-form-submit)', function (data) {
+        	console.log("schoolInfo",schoolInfo);
+        	data.field.schoolId=schoolInfo.schoolId;
+        	console.log("data",data);
+        	data.field.createTime=new Date(data.field.createTime);
+            if (febs.nativeEqual(data.field, schoolInfo)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'schoolInfo/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success(' 学校信息修改成功');
+                $('#febs-user').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>
