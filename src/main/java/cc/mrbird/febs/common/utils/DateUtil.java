@@ -16,7 +16,7 @@ import java.util.Locale;
  */
 public class DateUtil {
 
-    public static final String FULL_TIME_PATTERN_NO_DETAIL = "yyyy/MM/dd";
+    public static final String FULL_TIME_PATTERN_NO_DETAIL = "yyyy-MM-dd";
 
     public static final String FULL_TIME_PATTERN = "yyyyMMddHHmmss";
 

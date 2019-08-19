@@ -24,7 +24,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">购买时间：</label>
             <div class="layui-input-block">
-                <input type="date" name="buytTime" lay-verify="buytTime" autocomplete="off" class="layui-input">
+                <input type="date"  name="buytTime" lay-verify="buytTime" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -81,6 +81,7 @@
             treeSelect = layui.treeSelect,
             form = layui.form,
             deviceInfo = [[${deviceInfo}]],
+            buytTime = [[${buytTime}]],
             $view = $('#deviceInfo-update'),
             validate = layui.validate;
 
@@ -88,7 +89,6 @@
         form.render();
 
         initDeviceInfoValue();
-
         formSelects.render();
 
         formSelects.config('deviceInfo-update-school', {
