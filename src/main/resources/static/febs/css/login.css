@@ -1,1 +1,124 @@
-#febs-login{height:100%;background:#f0f2f5 url(../images/background.svg) no-repeat center 110px;padding-top:1px;margin-top:-1px}#febs-login .layui-logo{user-select:none;overflow:hidden;position:static;font-size:27px;width:100%;padding:0;line-height:120px;height:120px;color:#3491ff;font-family:"Trebuchet MS",Arial,Helvetica,sans-serif;transition:height .8s cubic-bezier(0.075,0.82,0.165,1)}#febs-login .layui-logo span{font-weight:600;color:rgba(0,0,0,.85);border-bottom:1px solid #3491ff}#febs-login .layui-logo span b{color:#3491ff}#febs-login .login-wrap{position:relative;top:50%;margin-top:-290px;height:540px}#febs-login .layui-form{overflow:hidden;background:#fff;padding:40px 40px 20px;border-radius:0;box-shadow:1px 3px 3px #ccc;position:relative}#febs-login .layui-form-item{position:relative}#febs-login .verify-block{display:none}#febs-login .layui-input{text-indent:26px}#febs-login .codeimg{margin-left:10px;cursor:pointer}#febs-login .sendsms{position:absolute;top:4px;right:4px;width:100px;border:none}#febs-login .sendsms.layui-btn-disabled{background:#f4f4f4;color:#bbb}#febs-login .houseimg{text-align:center}#febs-login .houseimg img{display:inline-block;margin-top:5%}#febs-login .login-type-tab{margin-bottom:20px;overflow:hidden}#febs-login .login-type-tab li{display:inline-block;padding-right:20px;font-size:16px;line-height:30px;color:#bbb;cursor:pointer;transition:color .5s ease}#febs-login .login-type-tab li.active{color:#333}#febs-login .login-type-tab li .qrcode-icon{font-size:24px}#febs-login .phonecode-block{display:none}#febs-login .qrcode-block{text-align:center;display:none}#febs-login .qrcode-block .qrcode{border:1px solid #eee;display:inline-block;padding:15px;margin:30px 0;width:158px;height:158px}#febs-login .qrcode-block .qrcode .layui-icon{line-height:158px;font-size:44px;color:#e6e6e6}#febs-login .qrcode-block .p1{font-size:16px}#febs-login .qrcode-block .p2{font-size:14px;color:#999;margin-top:10px;margin-bottom:20px}#febs-login .layui-form-item .label-icon{position:absolute;top:0;left:0;width:38px;line-height:38px;text-align:center;color:#d2d2d2!important}.footer{text-align:center;padding:.5rem 1rem 1rem}
+/*#febs-login{height:100%;background:#f0f2f5 url(../images/background.svg) no-repeat center 110px;padding-top:1px;margin-top:-1px}#febs-login .layui-logo{user-select:none;overflow:hidden;position:static;font-size:27px;width:100%;padding:0;line-height:120px;height:120px;color:#3491ff;font-family:"Trebuchet MS",Arial,Helvetica,sans-serif;transition:height .8s cubic-bezier(0.075,0.82,0.165,1)}#febs-login .layui-logo span{font-weight:600;color:rgba(0,0,0,.85);border-bottom:1px solid #3491ff}#febs-login .layui-logo span b{color:#3491ff}#febs-login .login-wrap{position:relative;top:50%;margin-top:-290px;height:540px}#febs-login .layui-form{overflow:hidden;background:#fff;padding:40px 40px 20px;border-radius:0;box-shadow:1px 3px 3px #ccc;position:relative}#febs-login .layui-form-item{position:relative}#febs-login .verify-block{display:none}#febs-login .layui-input{text-indent:26px}#febs-login .codeimg{margin-left:10px;cursor:pointer}#febs-login .sendsms{position:absolute;top:4px;right:4px;width:100px;border:none}#febs-login .sendsms.layui-btn-disabled{background:#f4f4f4;color:#bbb}#febs-login .houseimg{text-align:center}#febs-login .houseimg img{display:inline-block;margin-top:5%}#febs-login .login-type-tab{margin-bottom:20px;overflow:hidden}#febs-login .login-type-tab li{display:inline-block;padding-right:20px;font-size:16px;line-height:30px;color:#bbb;cursor:pointer;transition:color .5s ease}#febs-login .login-type-tab li.active{color:#333}#febs-login .login-type-tab li .qrcode-icon{font-size:24px}#febs-login .phonecode-block{display:none}#febs-login .qrcode-block{text-align:center;display:none}#febs-login .qrcode-block .qrcode{border:1px solid #eee;display:inline-block;padding:15px;margin:30px 0;width:158px;height:158px}#febs-login .qrcode-block .qrcode .layui-icon{line-height:158px;font-size:44px;color:#e6e6e6}#febs-login .qrcode-block .p1{font-size:16px}#febs-login .qrcode-block .p2{font-size:14px;color:#999;margin-top:10px;margin-bottom:20px}#febs-login .layui-form-item .label-icon{position:absolute;top:0;left:0;width:38px;line-height:38px;text-align:center;color:#d2d2d2!important}.footer{text-align:center;padding:.5rem 1rem 1rem}*/
+/*body{*/
+/*    width:100%;*/
+/*    background: url(febs/images/avatar/beijin.jpg)no-repeat;*/
+/*    min-width: 1200px;*/
+/*    background-size: 100%;*/
+/*    margin: 0 auto;*/
+/*}*/
+#main{
+    position:relative;
+    width: 374px;
+    height: 388px;
+    margin-left: 1000px;
+    margin-top:-300px ;
+    border-radius: 6px;
+    border: 2px solid gainsboro;
+    font-size: 18px;
+    background: #F1F3F4;
+}
+/*#erweima img{
+	width: 200px;
+	height: 200px;
+	margin-left: 80px;
+	margin-top: 70px;
+}*/
+#login_container{
+    margin:0 auto;
+}
+.tab-content p{
+    text-align: center;
+}
+#Qtel{
+    margin-top: 60px;
+    width: 90px;
+    height: 55px;
+    border:1px solid gainsboro;
+    margin-left: 40px;
+    float:left;
+}
+#Qimg{
+    margin-top: 40px;
+    width: 90px;
+    height: 55px;
+    border:1px solid gainsboro;
+    margin-left: 40px;
+    float:left;
+}
+#username{
+    margin-top: -55px;
+    float: left;
+    margin-left: 130px;
+    width: 210px;
+    height: 55px;
+    border:1px solid gainsboro;
+}
+#pwd{
+    margin-top:-55px;
+    float:left;
+    width: 210px;
+    height: 55px;
+    border:1px solid gainsboro;
+    margin-left:130px;
+}
+#login{
+    margin-top: 40px;
+    width: 300px;
+    height: 55px;
+    margin-left: 40px;
+    background: #42B0FF;
+    border-radius: 6px;
+    color: white;
+}
+#main ul li{
+    width: 185px;
+    height: 47px;
+}
+.selectd{
+    background-color: #FFFFFF;
+}
+#comment_bubble {
+    width: 600px;
+    height: 250px;
+    margin-left: 300px;
+    margin-top: 200px;
+    position: relative;
+    -moz-border-radius: 12px;
+    -webkit-border-radius: 12px;
+    border-radius: 12px;
+    border: 1px solid lightskyblue;
+}
+#logo{
+    width: 180px;
+    height: 180px;
+    margin-top: -20px;
+    margin-left: 20px;
+}
+#tet{
+    width: 300px;
+    height: 200px;
+    margin-left: 260px;
+    margin-top: -150px;
+}
+h1{
+    font-style: inherit;
+    color: lightskyblue;
+    font-size: 45px;
+}
+h3{
+    font-size: 35px;
+    font-style: inherit;
+    color: lightskyblue;
+}
+#username_hint{
+    width:40px;
+    margin-top: -40px;
+    float: left;
+    margin-left: 340px;
+}
+#password_hint{
+    width:40px;
+    float:right;
+    margin-top:-40px;
+    margin-right:-10px;
+}
