@@ -6,11 +6,16 @@ import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.utils.CaptchaUtil;
 import cc.mrbird.febs.common.utils.MD5Util;
+import cc.mrbird.febs.dingding.util.UserInfLix;
 import cc.mrbird.febs.monitor.entity.LoginLog;
 import cc.mrbird.febs.monitor.service.ILoginLogService;
 import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IUserService;
+import cc.mrbird.febs.system.service.LoginService;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.wf.captcha.Captcha;
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.shiro.authc.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -23,8 +28,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import static cc.mrbird.febs.dingding.util.requestUtil.$params;
 
 /**
  * @author MrBird
@@ -37,17 +45,91 @@ public class LoginController extends BaseController {
     private IUserService userService;
     @Autowired
     private ILoginLogService loginLogService;
+    @Autowired
+    private LoginService loginService;
+
 
     @PostMapping("login")
     @Limit(key = "login", period = 60, count = 20, name = "登录接口", prefix = "limit")
     public FebsResponse login(
-            @NotBlank(message = "{required}") String username,
+            /*@NotBlank(message = "{required}") String username,
             @NotBlank(message = "{required}") String password,
-//            @NotBlank(message = "{required}") String verifyCode,
+            @NotBlank(message = "{required}") String verifyCode,*/
             boolean rememberMe, HttpServletRequest request) throws FebsException {
-//        if (!CaptchaUtil.verify(verifyCode, request)) {
-//            throw new FebsException("验证码错误！");
-//        }
+        Map params = $params(request);
+        String ways = String.valueOf(params.get("ways"));
+        //两个登录方式，钉钉扫码登录和企业内部登录
+        if ("dingTalk".equals(ways)) {
+            try {
+                String tmpCode = String.valueOf(params.get("code"));
+                //获取用户信息
+                Map userInfMap = UserInfLix.getUserInf(tmpCode);
+                //截取掉department
+                String mapDepartment = String.valueOf(userInfMap.get("department"));
+                String department = mapDepartment.substring(1, mapDepartment.length() - 1);
+                userInfMap.put("department", department);
+                //获取roleMap
+                Map roleMap = getRolesMap(userInfMap);
+                //123456代替密码实现登录
+                //加密密码
+                //password = MD5Util.encrypt(String.valueOf(userInfMap.get("name")), String.valueOf(userInfMap.get("unionId")));
+                String password = MD5Util.encrypt(String.valueOf(userInfMap.get("name")), "123456");
+                //UsernamePasswordToken token = new UsernamePasswordToken(String.valueOf(userInfMap.get("name")), String.valueOf(userInfMap.get("unionid")), false);
+                //1.判断是否第一次登陆,第一次登陆需要将用户信息和权限添加到相应的表中
+                User isExistUser = loginService.selectIsExistUser(userInfMap);
+                UsernamePasswordToken token;
+                if (isExistUser == null) {
+                    userInfMap.put("password", password);
+                    loginService.insertUserInf(userInfMap);
+                    //获取钉钉登录的权限名字,并从t_role表拿到role_id
+                    Map roleIdMap = loginService.selectRoleId(roleMap);
+                    userInfMap.put("roleId", roleIdMap.get("roleId"));
+                    //新增的用户权限都为2，新增用户
+                    loginService.insertUserRole(userInfMap);
+                    token = new UsernamePasswordToken(String.valueOf(userInfMap.get("name")), password, false);
+                } else {
+                    token = new UsernamePasswordToken(isExistUser.getUsername(), isExistUser.getPassword(), false);
+                }
+                super.login(token);
+
+                // 保存登录日志
+                LoginLog loginLog = new LoginLog();
+                loginLog.setUsername(String.valueOf(userInfMap.get("name")));
+                loginLog.setSystemBrowserInfo();
+                this.loginLogService.saveLoginLog(loginLog);
+
+                return new FebsResponse().success();
+            } catch (UnknownAccountException | IncorrectCredentialsException | LockedAccountException e) {
+                throw new FebsException(e.getMessage());
+            } catch (AuthenticationException e) {
+                throw new FebsException("认证失败！");
+            }
+        }else{
+
+            //用户名密码登录
+            String username = String.valueOf(params.get("username"));
+            String password = String.valueOf(params.get("password"));
+            password = MD5Util.encrypt(username.toLowerCase(), password);
+            UsernamePasswordToken token = new UsernamePasswordToken(username, password, false);
+            try {
+                super.login(token);
+                // 保存登录日志
+                LoginLog loginLog = new LoginLog();
+                loginLog.setUsername(username);
+                loginLog.setSystemBrowserInfo();
+                this.loginLogService.saveLoginLog(loginLog);
+
+                return new FebsResponse().success();
+            } catch (UnknownAccountException | IncorrectCredentialsException | LockedAccountException e) {
+                throw new FebsException(e.getMessage());
+            } catch (AuthenticationException e) {
+                throw new FebsException("认证失败！");
+            }
+        }
+        /*if (!CaptchaUtil.verify(verifyCode, request)) {
+            throw new FebsException("验证码错误！");
+        }
+
         password = MD5Util.encrypt(username.toLowerCase(), password);
         //UsernamePasswordToken token = new UsernamePasswordToken(username, password, rememberMe);
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
@@ -64,7 +146,8 @@ public class LoginController extends BaseController {
             throw new FebsException(e.getMessage());
         } catch (AuthenticationException e) {
             throw new FebsException("认证失败！");
-        }
+        }*/
+
     }
 
     @PostMapping("regist")
@@ -104,5 +187,32 @@ public class LoginController extends BaseController {
     @GetMapping("images/captcha")
     public void captcha(HttpServletRequest request, HttpServletResponse response) throws Exception {
         CaptchaUtil.outPng(110, 34, 4, Captcha.TYPE_ONLY_NUMBER, request, response);
+    }
+
+    /**
+     * 获取rolesMap
+     * @param userInfMap
+     * @return
+     */
+    public static Map getRolesMap(Map userInfMap)  {
+        String mapRoles = String.valueOf(userInfMap.get("roles"));
+        //String roles = mapRoles.substring(1, mapRoles.length() - 1);
+        List<Map> list = JSONArray.parseArray(mapRoles,Map.class);
+        Map roleMap = new HashMap();
+        for(Map map:list){
+            if("角色".equals(String.valueOf(map.get("groupName")))){
+                roleMap.putAll(map);
+            }
+        }
+       /* JSONObject jsonRoles = JSONObject.parseObject(roles);
+        Iterator<String> it = jsonRoles.keySet().iterator();
+        Map roleMap = new HashMap();
+        while(it.hasNext()){
+            // 获得key
+            String key = it.next();
+            String value = jsonRoles.getString(key);
+            roleMap.put(key,value);
+        }*/
+        return roleMap;
     }
 }
