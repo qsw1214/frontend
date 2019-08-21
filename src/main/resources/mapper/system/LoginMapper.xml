@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.system.mapper.LoginMapper">
+    <!--查询是否存在用户-->
+    <select id="selectIsExistUser" parameterType="java.util.Map" resultType="user">
+        select USER_ID,USERNAME,PASSWORD from t_user
+        where USERNAME = #{name}
+    </select>
+    <!--添加用户信息-->
+    <insert id="insertUserInf" parameterType="java.util.Map"  useGeneratedKeys="true" keyProperty="userId2" keyColumn="USER_ID">
+        insert into t_user(USERNAME,PASSWORD,DEPT_ID,EMAIL,MOBILE,STATUS,CREATE_TIME,MODIFY_TIME,LAST_LOGIN_TIME,
+        SSEX,IS_TAB,THEME,AVATAR,DESCRIPTION)
+        values(#{name},#{password},#{department},'',#{mobile},1,now(),now(),now(),
+        1,1,'black','gaOngJwsRYRaVAuXXcmB.png','')
+    </insert>
+    <!--添加用户权限信息-->
+    <insert id="insertUserRole" parameterType="java.util.Map">
+        insert into t_user_role(USER_ID,ROLE_ID)
+        values(#{userId2},#{roleId})
+    </insert>
+    <!--查询权限id-->
+    <select id="selectRoleId" parameterType="java.util.Map" resultType="java.util.HashMap">
+        select ROLE_ID from t_role where ROLE_NAME = #{name}
+    </select>
+</mapper>
