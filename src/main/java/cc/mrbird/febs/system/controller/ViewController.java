@@ -177,6 +177,12 @@ public class ViewController extends BaseController {
         return FebsUtil.view("basicInfo/deviceInfo/deviceInfoUpdate");
     }
 
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/operate")
+    @RequiresPermissions("operate:view")
+    public String basicInfoOperate() {
+        return FebsUtil.view("basicInfo/operate/operate");
+    }
+
     @GetMapping(FebsConstant.VIEW_PREFIX + "404")
     public String error404() {
         return FebsUtil.view("error/404");
