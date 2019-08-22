@@ -27,10 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static cc.mrbird.febs.dingding.util.requestUtil.$params;
 
@@ -69,7 +66,7 @@ public class LoginController extends BaseController {
                 String department = mapDepartment.substring(1, mapDepartment.length() - 1);
                 userInfMap.put("department", department);
                 //获取roleMap
-                Map roleMap = getRolesMap(userInfMap);
+                List<Map<String,Object>> roleMapList = getRolesMap(userInfMap);
                 //123456代替密码实现登录
                 //加密密码
                 //password = MD5Util.encrypt(String.valueOf(userInfMap.get("name")), String.valueOf(userInfMap.get("unionId")));
@@ -81,11 +78,14 @@ public class LoginController extends BaseController {
                 if (isExistUser == null) {
                     userInfMap.put("password", password);
                     loginService.insertUserInf(userInfMap);
-                    //获取钉钉登录的权限名字,并从t_role表拿到role_id
-                    Map roleIdMap = loginService.selectRoleId(roleMap);
-                    userInfMap.put("roleId", roleIdMap.get("roleId"));
-                    //新增的用户权限都为2，新增用户
-                    loginService.insertUserRole(userInfMap);
+                    //获取钉钉登录的权限名字,并从t_role表拿到role_id,一个用户可能有多个角色
+                    for(Map map : roleMapList){
+                        Map roleIdMap = loginService.selectRoleId(map);
+                        userInfMap.put("roleId", roleIdMap.get("roleId"));
+                        //新增的用户权限与钉钉的绑定
+                        loginService.insertUserRole(userInfMap);
+                    }
+
                     token = new UsernamePasswordToken(String.valueOf(userInfMap.get("name")), password, false);
                 } else {
                     token = new UsernamePasswordToken(isExistUser.getUsername(), isExistUser.getPassword(), false);
@@ -196,14 +196,15 @@ public class LoginController extends BaseController {
      * @param userInfMap
      * @return
      */
-    public static Map getRolesMap(Map userInfMap)  {
+    public static List<Map<String, Object>> getRolesMap(Map userInfMap)  {
         String mapRoles = String.valueOf(userInfMap.get("roles"));
         //String roles = mapRoles.substring(1, mapRoles.length() - 1);
         List<Map> list = JSONArray.parseArray(mapRoles,Map.class);
-        Map roleMap = new HashMap();
+        List<Map<String,Object>> roleList = new ArrayList<Map<String,Object>>();
         for(Map map:list){
             if("角色".equals(String.valueOf(map.get("groupName")))){
-                roleMap.putAll(map);
+                roleList.add(map);
+                //roleList.add(map);
             }
         }
        /* JSONObject jsonRoles = JSONObject.parseObject(roles);
@@ -215,6 +216,6 @@ public class LoginController extends BaseController {
             String value = jsonRoles.getString(key);
             roleMap.put(key,value);
         }*/
-        return roleMap;
+        return roleList;
     }
 }
