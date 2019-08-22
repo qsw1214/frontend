@@ -248,8 +248,8 @@
                 buytTimeTo,
                 buytTime = $searchForm.find('input[name="buytTime"]').val();
             if (buytTime) {
-                createTimeFrom = buytTime.split(' - ')[0];
-                createTimeTo = buytTime.split(' - ')[1];
+                buytTimeFrom = buytTime.split(' - ')[0];
+                buytTimeTo = buytTime.split(' - ')[1];
             }
             return {
                 buytTimeFrom: buytTimeFrom,

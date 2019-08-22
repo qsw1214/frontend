@@ -33,8 +33,6 @@ public class ViewController extends BaseController {
     private IUserService userService;
 
     @Autowired
-    private IDeviceInfoService deviceInfoService;
-    @Autowired
     private ShiroHelper shiroHelper;
 
     @GetMapping("login")
@@ -146,37 +144,6 @@ public class ViewController extends BaseController {
         return FebsUtil.view("index");
     }
 
-    /**
-     * 数据管理
-     * @return
-     */
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/area")
-    @RequiresPermissions("area:view")
-    public String basicInfoArea() {
-        return FebsUtil.view("basicInfo/area/area");
-    }
-
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/deviceInfo")
-    @RequiresPermissions("deviceInfo:view")
-    public String basicInfoDeviceInfo() {
-
-        return FebsUtil.view("basicInfo/deviceInfo/deviceInfo");
-    }
-
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/deviceInfo/add")
-    @RequiresPermissions("deviceInfo:add")
-    public String basicInfoDeviceInfoAdd() {
-
-        return FebsUtil.view("basicInfo/deviceInfo/deviceInfoAdd");
-    }
-
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/deviceInfo/update/{deviceId}")
-    @RequiresPermissions("deviceInfo:update")
-    public String basicInfoDeviceInfoUpdate(@PathVariable Integer deviceId, Model model) {
-        resolveDeviceModel(deviceId, model, false);
-        return FebsUtil.view("basicInfo/deviceInfo/deviceInfoUpdate");
-    }
-
     @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/operate")
     @RequiresPermissions("operate:view")
     public String basicInfoOperate() {
@@ -209,13 +176,5 @@ public class ViewController extends BaseController {
         }
         if (user.getLastLoginTime() != null)
             model.addAttribute("lastLoginTime", DateUtil.getDateFormat(user.getLastLoginTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
-    }
-
-    private void resolveDeviceModel(Integer deviceId, Model model, Boolean transform) {
-        DeviceInfo deviceInfo = deviceInfoService.findDeviceById(deviceId);
-        model.addAttribute("deviceInfo", deviceInfo);
-
-        if (deviceInfo.getBuytTime() != null)
-            model.addAttribute("buytTime", DateUtil.getDateFormat(deviceInfo.getBuytTime(), DateUtil.FULL_TIME_PATTERN_NO_DETAIL));
     }
 }
