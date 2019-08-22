@@ -132,9 +132,10 @@ public class OperateController extends BaseController {
     }
 
     @RequestMapping("download")
-    public String downloadOne(HttpServletRequest req,HttpServletResponse response) throws IOException {
+    public void downloadOne(HttpServletRequest req,HttpServletResponse response) throws IOException, FebsException {
         String address=req.getParameter("attachAddress");
-        String fileName = new String(address.substring(address.lastIndexOf("/")+1) .getBytes("UTF-8"), "ISO-8859-1");;//被下载文件的名称
+        String fileName = new String(address.substring(address.lastIndexOf("/") + 1).getBytes("UTF-8"), "ISO-8859-1");
+        ;//被下载文件的名称
 
         File file = new File(address);
         if (file.exists()) {
@@ -153,7 +154,6 @@ public class OperateController extends BaseController {
                     outputStream.write(buffer, 0, i);
                     i = bis.read(buffer);
                 }
-                return "下载成功";
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -166,13 +166,17 @@ public class OperateController extends BaseController {
                 }
                 if (fis != null) {
                     try {
-                         fis.close();
+                        fis.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }
+        }else {
+           PrintWriter outpw=response.getWriter();
+           outpw.println("<script>");
+            outpw.println("alert('download failed');window.history.back();");
+            outpw.println("</script>");
         }
-        return "下载失败";
     }
 }
