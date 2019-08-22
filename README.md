@@ -34,8 +34,6 @@ Jana   | 1234qwer  |跑批人员，负责任务调度跑批模块
 名称 | 描述| 地址
 ---|---|---
 FEBS-Shiro 1.x | Spring Boot 2.0.4 & Shiro1.4.0 权限管理系统（单页）。 | [https://github.com/wuyouzhuguli/FEBS-Shiro/tree/mysql](https://github.com/wuyouzhuguli/FEBS-Shiro/tree/mysql)
-FEBS-Security | Spring Boot 2.0.4 & Spring Security 5.0.7 权限管理系统（单页）。 | [https://github.com/wuyouzhuguli/FEBS-Security](https://github.com/wuyouzhuguli/FEBS-Security)
-FEBS-Vue | FEBS-Shiro前后端分离版本，前端架构采用Vue全家桶。 | [https://github.com/wuyouzhuguli/FEBS-Vue](https://github.com/wuyouzhuguli/FEBS-Vue)
 
 ### 系统模块
 系统功能模块组成如下所示：
@@ -128,30 +126,4 @@ FEBS-Vue | FEBS-Shiro前后端分离版本，前端架构采用Vue全家桶。 |
 |[<img src="https://raw.github.com/alrra/browser-logos/master/src/archive/internet-explorer_9-11/internet-explorer_9-11_48x48.png" alt="Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>IE| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari |[<img src="https://raw.github.com/alrra/browser-logos/master/src/opera/opera_48x48.png" alt="Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Opera
 | --------- | --------- | --------- | --------- | --------- |--------- |
 |IE 10+| Edge| last 15 versions| last 15 versions| last 10 versions| last 15 versions
-### 参与贡献
-欢迎提交PR一起完善项目，以下为提PR并合并的小伙伴（排名不分先后）：
-
-<a href="https://github.com/everhopingandwaiting">
-    <img src="https://avatars3.githubusercontent.com/u/6021724?s=400&v=4" width="45px"></a>
-<a href="https://github.com/mgzu">
-    <img src="https://avatars1.githubusercontent.com/u/29629221?s=400&v=4" width="45px"></a>
-<a href="https://github.com/yuuki80code">
-    <img src="https://avatars0.githubusercontent.com/u/17798853?s=400&v=4" width="45px"></a>
-<a href="https://github.com/cinsin">
-        <img src="https://avatars1.githubusercontent.com/u/12856067?s=400&v=4" width="45px"></a>
-<a href="https://github.com/Minnull">
-    <img src="https://avatars2.githubusercontent.com/u/19608781?s=400&v=4" width="45px"></a>
-<a href="https://github.com/Harrison0x80">
-    <img src="https://avatars2.githubusercontent.com/u/8622915?s=400&v=4" width="45px"></a>
-<a href="https://github.com/notlcry">
-    <img src="https://avatars2.githubusercontent.com/u/1989218?s=400&v=4" width="45px"></a>
-
-### 反馈交流
-加入QQ群和大家一起~~交流~~吹水：
-
-![qq](screenshot/QQ.jpg)
-### 支持作者
-如果该系统对您有帮助的话，请作者喝杯肥宅水吧🍺~
-
-![treatme](screenshot/treatme.jpg)
 
