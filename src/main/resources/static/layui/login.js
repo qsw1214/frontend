@@ -43,12 +43,12 @@ if(code!=""&&status=="STATE"){
 			location.href =   '/index';
 		} else {
 			//提示
-			alert(data.code);
-			// $MB.n_warning(r.msg);alert()
+			alert(data.message);
+			// $MB.n_warning(r.msg);alert()/**/
 			//location.href.back();
 		}
 
-	});
+	})
 };
 
 // click
