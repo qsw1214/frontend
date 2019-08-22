@@ -100,9 +100,11 @@ public class LoginController extends BaseController {
 
                 return new FebsResponse().success();
             } catch (UnknownAccountException | IncorrectCredentialsException | LockedAccountException e) {
-                throw new FebsException(e.getMessage());
+                throw new FebsException("用户信息验证失败！请联系管理员");
             } catch (AuthenticationException e) {
                 throw new FebsException("认证失败！");
+            } catch(Exception e){
+                throw new FebsException("用户信息验证失败！请联系管理员");
             }
         }else{
 
