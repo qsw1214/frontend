@@ -73,7 +73,7 @@
                                        maxlength="100" lay-verify="range">
                             </div>
                             <div class="layui-input-block">
-                                <button type="botton" class="layui-btn" id="upload"><i class="layui-icon"></i>上传文件</button></i>
+                                <button type="button" class="layui-btn" id="upload"><i class="layui-icon"></i>上传文件</button></i>
                             </div>
                         </div>
                         <div class="layui-form-item febs-hide">
@@ -209,7 +209,7 @@
 
             if(layEvent==='download'){
                 var address=data.attachAddress;
-                window.location="operate/download?attachAddress="+address;
+                window.location = "operate/download?attachAddress=" + address;
             }
 
         });
@@ -250,6 +250,7 @@
         function getQueryParams() {
             return {
                 author: $searchForm.find('input[name="author"]').val().trim(),
+                title: $searchForm.find('input[name="title"]').val().trim(),
                 invalidate_ie_cache: new Date()
             };
         }
@@ -306,7 +307,6 @@
             ,method: 'POST'
             ,accept: 'file'
             ,size: "204800"
-            ,multiple:true
             ,done: function(res){//上传完毕回调
                 layer.closeAll('loading');
                 febs.alert.success(res.mess);
