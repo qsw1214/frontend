@@ -49,14 +49,14 @@ DROP TABLE IF EXISTS `jcc_class_info`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `jcc_class_info` (
-  `class_id` int(11) NOT NULL,
+  `class_id` int(11) NOT NULL AUTO_INCREMENT,
   `class_name` varchar(30) DEFAULT NULL,
   `username` varchar(30) DEFAULT NULL,
-  `grade_id` int(11) DEFAULT NULL,
-  `year` char(20) DEFAULT NULL,
+  `grade` varchar(11) DEFAULT NULL,
+  `school_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`class_id`),
-  KEY `FK_Reference_18` (`grade_id`),
-  CONSTRAINT `FK_Reference_18` FOREIGN KEY (`grade_id`) REFERENCES `jcc_grade_info` (`grade_id`)
+  KEY `FK_Reference_22` (`school_id`),
+  CONSTRAINT `jcc_school_info` FOREIGN KEY (`school_id`) REFERENCES `jcc_school_info` (`school_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -81,9 +81,11 @@ CREATE TABLE `jcc_classroom_info` (
   `school_id` int(11) DEFAULT NULL,
   `location` char(100) DEFAULT NULL,
   `contain_num` int(11) DEFAULT NULL,
-  `purpose` char(100) DEFAULT NULL,
+  `introduce` char(100) DEFAULT NULL,
   `url` char(100) DEFAULT NULL,
   `state` int(11) DEFAULT NULL,
+  `subject` varchar(10) DEFAULT NULL,
+  `garde` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_Reference_22` (`school_id`),
   CONSTRAINT `jcc_classroom_info_ibfk_1` FOREIGN KEY (`school_id`) REFERENCES `jcc_school_info` (`school_id`)
@@ -119,9 +121,7 @@ CREATE TABLE `jcc_device_info` (
   `num` int(11) DEFAULT NULL,
   PRIMARY KEY (`device_id`),
   KEY `FK_Reference_15` (`school_id`),
-  KEY `FK_Reference_21` (`firm_id`),
   KEY `FK_Reference_28` (`classroom_id`),
-  CONSTRAINT `FK_Reference_21` FOREIGN KEY (`firm_id`) REFERENCES `jcc_firm_info` (`firm_id`),
   CONSTRAINT `FK_Reference_28` FOREIGN KEY (`classroom_id`) REFERENCES `jcc_classroom_info` (`id`),
   CONSTRAINT `jcc_device_info_ibfk_1` FOREIGN KEY (`school_id`) REFERENCES `jcc_school_info` (`school_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
@@ -137,56 +137,7 @@ INSERT INTO `jcc_device_info` VALUES (3,'2222',NULL,'2','2019-08-17','2',NULL,NU
 /*!40000 ALTER TABLE `jcc_device_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `jcc_firm_info`
---
 
-DROP TABLE IF EXISTS `jcc_firm_info`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `jcc_firm_info` (
-  `firm_id` int(11) NOT NULL,
-  `firm_name` varchar(30) DEFAULT NULL,
-  PRIMARY KEY (`firm_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `jcc_firm_info`
---
-
-LOCK TABLES `jcc_firm_info` WRITE;
-/*!40000 ALTER TABLE `jcc_firm_info` DISABLE KEYS */;
-/*!40000 ALTER TABLE `jcc_firm_info` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `jcc_grade_info`
---
-
-DROP TABLE IF EXISTS `jcc_grade_info`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `jcc_grade_info` (
-  `grade_id` int(11) NOT NULL,
-  `grade_name` varchar(30) DEFAULT NULL,
-  `school_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`grade_id`),
-  KEY `FK_Reference_23` (`school_id`),
-  CONSTRAINT `jcc_grade_info_ibfk_1` FOREIGN KEY (`school_id`) REFERENCES `jcc_school_info` (`school_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `jcc_grade_info`
---
-
-LOCK TABLES `jcc_grade_info` WRITE;
-/*!40000 ALTER TABLE `jcc_grade_info` DISABLE KEYS */;
-/*!40000 ALTER TABLE `jcc_grade_info` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `jcc_operate_desc`
 --
 
@@ -265,9 +216,7 @@ CREATE TABLE `jcc_resource_info` (
   `resouce_order` int(11) DEFAULT NULL,
   PRIMARY KEY (`product_id`),
   KEY `FK_Reference_13` (`school_id`),
-  KEY `FK_Reference_19` (`grade_id`),
   KEY `FK_Reference_26` (`subject_id`),
-  CONSTRAINT `FK_Reference_19` FOREIGN KEY (`grade_id`) REFERENCES `jcc_grade_info` (`grade_id`),
   CONSTRAINT `FK_Reference_26` FOREIGN KEY (`subject_id`) REFERENCES `jcc_subject_info` (`subject_id`),
   CONSTRAINT `jcc_resource_info_ibfk_1` FOREIGN KEY (`school_id`) REFERENCES `jcc_school_info` (`school_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -294,15 +243,15 @@ CREATE TABLE `jcc_school_info` (
   `school_name` varchar(30) DEFAULT NULL,
   `introduce` varchar(1000) DEFAULT NULL,
   `school_type` varchar(30) DEFAULT NULL,
+  `school_category` varchar(20) DEFAULT NULL,
   `link_man` varchar(30) DEFAULT NULL,
   `link_phone` varchar(20) DEFAULT NULL,
   `post_code` varchar(10) DEFAULT NULL,
-  `area_code` char(30) DEFAULT NULL,
   `address` varchar(100) DEFAULT NULL,
   `lng` varchar(20) DEFAULT NULL,
   `lat` varchar(20) DEFAULT NULL,
   `create_time` date DEFAULT NULL,
-  `certificate_book` char(100) DEFAULT NULL,
+  `picture` char(100) DEFAULT NULL,
   `country_leader_name` char(50) DEFAULT NULL,
   `country_date` date DEFAULT NULL,
   `city_leader_name` char(50) DEFAULT NULL,
@@ -312,11 +261,10 @@ CREATE TABLE `jcc_school_info` (
   `state` int(4) DEFAULT NULL,
   `province` varchar(45) DEFAULT NULL,
   `city` varchar(45) DEFAULT NULL,
-  `conunty` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`school_id`),
-  KEY `FK_Reference_31` (`area_code`),
-  CONSTRAINT `jcc_school_info_ibfk_1` FOREIGN KEY (`area_code`) REFERENCES `jcc_area` (`area_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+  `country` varchar(45) DEFAULT NULL,
+  `class_num` int(4) DEFAULT NULL,
+  PRIMARY KEY (`school_id`)
+)ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -679,6 +627,7 @@ CREATE TABLE `t_dict` (
 LOCK TABLES `t_dict` WRITE;
 /*!40000 ALTER TABLE `t_dict` DISABLE KEYS */;
 INSERT INTO `t_dict` VALUES (1,'1','中班','grade'),(2,'2','大班','grade'),(3,'3','一年级','grade'),(4,'4','二年级','grade'),(5,'5','三年级','grade'),(6,'6','四年级','grade'),(7,'7','五年级','grade'),(8,'8','六年级','grade'),(9,'9','初一','grade'),(10,'10','初二','grade'),(11,'11','初三','grade'),(12,'12','高一','grade'),(13,'13','高二','grade'),(14,'14','高三','grade'),(15,'1','语文','subject'),(16,'2','数学','subject'),(17,'3','英语','subject'),(18,'4','物理','subject'),(19,'5','化学','subject'),(20,'6','生物','subject'),(21,'7','地理','subject'),(22,'8','政治','subject'),(23,'9','历史','subject'),(24,'avi','视频文件','file_type'),(25,'doc','word文档','file_type'),(26,'pdf','pdf文档','file_type'),(27,'xls','excel表','file_type'),(28,'txt','文本文档','file_type'),(29,'zip','压缩包','file_type'),(30,'image','图片','file_type');
+INSERT INTO `t_dict` VALUES (31,'1','小学','category'),(32,'2','初中','category'),(33,'3','高中','category'),(34,'4','大学','category');
 /*!40000 ALTER TABLE `t_dict` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -955,9 +904,9 @@ CREATE TABLE `t_user` (
   `USERNAME` varchar(50) NOT NULL COMMENT '用户名',
   `PASSWORD` varchar(128) NOT NULL COMMENT '密码',
   `DEPT_ID` bigint(20) DEFAULT NULL COMMENT '部门ID',
-  `EMAIL` varchar(128) DEFAULT NULL COMMENT '邮箱',
+  `ORGEMAIL` varchar(128) DEFAULT NULL COMMENT '邮箱',
   `MOBILE` varchar(20) DEFAULT NULL COMMENT '联系电话',
-  `STATUS` char(1) NOT NULL COMMENT '状态 0锁定 1有效',
+  `ACTIVE` char(1) NOT NULL COMMENT '状态 true表示已激活，false表示未激活',
   `CREATE_TIME` datetime NOT NULL COMMENT '创建时间',
   `MODIFY_TIME` datetime DEFAULT NULL COMMENT '修改时间',
   `LAST_LOGIN_TIME` date DEFAULT NULL COMMENT '最近访问时间',
@@ -965,7 +914,7 @@ CREATE TABLE `t_user` (
   `IS_TAB` char(1) DEFAULT NULL COMMENT '是否开启tab，0关闭 1开启',
   `THEME` varchar(10) DEFAULT NULL COMMENT '主题',
   `AVATAR` varchar(100) DEFAULT NULL COMMENT '头像',
-  `DESCRIPTION` varchar(100) DEFAULT NULL COMMENT '描述',
+  `REMARK` varchar(100) DEFAULT NULL COMMENT '描述',
   `SCHOOL_ID` int(11) DEFAULT NULL,
   `CLASS_ID` int(11) DEFAULT NULL,
   `CONTACT` varchar(50) DEFAULT NULL,

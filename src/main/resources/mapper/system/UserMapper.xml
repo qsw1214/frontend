@@ -16,6 +16,7 @@
         u.description,
         u.avatar,
         d.dept_name deptName,
+        u.school_id schoolId,
         GROUP_CONCAT(r.role_id) roleId,
         GROUP_CONCAT(r.ROLE_NAME) roleName
         FROM
@@ -29,6 +30,9 @@
         </if>
         <if test="user.deptId != null and user.deptId != ''">
             AND d.dept_id = #{user.deptId}
+        </if>
+        <if test="user.schoolId != null and user.schoolId != ''">
+            AND u.school_id = #{user.schoolId}
         </if>
         <if test="user.sex != null and user.sex != ''">
             AND u.ssex = #{user.sex}
@@ -54,6 +58,7 @@
             u.create_time,
             u.ssex,
             u.dept_id,
+            u.school_id,
             u.last_login_time,
             u.modify_time,
             u.description,
@@ -84,6 +89,7 @@
         u.avatar,
         u.theme,
         u.is_tab isTab,
+        u.school_id schoolId,
         d.dept_name deptName,
         GROUP_CONCAT(r.role_id) roleId,
         GROUP_CONCAT(r.ROLE_NAME) roleName
@@ -103,11 +109,11 @@
             u.create_time,
             u.ssex,
             u.dept_id,
+            u.school_id,
             u.last_login_time,
             u.modify_time,
             u.description,
             u.avatar,
-            u.theme,
-            u.is_tab
+            u.theme
     </select>
 </mapper>

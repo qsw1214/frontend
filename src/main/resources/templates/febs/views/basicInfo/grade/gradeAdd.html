@@ -1,0 +1,131 @@
+<style>
+    #user-add {
+        padding: 20px 25px 25px 0;
+    }
+    #user-add .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="user-add">
+    <form class="layui-form" action="" lay-filter="user-add-form" id="fm" enctype="multipart/form-data">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">学校名称：</label>
+            <div class="layui-input-block">
+                <select name="schoolId" id="schoolId">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">班级名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="className" minlength="2" maxlength="10"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">年级:</label>
+            <div class="layui-input-block"  style="width: 180px;">
+                <select name="grade" id="classInfo">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">班主任：</label>
+            <div class="layui-input-block">
+                <input type="text" name="username"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="grade-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+<script src="./mods/layarea.js"></script>
+<script>
+    layui.use(['febs', 'form', 'formSelects', 'laydate','validate','upload', 'treeSelect'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            form = layui.form,
+            $form = $('form'),
+            $view = $('#user-add'),
+            layarea = layui.layarea,
+            validate = layui.validate,
+            classInfo=$('#classInfo'),
+            school=$('#schoolId'),
+            sortObject = {field: 'createTime', type: null};
+
+        getGrade();
+        getSchool();
+        form.verify(validate);
+        form.render();
+        formSelects.render();
+        
+        function getSchool() {
+            febs.get(ctx+'school/list',null,function (res) {
+                var items=res.data;
+                if (items.total==0){
+                    school.append('<option value="'+""+'">'+""+'</option>');
+                }else{
+                    school.append('<option value="' + items.rows[0].schoolId + '">' + items.rows[0].schoolName+ '</option>');
+                }
+                form.render('select');
+            });
+        }
+        function getGrade() {
+            $.ajax({
+                type:'get',
+                url: ctx+"dict?field=grade",
+                success:function (res) {
+                    var items=res.data;
+                    if (items.length==0){
+                        classInfo.append('<option value="'+""+'">'+""+'</option>');
+                    }else{
+                        for (var i=0;i<items.length;i++) {
+                            classInfo.append('<option value="' + '' + '">' + items[i].v + '</option>');
+                        }
+                    }
+                    form.render('select');
+                }
+            });
+        }
+
+        form.on('submit(grade-add-form-submit)', function (data) {
+            febs.post(ctx+'classInfo',data.field,function () {
+                layer.closeAll();
+                febs.alert.success('新增班级成功');
+                $('#febs-user').find('#query').click();
+            });
+
+            return false;
+        });
+    });
+</script>
+<style>
+    #file{
+       opacity: 0;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100px;
+        height: 40px;
+    }
+    #file-box{
+        width: 100px;
+        height: 40px;
+        background-color: #32c787;
+        border-radius: 10px;
+        text-align: center;
+        line-height: 40px;
+        color: #FFFFFF;
+        position: relative;
+        float: left;
+    }
+    #fileName{
+        height: 40px;
+        line-height: 40px;
+        margin-left: 110px;
+    }
+</style>
