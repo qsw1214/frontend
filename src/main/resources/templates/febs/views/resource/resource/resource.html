@@ -346,12 +346,12 @@
 
         function getQueryParams() {
             return {
-                resourceName: $searchForm.find('input[name="resourceName"]').val().trim(),
+                resourceName: $searchForm.find('input[name="resourceName"]').val(),
                 status: $searchForm.find("select[name='status']").val(),
-                category: $searchForm.find("select[name='category']").val(),
-                school: $searchForm.find("input[name='school']").val().trim(),
-                grade: $searchForm.find("input[name='grade']").val().trim(),
-                subject: $searchForm.find("input[name='subject']").val().trim(),
+                categoryId: $searchForm.find("input[name='category']").val(),
+                schoolId: $searchForm.find("input[name='schoolId']").val(),
+                gradeId: $searchForm.find("input[name='gradeId']").val(),
+                subjectId: $searchForm.find("input[name='subjectId']").val(),
                 invalidate_ie_cache: new Date()
             };
         }

@@ -47,3 +47,9 @@ spring:
         max-wait: 10000
     # 连接超时时间（毫秒）
     timeout: 0
+    # 参数设置
+
+  myConfig:
+  # 上传文件路径设置
+  uploadBasePath: /home/daoye/upload/
+  ip2regionPath: /home/daoye/ip2region/ip2region.db

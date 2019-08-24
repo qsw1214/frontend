@@ -56,6 +56,9 @@
         <if test="resource.creator != null and resource.creator != ''">
             AND r.creator = #{resource.creator}
         </if>
+        <if test="resource.categoryId != null and resource.categoryId != ''">
+            AND r.category_id = #{resource.categoryId}
+        </if>
         <if test="resource.schoolId != null and resource.schoolId != ''">
             AND r.school_id = #{resource.schoolId}
         </if>

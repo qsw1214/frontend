@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.basicInfo.mapper.ClassroomInfoMapper">
+
+    <resultMap id="classroomInfo" type="cc.mrbird.febs.basicInfo.entity.ClassroomInfo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
+        <result column="location" jdbcType="CHAR" property="location"/>
+        <result column="contain_num" jdbcType="INTEGER" property="containNum"/>
+        <result column="introduce" jdbcType="CHAR" property="introduce"/>
+        <result column="url" jdbcType="CHAR" property="url"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="subject" jdbcType="VARCHAR" property="subject"/>
+        <result column="garde" jdbcType="VARCHAR" property="garde"/>
+        <result column="order_num" jdbcType="BIGINT" property="orderNum"/>
+    </resultMap>
+</mapper>
