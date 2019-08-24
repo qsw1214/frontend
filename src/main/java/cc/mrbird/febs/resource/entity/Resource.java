@@ -55,36 +55,26 @@ public class Resource {
     /**
      * 学校
      */
-    @TableField("school")
-    @Size(max = 50, message = "{noMoreThan}")
-    private String school;
+    @TableField("school_id")
+    private Integer schoolId;
 
     /**
      * 年级
      */
-    @TableField("grade")
-    @Size(max = 50, message = "{noMoreThan}")
-    private String grade;
+    @TableField("grade_id")
+    private Integer gradeId;
 
     /**
      * 科目
      */
-    @TableField("subject")
-    @Size(max = 50, message = "{noMoreThan}")
-    private String subject;
+    @TableField("subject_id")
+    private Integer subjectId;
 
     /**
      * 类别ID
      */
     @TableField("category_id")
     private Long categoryId;
-
-    /**
-     * 类别名称
-     */
-    @TableField("category_name")
-    @Size(max = 50, message = "{noMoreThan}")
-    private String categoryName;
     
     /**
      * 文件类型
@@ -158,5 +148,38 @@ public class Resource {
     @TableField("modify_time")
     @ExcelField(value = "创建时间", writeConverter = TimeConverter.class)
     private Date modifyTime;
+    
+    /**
+     * 类别名称
+     */
+    @ExcelField(value = "类别名")
+    @TableField(exist = false)
+    private String categoryName;
+    
+    /**
+     * 学校名称
+     */
+    @ExcelField(value = "学校名")
+    @TableField(exist = false)
+    private String schoolName;
+    
+    /**
+     * 年级名称
+     */
+    @ExcelField(value = "年级名")
+    @TableField(exist = false)
+    private String gradeName;
+    
+    /**
+     * 科目名称
+     */
+    @ExcelField(value = "科目名")
+    @TableField(exist = false)
+    private String subjectName;
+    
+    @TableField(exist = false)
+    private String createTimeFrom;
+    @TableField(exist = false)
+    private String createTimeTo;
 
 }
