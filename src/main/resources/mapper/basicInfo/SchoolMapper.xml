@@ -3,7 +3,7 @@
 <mapper namespace="cc.mrbird.febs.basicInfo.mapper.SchoolMapper">
 
     <resultMap id="school" type="cc.mrbird.febs.basicInfo.entity.School">
-        <id column="school_id" jdbcType="BIGINT" property="schoolId"/>
+        <id column="school_id" jdbcType="INTEGER" property="schoolId"/>
         <result column="school_name" jdbcType="VARCHAR" property="schoolName"/>
         <result column="introduce" jdbcType="VARCHAR" property="introduce"/>
         <result column="school_type" jdbcType="VARCHAR" property="schoolType"/>
@@ -15,12 +15,14 @@
         <result column="lat" jdbcType="VARCHAR" property="lat"/>
         <result column="province" jdbcType="VARCHAR" property="province"/>
         <result column="city" jdbcType="VARCHAR" property="city"/>
-        <result column="conunty" jdbcType="VARCHAR" property="conunty"/>
-        <result column="certificate_book" jdbcType="VARCHAR" property="certificateBook"/>
+        <result column="country" jdbcType="VARCHAR" property="country"/>
+        <result column="school_category" jdbcType="VARCHAR" property="schoolCategory"/>
         <result column="city_leader_name" jdbcType="VARCHAR" property="cityLeaderName"/>
         <result column="province_leader_name" jdbcType="VARCHAR" property="provinceLeaderName"/>
         <result column="city_date" jdbcType="DATE" property="cityDate"/>
         <result column="province_date" jdbcType="DATE" property="provinceDate"/>
         <result column="create_time" jdbcType="DATE" property="createTime"/>
+        <result column="picture" jdbcType="VARCHAR" property="picture"/>
+        <result column="state" jdbcType="INTEGER" property="picture"/>
     </resultMap>
 </mapper>

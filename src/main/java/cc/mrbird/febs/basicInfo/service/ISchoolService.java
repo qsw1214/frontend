@@ -51,5 +51,5 @@ public interface ISchoolService extends IService<School> {
      *
      * @param school school
      */
-    void deleteSchool(String[] schoolIds); 
+    void deleteSchool(String schoolIds); 
 }

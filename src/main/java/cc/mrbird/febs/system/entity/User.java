@@ -176,6 +176,12 @@ public class User implements Serializable {
     @TableField(exist = false)
     private String roleId;
 
+    /**
+     * 学校 ID
+     */
+    @TableField("SCHOOL_ID")
+    private Integer schoolId;
+    
     @ExcelField(value = "角色")
     @TableField(exist = false)
     private String roleName;

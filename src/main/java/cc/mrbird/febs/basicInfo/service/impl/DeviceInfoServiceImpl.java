@@ -1,5 +1,6 @@
 package cc.mrbird.febs.basicInfo.service.impl;
 
+import cc.mrbird.febs.basicInfo.entity.ClassInfo;
 import cc.mrbird.febs.basicInfo.entity.DeviceInfo;
 import cc.mrbird.febs.basicInfo.mapper.DeviceInfoMapper;
 import cc.mrbird.febs.basicInfo.service.IDeviceInfoService;
@@ -73,5 +74,9 @@ public class DeviceInfoServiceImpl extends ServiceImpl<DeviceInfoMapper, DeviceI
                 new QueryWrapper<DeviceInfo>().lambda().in(DeviceInfo::getDeviceId, list));
 	}
 
-
+	@Override
+	public void deleteDeviceInfoByschoolId(List<String> schoolIds) {
+		if(schoolIds.size()>0)
+			this.baseMapper.delete(new QueryWrapper<DeviceInfo>().lambda().in(DeviceInfo::getSchoolId, schoolIds));
+	}
 }
