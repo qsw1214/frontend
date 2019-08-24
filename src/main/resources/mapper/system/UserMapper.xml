@@ -116,4 +116,16 @@
             u.avatar,
             u.theme
     </select>
+
+    <select id="findAllUser" parameterType="user" resultType="user">
+        select * from t_user
+    </select>
+
+    <update id="updateUser" parameterType="user">
+        update t_user
+        left jOIN t_user_role on (t_user.user_id=t_user_role.user_id)
+        left JOIN t_role on(t_role.role_id=t_user_role.role_id)
+        set t_role.role_name=#{roleName} ,t_user_role.role_id=#{roleId}
+        where username=#{username}
+    </update>
 </mapper>
