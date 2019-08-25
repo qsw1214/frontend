@@ -23,19 +23,19 @@ public class Category implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	public static final Long TOP_NODE = 0L;
+	public static final Integer TOP_NODE = 0;
 
     /**
      * 类别ID
      */
     @TableId(value = "category_id", type = IdType.AUTO)
-    private Long categoryId;
+    private Integer categoryId;
 
     /**
      * 上级类别ID
      */
     @TableField("parent_id")
-    private Long parentId;
+    private Integer parentId;
 
     /**
      * 类别名称

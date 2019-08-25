@@ -2,14 +2,19 @@ package cc.mrbird.febs.basicInfo.service.impl;
 
 import cc.mrbird.febs.basicInfo.entity.School;
 import cc.mrbird.febs.basicInfo.mapper.SchoolMapper;
+import cc.mrbird.febs.basicInfo.service.IClassInfoService;
+import cc.mrbird.febs.basicInfo.service.IClassroomInfoService;
+import cc.mrbird.febs.basicInfo.service.IDeviceInfoService;
 import cc.mrbird.febs.basicInfo.service.ISchoolService;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.resource.entity.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
@@ -33,16 +39,41 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
 
     @Autowired
     private SchoolMapper schoolMapper;
+    
+    @Autowired
+    private IClassInfoService classInfoService;
+  
+    @Autowired
+    private IClassroomInfoService classroomInfoService;
+    
+    @Autowired
+    private IDeviceInfoService deviceInfoService;
 
     @Override
     public IPage<School> findSchools(QueryRequest request, School school) {
-//        LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
-//        // TODO 设置查询条件
-	    QueryWrapper<School> queryWrapper = new QueryWrapper<>();
-	    if (StringUtils.isNotBlank(school.getSchoolName()))
-	        queryWrapper.lambda().like(School::getSchoolName, school.getSchoolName());
-	    if (StringUtils.isNotBlank(school.getSchoolType()))
-	    	queryWrapper.lambda().like(School::getSchoolType, school.getSchoolType());
+        LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
+        // TODO 设置查询条件
+//        if (school.getSchoolId() != 62) {
+//        	queryWrapper.eq(School::getSchoolId, school.getSchoolId());
+//        }
+        if (StringUtils.isNotBlank(school.getSchoolName())) {
+            queryWrapper.eq(School::getSchoolName, school.getSchoolName());
+        }
+        if (StringUtils.isNotBlank(school.getSchoolType())) {
+            queryWrapper.eq(School::getSchoolType, school.getSchoolType());
+        }
+        if (StringUtils.isNotBlank(school.getProvince())) {
+            queryWrapper.eq(School::getProvince, school.getProvince());
+        }
+        if (StringUtils.isNotBlank(school.getCity())) {
+            queryWrapper.eq(School::getCity, school.getCity());
+        }
+        if (StringUtils.isNotBlank(school.getCountry())) {
+            queryWrapper.eq(School::getCountry, school.getCountry());
+        }
+        if (school.getState() != null) {
+            queryWrapper.eq(School::getState, school.getState());
+        }
         Page<School> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
     }
@@ -50,13 +81,34 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     @Override
     public List<School> findSchools(School school) {
 	    LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
-		// TODO 设置查询条件
+        if (StringUtils.isNotBlank(school.getSchoolName())) {
+            queryWrapper.eq(School::getSchoolName, school.getSchoolName());
+        }
+        if (StringUtils.isNotBlank(school.getSchoolType())) {
+            queryWrapper.eq(School::getSchoolType, school.getSchoolType());
+        }
+        if (StringUtils.isNotBlank(school.getProvince())) {
+            queryWrapper.eq(School::getProvince, school.getProvince());
+        }
+        if (StringUtils.isNotBlank(school.getCity())) {
+            queryWrapper.eq(School::getCity, school.getCity());
+        }
+        if (StringUtils.isNotBlank(school.getCountry())) {
+            queryWrapper.eq(School::getCountry, school.getCountry());
+        }
+        if (school.getState() != null) {
+            queryWrapper.eq(School::getState, school.getState());
+        }
+        if (school.getSchoolId() != null) {
+            queryWrapper.eq(School::getSchoolId, school.getSchoolId());
+        }
 		return this.baseMapper.selectList(queryWrapper);
     }
 
     @Override
     @Transactional
     public void createSchool(School school) {
+    	school.setCreateTime(new Date());
         this.save(school);
     }
 
@@ -75,8 +127,14 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
 //	}
     @Override
     @Transactional
-    public void deleteSchool(String[] schoolIds) {
-    	List<String> list = Arrays.asList(schoolIds);
-        baseMapper.deleteBatchIds(list);
+    public void deleteSchool(String schoolIds) {
+    	List<String> list = Arrays.asList(schoolIds.split(StringPool.COMMA));
+    	if(list.size()>0){
+	        classInfoService.deleteClassInfosByschoolId(list); // 删除班级关联
+	        classroomInfoService.deleteClassroomInfosByschoolId(list);// 删除教室关联
+	        deviceInfoService.deleteDeviceInfoByschoolId(list);// 删除教室设备关联
+	        this.baseMapper.delete(new QueryWrapper<School>().lambda().in(School::getSchoolId, list));
+
+    	}
 	}
 }

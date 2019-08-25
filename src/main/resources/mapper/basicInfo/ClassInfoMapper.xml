@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.basicInfo.mapper.ClassInfoMapper">
+
+    <resultMap id="classInfo" type="cc.mrbird.febs.basicInfo.entity.ClassInfo">
+        <id column="class_id" jdbcType="INTEGER" property="classId"/>
+        <result column="class_name" jdbcType="VARCHAR" property="className"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="grade" jdbcType="VARCHAR" property="grade"/>
+        <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
+    </resultMap>
+</mapper>

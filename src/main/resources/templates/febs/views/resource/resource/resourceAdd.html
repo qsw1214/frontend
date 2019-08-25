@@ -41,9 +41,20 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">学校：</label>
+            <div class="layui-input-block">
+                <select name="schoolId"
+                		xm-select-radio
+                        xm-select-direction="down"
+                        xm-select="resource-add-school"
+                        xm-select-skin="default">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">适用年级：</label>
             <div class="layui-input-block">
-                <select name="grade"
+                <select name="gradeId"
                 		xm-select-radio
                         xm-select-direction="down"
                         xm-select="resource-add-grade"
@@ -54,7 +65,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">科目：</label>
             <div class="layui-input-block">
-                <select name="subject"
+                <select name="subjectId"
                 		xm-select-radio
                         xm-select-direction="down"
                         xm-select="resource-add-subject"
@@ -139,7 +150,7 @@
                 for (var i = 0; i < data.length; i++) {
                     tranData.push({
                         name: data[i].v,
-                        value: data[i].v
+                        value: data[i].k
                     })
                 }
                 result.data = tranData;
@@ -162,7 +173,7 @@
                 for (var i = 0; i < data.length; i++) {
                     tranData.push({
                         name: data[i].v,
-                        value: data[i].v
+                        value: data[i].k
                     })
                 }
                 result.data = tranData;

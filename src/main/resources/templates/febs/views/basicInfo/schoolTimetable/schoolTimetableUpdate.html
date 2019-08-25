@@ -1,0 +1,239 @@
+<style>
+    #schoolTimetable-update {
+        padding: 20px 25px 25px 0;
+    }
+
+    #schoolTimetable-update .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="schoolTimetable-update">
+    <form class="layui-form" action="" lay-filter="schoolTimetable-update-form">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">课程编号：</label>
+            <div class="layui-input-block">
+                <input type="text" name="courseId" data-th-value="${schoolTimetable.courseId}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">课程名：</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" name="courseName" autocomplete="off">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">上课时间：</label>
+            <div class="layui-input-block">
+                <input type="date" name="beginDate" lay-verify="beginDate" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">授课时长：</label>
+            <div class="layui-input-block">
+                <input type="text" name="duration" lay-verify="duration" maxlength="50" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">科目：</label>
+            <div class="layui-input-block">
+                <input type="text" name="subject" lay-verify="subject" maxlength="50" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">学期：</label>
+            <div class="layui-input-block">
+                <input type="text" name="term" lay-verify="term" maxlength="50" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">星期：</label>
+            <div class="layui-input-block">
+                <input type="text" name="week" lay-verify="week" maxlength="1" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">节次：</label>
+            <div class="layui-input-block">
+                <input type="text" name="section" lay-verify="section" maxlength="1" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require" >授课教师：</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" lay-verify="username" maxlength="50" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">所属学校：</label>
+            <div class="layui-input-block">
+                <select name="schoolId"
+                        lay-verify="required"
+                        xm-select-direction="down"
+                        xm-select="schoolTimetable-update-school"
+                        xm-select-skin="default">
+                </select>
+            </div>
+        </div>
+        <!--<div class="layui-form-item febs-form-item-require">
+            <label class="layui-form-label">所属班级：</label>
+            <div class="layui-input-block">
+                <select name="classId"
+                        lay-verify="required"
+                        xm-select-direction="down"
+                        xm-select="schoolTimetable-add-class"
+                        xm-select-skin="default">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item febs-form-item-require">
+            <label class="layui-form-label">上课教室：</label>
+            <div class="layui-input-block">
+                <select name="classroomId"
+                        lay-verify="required"
+                        xm-select-direction="down"
+                        xm-select="schoolTimetable-add-classroom"
+                        xm-select-skin="default">
+                </select>
+            </div>
+        </div>-->
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="schoolTimetable-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            treeSelect = layui.treeSelect,
+            form = layui.form,
+            schoolTimetable = [[${schoolTimetable}]],
+            beginDate = [[${beginDate}]],
+            $view = $('#schoolTimetable-update'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        initSchoolTimetableValue();
+        formSelects.render();
+
+        formSelects.config('schoolTimetable-update-school', {
+            searchUrl: ctx + 'school/getAllSchools',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].schoolName,
+                        value: data[i].schoolId
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            success: function () {
+                formSelects.value('schoolTimetable-update-school', [schoolTimetable.schoolId]);
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取学校列表失败');
+            }
+        });
+
+        /*formSelects.config('schoolTimetable-update-class', {
+            searchUrl: ctx + 'class/getAllClass',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].className,
+                        value: data[i].classId
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            success: function () {
+                formSelects.value('schoolTimetable-update-class', [schoolTimetable.classId]);
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取班级列表失败');
+            }
+        });
+
+        formSelects.config('schoolTimetable-update-classroom', {
+            searchUrl: ctx + 'class/getAllClassroom',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].location,
+                        value: data[i].classroomId
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            success: function () {
+                formSelects.value('schoolTimetable-update-classroom', [schoolTimetable.classId]);
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取教室列表失败');
+            }
+        });*/
+
+        function initSchoolTimetableValue() {
+            form.val("schoolTimetable-update-form", {
+                "courseName": schoolTimetable.courseName,
+                "username": schoolTimetable.username,
+                "duration": schoolTimetable.duration,
+                "subject": schoolTimetable.subject,
+                "term": schoolTimetable.term,
+                'week': schoolTimetable.week,
+                'section':schoolTimetable.section,
+                'schoolId':schoolTimetable.schoolId,
+               // 'classId':schoolTimetable.classId,
+               // 'classroomId':schoolTimetable.classroomId,
+                "beginDate": beginDate
+            });
+        }
+
+        form.on('submit(schoolTimetable-update-form-submit)', function (data) {
+            //alert("xxx23");
+            if (febs.nativeEqual(data.field, schoolTimetable)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            data.field.beginDate = new Date(data.field.beginDate);
+            febs.post(ctx + 'schoolTimetable/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success(data.field.courseName + ' 课程数据修改成功');
+                $('#febs-schoolTimetable').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

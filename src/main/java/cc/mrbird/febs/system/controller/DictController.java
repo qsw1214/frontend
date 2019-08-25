@@ -71,7 +71,7 @@ public class DictController extends BaseController {
     }
 
     @Log("删除Dict")
-    @GetMapping("dict/delete{dictIds}")
+    @GetMapping("dict/delete/{dictIds}")
     @RequiresPermissions("dict:delete")
     public FebsResponse deleteDict(@NotBlank(message = "{required}") @PathVariable String dictIds) throws FebsException {
         try {

@@ -63,14 +63,8 @@ public class Subject {
      * 类别ID
      */
     @TableField("category_id")
-    private Long categoryId;
+    private Integer categoryId;
 
-    /**
-     * 类别名称
-     */
-    @TableField("category_name")
-    @Size(max = 50, message = "{noMoreThan}")
-    private String categoryName;
 
     /**
      * 阅读数

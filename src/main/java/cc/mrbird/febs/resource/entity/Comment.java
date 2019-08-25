@@ -80,12 +80,6 @@ public class Comment {
     private String content;
 
     /**
-     * 显示状态：0->不显示；1->显示
-     */
-    @TableField("show_status")
-    private Integer showStatus;
-
-    /**
      * 回复数量
      */
     @TableField("replay_count")

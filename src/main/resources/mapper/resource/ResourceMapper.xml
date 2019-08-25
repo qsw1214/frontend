@@ -2,15 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.resource.mapper.ResourceMapper">
 
-    <resultMap id="resource" type="cc.mrbird.febs.resource.entity.Resource">
+    <resultMap id="resourceMap" type="cc.mrbird.febs.resource.entity.Resource">
         <id column="resource_id" jdbcType="DECIMAL" property="resourceId"/>
         <result column="resource_name" jdbcType="VARCHAR" property="resourceName"/>
         <result column="creator" jdbcType="VARCHAR" property="creator"/>
-        <result column="school" jdbcType="VARCHAR" property="school"/>
-        <result column="grade" jdbcType="VARCHAR" property="grade"/>
-        <result column="subject" jdbcType="VARCHAR" property="subject"/>
-        <result column="category_id" jdbcType="DECIMAL" property="categoryId"/>
-        <result column="category_name" jdbcType="VARCHAR" property="categoryName"/>
+        <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
+        <result column="grade_id" jdbcType="INTEGER" property="gradeId"/>
+        <result column="subject_id" jdbcType="INTEGER" property="subjectId"/>
+        <result column="category_id" jdbcType="INTEGER" property="categoryId"/>
         <result column="file_type" jdbcType="VARCHAR" property="fileType"/>
         <result column="pic" jdbcType="VARCHAR" property="pic"/>
         <result column="url" jdbcType="VARCHAR" property="url"/>
@@ -22,6 +21,10 @@
         <result column="status" jdbcType="INTEGER" property="status"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
+        <result column="category_name" jdbcType="VARCHAR" property="categoryName"/>
+        <result column="school_name" jdbcType="VARCHAR" property="schoolName"/>
+        <result column="grade_name" jdbcType="VARCHAR" property="gradeName"/>
+        <result column="subject_name" jdbcType="VARCHAR" property="subjectName"/>
     </resultMap>
     <update id="increaseCommentCount">
 		update r_resource
@@ -33,4 +36,62 @@
 		<set>read_count = read_count + #{num}</set>
 		where resource_id = #{resourceId}
 	</update>
+	<select id="findDetails" resultMap="resourceMap">
+        SELECT
+        r.*,
+        c.category_name,
+        s.school_name,
+        g.v grade_name,
+        subj.v subject_name
+        FROM
+        r_resource r
+        LEFT JOIN r_category c ON r.category_id = c.category_id
+        LEFT JOIN jcc_school_info s ON r.school_id = s.school_id   
+        LEFT JOIN t_dict g ON r.grade_id = g.k AND g.field = 'grade'
+        LEFT JOIN t_dict subj ON r.subject_id = subj.k AND subj.field = 'subject'
+        WHERE 1 = 1
+        <if test="resource.resourceName != null and resource.resourceName != ''">
+            AND r.resourceName = #{resource.resourceName}
+        </if>
+        <if test="resource.creator != null and resource.creator != ''">
+            AND r.creator = #{resource.creator}
+        </if>
+        <if test="resource.categoryId != null and resource.categoryId != ''">
+            AND r.category_id = #{resource.categoryId}
+        </if>
+        <if test="resource.schoolId != null and resource.schoolId != ''">
+            AND r.school_id = #{resource.schoolId}
+        </if>
+        <if test="resource.gradeId != null and resource.gradeId != ''">
+            AND r.grade_id = #{resource.gradeId}
+        </if>
+        <if test="resource.subjectId != null and resource.subjectId != ''">
+            AND r.subject_id = #{resource.subjectId}
+        </if>
+        <if test="resource.status != null and resource.status != ''">
+            AND r.status = #{resource.status}
+        </if>
+        <if test="resource.createTimeFrom != null and resource.createTimeFrom !=''">
+            And r.create_time &gt; #{resource.createTimeFrom}
+        </if>
+        <if test="resource.createTimeTo!= null and resource.createTimeTo !=''">
+            And r.create_time &lt; #{resource.createTimeTo}
+        </if>
+    </select>
+    
+    <select id="findDetailById" resultMap="resourceMap">
+        SELECT
+        r.*,
+        c.category_name,
+        s.school_name,
+        g.v grade_name,
+        subj.v subject_name
+        FROM
+        r_resource r
+        LEFT JOIN r_category c ON r.category_id = c.category_id
+        LEFT JOIN jcc_school_info s ON r.school_id = s.school_id   
+        LEFT JOIN t_dict g ON r.grade_id = g.k AND g.field = 'grade'
+        LEFT JOIN t_dict subj ON r.subject_id = subj.k AND subj.field = 'subject'
+        WHERE r.resource_id = #{resourceId}
+    </select>
 </mapper>

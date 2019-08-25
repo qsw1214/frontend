@@ -34,13 +34,18 @@
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">学校</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="school" autocomplete="off" class="layui-input">
-                                        </div>
+							                <select name="schoolId"
+							                		xm-select-radio
+							                        xm-select-direction="down"
+							                        xm-select="school"
+							                        xm-select-skin="default">
+							                </select>
+							            </div>
                                     </div>
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">年级</label>
                                         <div class="layui-input-inline">
-							                <select name="grade"
+							                <select name="gradeId"
 							                		xm-select-radio
 							                        xm-select-direction="down"
 							                        xm-select="grade"
@@ -51,7 +56,7 @@
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">科目</label>
                                         <div class="layui-input-inline">
-							                <select name="subject"
+							                <select name="subjectId"
 							                		xm-select-radio
 							                        xm-select-direction="down"
 							                        xm-select="subject"
@@ -202,6 +207,29 @@
             search: false
         });
         
+        formSelects.config('school', {
+            searchUrl: ctx + 'dict?field=school',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].school,
+                        value: data[i].school_id
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取学校列表失败');
+            }
+        });
+        
         formSelects.config('grade', {
             searchUrl: ctx + 'dict?field=grade',
             response: {
@@ -213,7 +241,7 @@
                 for (var i = 0; i < data.length; i++) {
                     tranData.push({
                         name: data[i].v,
-                        value: data[i].v
+                        value: data[i].k
                     })
                 }
                 result.data = tranData;
@@ -236,7 +264,7 @@
                 for (var i = 0; i < data.length; i++) {
                     tranData.push({
                         name: data[i].v,
-                        value: data[i].v
+                        value: data[i].k
                     })
                 }
                 result.data = tranData;
@@ -308,7 +336,7 @@
                     {field: 'resourceName', title: '资源名', minWidth: 100},
                     {title: '文件类型', templet: '#file-type'},
                     {field: 'creator', title: '作者'},
-                    {field: 'school', title: '学校'},
+                    {field: 'schoolName', title: '学校'},
                     {title: '审核状态', templet: '#resource-status'},
                     {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
                     {title: '操作', toolbar: '#resource-option', minWidth: 140}
@@ -318,12 +346,12 @@
 
         function getQueryParams() {
             return {
-                resourceName: $searchForm.find('input[name="resourceName"]').val().trim(),
+                resourceName: $searchForm.find('input[name="resourceName"]').val(),
                 status: $searchForm.find("select[name='status']").val(),
-                category: $searchForm.find("select[name='category']").val(),
-                school: $searchForm.find("input[name='school']").val().trim(),
-                grade: $searchForm.find("input[name='grade']").val().trim(),
-                subject: $searchForm.find("input[name='subject']").val().trim(),
+                categoryId: $searchForm.find("input[name='category']").val(),
+                schoolId: $searchForm.find("input[name='schoolId']").val(),
+                gradeId: $searchForm.find("input[name='gradeId']").val(),
+                subjectId: $searchForm.find("input[name='subjectId']").val(),
                 invalidate_ie_cache: new Date()
             };
         }
