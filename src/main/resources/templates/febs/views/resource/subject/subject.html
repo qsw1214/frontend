@@ -1,3 +1,16 @@
+<style>
+    .detail-row {
+        padding: 5px;
+    }
+    .label1{
+    	width: 80px;
+    	float: left;
+    	text-align: right;
+    }
+    .label2{
+    	padding-left: 20px;
+    }
+</style>
 <div class="layui-fluid layui-anim febs-anim" id="febs-subject" lay-title="专题管理">
     <div class="layui-row febs-container">
         <div class="layui-col-md12">
@@ -58,7 +71,45 @@
         </div>
     </div>
 </div>
-
+<script type="text/html" id="subjectDetail">
+<div style="height:300px;overflow:auto">
+  <div class="detail-row">
+    <label class="label1">专题id:</label>
+    <label class="label2">{{d.subjectId}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">专题名:</label>
+    <label class="label2">{{d.subjectName}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">创建人:</label>
+    <label class="label2">{{d.creator}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">显示状态:</label>
+    <label class="label2">{{d.showStatus==0?'不显示':'显示'}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">创建时间:</label>
+    <label class="label2">{{d.createTime}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">阅读数:</label>
+    <label class="label2">{{d.readCount}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">资源数:</label>
+    <label class="label2">{{d.resourceCount}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">专题介绍:</label>
+    <label class="label2">{{d.description}}</label>
+  </div>
+</div>
+</script>
+<script type="text/html" id="resource">
+    <a lay-href="/resource/subject/{{d.subjectId}}/resources">资源：{{ d.resourceCount }}</a>
+</script>
 <script type="text/html" id="show-status">
     {{#
     var status = {
@@ -76,14 +127,13 @@
             class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
     <a lay-event="edit" shiro:hasPermission="subject:update"><i
             class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
-	<a lay-event="relate" shiro:hasPermission="subject:update"><i
-            class="layui-icon febs-edit-area febs-orange">&#xe654;</i></a>
     <a lay-event="del" shiro:hasPermission="subject:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
-    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect', 'formSelects'], function () {
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect', 'formSelects', 'laytpl'], function () {
         var $ = layui.jquery,
             laydate = layui.laydate,
+            laytpl = layui.laytpl,
             febs = layui.febs,
             form = layui.form,
             table = layui.table,
@@ -171,25 +221,19 @@
             var data = obj.data,
                 layEvent = obj.event;
             if (layEvent === 'detail') {
-                febs.modal.view('专题信息', 'resource/subject/detail/' + data.subjectName, {
-                    area: $(window).width() <= 750 ? '95%' : '660px'
-                });
+            	var getTpl = subjectDetail.innerHTML;
+            	laytpl(getTpl).render(data, function(html){
+	           		layer.open({
+                       type: 1
+                       ,title: '详情'
+                       ,area: '600px;'
+                       ,content: html
+                     });
+           		});
             }
             if (layEvent === 'del') {
                 febs.modal.confirm('删除专题', '确定删除该专题？', function () {
                     deleteSubjects(data.subjectId);
-                });
-            }
-            if (layEvent === 'relate') {
-                febs.modal.open('关联资源', 'resource/subject/relate/' + data.subjectId, {
-                    area: $(window).width() <= 750 ? '90%' : '70%',
-                    btn: ['提交', '取消'],
-                    yes: function (index, layero) {
-                        $('#relate-resource').find('#submit').trigger('click');
-                    },
-                    btn2: function () {
-                        layer.closeAll();
-                    }
                 });
             }
             if (layEvent === 'edit') {
@@ -238,6 +282,7 @@
                     {type: 'checkbox'},
                     {field: 'subjectName', title: '专题名', minWidth: 100},
                     {field: 'creator', title: '作者'},
+                    {title: '资源', templet: '#resource'},
                     {title: '显示状态', templet: '#show-status'},
                     {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
                     {title: '操作', toolbar: '#subject-option', minWidth: 140}

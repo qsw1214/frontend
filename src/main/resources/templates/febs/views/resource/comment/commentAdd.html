@@ -1,0 +1,67 @@
+<style>
+    #comment-add {
+        padding: 20px 25px 25px 0;
+    }
+    #comment-add .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="comment-add">
+    <form class="layui-form" action="" lay-filter="comment-add-form">
+        <div class="layui-form-item febs-hide">
+            <div class="layui-input-block">
+                <input type="text" name="resourceId" id="resourceId" data-th-value="${resourceId}">
+            </div>
+        </div>
+		<div class="layui-form-item layui-form-text">
+            <label class="layui-form-label layui-form-label-sm">评分:</label>
+            <div class="layui-input-block"> 
+            	<div id="star"></div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">评论内容：</label>
+            <div class="layui-input-block">
+                <textarea name="content" maxlength="500" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="comment-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['febs', 'form', 'validate', 'rate'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            rate = layui.rate,
+            form = layui.form,
+            $view = $('#comment-add'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        var star = 0;
+        rate.render({
+          elem: '#star',
+          choose: function(value){
+        	    star = value;
+          }
+        })
+        
+        form.on('submit(comment-add-form-submit)', function (data) {
+        	var params = data.field;
+        	params.star = star;
+            febs.post(ctx + 'comment', params, function () {
+                layer.closeAll();
+                febs.alert.success('新增评论成功');
+                $('#febs-comment').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

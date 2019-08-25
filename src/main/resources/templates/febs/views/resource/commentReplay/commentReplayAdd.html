@@ -1,0 +1,52 @@
+<style>
+    #commentReplay-add {
+        padding: 20px 25px 25px 0;
+    }
+    #commentReplay-add .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="commentReplay-add">
+    <form class="layui-form" action="" lay-filter="commentReplay-add-form">
+        <div class="layui-form-item febs-hide">
+            <div class="layui-input-block">
+                <input type="text" name="commentId" id="commentId" data-th-value="${commentId}">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">回复内容：</label>
+            <div class="layui-input-block">
+                <textarea name="content" maxlength="500" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="commentReplay-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['febs', 'form', 'validate'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            rate = layui.rate,
+            form = layui.form,
+            $view = $('#commentReplay-add'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        form.on('submit(commentReplay-add-form-submit)', function (data) {
+        	var params = data.field;
+            febs.post(ctx + 'commentReplay', params, function () {
+                layer.closeAll();
+                febs.alert.success('新增回复成功');
+                $('#febs-commentReplay').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

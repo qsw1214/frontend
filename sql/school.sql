@@ -941,6 +941,7 @@ CREATE TABLE `r_subject` (
   `description` varchar(1000) DEFAULT NULL COMMENT '专题描述',
   `category_id` int(11) DEFAULT NULL COMMENT '类别ID',
   `read_count` int(11) DEFAULT 0 COMMENT '阅读数',
+  `resource_count` int(11) DEFAULT 0 COMMENT '资源数',
   `pic` varchar(255) DEFAULT NULL COMMENT '专题图片',
   `order_num` bigint(20) DEFAULT 0 COMMENT '排序',
   `show_status` int(1) DEFAULT 1 COMMENT '显示状态：0->不显示；1->显示',
@@ -971,7 +972,6 @@ DROP TABLE IF EXISTS `r_comment`;
 CREATE TABLE `r_comment` (
   `comment_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '评论ID',
   `resource_id` bigint(20) NOT NULL COMMENT '资源ID',
-  `resource_name` varchar(255) NOT NULL COMMENT '资源名称',
   `user_name` varchar(50) NOT NULL COMMENT '评论人',
   `user_ip` varchar(64) DEFAULT NULL COMMENT '评价的ip',
   `user_avatar` varchar(255) DEFAULT NULL COMMENT '评论人头像',

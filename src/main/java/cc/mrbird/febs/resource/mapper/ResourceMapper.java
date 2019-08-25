@@ -20,7 +20,7 @@ public interface ResourceMapper extends BaseMapper<Resource> {
      * @param resourceId 资源id
      * @return 资源
      */
-    Resource findDetailById(@Param("resourceId") Long resourceId);
+    Resource findDetailById(Long resourceId);
     
     /**
      * 查找资源详细信息

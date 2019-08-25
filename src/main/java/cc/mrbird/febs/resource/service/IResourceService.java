@@ -77,12 +77,12 @@ public interface IResourceService extends IService<Resource> {
 	 * @param resourceId
 	 * @param num
 	 */
-	void increaseCommentCount(@Param("resourceId") Long resourceId, @Param("num") Integer num);
+	void increaseCommentCount(Long resourceId, Integer num);
 	
 	/**
 	 * 增加浏览数
 	 * @param resourceId
 	 * @param num
 	 */
-	void increaseReadCount(@Param("resourceId") Long resourceId, @Param("num") Integer num);
+	void increaseReadCount(Long resourceId, Integer num);
 }

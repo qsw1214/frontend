@@ -65,12 +65,17 @@ public class Subject {
     @TableField("category_id")
     private Integer categoryId;
 
-
     /**
      * 阅读数
      */
     @TableField("read_count")
     private Integer readCount;
+    
+    /**
+     * 资源数
+     */
+    @TableField("resource_count")
+    private Integer resourceCount;
 
     /**
      * 专题图片

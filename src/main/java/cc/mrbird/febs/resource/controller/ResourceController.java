@@ -65,6 +65,7 @@ public class ResourceController extends BaseController {
         	User user = super.getCurrentUser();
         	resource.setCreator(user.getUsername());
         	resource.setAvatar(user.getAvatar());
+        	resource.setSchoolId(user.getSchoolId());
             this.resourceService.createResource(resource);
             return new FebsResponse().success();
         } catch (Exception e) {

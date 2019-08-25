@@ -1,15 +1,15 @@
 <style>
-    #relate-resource {
+    #add-resource {
     	height: 300px;
     	overflow: auto;
         padding: 20px 25px 25px 25px;
     }
 
-    #relate-resource .layui-treeSelect .ztree li a, .ztree li span {
+    #add-resource .layui-treeSelect .ztree li a, .ztree li span {
         margin: 0 0 2px 3px !important;
     }
 </style>
-<div class="layui-fluid" id="relate-resource">
+<div class="layui-fluid" id="add-resource">
     <form class="layui-form layui-table-form" lay-filter="resource-table-form">
        <div class="layui-row">
            <div class="layui-col-md10">
@@ -39,15 +39,20 @@
                        </div>
                    </div>
                    <div class="layui-inline">
-                       <label class="layui-form-label layui-form-label-sm">学校</label>
-                       <div class="layui-input-inline">
-                           <input type="text" name="school" autocomplete="off" class="layui-input">
-                       </div>
+                        <label class="layui-form-label layui-form-label-sm">学校</label>
+                        <div class="layui-input-inline">
+			                <select name="schoolId"
+			                		xm-select-radio
+			                        xm-select-direction="down"
+			                        xm-select="school"
+			                        xm-select-skin="default">
+			                </select>
+		           		</div>
                    </div>
                    <div class="layui-inline">
                        <label class="layui-form-label layui-form-label-sm">年级</label>
                        <div class="layui-input-inline">
-					      <select name="grade"
+					      <select name="gradeId"
 					      		xm-select-radio
 					              xm-select-direction="down"
 					              xm-select="grade"
@@ -58,7 +63,7 @@
                    <div class="layui-inline">
                        <label class="layui-form-label layui-form-label-sm">科目</label>
                        <div class="layui-input-inline">
-					      <select name="subject"
+					      <select name="subjectId"
 					      		xm-select-radio
 					              xm-select-direction="down"
 					              xm-select="subject"
@@ -85,7 +90,7 @@
             <div class="layui-input-block">
                 <input type="text" name="subjectId" id="subjectId" data-th-value="${subjectId}">
             </div>
-        </div>
+       </div>
        <div class="layui-form-item febs-hide">
 	       <button class="layui-btn" onClick="relate()" id="submit"></button>
 	   </div>
@@ -116,7 +121,7 @@
             treeSelect = layui.treeSelect,
             formSelects = layui.formSelects,
             dropdown = layui.dropdown,
-            $view = $('#relate-resource'),
+            $view = $('#add-resource'),
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
             $searchForm = $view.find('form'),
@@ -141,6 +146,29 @@
             search: false
         });
         
+        formSelects.config('school', {
+            searchUrl: ctx + 'school',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].schoolName,
+                        value: data[i].schoolId
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取学校列表失败');
+            }
+        });
+        
         formSelects.config('grade', {
             searchUrl: ctx + 'dict?field=grade',
             response: {
@@ -152,7 +180,7 @@
                 for (var i = 0; i < data.length; i++) {
                     tranData.push({
                         name: data[i].v,
-                        value: data[i].v
+                        value: data[i].k
                     })
                 }
                 result.data = tranData;
@@ -175,7 +203,7 @@
                 for (var i = 0; i < data.length; i++) {
                     tranData.push({
                         name: data[i].v,
-                        value: data[i].v
+                        value: data[i].k
                     })
                 }
                 result.data = tranData;
@@ -219,19 +247,19 @@
                     {type: 'checkbox'},
                     {field: 'resourceName', title: '资源名', minWidth: 100},
                     {field: 'creator', title: '作者'},
-                    {field: 'school', title: '学校'}
+                    {field: 'schoolName', title: '学校'}
                 ]]
             });
         }
 
         function getQueryParams() {
             return {
-                resourceName: $searchForm.find('input[name="resourceName"]').val().trim(),
+            	resourceName: $searchForm.find('input[name="resourceName"]').val(),
                 status: $searchForm.find("select[name='status']").val(),
-                category: $searchForm.find("select[name='category']").val(),
-                school: $searchForm.find("input[name='school']").val().trim(),
-                grade: $searchForm.find("input[name='grade']").val().trim(),
-                subject: $searchForm.find("input[name='subject']").val().trim(),
+                categoryId: $searchForm.find("input[name='category']").val(),
+                schoolId: $searchForm.find("input[name='schoolId']").val(),
+                gradeId: $searchForm.find("input[name='gradeId']").val(),
+                subjectId: $searchForm.find("input[name='subjectId']").val(),
                 invalidate_ie_cache: new Date()
             };
         }

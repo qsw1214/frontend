@@ -37,14 +37,6 @@ public class Comment {
     private Long resourceId;
 
     /**
-     * 资源名称
-     */
-    @TableField("resource_name")
-    @NotBlank(message = "{required}")
-    @Size(max = 255, message = "{noMoreThan}")
-    private String resourceName;
-
-    /**
      * 评论人
      */
     @TableField("user_name")

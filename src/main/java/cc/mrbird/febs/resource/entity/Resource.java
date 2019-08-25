@@ -182,4 +182,6 @@ public class Resource {
     @TableField(exist = false)
     private String createTimeTo;
 
+    @TableField(exist = false)
+    private Long subjectResourceId;
 }

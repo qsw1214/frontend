@@ -67,5 +67,5 @@ public interface ICommentService extends IService<Comment> {
 	 * @param commentId
 	 * @param num
 	 */
-	void increaseReplayCount(@Param("commentId") Long commentId, @Param("num") Integer num);
+	void increaseReplayCount(Long commentId, Integer num);
 }

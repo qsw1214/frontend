@@ -77,19 +77,7 @@ public class SubjectResourceController extends BaseController {
     @RequiresPermissions("subject:add")
     public FebsResponse addSubjectResources(Long subjectId, String resourceIds) throws FebsException {
         try {
-        	System.out.println(subjectId);
-        	System.out.println(resourceIds); 
-        	if(subjectId!=null && resourceIds!=null){
-        		List<SubjectResource> list = new ArrayList<>();
-        		String[] array = resourceIds.split(",");
-        		for(int i=0; i<array.length; i++){
-        			SubjectResource sr = new SubjectResource();
-        			sr.setSubjectId(subjectId);
-        			sr.setResourceId(Long.valueOf(array[i]));
-        			list.add(sr);
-        		}
-        		this.subjectResourceService.saveBatch(list);
-        	}
+        	this.subjectResourceService.addSubjectResources(subjectId, resourceIds);
             return new FebsResponse().success();
         } catch (Exception e) {
             String message = "新增SubjectResource失败";

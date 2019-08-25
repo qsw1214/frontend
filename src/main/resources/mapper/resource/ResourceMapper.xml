@@ -51,7 +51,7 @@
         LEFT JOIN t_dict subj ON r.subject_id = subj.k AND subj.field = 'subject'
         WHERE 1 = 1
         <if test="resource.resourceName != null and resource.resourceName != ''">
-            AND r.resourceName = #{resource.resourceName}
+            AND r.resource_name = #{resource.resourceName}
         </if>
         <if test="resource.creator != null and resource.creator != ''">
             AND r.creator = #{resource.creator}
@@ -79,7 +79,7 @@
         </if>
     </select>
     
-    <select id="findDetailById" resultMap="resourceMap">
+    <select id="findDetailById" parameterType="long" resultMap="resourceMap">
         SELECT
         r.*,
         c.category_name,

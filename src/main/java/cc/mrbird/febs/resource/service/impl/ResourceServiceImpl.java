@@ -53,7 +53,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 	@Override
 	public IPage<Resource> findDetails(Resource resource, QueryRequest request) {
 		Page<Resource> page = new Page<>(request.getPageNum(), request.getPageSize());
-        SortUtil.handlePageSort(request, page, "resource_id", FebsConstant.ORDER_ASC, false);
+        SortUtil.handlePageSort(request, page, "resource_id", FebsConstant.ORDER_DESC, false);
 		return resourceMapper.findDetails(page, resource);
 	}
 

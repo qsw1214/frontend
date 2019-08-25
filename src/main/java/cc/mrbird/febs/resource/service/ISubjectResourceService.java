@@ -1,12 +1,16 @@
 package cc.mrbird.febs.resource.service;
 
+import cc.mrbird.febs.resource.entity.Resource;
 import cc.mrbird.febs.resource.entity.SubjectResource;
 
 import cc.mrbird.febs.common.entity.QueryRequest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 
 /**
  *  Service接口
@@ -38,6 +42,8 @@ public interface ISubjectResourceService extends IService<SubjectResource> {
      * @param subjectResource subjectResource
      */
     void createSubjectResource(SubjectResource subjectResource);
+    
+    void addSubjectResources(Long subjectId, String resourceIds);
 
     /**
      * 修改
@@ -66,4 +72,5 @@ public interface ISubjectResourceService extends IService<SubjectResource> {
      * @param List<String> 资源 id
      */
     void deleteSubjectResourcesByResourceId(List<String> resourceIds);
+    
 }
