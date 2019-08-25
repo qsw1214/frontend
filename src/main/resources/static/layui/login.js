@@ -4,9 +4,9 @@ var demo = encodeURIComponent('https://oapi.dingtalk.com/connect/oauth2/sns_auth
 var obj = DDLogin({
 	id:"login_container",
 	goto: demo,
-	style: "border:none;background-color:#F1F3F4;",
-	width : "365px",
-	height: "400px"
+	style: "border:none;",
+	width : "336px",
+	height: "350px",
 });
 var hanndleMessage = function (event) {
 	var origin = event.origin;
@@ -24,8 +24,8 @@ if (typeof window.addEventListener != 'undefined') {
 }
 //2.5.这儿主要是获取code，返回钉钉id，进行后端的钉钉id比对,api接口见下
 var url = window.location.search.split("&");
-var code=url[0].substring(url[0].lastIndexOf("=")+1);
-var status=url[1].substring(url[1].lastIndexOf("=")+1);
+var code=url[0].substring(url[0].lastIndexOf("=")+1)
+var status=url[1].substring(url[1].lastIndexOf("=")+1)
 if(code!=""&&status=="STATE"){
 	var uri="/"
 	$.ajax({
@@ -53,27 +53,3 @@ if(code!=""&&status=="STATE"){
 
 // click
 // click
-function btn(){
-
-		var username=$('#username').val().trim();
-		var pwd=$('#pwd').val().trim();
-	    // alert("注册成功");
-		$.ajax({
-			url:"http://localhost:8080/login",
-			method:'post',
-			data: {
-				"username":username,
-				"password":pwd,
-			},
-			datatype:"json",
-			success: function(data){
-				window.location.href= '/index';
-			},
-			error: function(data){
-				alert('登陆失败')
-				window.location.back();
-
-			}
-		});
-
-};
