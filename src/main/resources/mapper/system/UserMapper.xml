@@ -10,27 +10,39 @@
         u.status,
         u.create_time createTime,
         u.ssex sex,
-        u.dept_id deptId,
+        /*u.dept_id deptId,*/
         u.last_login_time lastLoginTime,
         u.modify_time modifyTime,
         u.description,
         u.avatar,
-        d.dept_name deptName,
+        u.unionid,
+        u.active,
+        u.order_in_depts,
+        u.is_admin,
+        u.is_boss,
+        u.department,
+        u.hired_date,
+        u.is_senior,
+        u.is_leader_in_depts,
+        u.is_hide,
+        u.position,
+        u.jobnumber,
+        /*d.dept_name deptName,*/
         u.school_id schoolId,
         GROUP_CONCAT(r.role_id) roleId,
         GROUP_CONCAT(r.ROLE_NAME) roleName
         FROM
         t_user u
-        LEFT JOIN t_dept d ON (u.dept_id = d.dept_id)
+        /*LEFT JOIN t_dept d ON (u.dept_id = d.dept_id)*/
         LEFT JOIN t_user_role ur ON (u.user_id = ur.user_id)
         LEFT JOIN t_role r ON r.role_id = ur.role_id
         WHERE 1 = 1
         <if test="user.username != null and user.username != ''">
             AND u.username = #{user.username}
         </if>
-        <if test="user.deptId != null and user.deptId != ''">
+        <!--<if test="user.deptId != null and user.deptId != ''">
             AND d.dept_id = #{user.deptId}
-        </if>
+        </if>-->
         <if test="user.schoolId != null and user.schoolId != ''">
             AND u.school_id = #{user.schoolId}
         </if>
@@ -50,19 +62,31 @@
             And u.create_time &lt; #{user.createTimeTo}
         </if>
         GROUP BY
-            u.username,
-            u.user_id,
-            u.email,
-            u.mobile,
-            u.status,
-            u.create_time,
-            u.ssex,
-            u.dept_id,
-            u.school_id,
-            u.last_login_time,
-            u.modify_time,
-            u.description,
-            u.avatar
+        u.username,
+        u.user_id,
+        u.email,
+        u.mobile,
+        u.status,
+        u.create_time,
+        u.ssex,
+        /*u.dept_id,*/
+        u.school_id,
+        u.last_login_time,
+        u.modify_time,
+        u.description,
+        u.avatar,
+        u.unionid,
+        u.active,
+        u.order_in_depts,
+        u.is_admin,
+        u.is_boss,
+        u.department,
+        u.hired_date,
+        u.is_senior,
+        u.is_leader_in_depts,
+        u.is_hide,
+        u.position,
+        u.jobnumber
     </sql>
     <select id="findUserDetailPage" parameterType="user" resultType="user">
         <include refid="findUserDetailSql"/>
@@ -82,7 +106,7 @@
         u.status,
         u.create_time createTime,
         u.ssex sex,
-        u.dept_id deptId,
+        /*u.dept_id deptId,*/
         u.last_login_time lastLoginTime,
         u.modify_time modifyTime,
         u.description,
@@ -90,30 +114,54 @@
         u.theme,
         u.is_tab isTab,
         u.school_id schoolId,
-        d.dept_name deptName,
+        /*d.dept_name deptName,*/
+        u.unionid,
+        u.active,
+        u.order_in_depts,
+        u.is_admin,
+        u.is_boss,
+        u.department,
+        u.hired_date,
+        u.is_senior,
+        u.is_leader_in_depts,
+        u.is_hide,
+        u.position,
+        u.jobnumber,
         GROUP_CONCAT(r.role_id) roleId,
         GROUP_CONCAT(r.ROLE_NAME) roleName
         FROM
         t_user u
-        LEFT JOIN t_dept d ON (u.dept_id = d.dept_id)
+        /*LEFT JOIN t_dept d ON (u.dept_id = d.dept_id)*/
         LEFT JOIN t_user_role ur ON (u.user_id = ur.user_id)
         LEFT JOIN t_role r ON r.role_id = ur.role_id
         WHERE  u.username = #{username}
         GROUP BY
-            u.username,
-            u.user_id,
-            u.email,
-            u.mobile,
-            u.password,
-            u.status,
-            u.create_time,
-            u.ssex,
-            u.dept_id,
-            u.school_id,
-            u.last_login_time,
-            u.modify_time,
-            u.description,
-            u.avatar,
-            u.theme
+        u.username,
+        u.user_id,
+        u.email,
+        u.mobile,
+        u.password,
+        u.status,
+        u.create_time,
+        u.ssex,
+        /*u.dept_id,*/
+        u.school_id,
+        u.last_login_time,
+        u.modify_time,
+        u.description,
+        u.avatar,
+        u.theme,
+        u.unionid,
+        u.active,
+        u.order_in_depts,
+        u.is_admin,
+        u.is_boss,
+        u.department,
+        u.hired_date,
+        u.is_senior,
+        u.is_leader_in_depts,
+        u.is_hide,
+        u.position,
+        u.jobnumber
     </select>
 </mapper>

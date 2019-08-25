@@ -139,6 +139,12 @@ public class ViewController extends BaseController {
         return FebsUtil.view("system/dept/dept");
     }
 
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/dict")
+    @RequiresPermissions("dict:view")
+    public String systemDict() {
+        return FebsUtil.view("system/dict/dict");
+    }
+
     @RequestMapping(FebsConstant.VIEW_PREFIX + "index")
     public String pageIndex() {
         return FebsUtil.view("index");
