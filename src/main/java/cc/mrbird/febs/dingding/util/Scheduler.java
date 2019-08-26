@@ -23,7 +23,7 @@ public class Scheduler{
 
     AccessTokenUtil accessToken = new AccessTokenUtil();
 
-    @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
+    //@Scheduled(fixedRate = 24 * 60 * 60 * 1000)
     public void testTasks() {
             List<User> list=userMapper.findAllUser();
 
@@ -58,7 +58,7 @@ public class Scheduler{
             }
     }
 
-    @Scheduled(fixedRate = 2000)
+    //@Scheduled(fixedRate = 2000)
     public void testTasks1() throws ApiException {
                 DingTalkClient client1 = new DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/role/list");
                 OapiRoleListRequest request1 = new OapiRoleListRequest();
