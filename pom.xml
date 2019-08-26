@@ -188,6 +188,14 @@
             <systemPath>${project.basedir}/src/main/resources/lib/taobao-sdk-java-auto_1479188381469-20190717.jar</systemPath>
         </dependency>
 
+        <dependency>
+            <groupId>com.taobao.top</groupId>
+            <artifactId>lippi-oapi-encrpt</artifactId>
+            <version>dingtalk-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/lippi-oapi-encrpt.jar</systemPath>
+        </dependency>
+
     </dependencies>
 
     <repositories>
