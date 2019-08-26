@@ -1,0 +1,290 @@
+<style>
+    .detail-row {
+        padding: 5px;
+    }
+    .label1{
+    	width: 80px;
+    	float: left;
+    	text-align: right;
+    }
+    .label2{
+    	padding-left: 20px;
+    }
+</style>
+<div class="layui-fluid layui-anim febs-anim" id="febs-subjectResource" lay-title="专题资源管理">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="subjectResource-table-form">
+                        <div class="layui-row">
+                            <div class="layui-col-md10">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">资源名：</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="resourceName" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+                            	<div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="query">
+                                    <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
+                                     shiro:hasAnyPermissions="subject:add,subject:update,subjectResource:password:reset,subjectResource:export">
+                                    <i class="layui-icon">&#xe875;</i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item febs-hide">
+				            <div class="layui-input-block">
+				                <input type="text" name="subjectId" id="subjectId" data-th-value="${subject.subjectId}">
+				            </div>
+				        </div>
+                    </form>
+                    <div class="layui-row">
+                    	<blockquote class="layui-elem-quote" data-th-text="${subject.creator}+'：'+${subject.subjectName}">
+                    	</blockquote>
+                    </div>
+                    <table lay-filter="subjectResourceTable" lay-data="{id: 'subjectResourceTable'}"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="subjectResource-status">
+    {{#
+    var status = {
+    0: {title: '待审核', color: 'gray'},
+    1: {title: '审核通过', color: 'green'},
+    2: {title: '审核未通过', color: 'volcano'}
+    }[d.status];
+    }}
+    <span class="layui-badge febs-tag-{{status.color}}">{{ status.title }}</span>
+</script>
+<script type="text/html" id="detail">
+<div style="height:300px;overflow:auto">
+  <div class="detail-row">
+    <label class="label1">资源名:</label>
+    <label class="label2">{{d.resourceName}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">评分:</label>
+    <label class="label2">{{d.star}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">创建人:</label>
+    <label class="label2">{{d.creator}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">审核状态:</label>
+    <label class="label2">{{d.status}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">学校:</label>
+    <label class="label2">{{d.schoolName}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">年级:</label>
+    <label class="label2">{{d.gradeName}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">科目:</label>
+    <label class="label2">{{d.subjectName}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">类别:</label>
+    <label class="label2">{{d.categoryName}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">文件类型:</label>
+    <label class="label2">{{d.fileType}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">资源地址:</label>
+    <label class="label2">{{d.url}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">创建时间:</label>
+    <label class="label2">{{d.createTime}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">阅读数:</label>
+    <label class="label2">{{d.readCount}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">评论数:</label>
+    <label class="label2">{{d.commentCount}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">资源介绍:</label>
+    <label class="label2">{{d.description}}</label>
+  </div>
+</div>
+</script>
+<script type="text/html" id="file-type">
+    {{#
+    var fileType = {
+    avi: {title: '视频文件'},
+    doc: {title: 'word文档'},
+    pdf: {title: 'pdf文档'},
+    xls: {title: 'excel表'},
+	txt: {title: '文本文档'},
+	zip: {title: '压缩包'},
+	image: {title: '图片'}
+    }[d.fileType];
+    }}
+    <span>{{ fileType.title }}</span>
+</script>
+<script type="text/html" id="subjectResource-option">
+    <span shiro:lacksPermission="subject:view,subject:update,subject:delete">
+        <span class="layui-badge-dot febs-bg-orange"></span> 无权限
+    </span>
+    <a lay-event="detail" shiro:hasPermission="subject:view"><i
+            class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
+    <a lay-event="del" shiro:hasPermission="subject:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'form', 'table', 'febs', 'laytpl'], function () {
+        var $ = layui.jquery,
+            laytpl = layui.laytpl,
+            febs = layui.febs,
+            form = layui.form,
+            table = layui.table,
+            subjectId = $('#subjectId').val(),
+            dropdown = layui.dropdown,
+            $view = $('#febs-subjectResource'),
+            $reset = $view.find('#reset'),
+            $query = $view.find('#query'),
+            $searchForm = $view.find('form'),
+            sortObject = {field: 'createTime', type: null},
+            tableIns;
+
+        form.render();
+
+        initTable();
+
+        dropdown.render({
+            elem: $view.find('.action-more'),
+            click: function (name, elem, event) {
+                var checkStatus = table.checkStatus('subjectResourceTable');
+                if (name === 'add') {
+                	febs.modal.open('添加资源到专题', 'resource/subject/' + subjectId +'/addResource', {
+                        area: $(window).width() <= 750 ? '90%' : '70%',
+                        btn: ['提交', '取消'],
+                        yes: function (index, layero) {
+                            $('#add-resource').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            layer.closeAll();
+                        }
+                    });
+                }
+                if (name === 'delete') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择需要删除的资源');
+                    } else {
+                        febs.modal.confirm('删除资源', '确定删除该资源？', function () {
+                            var subjectResourceIds = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                subjectResourceIds.push(item.subjectResourceId)
+                            });
+                            deleteSubjectResources(subjectResourceIds.join(','));
+                        });
+                    }
+                }
+            },
+            options: [{
+                name: 'add',
+                title: '新增资源',
+                perms: 'subject:add'
+            }, {
+                name: 'delete',
+                title: '删除资源',
+                perms: 'subject:delete'
+            }]
+        });
+
+        table.on('tool(subjectResourceTable)', function (obj) {
+            var data = obj.data,
+                layEvent = obj.event;
+            if (layEvent === 'detail') {
+            	var getTpl = detail.innerHTML;
+            	laytpl(getTpl).render(data, function(html){
+	           		layer.open({
+                       type: 1
+                       ,title: '详情'
+                       ,area: '600px;'
+                       ,content: html
+                     });
+           		});
+            	
+            }
+            if (layEvent === 'del') {
+                febs.modal.confirm('移除资源', '确定从本专题移除资源？', function () {
+                    deleteSubjectResources(data.subjectResourceId);
+                });
+            }
+        });
+
+        table.on('sort(subjectResourceTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({
+                initSort: obj,
+                where: $.extend(getQueryParams(), {
+                    field: obj.field,
+                    order: obj.type
+                })
+            });
+        });
+        
+        $query.on('click', function () {
+            var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+            tableIns.reload({where: params, page: {curr: 1}});
+        });
+
+        $reset.on('click', function () {
+            $searchForm[0].reset();
+            sortObject.type = 'null';
+            tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
+        });
+        
+        function getQueryParams() {
+            return {
+                resourceName: $searchForm.find('input[name="resourceName"]').val(),
+                invalidate_ie_cache: new Date()
+            };
+        }
+
+        function initTable() {
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'subjectResourceTable',
+                url: ctx + 'subject/'+subjectId+'/resources',
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'resourceName', title: '资源名', minWidth: 100},
+                    {title: '文件类型', templet: '#file-type'},
+                    {field: 'creator', title: '作者'},
+                    {field: 'schoolName', title: '学校'},
+                    {field: 'commentCount', title: '评论数'},
+                    {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
+                    {title: '审核状态', templet: '#subjectResource-status'},
+                    {title: '操作', toolbar: '#subjectResource-option', minWidth: 140}
+                ]]
+            });
+        }
+
+        function deleteSubjectResources(subjectResourceIds) {
+            febs.get(ctx + 'subjectResource/delete/' + subjectResourceIds, null, function () {
+                febs.alert.success('删除资源成功');
+                $query.click();
+            });
+        }
+    })
+</script>

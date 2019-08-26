@@ -52,7 +52,7 @@ public class ResourceController extends BaseController {
     @ResponseBody
     @RequiresPermissions("resource:view")
     public FebsResponse resourceList(QueryRequest request, Resource resource) {
-        Map<String, Object> dataTable = getDataTable(this.resourceService.findResources(request, resource));
+        Map<String, Object> dataTable = getDataTable(this.resourceService.findDetails(resource, request));
         return new FebsResponse().success().data(dataTable);
     }
 
@@ -65,6 +65,7 @@ public class ResourceController extends BaseController {
         	User user = super.getCurrentUser();
         	resource.setCreator(user.getUsername());
         	resource.setAvatar(user.getAvatar());
+        	resource.setSchoolId(user.getSchoolId());
             this.resourceService.createResource(resource);
             return new FebsResponse().success();
         } catch (Exception e) {

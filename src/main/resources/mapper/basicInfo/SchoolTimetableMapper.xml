@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.basicInfo.mapper.SchoolTimetableMapper">
+
+    <resultMap id="schoolTimetableMap" type="cc.mrbird.febs.basicInfo.entity.SchoolTimetable">
+        <result column="course_id" jdbcType="INTEGER" property="courseId"/>
+        <result column="course_name" jdbcType="CHAR" property="courseName"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+
+        <result column="begin_date" jdbcType="DATE" property="beginDate"/>
+        <result column="class_id" jdbcType="CHAR" property="classId"/>
+        <result column="classroom_id" jdbcType="INTEGER" property="classroomId"/>
+
+        <result column="duration" jdbcType="INTEGER" property="duration"/>
+        <result column="grade" jdbcType="CHAR" property="grade"/>
+        <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
+        <result column="section" jdbcType="VARCHAR" property="section"/>
+        <result column="subject" jdbcType="CHAR" property="subject"/>
+        <result column="term" jdbcType="CHAR" property="term"/>
+
+        <result column="week" jdbcType="VARCHAR" property="week"/>
+    </resultMap>
+
+    <sql id="findSchoolTimetableDetailSql">
+        SELECT
+        d.course_id,d.course_name,d.begin_date,
+        d.duration,d.grade,d.section,d.subject,d.term,
+        u.user_id,u.username,
+        s.school_id,s.school_name schoolName,
+        c.class_id,c.class_name className,
+        cr.id classroom_id,cr.location
+        FROM
+        jcc_school_timetable d
+        LEFT JOIN jcc_school_info s ON (s.school_id = d.school_id)
+        LEFT JOIN jcc_class_info c ON (c.class_id = d.class_id)
+        LEFT JOIN jcc_classroom_info cr ON (cr.id = d.classroom_id)
+        LEFT JOIN t_user u ON (u.user_id = d.user_id)
+        WHERE 1 = 1
+        <if test="schoolTimetable.courseName != null and schoolTimetable.courseName != ''">
+            AND d.course_name like CONCAT('%','${schoolTimetable.courseName}','%')
+        </if>
+        <if test="schoolTimetable.subject != null and schoolTimetable.subject != ''">
+            AND s.subject like CONCAT('%','${schoolTimetable.subject}','%')
+        </if>
+        <if test="schoolTimetable.schoolName != null and schoolTimetable.schoolName != ''">
+            AND s.school_name like CONCAT('%','${schoolTimetable.schoolName}','%')
+        </if>
+    </sql>
+    <select id="findSchoolTimetables" parameterType="cc.mrbird.febs.basicInfo.entity.SchoolTimetable" resultMap="schoolTimetableMap">
+        <include refid="findSchoolTimetableDetailSql"/>
+    </select>
+</mapper>

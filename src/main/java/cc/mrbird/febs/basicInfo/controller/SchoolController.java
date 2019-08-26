@@ -2,6 +2,7 @@ package cc.mrbird.febs.basicInfo.controller;
 
 import cc.mrbird.febs.common.annotation.Log;
 import cc.mrbird.febs.common.utils.FebsUtil;
+import cc.mrbird.febs.common.utils.Tools;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
@@ -9,11 +10,13 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.basicInfo.entity.School;
 import cc.mrbird.febs.basicInfo.service.ISchoolService;
-
+import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IRoleService;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +24,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -39,7 +44,7 @@ import java.util.Map;
  */
 @Slf4j
 @Validated
-@Controller("school")
+@Controller
 public class SchoolController extends BaseController {
 
     @Autowired
@@ -87,9 +92,9 @@ public class SchoolController extends BaseController {
         return FebsUtil.view("basicInfo/school/schoolUpdate");
     }
 
-    @GetMapping("school/getAllSchools")
+    @GetMapping("school")
     @ResponseBody
-//    @RequiresPermissions("school:getAllSchools")
+//    @RequiresPermissions("school:list")
     public FebsResponse getAllSchools(School school) {
         return new FebsResponse().success().data(schoolService.findSchools(school));
     }
@@ -99,6 +104,8 @@ public class SchoolController extends BaseController {
     @ResponseBody
 //    @RequiresPermissions("school:list")
     public FebsResponse schoolList(QueryRequest request, School school) {
+//    	User currentUser = getCurrentUser();
+//    	school.setSchoolId(currentUser.getSchoolId());
         Map<String, Object> dataTable = getDataTable(this.schoolService.findSchools(request, school));
         return new FebsResponse().success().data(dataTable);
     }
@@ -107,8 +114,12 @@ public class SchoolController extends BaseController {
     @PostMapping("school")
     @ResponseBody
 //    @RequiresPermissions("school:add")
-    public FebsResponse addSchool(@Valid School school) throws FebsException {
+    public FebsResponse addSchool(@Valid School school, @RequestParam(required=false,value="file") MultipartFile file) throws FebsException {
         try {
+			if (file != null) {
+				String path = Tools.saveFile(file, "school");
+				school.setPicture(path);
+			}
             this.schoolService.createSchool(school);
             return new FebsResponse().success();
         } catch (Exception e) {
@@ -117,15 +128,14 @@ public class SchoolController extends BaseController {
             throw new FebsException(message);
         }
     }
-
+    
     @Log("删除School")
     @GetMapping("school/delete/{schoolIds}")    
     @ResponseBody
 //    @RequiresPermissions("school:delete")
     public FebsResponse deleteSchool(@NotBlank(message = "{required}") @PathVariable String schoolIds) throws FebsException {
         try {
-        	String[] ids = schoolIds.split(StringPool.COMMA);
-            this.schoolService.deleteSchool(ids);
+            this.schoolService.deleteSchool(schoolIds);
             return new FebsResponse().success();
         } catch (Exception e) {
             String message = "删除School失败";
@@ -138,8 +148,12 @@ public class SchoolController extends BaseController {
     @PostMapping("school/update")
     @ResponseBody
 //    @RequiresPermissions("school:update")
-    public FebsResponse updateSchool(School school) throws FebsException {
+    public FebsResponse updateSchool(School school, @RequestParam(required=false,value="file") MultipartFile file) throws FebsException {
         try {
+			if (file != null) {
+				String path = Tools.saveFile(file, "school");
+				school.setPicture(path);
+			}
             this.schoolService.updateSchool(school);
             return new FebsResponse().success();
         } catch (Exception e) {
@@ -148,7 +162,7 @@ public class SchoolController extends BaseController {
             throw new FebsException(message);
         }
     }
-
+    
     @PostMapping("school/excel")
     @ResponseBody
 //    @RequiresPermissions("school:export")
@@ -165,7 +179,6 @@ public class SchoolController extends BaseController {
     
     private void resolveSchoolrModel(Long schoolId, Model model, Boolean transform) {
         School school = this.schoolService.getById(schoolId);
-        System.out.println("school="+school);
         model.addAttribute("school", school);
         
     }

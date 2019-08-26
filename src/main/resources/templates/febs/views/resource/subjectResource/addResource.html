@@ -1,0 +1,268 @@
+<style>
+    #add-resource {
+    	height: 300px;
+    	overflow: auto;
+        padding: 20px 25px 25px 25px;
+    }
+
+    #add-resource .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="add-resource">
+    <form class="layui-form layui-table-form" lay-filter="resource-table-form">
+       <div class="layui-row">
+           <div class="layui-col-md10">
+               <div class="layui-form-item">
+                   <div class="layui-inline">
+                       <label class="layui-form-label layui-form-label-sm">资源名</label>
+                       <div class="layui-input-inline">
+                           <input type="text" name="resourceName" autocomplete="off" class="layui-input">
+                       </div>
+                   </div>
+                   <div class="layui-inline">
+                       <label class="layui-form-label layui-form-label-sm">审核状态</label>
+                       <div class="layui-input-inline">
+                           <select name="status">
+                               <option value=""></option>
+                               <option value="0">待审核</option>
+                               <option value="1">审核通过</option>
+                               <option value="2">审核不通过</option>
+                           </select>
+                       </div>
+                   </div>
+                   <div class="layui-inline">
+                       <label class="layui-form-label layui-form-label-sm">类别</label>
+                       <div class="layui-input-inline">
+                           <input type="text" name="category" id="category" lay-filter="category"
+                                  class="layui-input">
+                       </div>
+                   </div>
+                   <div class="layui-inline">
+                        <label class="layui-form-label layui-form-label-sm">学校</label>
+                        <div class="layui-input-inline">
+			                <select name="schoolId"
+			                		xm-select-radio
+			                        xm-select-direction="down"
+			                        xm-select="school"
+			                        xm-select-skin="default">
+			                </select>
+		           		</div>
+                   </div>
+                   <div class="layui-inline">
+                       <label class="layui-form-label layui-form-label-sm">年级</label>
+                       <div class="layui-input-inline">
+					      <select name="gradeId"
+					      		xm-select-radio
+					              xm-select-direction="down"
+					              xm-select="grade"
+					              xm-select-skin="default">
+					      </select>
+					  </div>
+                   </div>             
+                   <div class="layui-inline">
+                       <label class="layui-form-label layui-form-label-sm">科目</label>
+                       <div class="layui-input-inline">
+					      <select name="subjectId"
+					      		xm-select-radio
+					              xm-select-direction="down"
+					              xm-select="subject"
+					              xm-select-skin="default">
+					      </select>
+					  </div>
+                   </div>
+               </div>
+           </div>
+           <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+               <div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="query">
+                   <i class="layui-icon">&#xe848;</i>
+               </div>
+               <div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="reset">
+                   <i class="layui-icon">&#xe79b;</i>
+               </div>
+               <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
+                    shiro:hasAnyPermissions="resource:add,resource:update,resource:password:reset,resource:export">
+                   <i class="layui-icon">&#xe875;</i>
+               </div>
+           </div>
+       </div>
+       <div class="layui-form-item febs-hide">
+            <div class="layui-input-block">
+                <input type="text" name="subjectId" id="subjectId" data-th-value="${subjectId}">
+            </div>
+       </div>
+       <div class="layui-form-item febs-hide">
+	       <button class="layui-btn" onClick="relate()" id="submit"></button>
+	   </div>
+   </form>
+   <table lay-filter="resourceTable" lay-data="{id: 'resourceTable'}"></table>
+</div>
+
+<script data-th-inline="none" type="text/javascript">
+	function relate(){
+		var subjectId = layui.$('#subjectId').val();
+		var selectData = layui.table.checkStatus('resourceTable').data;
+		var array = [];
+        layui.each(selectData, function (key, item) {
+        	array.push(item.resourceId);
+        });
+        var resourceIds=array.join(',');
+        layui.febs.post(ctx + 'subjectResources', {'subjectId':subjectId, 'resourceIds': resourceIds}, function () {
+        	layer.closeAll(); 
+        	layui.febs.alert.success('添加资源成功');
+        });
+	}
+	layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect', 'formSelects'], function () {
+        var $ = layui.jquery,
+            laydate = layui.laydate,
+            febs = layui.febs,
+            form = layui.form,
+            table = layui.table,
+            treeSelect = layui.treeSelect,
+            formSelects = layui.formSelects,
+            dropdown = layui.dropdown,
+            $view = $('#add-resource'),
+            $query = $view.find('#query'),
+            $reset = $view.find('#reset'),
+            $searchForm = $view.find('form'),
+            sortObject = {field: 'createTime', type: null},
+            tableIns;
+
+        form.render();
+
+        initTable();
+
+        laydate.render({
+            elem: '#createTime',
+            range: true,
+            trigger: 'click'
+        });
+        
+        treeSelect.render({
+            elem: $view.find('#category'),
+            type: 'get',
+            data: ctx + 'category/select/tree',
+            placeholder: '请选择',
+            search: false
+        });
+        
+        formSelects.config('school', {
+            searchUrl: ctx + 'school',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].schoolName,
+                        value: data[i].schoolId
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取学校列表失败');
+            }
+        });
+        
+        formSelects.config('grade', {
+            searchUrl: ctx + 'dict?field=grade',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].v,
+                        value: data[i].k
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取年级列表失败');
+            }
+        });
+        
+        formSelects.config('subject', {
+            searchUrl: ctx + 'dict?field=subject',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].v,
+                        value: data[i].k
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取科目列表失败');
+            }
+        });
+
+        table.on('sort(resourceTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({
+                initSort: obj,
+                where: $.extend(getQueryParams(), {
+                    field: obj.field,
+                    order: obj.type
+                })
+            });
+        });
+
+        $query.on('click', function () {
+            var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+            tableIns.reload({where: params, page: {curr: 1}});
+        });
+
+        $reset.on('click', function () {
+            $searchForm[0].reset();
+            treeSelect.revokeNode('category');
+            sortObject.type = 'null';
+            tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
+        });
+       
+        function initTable() {
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'resourceTable',
+                url: ctx + 'resource/list',
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'resourceName', title: '资源名', minWidth: 100},
+                    {field: 'creator', title: '作者'},
+                    {field: 'schoolName', title: '学校'}
+                ]]
+            });
+        }
+
+        function getQueryParams() {
+            return {
+            	resourceName: $searchForm.find('input[name="resourceName"]').val(),
+                status: $searchForm.find("select[name='status']").val(),
+                categoryId: $searchForm.find("input[name='category']").val(),
+                schoolId: $searchForm.find("input[name='schoolId']").val(),
+                gradeId: $searchForm.find("input[name='gradeId']").val(),
+                subjectId: $searchForm.find("input[name='subjectId']").val(),
+                invalidate_ie_cache: new Date()
+            };
+        }
+
+    })
+</script>

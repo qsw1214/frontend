@@ -176,6 +176,12 @@ public class User implements Serializable {
     @TableField(exist = false)
     private String roleId;
 
+    /**
+     * 学校 ID
+     */
+    @TableField("SCHOOL_ID")
+    private Integer schoolId;
+    
     @ExcelField(value = "角色")
     @TableField(exist = false)
     private String roleName;
@@ -183,4 +189,40 @@ public class User implements Serializable {
     public Long getId() {
         return userId;
     }
+
+    @TableField("UNIONID")
+    private String unionid;
+
+    @TableField("ACTIVE")
+    private boolean active;
+
+    @TableField("ORDER_IN_DEPTS")
+    private String  orderInDepts;  //在对应的部门中的排序，Map结构的json字符串，key是部门的Id，value是人员在这个部门的排序值
+
+    @TableField("IS_ADMIN")
+    private boolean isAdmin;    //是否为企业的管理员，true表示是，false表示不是
+
+    @TableField("IS_BOSS")
+    private boolean isBoss;    //是否为企业的老板，true表示是，false表示不是
+
+    @TableField("IS_LEADER_IN_DEPTS")
+    private String isLeaderInDepts; //在对应的部门中是否为主管：Map结构的json字符串，key是部门的Id，value是人员在这个部门中是否为主管，true表示是，false表示不是
+
+    @TableField("IS_HIDE")
+    private boolean isHide;   //是否号码隐藏，true表示隐藏，false表示不隐藏
+
+    @TableField("DEPARTMENT")
+    private String department; //成员所属部门id列表
+
+    @TableField("POSITION")
+    private String position;  //职位信息
+
+    @TableField("HIRED_DATE")
+    private Date hiredDate;    //入职时间
+
+    @TableField("JOBNUMBER")
+    private String jobnumber;
+
+    @TableField("IS_SENIOR")
+    private boolean isSenior;  //是否是高管
 }

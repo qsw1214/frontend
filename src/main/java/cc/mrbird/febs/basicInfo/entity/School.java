@@ -2,6 +2,8 @@ package cc.mrbird.febs.basicInfo.entity;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.Data;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -22,12 +24,13 @@ public class School {
      * 学校ID
      */
     @TableId(value = "school_id", type = IdType.AUTO)
-    private Long schoolId;
+    private Integer schoolId;
 
     /**
      * 学校名
      */
     @TableField("school_name")
+    @NotBlank(message = "{required}")
     private String schoolName;
 
     /**
@@ -40,8 +43,15 @@ public class School {
      * 学校类型
      */
     @TableField("school_type")
+    @NotBlank(message = "{required}")
     private String schoolType;
 
+    /**
+     * 学校类别
+     */
+    @TableField("school_category")
+    private String schoolCategory;
+    
     /**
      * 联系人
      */
@@ -79,28 +89,43 @@ public class School {
     private String lat;
 
     /**
+     * 状态
+     */
+    @TableField("state")
+    private Integer state;
+    
+    /**
+     * 开课次数
+     */
+    @TableField("class_num")
+    private Integer classNum;
+    
+    /**
      * 省
      */
     @TableField("province")
+    @NotBlank(message = "{required}")
     private String province;
 
     /**
      * 市
      */
     @TableField("city")
+    @NotBlank(message = "{required}")
     private String city;
 
     /**
      * 县
      */
-    @TableField("conunty")
-    private String conunty;
+    @TableField("country")
+    @NotBlank(message = "{required}")
+    private String country;
 
     /**
-     * 资质证明
+     * 学校图片
      */
-    @TableField("certificate_book")
-    private String certificateBook;
+    @TableField("picture")
+    private String picture;
 
     /**
      * 市领导

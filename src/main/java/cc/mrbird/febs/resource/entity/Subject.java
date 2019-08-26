@@ -63,20 +63,19 @@ public class Subject {
      * 类别ID
      */
     @TableField("category_id")
-    private Long categoryId;
-
-    /**
-     * 类别名称
-     */
-    @TableField("category_name")
-    @Size(max = 50, message = "{noMoreThan}")
-    private String categoryName;
+    private Integer categoryId;
 
     /**
      * 阅读数
      */
     @TableField("read_count")
     private Integer readCount;
+    
+    /**
+     * 资源数
+     */
+    @TableField("resource_count")
+    private Integer resourceCount;
 
     /**
      * 专题图片

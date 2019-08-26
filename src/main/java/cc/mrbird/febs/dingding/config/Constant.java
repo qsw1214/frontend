@@ -43,10 +43,10 @@ public class Constant {
     /**
      * 审批模板唯一标识，可以在审批管理后台找到
      */
-    public static final String PROCESS_CODE = "PROC-6405B98C-CF31-49D6-98F7-3DFF0457B759";
+    public static final String PROCESS_CODE = "PROC-997ABD5D-D0D9-487E-9696-5B5DF49EFCC0";
 
     /**
      * 回调host
      */
-    public static final String CALLBACK_URL_HOST = "http://157fcefb.cpolar.io";
+    public static final String CALLBACK_URL_HOST = "https://193a319b.cpolar.io/approval";
 }

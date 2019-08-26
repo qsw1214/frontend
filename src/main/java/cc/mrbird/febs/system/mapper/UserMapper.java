@@ -38,4 +38,8 @@ public interface UserMapper extends BaseMapper<User> {
      */
     List<User> findUserDetail(@Param("user") User user);
 
+    List<User> findAllUser();
+
+    void updateUser(String username,String roleName,int roleId);
+
 }

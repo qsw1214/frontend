@@ -1,11 +1,15 @@
 package cc.mrbird.febs.resource.service.impl;
 
+import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.resource.entity.Resource;
 import cc.mrbird.febs.resource.mapper.ResourceMapper;
 import cc.mrbird.febs.resource.service.ICommentService;
 import cc.mrbird.febs.resource.service.IResourceService;
 import cc.mrbird.febs.resource.service.ISubjectResourceService;
+import cc.mrbird.febs.system.entity.User;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
@@ -40,6 +44,18 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     private ISubjectResourceService subjectResourceService;
     @Autowired
     private ICommentService commentService;
+    
+    @Override
+	public Resource findDetailById(Long resourceId) {
+		return resourceMapper.findDetailById(resourceId);
+	}
+
+	@Override
+	public IPage<Resource> findDetails(Resource resource, QueryRequest request) {
+		Page<Resource> page = new Page<>(request.getPageNum(), request.getPageSize());
+        SortUtil.handlePageSort(request, page, "resource_id", FebsConstant.ORDER_DESC, false);
+		return resourceMapper.findDetails(page, resource);
+	}
 
     @Override
     public IPage<Resource> findResources(QueryRequest request, Resource resource) {
@@ -51,14 +67,14 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         if (StringUtils.isNotBlank(resource.getCreator())) {
             queryWrapper.eq(Resource::getCreator, resource.getCreator());
         }
-        if (StringUtils.isNotBlank(resource.getSchool())) {
-            queryWrapper.eq(Resource::getSchool, resource.getSchool());
+        if (resource.getSchoolId() != null) {
+            queryWrapper.eq(Resource::getSchoolId, resource.getSchoolId());
         }
-        if (StringUtils.isNotBlank(resource.getSubject())) {
-            queryWrapper.eq(Resource::getSubject, resource.getSubject());
+        if (resource.getSubjectId() !=null ) {
+            queryWrapper.eq(Resource::getSubjectId, resource.getSubjectId());
         }
-        if (StringUtils.isNotBlank(resource.getGrade())) {
-            queryWrapper.eq(Resource::getGrade, resource.getGrade());
+        if (resource.getGradeId() != null) {
+            queryWrapper.eq(Resource::getGradeId, resource.getGradeId());
         }
         if (resource.getStatus() != null) {
             queryWrapper.eq(Resource::getStatus, resource.getStatus());
@@ -77,17 +93,20 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 	    if (StringUtils.isNotBlank(resource.getResourceName())) {
             queryWrapper.like(Resource::getResourceName, resource.getResourceName());
         }
-	    if (StringUtils.isNotBlank(resource.getCreator())) {
+        if (StringUtils.isNotBlank(resource.getCreator())) {
             queryWrapper.eq(Resource::getCreator, resource.getCreator());
         }
-        if (StringUtils.isNotBlank(resource.getSchool())) {
-            queryWrapper.eq(Resource::getSchool, resource.getSchool());
+        if (resource.getSchoolId() != null) {
+            queryWrapper.eq(Resource::getSchoolId, resource.getSchoolId());
         }
-        if (StringUtils.isNotBlank(resource.getSubject())) {
-            queryWrapper.eq(Resource::getSubject, resource.getSubject());
+        if (resource.getSubjectId() !=null ) {
+            queryWrapper.eq(Resource::getSubjectId, resource.getSubjectId());
         }
-        if (StringUtils.isNotBlank(resource.getGrade())) {
-            queryWrapper.eq(Resource::getGrade, resource.getGrade());
+        if (resource.getGradeId() != null) {
+            queryWrapper.eq(Resource::getGradeId, resource.getGradeId());
+        }
+        if (resource.getStatus() != null) {
+            queryWrapper.eq(Resource::getStatus, resource.getStatus());
         }
         if (resource.getCategoryId() != null) {
             queryWrapper.eq(Resource::getCategoryId, resource.getCategoryId());
@@ -129,4 +148,5 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 	public void increaseReadCount(Long resourceId, Integer num) {
 		resourceMapper.increaseReadCount(resourceId, num);
 	}
+
 }

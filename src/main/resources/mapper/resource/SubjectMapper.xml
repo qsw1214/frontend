@@ -10,15 +10,67 @@
         <result column="category_id" jdbcType="DECIMAL" property="categoryId"/>
         <result column="category_name" jdbcType="VARCHAR" property="categoryName"/>
         <result column="read_count" jdbcType="INTEGER" property="readCount"/>
+        <result column="resource_count" jdbcType="INTEGER" property="resourceCount"/>
         <result column="pic" jdbcType="VARCHAR" property="pic"/>
         <result column="order_num" jdbcType="DECIMAL" property="orderNum"/>
         <result column="show_status" jdbcType="INTEGER" property="showStatus"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
     </resultMap>
+    <resultMap id="subjectResourceMap" type="cc.mrbird.febs.resource.entity.Resource">
+    	<id column="id" jdbcType="DECIMAL" property="subjectResourceId"/>
+    	<result column="subject_id" jdbcType="DECIMAL" property="subjectId"/>
+        <result column="resource_id" jdbcType="DECIMAL" property="resourceId"/>
+        <result column="resource_name" jdbcType="VARCHAR" property="resourceName"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
+        <result column="grade_id" jdbcType="INTEGER" property="gradeId"/>
+        <result column="subject_id" jdbcType="INTEGER" property="subjectId"/>
+        <result column="category_id" jdbcType="INTEGER" property="categoryId"/>
+        <result column="file_type" jdbcType="VARCHAR" property="fileType"/>
+        <result column="pic" jdbcType="VARCHAR" property="pic"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="star" jdbcType="INTEGER" property="star"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="read_count" jdbcType="INTEGER" property="readCount"/>
+        <result column="comment_count" jdbcType="INTEGER" property="commentCount"/>
+        <result column="order_num" jdbcType="DECIMAL" property="orderNum"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
+        <result column="category_name" jdbcType="VARCHAR" property="categoryName"/>
+        <result column="school_name" jdbcType="VARCHAR" property="schoolName"/>
+        <result column="grade_name" jdbcType="VARCHAR" property="gradeName"/>
+        <result column="subject_name" jdbcType="VARCHAR" property="subjectName"/>
+    </resultMap>
     <update id="increaseReadCount">
 		update r_subject
 		<set>read_count = read_count + #{num}</set>
 		where subject_id = #{subjectId}
 	</update>
+	<update id="increaseResourceCount">
+		update r_subject
+		<set>resource_count = resource_count + #{num}</set>
+		where subject_id = #{subjectId}
+	</update>
+	<select id="findSubjectResources" parameterType="long" resultMap="subjectResourceMap">
+        SELECT
+        sr.id,
+        r.*,
+        c.category_name,
+        s.school_name,
+        g.v grade_name,
+        subj.v subject_name
+        FROM
+        r_subject_resource sr
+        LEFT JOIN r_resource r ON sr.resource_id = r.resource_id
+        LEFT JOIN r_category c ON r.category_id = c.category_id
+        LEFT JOIN jcc_school_info s ON r.school_id = s.school_id   
+        LEFT JOIN t_dict g ON r.grade_id = g.k AND g.field = 'grade'
+        LEFT JOIN t_dict subj ON r.subject_id = subj.k AND subj.field = 'subject'
+        WHERE sr.subject_id = #{subjectId}
+        <if test="resource.resourceName != null and resource.resourceName != ''">
+            AND r.resource_name = #{resource.resourceName}
+        </if>
+    </select>
 </mapper>

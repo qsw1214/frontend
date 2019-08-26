@@ -5,13 +5,11 @@
     <resultMap id="comment" type="cc.mrbird.febs.resource.entity.Comment">
         <id column="comment_id" jdbcType="DECIMAL" property="commentId"/>
         <result column="resource_id" jdbcType="DECIMAL" property="resourceId"/>
-        <result column="resource_name" jdbcType="VARCHAR" property="resourceName"/>
         <result column="user_name" jdbcType="VARCHAR" property="userName"/>
         <result column="user_ip" jdbcType="VARCHAR" property="userIp"/>
         <result column="user_icon" jdbcType="VARCHAR" property="userIcon"/>
         <result column="star" jdbcType="INTEGER" property="star"/>
         <result column="content" jdbcType="VARCHAR" property="content"/>
-        <result column="show_status" jdbcType="INTEGER" property="showStatus"/>
         <result column="replay_count" jdbcType="INTEGER" property="replayCount"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
     </resultMap>

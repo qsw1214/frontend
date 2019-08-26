@@ -1,6 +1,9 @@
 package cc.mrbird.febs.resource.service.impl;
 
+import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.utils.SortUtil;
+import cc.mrbird.febs.resource.entity.Resource;
 import cc.mrbird.febs.resource.entity.Subject;
 import cc.mrbird.febs.resource.mapper.SubjectMapper;
 import cc.mrbird.febs.resource.service.ISubjectResourceService;
@@ -97,5 +100,17 @@ public class SubjectServiceImpl extends ServiceImpl<SubjectMapper, Subject> impl
 	@Override
 	public void increaseReadCount(Long subjectId, Integer num) {
 		subjectMapper.increaseReadCount(subjectId, num);;
+	}
+	
+	@Override
+	public void increaseResourceCount(Long subjectId, Integer num) {
+		subjectMapper.increaseResourceCount(subjectId, num);;
+	}
+	
+	@Override
+	public IPage<Resource> findSubjectResources(Long subjectId, Resource resource, QueryRequest request) {
+		Page<Resource> page = new Page<>(request.getPageNum(), request.getPageSize());
+        SortUtil.handlePageSort(request, page, "id", FebsConstant.ORDER_DESC, false);
+		return subjectMapper.findSubjectResources(page, subjectId, resource);
 	}
 }

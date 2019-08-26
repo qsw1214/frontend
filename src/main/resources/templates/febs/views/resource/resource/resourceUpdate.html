@@ -50,7 +50,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">适用年级：</label>
             <div class="layui-input-block">
-                <select name="grade"
+                <select name="gradeId"
                 		xm-select-radio
                         xm-select-direction="down"
                         xm-select="resource-update-grade"
@@ -61,7 +61,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">科目：</label>
             <div class="layui-input-block">
-                <select name="subject"
+                <select name="subjectId"
                 		xm-select-radio
                         xm-select-direction="down"
                         xm-select="resource-update-subject"
@@ -155,7 +155,7 @@
                 for (var i = 0; i < data.length; i++) {
                     tranData.push({
                         name: data[i].v,
-                        value: data[i].v
+                        value: data[i].k
                     })
                 }
                 result.data = tranData;
@@ -181,7 +181,7 @@
                 for (var i = 0; i < data.length; i++) {
                     tranData.push({
                         name: data[i].v,
-                        value: data[i].v
+                        value: data[i].k
                     })
                 }
                 result.data = tranData;
@@ -202,8 +202,8 @@
                 "url": resource.url,
                 "pic": resource.pic,
                 "fileType": resource.fileType,
-                "grade": resource.grade,
-                "subject": resource.subject,
+                "gradeId": resource.gradeId,
+                "subjectId": resource.subjectId,
                 "categoryId": resource.categoryId,
                 "description": resource.description
             });

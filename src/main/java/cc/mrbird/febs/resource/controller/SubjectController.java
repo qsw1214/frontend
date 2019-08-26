@@ -5,6 +5,7 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
+import cc.mrbird.febs.resource.entity.Resource;
 import cc.mrbird.febs.resource.entity.Subject;
 import cc.mrbird.febs.resource.service.ISubjectService;
 import cc.mrbird.febs.system.entity.User;
@@ -53,6 +54,14 @@ public class SubjectController extends BaseController {
     @RequiresPermissions("subject:view")
     public FebsResponse subjectList(QueryRequest request, Subject subject) {
         Map<String, Object> dataTable = getDataTable(this.subjectService.findSubjects(request, subject));
+        return new FebsResponse().success().data(dataTable);
+    }
+    
+    @GetMapping("subject/{subjectId}/resources")
+    @ResponseBody
+    @RequiresPermissions("subject:view")
+    public FebsResponse subjectResources(Resource resource, QueryRequest request, @PathVariable Long subjectId) {
+        Map<String, Object> dataTable = getDataTable(this.subjectService.findSubjectResources(subjectId, resource, request));
         return new FebsResponse().success().data(dataTable);
     }
 

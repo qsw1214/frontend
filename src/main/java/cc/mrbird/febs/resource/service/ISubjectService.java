@@ -1,9 +1,11 @@
 package cc.mrbird.febs.resource.service;
 
+import cc.mrbird.febs.resource.entity.Resource;
 import cc.mrbird.febs.resource.entity.Subject;
 
 import cc.mrbird.febs.common.entity.QueryRequest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -60,5 +62,21 @@ public interface ISubjectService extends IService<Subject> {
 	 * @param subjectId
 	 * @param num
 	 */
-	void increaseReadCount(@Param("subjectId") Long subjectId, @Param("num") Integer num);
+	void increaseReadCount(Long subjectId, Integer num);
+	
+	/**
+	 * 增加资源数
+	 * @param subjectId
+	 * @param num
+	 */
+	void increaseResourceCount(Long subjectId, Integer num);
+	
+	/**
+     * 查找专题的资源
+     *
+     * @param page 分页对象
+     * @param resource 资源对象，用于传递查询条件
+     * @return Ipage
+     */
+    IPage<Resource> findSubjectResources(Long subjectId, Resource resource, QueryRequest request);
 }

@@ -81,14 +81,18 @@ public class CommentReplayServiceImpl extends ServiceImpl<CommentReplayMapper, C
     @Transactional
     public void deleteCommentReplays(String commentReplayIds) {
     	List<String> list = Arrays.asList(commentReplayIds.split(StringPool.COMMA));
-    	if(list.size()>0)
-    		this.baseMapper.delete(new QueryWrapper<CommentReplay>().lambda().in(CommentReplay::getCommentReplayId, list));
+    	if(list.size()>0){
+    		CommentReplay cr = this.baseMapper.selectById(list.get(0));
+    		int n = this.baseMapper.delete(new QueryWrapper<CommentReplay>().lambda().in(CommentReplay::getCommentReplayId, list));
+    		commentService.increaseReplayCount(cr.getCommentId(), -n);
+    	}
 	}
 
 	@Override
 	public void deleteCommentReplaysByCommentId(List<String> commentIds) {
-		if(commentIds.size()>0)
+		if(commentIds.size()>0){
 			this.baseMapper.delete(new QueryWrapper<CommentReplay>().lambda().in(CommentReplay::getCommentId, commentIds));
+		}
 	}
 	
 }

@@ -1,3 +1,16 @@
+<style>
+    .detail-row {
+        padding: 5px;
+    }
+    .label1{
+    	width: 80px;
+    	float: left;
+    	text-align: right;
+    }
+    .label2{
+    	padding-left: 20px;
+    }
+</style>
 <div class="layui-fluid layui-anim febs-anim" id="febs-resource" lay-title="资源管理">
     <div class="layui-row febs-container">
         <div class="layui-col-md12">
@@ -34,13 +47,18 @@
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">学校</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="school" autocomplete="off" class="layui-input">
-                                        </div>
+							                <select name="schoolId"
+							                		xm-select-radio
+							                        xm-select-direction="down"
+							                        xm-select="school"
+							                        xm-select-skin="default">
+							                </select>
+							            </div>
                                     </div>
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">年级</label>
                                         <div class="layui-input-inline">
-							                <select name="grade"
+							                <select name="gradeId"
 							                		xm-select-radio
 							                        xm-select-direction="down"
 							                        xm-select="grade"
@@ -51,7 +69,7 @@
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">科目</label>
                                         <div class="layui-input-inline">
-							                <select name="subject"
+							                <select name="subjectId"
 							                		xm-select-radio
 							                        xm-select-direction="down"
 							                        xm-select="subject"
@@ -91,6 +109,69 @@
     }}
     <span class="layui-badge febs-tag-{{status.color}}">{{ status.title }}</span>
 </script>
+<script type="text/html" id="comment">
+    <a lay-event="comment">评论：{{ d.commentCount }}</a>
+</script>
+<script type="text/html" id="detail">
+<div style="height:300px;overflow:auto">
+  <div class="detail-row">
+    <label class="label1">资源名:</label>
+    <label class="label2">{{d.resourceName}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">评分:</label>
+    <label class="label2">{{d.star}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">创建人:</label>
+    <label class="label2">{{d.creator}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">审核状态:</label>
+    <label class="label2">{{d.status}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">学校:</label>
+    <label class="label2">{{d.schoolName}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">年级:</label>
+    <label class="label2">{{d.gradeName}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">科目:</label>
+    <label class="label2">{{d.subjectName}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">类别:</label>
+    <label class="label2">{{d.categoryName}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">文件类型:</label>
+    <label class="label2">{{d.fileType}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">资源地址:</label>
+    <label class="label2">{{d.url}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">创建时间:</label>
+    <label class="label2">{{d.createTime}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">阅读数:</label>
+    <label class="label2">{{d.readCount}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">评论数:</label>
+    <label class="label2">{{d.commentCount}}</label>
+  </div>
+  <div class="detail-row">
+    <label class="label1">资源介绍:</label>
+    <label class="label2">{{d.description}}</label>
+  </div>
+</div>
+</script>
 <script type="text/html" id="file-type">
     {{#
     var fileType = {
@@ -116,9 +197,10 @@
     <a lay-event="del" shiro:hasPermission="resource:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
-    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect', 'formSelects'], function () {
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect', 'formSelects', 'laytpl'], function () {
         var $ = layui.jquery,
             laydate = layui.laydate,
+            laytpl = layui.laytpl,
             febs = layui.febs,
             form = layui.form,
             table = layui.table,
@@ -202,6 +284,29 @@
             search: false
         });
         
+        formSelects.config('school', {
+            searchUrl: ctx + 'school',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].schoolName,
+                        value: data[i].schoolId
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取学校列表失败');
+            }
+        });
+        
         formSelects.config('grade', {
             searchUrl: ctx + 'dict?field=grade',
             response: {
@@ -213,7 +318,7 @@
                 for (var i = 0; i < data.length; i++) {
                     tranData.push({
                         name: data[i].v,
-                        value: data[i].v
+                        value: data[i].k
                     })
                 }
                 result.data = tranData;
@@ -236,7 +341,7 @@
                 for (var i = 0; i < data.length; i++) {
                     tranData.push({
                         name: data[i].v,
-                        value: data[i].v
+                        value: data[i].k
                     })
                 }
                 result.data = tranData;
@@ -252,14 +357,24 @@
             var data = obj.data,
                 layEvent = obj.event;
             if (layEvent === 'detail') {
-                febs.modal.view('资源信息', 'resource/resource/detail/' + data.resourceName, {
-                    area: $(window).width() <= 750 ? '95%' : '660px'
-                });
+            	var getTpl = detail.innerHTML;
+            	laytpl(getTpl).render(data, function(html){
+	           		layer.open({
+                       type: 1
+                       ,title: '详情'
+                       ,area: '600px;'
+                       ,content: html
+                     });
+           		});
+            	
             }
             if (layEvent === 'del') {
                 febs.modal.confirm('删除资源', '确定删除该资源？', function () {
                     deleteResources(data.resourceId);
                 });
+            }
+            if (layEvent === 'comment') {
+            	febs.navigate("/resource/"+data.resourceId+"/comment");
             }
             if (layEvent === 'edit') {
                 febs.modal.open('修改资源', 'resource/resource/update/' + data.resourceId, {
@@ -308,9 +423,10 @@
                     {field: 'resourceName', title: '资源名', minWidth: 100},
                     {title: '文件类型', templet: '#file-type'},
                     {field: 'creator', title: '作者'},
-                    {field: 'school', title: '学校'},
-                    {title: '审核状态', templet: '#resource-status'},
+                    {field: 'schoolName', title: '学校'},
+                    {title: '评论', templet: '#comment'},
                     {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
+                    {title: '审核状态', templet: '#resource-status'},
                     {title: '操作', toolbar: '#resource-option', minWidth: 140}
                 ]]
             });
@@ -318,12 +434,12 @@
 
         function getQueryParams() {
             return {
-                resourceName: $searchForm.find('input[name="resourceName"]').val().trim(),
+                resourceName: $searchForm.find('input[name="resourceName"]').val(),
                 status: $searchForm.find("select[name='status']").val(),
-                category: $searchForm.find("select[name='category']").val(),
-                school: $searchForm.find("input[name='school']").val().trim(),
-                grade: $searchForm.find("input[name='grade']").val().trim(),
-                subject: $searchForm.find("input[name='subject']").val().trim(),
+                categoryId: $searchForm.find("input[name='category']").val(),
+                schoolId: $searchForm.find("input[name='schoolId']").val(),
+                gradeId: $searchForm.find("input[name='gradeId']").val(),
+                subjectId: $searchForm.find("input[name='subjectId']").val(),
                 invalidate_ie_cache: new Date()
             };
         }

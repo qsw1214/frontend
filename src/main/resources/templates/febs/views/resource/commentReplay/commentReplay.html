@@ -1,0 +1,187 @@
+<div class="layui-fluid layui-anim febs-anim" id="febs-commentReplay" lay-title="回复管理">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="commentReplay-table-form">
+                        <div class="layui-row">
+                            <div class="layui-col-md10">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">回复人：</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="userName" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="query">
+                                    <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
+                                     shiro:hasAnyPermissions="comment:add,comment:update,,commentReplay:export">
+                                    <i class="layui-icon">&#xe875;</i>
+                                </div>
+                            </div>
+                        </div>           
+                        <div class="layui-form-item febs-hide">
+				            <div class="layui-input-block">
+				                <input type="text" name="commentId" id="commentId" data-th-value="${comment.commentId}">
+				            </div>
+				        </div>
+                    </form>
+                    <div class="layui-row">
+                    	<blockquote class="layui-elem-quote" data-th-text="${comment.userName}+'：'+${comment.content}">
+                    	</blockquote>
+                    </div>
+                    <table lay-filter="commentReplayTable" lay-data="{id: 'commentReplayTable'}"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="commentReplay-option">
+    <span shiro:lacksPermission="comment:view,comment:update,comment:delete">
+        <span class="layui-badge-dot febs-bg-orange"></span> 无权限
+    </span>
+    <a lay-event="detail" shiro:hasPermission="comment:view"><i
+            class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
+    <a lay-event="del" shiro:hasPermission="comment:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'form', 'table', 'febs', 'layer'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            layer = layui.layer,
+            form = layui.form,
+            table = layui.table,
+            dropdown = layui.dropdown,
+            commentId = layui.$('#commentId').val(),
+            $view = $('#febs-commentReplay'),
+            $query = $view.find('#query'),
+            $reset = $view.find('#reset'),
+            $searchForm = $view.find('form'),
+            sortObject = {field: 'createTime', type: null},
+            tableIns;
+
+        form.render();
+
+        initTable();
+
+        dropdown.render({
+            elem: $view.find('.action-more'),
+            click: function (name, elem, event) {
+                var checkStatus = table.checkStatus('commentReplayTable');
+                if (name === 'add') {
+                    febs.modal.open('新增回复', 'resource/comment/'+commentId+'/commentReplay/add', {
+                        btn: ['提交', '重置'],
+                        area: $(window).width() <= 750 ? '95%' : '50%',
+                        yes: function (index, layero) {
+                            $('#commentReplay-add').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            $('#commentReplay-add').find('#reset').trigger('click');
+                            return false;
+                        }
+                    });
+                }
+                if (name === 'delete') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择需要删除的回复');
+                    } else {
+                        febs.modal.confirm('删除回复', '确定删除该回复？', function () {
+                            var commentReplayIds = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                commentReplayIds.push(item.commentReplayId)
+                            });
+                            deleteCommentReplays(commentReplayIds.join(','));
+                        });
+                    }
+                }
+            },
+            options: [{
+                name: 'add',
+                title: '新增回复',
+                perms: 'comment:add'
+            }, {
+                name: 'delete',
+                title: '删除回复',
+                perms: 'comment:delete'
+            }]
+        });
+
+        table.on('tool(commentReplayTable)', function (obj) {
+            var data = obj.data,
+                layEvent = obj.event;
+            if (layEvent === 'detail') {
+            	layer.open({
+                  type: 1
+                  ,title: '详情'
+                  ,area: '300px;'
+                  ,content: '<div style="padding: 20px;">'+ data.content +'</div>'
+                });
+            }
+            if (layEvent === 'del') {
+                febs.modal.confirm('删除回复', '确定删除该回复？', function () {
+                    deleteCommentReplays(data.commentReplayId);
+                });
+            }
+        });
+
+        table.on('sort(commentReplayTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({
+                initSort: obj,
+                where: $.extend(getQueryParams(), {
+                    field: obj.field,
+                    order: obj.type
+                })
+            });
+        });
+
+        $query.on('click', function () {
+            var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+            tableIns.reload({where: params, page: {curr: 1}});
+        });
+
+        $reset.on('click', function () {
+            $searchForm[0].reset();
+            sortObject.type = 'null';
+            tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
+        });
+
+        function initTable() {
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'commentReplayTable',
+                url: ctx + 'commentReplay/list',
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'commentReplayId', title: '回复id', minWidth: 100},
+                    {field: 'userName', title: '回复人'},
+                    {field: 'content', title: '回复内容'},
+                    {field: 'createTime', title: '回复时间', minWidth: 180, sort: true},
+                    {title: '操作', toolbar: '#commentReplay-option', minWidth: 140}
+                ]]
+            });
+        }
+
+        function getQueryParams() {
+            return {
+                userName: $searchForm.find('input[name="userName"]').val(),
+                invalidate_ie_cache: new Date()
+            };
+        }
+
+        function deleteCommentReplays(commentReplayIds) {
+            febs.get(ctx + 'commentReplay/delete/' + commentReplayIds, null, function () {
+                febs.alert.success('删除回复成功');
+                $query.click();
+            });
+        }
+    })
+</script>

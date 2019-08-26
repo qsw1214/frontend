@@ -8,15 +8,9 @@
                             <div class="layui-col-md10">
                                 <div class="layui-form-item">
                                     <div class="layui-inline">
-                                        <label class="layui-form-label layui-form-label-sm">学校名</label>
+                                        <label class="layui-form-label layui-form-label-sm">学校名称</label>
                                         <div class="layui-input-inline">
                                             <input type="text" name="school" autocomplete="off" class="layui-input">
-                                        </div>
-                                    </div>
-                                    <div class="layui-inline">
-                                        <label class="layui-form-label layui-form-label-sm">所属地区</label>
-                                        <div class="layui-input-inline">
-                                            <input type="text" name="district" id="area" class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline">
@@ -28,7 +22,32 @@
                                                 <option value="分校">分校</option>
                                             </select>
                                         </div>
-                                    </div>      
+                                    </div>
+                                    <div class="layui-inline" id="area">
+                                        <label class="layui-form-label">选择地区</label>
+                                        <div class="layui-input-inline" style="width: 180px;">
+                                            <select name="province" class="province-selector"  lay-filter="province-1">
+                                                <option value="">请选择省</option>
+                                            </select>
+                                        </div>
+                                        <!--<div class="layui-input-inline" style="width: 180px;">-->
+                                            <!--<select name="city" class="city-selector"   lay-filter="city-1">-->
+                                                <!--<option value="">请选择市</option>-->
+                                            <!--</select>-->
+                                        <!--</div>-->
+                                        <!--<div class="layui-input-inline" style="width: 180px;">-->
+                                            <!--<select name="country" class="county-selector"  lay-filter="county-1">-->
+                                                <!--<option value="">请选择区</option>-->
+                                            <!--</select>-->
+                                        <!--</div>-->
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">学校类别</label>
+                                        <div class="layui-input-inline">
+                                            <select name="schoolCategory" id="schoolCategory">
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
@@ -48,6 +67,7 @@
         </div>
     </div>
 </div>
+<script src="./mods/layarea.js"></script>
 <script type="text/html" id="user-status">
     {{#
     var status = {
@@ -71,6 +91,7 @@
     layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect'], function () {
         var $ = layui.jquery,
             laydate = layui.laydate,
+            layarea = layui.layarea,
             febs = layui.febs,
             form = layui.form,
             table = layui.table,
@@ -80,20 +101,37 @@
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
             $searchForm = $view.find('form'),
-            /* sortObject = {field: 'createTime', type: null}, */
-            $header = $view.find('#form-header'),
+            schoolCategory=$('#schoolCategory'),
             tableIns;
-
+        getschoolCategory();
         form.render();
 
         initTable();
-
+        layarea.render({
+            elem: '#area',
+        });
         laydate.render({
             elem: '#createTime',
             range: true,
             trigger: 'click'
         });
- 
+        function getschoolCategory() {
+            $.ajax({
+                type:'get',
+                url: ctx+"dict?field=category",
+                success:function (res) {
+                    var items=res.data;
+                    if (res.data.length==0){
+                        schoolCategory.append('<option value="'+""+'">'+""+'</option>');
+                    }else{
+                        for (var i=0;i<items.length;i++) {
+                            $('#schoolCategory').append('<option value="' + '' + '">' + items[i].v + '</option>');
+                        }
+                    }
+                    form.render('select');
+                }
+            });
+        }
         dropdown.render({
             elem: $view.find('.action-more'),
             click: function (name, elem, event) {
@@ -118,22 +156,9 @@
                         febs.modal.confirm('删除学校', '确定删除该学校？', function () {
                             var schoolIds = [];
                             layui.each(checkStatus.data, function (key, item) {
-                            	schoolIds.push(item.userId)
+                            	schoolIds.push(item.schoolId)
                             });
-                            deleteSchools(schoolIds.join(','));
-                        });
-                    }
-                }
-                if (name === 'reset') {
-                    if (!checkStatus.data.length) {
-                        febs.alert.warn('请选择需要重置密码的用户');
-                    } else {
-                        var usernames = [];
-                        layui.each(checkStatus.data, function (key, item) {
-                            usernames.push(item.username)
-                        });
-                        febs.post(ctx + 'user/password/reset/' + usernames.join(','), null, function () {
-                            febs.alert.success('所选用户密码已重置为1234qwer');
+                            deleteUsers(schoolIds.join(','));
                         });
                     }
                 }
@@ -141,7 +166,7 @@
                     var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
                     params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
                     params.pageNum = $view.find(".layui-laypage-em").next().html();
-                    febs.download(ctx + 'user/excel', params, '学校信息表.xlsx');
+                    febs.download(ctx + 'school/excel', params, '学校信息表.xlsx');
                 }
             },
             options: [{
@@ -217,11 +242,11 @@
                     {type: 'checkbox'},
                     {field: 'schoolName', title: '学校名称', minWidth: 150},
                     {field: 'schoolType', title: '学校类型',minWidth: 100},
+                    {field: 'schoolCategory', title: '学校类别',minWidth: 100},
                     {field: 'linkMan', title: '主负责人'},
                     {field: 'linkPhone', title: '联系电话', minWidth: 165},
                     {field: 'postCode', title: '邮编'},
                     {field: 'address', title: '学校所在地', minWidth: 210},
-                    {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
                     {title: '操作', toolbar: '#user-option', minWidth: 140}
                 ]]
             });
@@ -231,13 +256,17 @@
             return {
             	schoolName: $searchForm.find('input[name="school"]').val().trim(),
             	schoolType: $searchForm.find("select[name='status']").val(),
+                province:$searchForm.find("select[name='province']").val(),
+//                city:$searchForm.find("select[name='city']").val(),
+//                country:$searchForm.find("select[name='country']").val(),
+                schoolCategory:$searchForm.find("select[name='schoolCategory']").val(),
             	invalidate_ie_cache: new Date()
             };
         }
 
         function deleteUsers(schoolIds) {
-            febs.get(ctx + 'basicInfo/school/delete/' + schoolIds, null, function () {
-                febs.alert.success('删除用户成功');
+            febs.get(ctx + 'school/delete/' + schoolIds, null, function () {
+                febs.alert.success('删除学校成功');
                 $query.click();
             });
         }

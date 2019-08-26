@@ -37,14 +37,6 @@ public class Comment {
     private Long resourceId;
 
     /**
-     * 资源名称
-     */
-    @TableField("resource_name")
-    @NotBlank(message = "{required}")
-    @Size(max = 255, message = "{noMoreThan}")
-    private String resourceName;
-
-    /**
      * 评论人
      */
     @TableField("user_name")
@@ -78,12 +70,6 @@ public class Comment {
     @NotBlank(message = "{required}")
     @Size(max = 1000, message = "{noMoreThan}")
     private String content;
-
-    /**
-     * 显示状态：0->不显示；1->显示
-     */
-    @TableField("show_status")
-    private Integer showStatus;
 
     /**
      * 回复数量

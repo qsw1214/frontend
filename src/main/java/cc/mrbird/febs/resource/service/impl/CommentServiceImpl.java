@@ -81,7 +81,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     public void deleteComments(String commentIds) {
     	List<String> list = Arrays.asList(commentIds.split(StringPool.COMMA));
     	if(list.size()>0){
-	        this.baseMapper.delete(new QueryWrapper<Comment>().lambda().in(Comment::getCommentId, list)); // 删除评论
+    		Comment comment = this.baseMapper.selectById(list.get(0));
+	        int n = this.baseMapper.delete(new QueryWrapper<Comment>().lambda().in(Comment::getCommentId, list)); // 删除评论
+	        resourceService.increaseCommentCount(comment.getResourceId(), -n);
 	        commentReplayService.deleteCommentReplaysByCommentId(list); // 删除回复
     	}
 	}
