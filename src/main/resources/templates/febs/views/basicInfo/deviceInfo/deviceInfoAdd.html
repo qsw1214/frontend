@@ -10,20 +10,20 @@
     <form class="layui-form" action="" lay-filter="deviceInfo-add-form">
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">设备名：</label>
-            <div class="layui-input-block">
+            <div class="layui-input-block ">
                 <input type="text" name="deviceName" minlength="2" maxlength="10" lay-verify="range|deviceName"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">购买时间：</label>
-            <div class="layui-input-block">
+            <label class="layui-form-label febs-form-item-require">购买时间：</label>
+            <div class="layui-input-block ">
                 <input type="date" name="buytTime" lay-verify="buytTime" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">厂商名称：</label>
-            <div class="layui-input-block">
+            <label class="layui-form-label febs-form-item-require">厂商名称：</label>
+            <div class="layui-input-block ">
                 <input type="text" name="firmName" lay-verify="firmName" maxlength="50" autocomplete="off"
                        class="layui-input">
             </div>
@@ -37,7 +37,7 @@
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">所属学校：</label>
-            <div class="layui-input-block">
+            <div class="layui-input-block" >
                 <select name="schoolId"
                         lay-verify="required"
                         xm-select-direction="down"
@@ -47,8 +47,8 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">负责人：</label>
-            <div class="layui-input-block">
+            <label class="layui-form-label febs-form-item-require">负责人：</label>
+            <div class="layui-input-block ">
                 <input type="text" name="username" lay-verify="username" maxlength="50" autocomplete="off"
                        class="layui-input">
             </div>
@@ -92,7 +92,7 @@
         });*/
 
         formSelects.config('deviceInfo-add-school', {
-            searchUrl: ctx + 'school/getAllSchools',
+            searchUrl: ctx + 'school',
             response: {
                 statusCode: 200
             },
