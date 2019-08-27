@@ -61,7 +61,6 @@ public class ApprovalController {
         try {
             DingTalkEncryptor dingTalkEncryptor = new DingTalkEncryptor(Constant.TOKEN, Constant.ENCODING_AES_KEY,
                     Constant.CORP_ID);
-
             //从post请求的body中获取回调信息的加密数据进行解密处理
             String encryptMsg = json.getString("encrypt");
             String plainText = dingTalkEncryptor.getDecryptMsg(signature, timestamp, nonce, encryptMsg);

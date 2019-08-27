@@ -35,13 +35,13 @@
                                             <input type="text" name="mobile" autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
-                                    <!--<div class="layui-inline">
+                                    <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">部门</label>
                                         <div class="layui-input-inline">
                                             <input type="text" name="dept" id="dept" lay-filter="dept"
                                                    class="layui-input">
                                         </div>
-                                    </div>-->
+                                    </div>
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">性别</label>
                                         <div class="layui-input-inline">
@@ -199,13 +199,13 @@
             }]
         });
 
-        /*treeSelect.render({
+        treeSelect.render({
             elem: $view.find('#dept'),
             type: 'get',
             data: ctx + 'dept/select/tree',
             placeholder: '请选择',
             search: false
-        });*/
+        });
 
         table.on('tool(userTable)', function (obj) {
             var data = obj.data,
@@ -266,7 +266,7 @@
                     {type: 'checkbox'},
                     {field: 'username', title: '用户名', minWidth: 100},
                     {title: '性别', templet: '#user-sex'},
-                    /*{field: 'deptName', title: '部门'},*/
+                    {field: 'deptName', title: '部门'},
                     {field: 'mobile', title: '手机', minWidth: 165},
                     {field: 'email', title: '邮箱', minWidth: 180},
                     {title: '状态', templet: '#user-status'},
