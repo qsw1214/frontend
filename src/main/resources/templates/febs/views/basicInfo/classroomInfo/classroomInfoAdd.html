@@ -1,0 +1,172 @@
+<style>
+    #user-add {
+        padding: 20px 25px 25px 0;
+    }
+    #user-add .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="user-add">
+    <form class="layui-form" action="" lay-filter="user-add-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">学校名称：</label>
+            <div class="layui-input-block">
+                <select name="schoolId" id="schoolId">
+                </select>
+            </div>
+        </div>
+<!--         <div class="layui-form-item">
+            <label class="layui-form-label">课程：</label>
+            <div class="layui-input-block">
+                <div type="text" name="subject" class="layui-input">
+            </div>
+        </div> -->
+         <div class="layui-form-item">
+            <label class="layui-form-label">课程:</label>
+            <div class="layui-input-block"  style="width: 180px;">
+                <select name="subject" id="subjectInfo">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">年级:</label>
+            <div class="layui-input-block"  style="width: 180px;">
+                <select name="grade" id="classInfo">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">位置：</label>
+            <div class="layui-input-block">
+                <input type="text" name="location" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">容纳数量：</label>
+            <div class="layui-input-block">
+                <input type="text" name="containNum" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">简介：</label>
+            <div class="layui-input-block">
+                <textarea name="introduce" maxlength="100" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">播放地址：</label>
+            <div class="layui-input-block">
+                <input type="text" name="url" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="user-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            treeSelect = layui.treeSelect,
+            form = layui.form,
+            $view = $('#user-add'),
+            classInfo=$('#classInfo'),
+            subjectInfo=$('#subjectInfo'),
+            school=$('#schoolId'),
+            validate = layui.validate;
+
+        getSchool();
+        getGrade();
+        getSubject();
+        form.verify(validate);
+        form.render();
+
+        formSelects.render();
+
+
+
+        formSelects.config('user-add-role', {
+            searchUrl: ctx + 'role',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].roleName,
+                        value: data[i].roleId
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取角色列表失败');
+            }
+        });
+
+        function getSchool() {
+            febs.get(ctx+'school/list',null,function (res) {
+                var items=res.data;
+                if (items.total==0){
+                    school.append('<option value="'+""+'">'+""+'</option>');
+                }else{
+                    school.append('<option value="' + items.rows[0].schoolId + '">' + items.rows[0].schoolName+ '</option>');
+                }
+                form.render('select');
+            });
+        }
+	    function getGrade() {
+	        $.ajax({
+	            type:'get',
+	            url: ctx+"dict?field=grade",
+	            success:function (res) {
+	                var items=res.data;
+	                if (items.length==0){
+	                    classInfo.append('<option>'+""+'</option>');
+	                }else{
+	                    for (var i=0;i<items.length;i++) {
+	                        classInfo.append('<option>' + items[i].v + '</option>');
+	                    }
+	                }
+	                form.render('select');
+	            }
+	        });
+        }
+          function getSubject() {
+            $.ajax({
+                type:'get',
+                url: ctx+"dict?field=subject",
+                success:function (res) {
+                    var items=res.data;
+                    if (items.length==0){
+                    	subjectInfo.append('<option>'+""+'</option>');
+                    }else{
+                        for (var i=0;i<items.length;i++) {
+                        	subjectInfo.append('<option>' + items[i].v + '</option>');
+                        }
+                    }
+                    form.render('select');
+                }
+            });
+        }
+        form.on('submit(user-add-form-submit)', function (data) {
+            console.log(data.field);
+            febs.post(ctx + 'classroomInfo', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('新增教室成功');
+                $('#febs-user').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>
