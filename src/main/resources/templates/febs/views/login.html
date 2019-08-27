@@ -69,6 +69,13 @@
     //用户验证登录
 var password_Boolean = false;
 var user_Boolean = false;
+function getPath(){
+        var curWwwPath = window.document.location.href;
+        var pathName = window.document.location.pathname;
+        var pos = curWwwPath.indexOf(pathName);
+        var localhostPaht = curWwwPath.substring(0, pos);
+        return localhostPaht;
+}
 $('#username').blur(function(){
 	if ((/^[a-z0-9_-]{2,8}$/).test($("#username").val())){
 		$('#username_hint').html("✔").css("color","green");
