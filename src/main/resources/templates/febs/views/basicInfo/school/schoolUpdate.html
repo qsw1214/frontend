@@ -129,7 +129,7 @@
                         schoolCategory.append('<option value="'+""+'">'+""+'</option>');
                     }else{
                         for (var i=0;i<items.length;i++) {
-                            $('#schoolCate').append('<option value="' + '' + '">' + items[i].v + '</option>');
+                            $('#schoolCate').append('<option value="' + items[i].v + '">' + items[i].v + '</option>');
                         }
                     }
                     form.render('select');
@@ -163,6 +163,7 @@
 
         form.on('submit(school-update-form-submit)', function (data) {
         	data.field.schoolId=school.schoolId;
+        	console.log(data.field);
             if (febs.nativeEqual(data.field, school)) {
                 febs.alert.warn('数据未作任何修改！');
                 return false;
@@ -170,7 +171,7 @@
             febs.post(ctx + 'school/update', data.field, function () {
                 layer.closeAll();
                 febs.alert.success(' 学校信息修改成功');
-                $('#febs-user').find('#query').click();
+                $('#febs-user').find('#reset').click();
             });
             return false;
         });

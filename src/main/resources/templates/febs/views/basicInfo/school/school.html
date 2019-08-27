@@ -18,15 +18,15 @@
                                         <div class="layui-input-inline">
                                             <select name="status">
                                                 <option value=""></option>
-                                                <option value="主校">主校</option>
-                                                <option value="分校">分校</option>
+                                                <option value="0">主校</option>
+                                                <option value="1">分校</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="layui-inline" id="area">
                                         <label class="layui-form-label">选择地区</label>
                                         <div class="layui-input-inline" style="width: 180px;">
-                                            <select name="province" class="province-selector"  lay-filter="province-1">
+                                            <select name="province" class="province-selector" lay-filter="province-1">
                                                 <option value="">请选择省</option>
                                             </select>
                                         </div>
@@ -53,6 +53,9 @@
                             <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="query">
                                     <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
                                      shiro:hasAnyPermissions="user:add,user:update,user:password:reset,user:export">
@@ -102,6 +105,7 @@
             $reset = $view.find('#reset'),
             $searchForm = $view.find('form'),
             schoolCategory=$('#schoolCategory'),
+            sortObject = {field: 'schoolName', type: null},
             tableIns;
         getschoolCategory();
         form.render();
@@ -230,7 +234,7 @@
 
         $reset.on('click', function () {
             $searchForm[0].reset();
-            tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
+            tableIns.reload({page: {curr: 1}});
         });
         
         function initTable() {
@@ -253,6 +257,7 @@
         }
 
         function getQueryParams() {
+//            console.log($searchForm.find("select[name='province']").val());   北京
             return {
             	schoolName: $searchForm.find('input[name="school"]').val().trim(),
             	schoolType: $searchForm.find("select[name='status']").val(),
@@ -267,7 +272,7 @@
         function deleteUsers(schoolIds) {
             febs.get(ctx + 'school/delete/' + schoolIds, null, function () {
                 febs.alert.success('删除学校成功');
-                $query.click();
+                $reset.click();
             });
         }
     })

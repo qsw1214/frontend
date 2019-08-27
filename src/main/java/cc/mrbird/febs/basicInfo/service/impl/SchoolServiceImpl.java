@@ -130,9 +130,9 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     public void deleteSchool(String schoolIds) {
     	List<String> list = Arrays.asList(schoolIds.split(StringPool.COMMA));
     	if(list.size()>0){
-	        classInfoService.deleteClassInfosByschoolId(list); // 删除班级关联
-	        classroomInfoService.deleteClassroomInfosByschoolId(list);// 删除教室关联
-	        deviceInfoService.deleteDeviceInfoByschoolId(list);// 删除教室设备关联
+//	        classInfoService.deleteClassInfosByschoolId(list); // 删除班级关联
+//	        classroomInfoService.deleteClassroomInfosByschoolId(list);// 删除教室关联
+//	        deviceInfoService.deleteDeviceInfoByschoolId(list);// 删除教室设备关联
 	        this.baseMapper.delete(new QueryWrapper<School>().lambda().in(School::getSchoolId, list));
 
     	}

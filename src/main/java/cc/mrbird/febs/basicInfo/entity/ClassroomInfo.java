@@ -4,6 +4,7 @@ package cc.mrbird.febs.basicInfo.entity;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -30,7 +31,7 @@ public class ClassroomInfo {
      * 
      */
     @TableField("school_id")
-    @NotBlank(message = "{required}")
+    @NotNull(message = "{required}")
     private Integer schoolId;
 
     /**
@@ -75,10 +76,5 @@ public class ClassroomInfo {
     @TableField("garde")
     private String garde;
 
-    /**
-     * 
-     */
-    @TableField("order_num")
-    private Long orderNum;
 
 }

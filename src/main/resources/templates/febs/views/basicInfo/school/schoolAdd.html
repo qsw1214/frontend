@@ -201,7 +201,6 @@
             formData.append('city',data.field.city);
             formData.append('country',data.field.country);
             formData.append('file', $("#file")[0].files[0]);
-            console.log(formData)
             var url=ctx+'school';
             $.ajax({
                 type:'POST',
@@ -212,7 +211,7 @@
                 success:function(data){
                     layer.closeAll();
                     febs.alert.success('新增学校成功');
-                    $('#febs-user').find('#query').click();
+                    $('#febs-user').find('#reset').click();
                 }
             });
             return false;

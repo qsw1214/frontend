@@ -55,6 +55,7 @@
             validate = layui.validate,
             classInfo=$('#classInfo'),
             school=$('#schoolId'),
+            treeSelect = layui.treeSelect,
             sortObject = {field: 'createTime', type: null};
 
         getGrade();
@@ -62,7 +63,6 @@
         form.verify(validate);
         form.render();
         formSelects.render();
-        
         function getSchool() {
             febs.get(ctx+'school/list',null,function (res) {
                 var items=res.data;
@@ -81,10 +81,10 @@
                 success:function (res) {
                     var items=res.data;
                     if (items.length==0){
-                        classInfo.append('<option value="'+""+'">'+""+'</option>');
+                        classInfo.append('<option>'+""+'</option>');
                     }else{
                         for (var i=0;i<items.length;i++) {
-                            classInfo.append('<option value="' + '' + '">' + items[i].v + '</option>');
+                            classInfo.append('<option>' + items[i].v + '</option>');
                         }
                     }
                     form.render('select');
@@ -93,6 +93,7 @@
         }
 
         form.on('submit(grade-add-form-submit)', function (data) {
+            data.field.grade=$("#classInfo option:selected").val();
             febs.post(ctx+'classInfo',data.field,function () {
                 layer.closeAll();
                 febs.alert.success('新增班级成功');
@@ -127,5 +128,9 @@
         height: 40px;
         line-height: 40px;
         margin-left: 110px;
+    }
+    .layui-form-select dl{
+        position: relative;
+        top:0;
     }
 </style>

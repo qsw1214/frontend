@@ -19,7 +19,9 @@
         <div class="layui-form-item">
             <label class="layui-form-label">课程：</label>
             <div class="layui-input-block">
-                <input type="text" name="subject" class="layui-input">
+            	<select name="subject" id="subjectInfo">
+                </select>
+                
             </div>
         </div>
         <div class="layui-form-item">
@@ -54,6 +56,8 @@
                 <input type="text" name="url" class="layui-input">
             </div>
         </div>
+
+
         <div class="layui-form-item febs-hide">
             <button class="layui-btn" lay-submit="" lay-filter="school-update-form-submit" id="submit"></button>
         </div>
@@ -69,12 +73,14 @@
             form = layui.form,
             $form = $('form'),
             grade=$('#classInfo'),
+            subjectInfo=$('#subjectInfo'),
             school=$('#schoolId'),
             classroomInfo = [[${classroomInfo}]],
             $view = $('#school-update'),
             validate = layui.validate;
         getSchool();
         getGrade();
+        getSubject();
         initUserValue();
         form.verify(validate);
         form.render();
@@ -112,13 +118,30 @@
                 form.render('select');
             });
         }
+        
+        function getSubject() {
+            $.ajax({
+                type:'get',
+                url: ctx+"dict?field=subject",
+                success:function (res) {
+                    var items=res.data;
+                    if (items.length==0){
+                        subjectInfo.append('<option>'+""+'</option>');
+                    }else{
+                        for (var i=0;i<items.length;i++) {
+                        	subjectInfo.append('<option>' + items[i].v + '</option>');
+                        }
+                    }
+                    form.render('select');
+                }
+            });
+        }
         function initUserValue() {
             form.val("school-update-form", {
                 "location": classroomInfo.location,
                 "containNum": classroomInfo.containNum,
                 "introduce": classroomInfo.introduce,
                 "url": classroomInfo.url,
-/*                 "state": classroomInfo.state, */
                 "subject": classroomInfo.subject,
                 "garde": classroomInfo.garde
             });

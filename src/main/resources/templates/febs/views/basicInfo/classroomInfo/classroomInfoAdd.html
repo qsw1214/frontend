@@ -15,18 +15,11 @@
                 </select>
             </div>
         </div>
-<!--         <div class="layui-form-item">
-            <label class="layui-form-label">课程：</label>
-            <div class="layui-input-block">
-                <div type="text" name="subject" class="layui-input">
-            </div>
-        </div> -->
-         <div class="layui-form-item">
-            <label class="layui-form-label">课程:</label>
+        <div class="layui-form-item">
+            <label class="layui-form-label">科目：</label>
             <div class="layui-input-block"  style="width: 180px;">
                 <select name="subject" id="subjectInfo">
                 </select>
-            </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">年级:</label>
@@ -43,7 +36,7 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">容纳数量：</label>
+            <label class="layui-form-label">数量：</label>
             <div class="layui-input-block">
                 <input type="text" name="containNum" class="layui-input">
             </div>
@@ -125,31 +118,31 @@
                 form.render('select');
             });
         }
-	    function getGrade() {
-	        $.ajax({
-	            type:'get',
-	            url: ctx+"dict?field=grade",
-	            success:function (res) {
-	                var items=res.data;
-	                if (items.length==0){
-	                    classInfo.append('<option>'+""+'</option>');
-	                }else{
-	                    for (var i=0;i<items.length;i++) {
-	                        classInfo.append('<option>' + items[i].v + '</option>');
-	                    }
-	                }
-	                form.render('select');
-	            }
-	        });
+        function getGrade() {
+            $.ajax({
+                type:'get',
+                url: ctx+"dict?field=grade",
+                success:function (res) {
+                    var items=res.data;
+                    if (items.length==0){
+                        classInfo.append('<option>'+""+'</option>');
+                    }else{
+                        for (var i=0;i<items.length;i++) {
+                            classInfo.append('<option>' + items[i].v + '</option>');
+                        }
+                    }
+                    form.render('select');
+                }
+            });
         }
-          function getSubject() {
+        function getSubject() {
             $.ajax({
                 type:'get',
                 url: ctx+"dict?field=subject",
                 success:function (res) {
                     var items=res.data;
                     if (items.length==0){
-                    	subjectInfo.append('<option>'+""+'</option>');
+                        subjectInfo.append('<option>'+""+'</option>');
                     }else{
                         for (var i=0;i<items.length;i++) {
                         	subjectInfo.append('<option>' + items[i].v + '</option>');

@@ -73,17 +73,13 @@ public class SchoolController extends BaseController {
         return FebsUtil.view("basicInfo/school/schoolDetail");
     }
 
-/*    @GetMapping
-    public FebsResponse getAllSchool(School school) {
-        return new FebsResponse().success().data(schoolService.findSchools(school));
-    }*/
 
-    //根据id查询
-	@GetMapping("school/{schoolId}")
-	@ResponseBody
-	public School schoolById(@NotNull(message = "{required}") @PathVariable Long schoolId) {
-		return this.schoolService.getById(schoolId);
-	}
+//    //根据id查询
+//	@GetMapping("school/{schoolId}")
+//	@ResponseBody
+//	public School schoolById(@NotNull(message = "{required}") @PathVariable Long schoolId) {
+//		return this.schoolService.getById(schoolId);
+//	}
   
     @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/school/update/{schoolId}")
   //@RequiresPermissions("schoolInfo:update")

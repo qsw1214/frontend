@@ -35,14 +35,14 @@ INSERT INTO `jcc_area` VALUES ('1002', '湖南省', '长沙市', '天心区');
 -- ----------------------------
 DROP TABLE IF EXISTS `jcc_class_info`;
 CREATE TABLE `jcc_class_info` (
-  `class_id` int(11) NOT NULL,
+  `class_id` int(11) NOT NULL AUTO_INCREMENT,
   `class_name` varchar(30) DEFAULT NULL,
   `username` varchar(30) DEFAULT NULL,
-  `grade_id` int(11) DEFAULT NULL,
-  `year` char(20) DEFAULT NULL,
+  `grade` varchar(11) DEFAULT NULL,
+  `school_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`class_id`),
-  KEY `FK_Reference_18` (`grade_id`),
-  CONSTRAINT `FK_Reference_18` FOREIGN KEY (`grade_id`) REFERENCES `jcc_grade_info` (`grade_id`)
+  KEY `FK_Reference_22` (`school_id`),
+  CONSTRAINT `jcc_school_info` FOREIGN KEY (`school_id`) REFERENCES `jcc_school_info` (`school_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -54,18 +54,19 @@ CREATE TABLE `jcc_class_info` (
 -- ----------------------------
 DROP TABLE IF EXISTS `jcc_classroom_info`;
 CREATE TABLE `jcc_classroom_info` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `school_id` int(11) DEFAULT NULL,
   `location` char(100) DEFAULT NULL,
   `contain_num` int(11) DEFAULT NULL,
-  `purpose` char(100) DEFAULT NULL,
+  `introduce` char(100) DEFAULT NULL,
   `url` char(100) DEFAULT NULL,
   `state` int(11) DEFAULT NULL,
+  `subject` varchar(10) DEFAULT NULL,
+  `garde` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_Reference_22` (`school_id`),
   CONSTRAINT `jcc_classroom_info_ibfk_1` FOREIGN KEY (`school_id`) REFERENCES `jcc_school_info` (`school_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 -- ----------------------------
 -- Records of jcc_classroom_info
 -- ----------------------------
@@ -99,37 +100,6 @@ CREATE TABLE `jcc_device_info` (
 -- ----------------------------
 INSERT INTO `jcc_device_info` VALUES ('1', '投影仪', null, 'kk', '2019-08-15', '硬件', null, null, '1', '1');
 INSERT INTO `jcc_device_info` VALUES ('2', '2', null, '2', '2014-12-25', '2', null, null, '0', '0');
-
--- ----------------------------
--- Table structure for jcc_firm_info
--- ----------------------------
-DROP TABLE IF EXISTS `jcc_firm_info`;
-CREATE TABLE `jcc_firm_info` (
-  `firm_id` int(11) NOT NULL,
-  `firm_name` varchar(30) DEFAULT NULL,
-  PRIMARY KEY (`firm_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of jcc_firm_info
--- ----------------------------
-
--- ----------------------------
--- Table structure for jcc_grade_info
--- ----------------------------
-DROP TABLE IF EXISTS `jcc_grade_info`;
-CREATE TABLE `jcc_grade_info` (
-  `grade_id` int(11) NOT NULL,
-  `grade_name` varchar(30) DEFAULT NULL,
-  `school_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`grade_id`),
-  KEY `FK_Reference_23` (`school_id`),
-  CONSTRAINT `jcc_grade_info_ibfk_1` FOREIGN KEY (`school_id`) REFERENCES `jcc_school_info` (`school_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of jcc_grade_info
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for jcc_operate_desc
@@ -209,15 +179,15 @@ CREATE TABLE `jcc_school_info` (
   `school_name` varchar(30) DEFAULT NULL,
   `introduce` varchar(1000) DEFAULT NULL,
   `school_type` varchar(30) DEFAULT NULL,
-  `linkman` varchar(30) DEFAULT NULL,
-  `linkphone` varchar(20) DEFAULT NULL,
-  `postcode` varchar(10) DEFAULT NULL,
-  `area_code` char(30) DEFAULT NULL,
+  `school_category` varchar(20) DEFAULT NULL,
+  `link_man` varchar(30) DEFAULT NULL,
+  `link_phone` varchar(20) DEFAULT NULL,
+  `post_code` varchar(10) DEFAULT NULL,
   `address` varchar(100) DEFAULT NULL,
   `lng` varchar(20) DEFAULT NULL,
   `lat` varchar(20) DEFAULT NULL,
   `create_time` date DEFAULT NULL,
-  `certificate_book` char(100) DEFAULT NULL,
+  `picture` char(100) DEFAULT NULL,
   `country_leader_name` char(50) DEFAULT NULL,
   `country_date` date DEFAULT NULL,
   `city_leader_name` char(50) DEFAULT NULL,
@@ -225,11 +195,12 @@ CREATE TABLE `jcc_school_info` (
   `province_leader_name` char(50) DEFAULT NULL,
   `province_date` date DEFAULT NULL,
   `state` int(4) DEFAULT NULL,
-  PRIMARY KEY (`school_id`),
-  KEY `FK_Reference_31` (`area_code`),
-  CONSTRAINT `jcc_school_info_ibfk_1` FOREIGN KEY (`area_code`) REFERENCES `jcc_area` (`area_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
-
+  `province` varchar(45) DEFAULT NULL,
+  `city` varchar(45) DEFAULT NULL,
+  `country` varchar(45) DEFAULT NULL,
+  `class_num` int(4) DEFAULT NULL,
+  PRIMARY KEY (`school_id`)
+)ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 -- ----------------------------
 -- Records of jcc_school_info
 -- ----------------------------

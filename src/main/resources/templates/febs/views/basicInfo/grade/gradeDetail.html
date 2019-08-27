@@ -35,29 +35,17 @@
     }
 
 </style>
-<div class="layui-fluid" id="febs-user-detail" lay-title="个人信息">
+<div class="layui-fluid" id="febs-user-detail" lay-title="班级信息">
 	<div id="user-info-wrapper">
-        <div id="user-img">
-            <img alt="学校图片" title="点我更换图片" data-th-src="@{febs/images/avatar/}+${school.picture}">
-        </div>
         <div class="user-info">
-           <div><span class="layui-icon layui-icon-user"></span> 学校名称：
-                 [[${school.schoolName}]]
-            </div> 
-            <div><span class="layui-icon layui-icon-trophy"></span> 学校类型：
-                [[${school.schoolType}]]
+           <div><span class="layui-icon layui-icon-user"></span> 班级名称：
+                 [[${classInfo.className}]]
             </div>
-            <div><span class="layui-icon layui-icon-home"></span> 主负责人：
-                [[${#strings.defaultString(school.linkMan,'暂无主负责人')}]]
+            <div><span class="layui-icon layui-icon-home"></span> 班主任：
+                [[${#strings.defaultString(classInfo.username,'暂无班主任')}]]
             </div>
-             <div><span class="layui-icon layui-icon-trophy"></span> 联系电话：
-                [[${#strings.defaultString(school.linkPhone,'暂无联系电话')}]]
-            </div>
-             <div><span class="layui-icon layui-icon-skin"></span> 邮编：
-                [[${#strings.defaultString(school.postCode,'暂无邮编')}]]
-            </div>
-            <div><span class="layui-icon layui-icon-home"></span> 学校所在地：
-                [[${#strings.defaultString(school.address,'暂无学校所在地')}]]
+             <div><span class="layui-icon layui-icon-trophy"></span> 年级：
+                [[${classInfo.grade}]]
             </div>
         </div>
     </div>

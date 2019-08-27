@@ -10,7 +10,7 @@
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">班级名称</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="className" autocomplete="off" class="layui-input">
+                                            <input type="text" name="class" autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline">
@@ -18,6 +18,8 @@
                                         <div class="layui-input-inline">
                                             <select name="grade" id="grade">
                                             </select>
+                                            <!--<input type="text" name="grade" id="grade" lay-filter="dept"-->
+                                                   <!--class="layui-input">-->
                                         </div>
                                     </div>
                                 </div>
@@ -25,6 +27,9 @@
                             <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="query">
                                     <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
                                      shiro:hasAnyPermissions="user:add,user:update,user:password:reset,user:export">
@@ -64,6 +69,7 @@
             $reset = $view.find('#reset'),
             $searchForm = $view.find('form'),
             grade=$('#grade'),
+            sortObject = {field: 'className', type: null},
             tableIns;
 
         form.render();
@@ -85,13 +91,20 @@
                         grade.append('<option value="'+""+'">'+""+'</option>');
                     }else{
                         for (var i=0;i<items.length;i++) {
-                            $('#grade').append('<option value="' + '' + '">' + items[i].v + '</option>');
+                            $('#grade').append('<option value="' + items[i].v + '">' + items[i].v + '</option>');
                         }
                     }
                     form.render('select');
                 }
             });
         }
+//        treeSelect.render({
+//            elem: $view.find('#grade'),
+//            type: 'get',
+//            data: ctx + 'dict?field=grade',
+//            placeholder: '请选择',
+//            search: false,
+//        });
         dropdown.render({
             elem: $view.find('.action-more'),
             click: function (name, elem, event) {
@@ -114,11 +127,11 @@
                         febs.alert.warn('请选择需要删除的班级');
                     } else {
                         febs.modal.confirm('删除班级', '确定删除该班级？', function () {
-                            var schoolIds = [];
+                            var classIds = [];
                             layui.each(checkStatus.data, function (key, item) {
-                                schoolIds.push(item.schoolId)
+                                classIds.push(item.classId)
                             });
-                            deleteUsers(schoolIds.join(','));
+                            deleteClass(classIds.join(','));
                         });
                     }
                 }
@@ -145,20 +158,20 @@
         });
 
         table.on('tool(gradeTable)', function (obj) {
-            var data = obj.data,
+            var data = obj.data;
                 layEvent = obj.event;
             if (layEvent === 'detail') {
-                febs.modal.view('班级信息', 'basicInfo/grade/detail/' + data.schoolId, {
+                febs.modal.view('班级信息', 'basicInfo/grade/detail/' + data.classId, {
                     area: $(window).width() <= 750 ? '95%' : '660px'
                 });
             }
             if (layEvent === 'del') {
-                febs.modal.confirm('删除学校', '确定删除该学校？', function () {
-                    deleteUsers(data.schoolId);
+                febs.modal.confirm('删除班级', '确定删除该班级？', function () {
+                    deleteClass(data.classId);
                 });
             }
             if (layEvent === 'edit') {
-                febs.modal.open('修改学校', 'basicInfo/grade/update/' + data.schoolId, {
+                febs.modal.open('修改班级', 'basicInfo/grade/update/' + data.classId, {
                     area: $(window).width() <= 750 ? '90%' : '50%',
                     btn: ['提交', '取消'],
                     yes: function (index, layero) {
@@ -170,7 +183,6 @@
                 });
             }
         });
-
         table.on('sort(gradeTable)', function (obj) {
             sortObject = obj;
             tableIns.reload({
@@ -189,6 +201,7 @@
         });
 
         $reset.on('click', function () {
+            treeSelect.revokeNode('grade');
             $searchForm[0].reset();
             tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
         });
@@ -202,8 +215,7 @@
                     {type: 'checkbox'},
                     {field: 'className', title: '班级名称', minWidth: 150},
                     {field: 'username', title: '班主任',minWidth: 100},
-                    {field: 'schoolCategory', title: '年级',minWidth: 100},
-                    {field: 'schoolName', title: '所属学校'},
+                    {field: 'grade', title: '年级',minWidth: 100},
                     {title: '操作', toolbar: '#user-option', minWidth: 140}
                 ]]
             });
@@ -211,14 +223,15 @@
 
         function getQueryParams() {
             return {
-                schoolName: $searchForm.find('input[name="school"]').val().trim(),
-                schoolType: $searchForm.find("select[name='status']").val(),
+                className: $searchForm.find('input[name="class"]').val(),
+//                grade: $searchForm.find("input[name='grade']").val(),
+                grade: $searchForm.find("select[name='grade']").val(),
                 invalidate_ie_cache: new Date()
             };
         }
 
-        function deleteUsers(classInfo) {
-            febs.get(ctx + 'classInfo/delete/' + schoolIds, null, function () {
+        function deleteClass(classIds) {
+            febs.get(ctx + 'classInfo/delete/' + classIds, null, function () {
                 febs.alert.success('删除班级成功');
                 $query.click();
             });
