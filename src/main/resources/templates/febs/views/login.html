@@ -67,6 +67,8 @@
 <script th:src="@{layui/login.js}"></script>
 <script>
     //用户验证登录
+var password_Boolean = false;
+var user_Boolean = false;
 $('#username').blur(function(){
 	if ((/^[a-z0-9_-]{2,8}$/).test($("#username").val())){
 		$('#username_hint').html("✔").css("color","green");
@@ -100,14 +102,14 @@ $('#pwd').blur(function(){
             $('.input-code').html('验证码错误').css('color','black');
             code_Boolean=true;
         }
-    })
+    });
+
     function btn() {
-        if (password_Boolean == true && user_Boolean && code_Boolean == true) {
-            var username = $('#username').val().trim();
-            var pwd = $('#pwd').val().trim();
-            // alert("注册成功");
+        var username = $('#username').val().trim();
+        var pwd = $('#pwd').val().trim();
+        if (username != '' && username != null && pwd != '' && pwd != null) {
             $.ajax({
-                url: "http://localhost:8080/login",
+                url: getPath() + "/login",
                 method: 'post',
                 data: {
                     "username": username,
@@ -124,7 +126,7 @@ $('#pwd').blur(function(){
                 }
             });
         } else {
-                alert('请完善信息');
+            alert('请完善用户密码信息');
         }
     }
 </script>

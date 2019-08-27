@@ -24,12 +24,22 @@ if (typeof window.addEventListener != 'undefined') {
 }
 //2.5.这儿主要是获取code，返回钉钉id，进行后端的钉钉id比对,api接口见下
 var url = window.location.search.split("&");
-var code=url[0].substring(url[0].lastIndexOf("=")+1)
-var status=url[1].substring(url[1].lastIndexOf("=")+1)
-if(code!=""&&status=="STATE"){
+var code = url[0].substring(url[0].lastIndexOf("=") + 1);
+var status = "";
+if(url.length > 1){
+	status = url[1].substring(url[1].lastIndexOf("=") + 1);
+}
+function getPath(){
+    var curWwwPath = window.document.location.href;
+    var pathName = window.document.location.pathname;
+    var pos = curWwwPath.indexOf(pathName);
+    var localhostPaht = curWwwPath.substring(0, pos);
+    return localhostPaht;
+}
+if(code != "" && status=="STATE"){
 	var uri="/"
 	$.ajax({
-		url:"http://localhost:8080/login",
+		url: getPath() + "/login",
 		method:"post",
 		data: {
 			"code": code,
