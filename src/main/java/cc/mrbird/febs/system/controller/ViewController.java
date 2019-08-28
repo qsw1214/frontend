@@ -1,7 +1,5 @@
 package cc.mrbird.febs.system.controller;
 
-import cc.mrbird.febs.basicInfo.entity.DeviceInfo;
-import cc.mrbird.febs.basicInfo.service.IDeviceInfoService;
 import cc.mrbird.febs.common.authentication.ShiroHelper;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsConstant;
@@ -148,12 +146,6 @@ public class ViewController extends BaseController {
     @RequestMapping(FebsConstant.VIEW_PREFIX + "index")
     public String pageIndex() {
         return FebsUtil.view("index");
-    }
-
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/operate")
-    @RequiresPermissions("operate:view")
-    public String basicInfoOperate() {
-        return FebsUtil.view("basicInfo/operate/operate");
     }
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "404")

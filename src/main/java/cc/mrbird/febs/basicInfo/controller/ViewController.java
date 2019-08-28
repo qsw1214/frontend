@@ -1,8 +1,12 @@
 package cc.mrbird.febs.basicInfo.controller;
 
+import cc.mrbird.febs.basicInfo.entity.ClassInfo;
 import cc.mrbird.febs.basicInfo.entity.DeviceInfo;
+import cc.mrbird.febs.basicInfo.entity.School;
 import cc.mrbird.febs.basicInfo.entity.SchoolTimetable;
+import cc.mrbird.febs.basicInfo.service.IClassInfoService;
 import cc.mrbird.febs.basicInfo.service.IDeviceInfoService;
+import cc.mrbird.febs.basicInfo.service.ISchoolService;
 import cc.mrbird.febs.basicInfo.service.ISchoolTimetableService;
 import cc.mrbird.febs.common.authentication.ShiroHelper;
 import cc.mrbird.febs.common.controller.BaseController;
@@ -27,7 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author MrBird
+ * @author Psy
  */
 @Controller("basicInfoView")
 public class ViewController extends BaseController {
@@ -39,17 +43,111 @@ public class ViewController extends BaseController {
     private ISchoolTimetableService schoolTimetableService;
 
     @Autowired
+    private ISchoolService schoolService;
+
+    @Autowired
+    private IClassInfoService classInfoService;
+
+    @Autowired
     private ShiroHelper shiroHelper;
 
-    /**
-     * 数据管理
-     * @return
-     */
+    //==============================================START==================================================
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classroomInfo")
+    private String classroomIndex(){
+        return FebsUtil.view("basicInfo/classroomInfo/classroomInfo");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classroomInfo/classroomInfoAdd")
+    private String classroomAdd(){
+        return FebsUtil.view("basicInfo/classroomInfo/classroomInfoAdd");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classroomInfo/detail/{classroomId}")
+//  @RequiresPermissions("schoolInfo:view")
+    public String classroomInfoDetail(@PathVariable Integer classroomId, Model model) {
+        resolveClassrModel(classroomId,model, true);
+        return FebsUtil.view("basicInfo/classroomInfo/classroomInfoDetail");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classroomInfo/update/{classInfoId}")
+    //@RequiresPermissions("classInfo:update")
+    public String classroomInfoUpdate(@PathVariable Integer classInfoId, Model model) {
+        resolveClassrModel(classInfoId,model, true);
+        return FebsUtil.view("basicInfo/classroomInfo/classroomInfoUpdate");
+    }
+
+    //==============================================END==================================================
+
+    //==============================================START==================================================
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/grade")
+    private String gradeIndex(){
+        return FebsUtil.view("basicInfo/grade/grade");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/grade/gradeAdd")
+    private String gradeAdd(){
+
+        return FebsUtil.view("basicInfo/grade/gradeAdd");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/grade/detail/{classInfoId}")
+//  @RequiresPermissions("classInfo:view")
+    public String gradeDetail(@PathVariable Integer classInfoId, Model model) {
+        resolveClassrModel(classInfoId,model, true);
+        return FebsUtil.view("basicInfo/grade/gradeDetail");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/grade/update/{classInfoId}")
+    //@RequiresPermissions("classInfo:update")
+    public String gradeUpdate(@PathVariable Integer classInfoId, Model model) {
+        resolveClassrModel(classInfoId,model, true);
+        return FebsUtil.view("basicInfo/grade/gradeUpdate");
+    }
+
+    //==============================================END==================================================
+
+    //==============================================START==================================================
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/school")
+    private String schoolIndex(){
+        return FebsUtil.view("basicInfo/school/school");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX +  "basicInfo/school/schoolAdd")
+//  @RequiresPermissions("school:add")
+    public String schoolAdd() {
+        return FebsUtil.view("basicInfo/school/schoolAdd");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/school/detail/{schoolId}")
+//  @RequiresPermissions("schoolInfo:view")
+    public String systemUserDetail(@PathVariable Long schoolId, Model model) {
+        resolveSchoolrModel(schoolId,model, true);
+        return FebsUtil.view("basicInfo/school/schoolDetail");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/school/update/{schoolId}")
+    //@RequiresPermissions("schoolInfo:update")
+    public String systemUserUpdate(@PathVariable Long schoolId, Model model) {
+        resolveSchoolrModel(schoolId,model, true);
+        return FebsUtil.view("basicInfo/school/schoolUpdate");
+    }
+
+    //==============================================END==================================================
+
+    //==============================================START==================================================
+
     @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/area")
     @RequiresPermissions("area:view")
     public String basicInfoArea() {
         return FebsUtil.view("basicInfo/area/area");
     }
+
+    //==============================================END==================================================
+
+    //==============================================START==================================================
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/deviceInfo")
     @RequiresPermissions("deviceInfo:view")
@@ -72,6 +170,10 @@ public class ViewController extends BaseController {
         return FebsUtil.view("basicInfo/deviceInfo/deviceInfoUpdate");
     }
 
+    //==============================================END==================================================
+
+    //==============================================START==================================================
+
     @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/schoolTimetable")
     @RequiresPermissions("schoolTimetable:view")
     public String basicInfoSchoolTimetable() {
@@ -93,6 +195,18 @@ public class ViewController extends BaseController {
         return FebsUtil.view("basicInfo/schoolTimetable/schoolTimetableUpdate");
     }
 
+    //==============================================END==================================================
+
+    //==============================================START==================================================
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/operate")
+    @RequiresPermissions("operate:view")
+    public String basicInfoOperate() {
+        return FebsUtil.view("basicInfo/operate/operate");
+    }
+    //==============================================END==================================================
+
+
     private void resolveDeviceModel(Integer deviceId, Model model, Boolean transform) {
         DeviceInfo deviceInfo = deviceInfoService.findDeviceById(deviceId);
         model.addAttribute("deviceInfo", deviceInfo);
@@ -107,5 +221,16 @@ public class ViewController extends BaseController {
 
         if (schoolTimetable.getBeginDate() != null)
             model.addAttribute("beginDate", DateUtil.getDateFormat(schoolTimetable.getBeginDate(), DateUtil.FULL_TIME_PATTERN_NO_DETAIL));
+    }
+
+    private void resolveSchoolrModel(Long schoolId, Model model, Boolean transform) {
+        School school = this.schoolService.getById(schoolId);
+        model.addAttribute("school", school);
+    }
+
+    private void resolveClassrModel(Integer classInfoId, Model model, Boolean transform) {
+        ClassInfo classInfo = this.classInfoService.getById(classInfoId);
+        model.addAttribute("classInfo", classInfo);
+
     }
 }

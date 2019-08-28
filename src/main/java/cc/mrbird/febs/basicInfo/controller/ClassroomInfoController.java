@@ -44,41 +44,6 @@ public class ClassroomInfoController extends BaseController {
     @Autowired
     private IClassroomInfoService classroomInfoService;
 
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classroomInfo")
-    private String classIndex(){
-        return FebsUtil.view("basicInfo/classroomInfo/classroomInfo");
-    }
-
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classroomInfo/classroomInfoAdd")
-    private String classAdd(){
-        return FebsUtil.view("basicInfo/classroomInfo/classroomInfoAdd");
-    }
-
-//    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classroomInfo/detail/{Id}")
-////  @RequiresPermissions("classroomInfo:view")
-//    public String systemUserDetail(@PathVariable Integer classInfoId, Model model) {
-//        resolveClassrModel(classInfoId,model, true);
-//        return FebsUtil.view("basicInfo/classroomInfo/classroomInfoDetail");
-//    }
-
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classroomInfo/detail/{classroomId}")
-//  @RequiresPermissions("schoolInfo:view")
-    public String systemUserDetail(@PathVariable Integer classroomId, Model model) {
-        resolveClassrModel(classroomId,model, true);
-        return FebsUtil.view("basicInfo/classroomInfo/classroomInfoDetail");
-    }
-
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classroomInfo/update/{classInfoId}")
-    //@RequiresPermissions("classInfo:update")
-    public String systemUserUpdate(@PathVariable Integer classInfoId, Model model) {
-        resolveClassrModel(classInfoId,model, true);
-        return FebsUtil.view("basicInfo/classroomInfo/classroomInfoUpdate");
-    }
-//    @GetMapping(FebsConstant.VIEW_PREFIX + "classroomInfo")
-//    private String classroomInfoIndex(){
-//        return FebsUtil.view("classroomInfo/classroomInfo");
-//    }
-
     @GetMapping("classroomInfo")
     @ResponseBody
 //    @RequiresPermissions("classroomInfo:list")

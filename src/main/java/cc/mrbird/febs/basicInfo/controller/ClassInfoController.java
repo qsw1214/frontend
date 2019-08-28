@@ -33,7 +33,6 @@ import java.util.Map;
 
 /**
  *  Controller
- *
  * @author psy
  * @date 2019-08-22 17:35:44
  */
@@ -44,47 +43,6 @@ public class ClassInfoController extends BaseController {
 
     @Autowired
     private IClassInfoService classInfoService;
-
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/grade")
-    private String classIndex(){
-        return FebsUtil.view("basicInfo/grade/grade");
-    }
-
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/grade/gradeAdd")
-    private String classAdd(){
-        return FebsUtil.view("basicInfo/grade/gradeAdd");
-    }
-    
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/grade/detail/{classInfoId}")
-//  @RequiresPermissions("classInfo:view")
-    public String systemUserDetail(@PathVariable Integer classInfoId, Model model) {
-    	resolveClassrModel(classInfoId,model, true);
-        return FebsUtil.view("basicInfo/grade/gradeDetail");
-    }
-    
-//    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/grade/update/{gradeId}")
-//  //@RequiresPermissions("classInfo:update")
-//    public String systemUserUpdate(@PathVariable Integer classInfoId, Model model) {
-//    	resolveClassrModel(classInfoId,model, true);
-//        return FebsUtil.view("basicInfo/grade/gradeUpdate");
-//    }
-
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/grade/update/{classInfoId}")
-    //@RequiresPermissions("classInfo:update")
-    public String systemUserUpdate(@PathVariable Integer classInfoId, Model model) {
-        resolveClassrModel(classInfoId,model, true);
-        return FebsUtil.view("basicInfo/grade/gradeUpdate");
-    }
-
-//    @GetMapping(FebsConstant.VIEW_PREFIX + "classInfo")
-//    private String classInfoIndex(){
-//        return FebsUtil.view("classInfo/classInfo");
-//    }
-//    
-//    @GetMapping(FebsConstant.VIEW_PREFIX + "classInfo")
-//    private String classInfoIndex(){
-//        return FebsUtil.view("classInfo/classInfo");
-//    }
 
     @GetMapping("classInfo")
     @ResponseBody
@@ -159,11 +117,5 @@ public class ClassInfoController extends BaseController {
             log.error(message, e);
             throw new FebsException(message);
         }
-    }
-    
-    private void resolveClassrModel(Integer classInfoId, Model model, Boolean transform) {
-        ClassInfo classInfo = this.classInfoService.getById(classInfoId);
-        model.addAttribute("classInfo", classInfo);
-        
     }
 }

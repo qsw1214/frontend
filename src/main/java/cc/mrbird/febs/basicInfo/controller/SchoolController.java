@@ -1,5 +1,8 @@
 package cc.mrbird.febs.basicInfo.controller;
 
+import cc.mrbird.febs.basicInfo.service.IClassInfoService;
+import cc.mrbird.febs.basicInfo.service.IClassroomInfoService;
+import cc.mrbird.febs.basicInfo.service.IDeviceInfoService;
 import cc.mrbird.febs.common.annotation.Log;
 import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.common.utils.Tools;
@@ -10,13 +13,12 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.basicInfo.entity.School;
 import cc.mrbird.febs.basicInfo.service.ISchoolService;
-import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IRoleService;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,13 +35,14 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
  * 学校表 Controller
  *
- * @author MrBird
+ * @author Jck
  * @date 2019-08-18 01:39:43
  */
 @Slf4j
@@ -49,44 +52,6 @@ public class SchoolController extends BaseController {
 
     @Autowired
     private ISchoolService schoolService;
-
-    @Autowired
-    private IRoleService roleService;
-
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/school")
-    private String schoolIndex(){
-        return FebsUtil.view("basicInfo/school/school");
-    }
-    
-    
-    @GetMapping(FebsConstant.VIEW_PREFIX +  "basicInfo/school/schoolAdd")
-//  @RequiresPermissions("school:add")
-    public String schoolAdd() {
-        return FebsUtil.view("basicInfo/school/schoolAdd");
-    }
-
-  
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/school/detail/{schoolId}")
-//  @RequiresPermissions("schoolInfo:view")
-    public String systemUserDetail(@PathVariable Long schoolId, Model model) {
-        resolveSchoolrModel(schoolId,model, true);
-        return FebsUtil.view("basicInfo/school/schoolDetail");
-    }
-
-
-//    //根据id查询
-//	@GetMapping("school/{schoolId}")
-//	@ResponseBody
-//	public School schoolById(@NotNull(message = "{required}") @PathVariable Long schoolId) {
-//		return this.schoolService.getById(schoolId);
-//	}
-  
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/school/update/{schoolId}")
-  //@RequiresPermissions("schoolInfo:update")
-    public String systemUserUpdate(@PathVariable Long schoolId, Model model) {
-        resolveSchoolrModel(schoolId,model, true);
-        return FebsUtil.view("basicInfo/school/schoolUpdate");
-    }
 
     @GetMapping("school")
     @ResponseBody
@@ -124,14 +89,32 @@ public class SchoolController extends BaseController {
             throw new FebsException(message);
         }
     }
-    
+
+    @Autowired
+    private IDeviceInfoService deviceInfoService;
+
+    @Autowired
+    private IClassroomInfoService classroomInfoService;
+
+    @Autowired
+    private IClassInfoService classInfoService;
+
     @Log("删除School")
     @GetMapping("school/delete/{schoolIds}")    
     @ResponseBody
 //    @RequiresPermissions("school:delete")
     public FebsResponse deleteSchool(@NotBlank(message = "{required}") @PathVariable String schoolIds) throws FebsException {
         try {
+            List<String> list = new ArrayList<>();
+            String[] schools = schoolIds.split(",");
+            for (String schoolId:schools) {
+                list.add(schoolId);
+            }
+            this.deviceInfoService.deleteDeviceInfoByschoolId(list);
+            this.classInfoService.deleteClassInfosByschoolId(list);
+            this.classroomInfoService.deleteClassroomInfosByschoolId(list);
             this.schoolService.deleteSchool(schoolIds);
+            //删除本地学校部门数据，应该使用钉钉回调函数来进行处理；
             return new FebsResponse().success();
         } catch (Exception e) {
             String message = "删除School失败";
@@ -172,10 +155,6 @@ public class SchoolController extends BaseController {
             throw new FebsException(message);
         }
     }
-    
-    private void resolveSchoolrModel(Long schoolId, Model model, Boolean transform) {
-        School school = this.schoolService.getById(schoolId);
-        model.addAttribute("school", school);
-        
-    }
+
+
 }
