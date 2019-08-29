@@ -117,7 +117,7 @@ public class OperateController extends BaseController {
         }
 
         String fileName = file.getOriginalFilename();
-        String filePath = "E://";
+        String filePath = "/";
         File dest = new File(filePath + fileName);
         try {
             file.transferTo(dest);
@@ -175,8 +175,8 @@ public class OperateController extends BaseController {
         }else {
            PrintWriter outpw=response.getWriter();
            outpw.println("<script>");
-            outpw.println("alert('download failed');window.history.back();");
-            outpw.println("</script>");
+           outpw.println("alert('download failed');window.history.back();");
+           outpw.println("</script>");
         }
     }
 }

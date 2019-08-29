@@ -48,5 +48,10 @@ public class Constant {
     /**
      * 回调host
      */
-    public static final String CALLBACK_URL_HOST = "https://193a319b.cpolar.io/approval";
+    public static final String CALLBACK_URL_HOST = "https://cd804d1.cpolar.io/approval";
+
+    /**
+     * 通讯录回调host
+     */
+    public static final String CALLBACK_URL_ORG = "http://cd804d1.cpolar.io/org";
 }
