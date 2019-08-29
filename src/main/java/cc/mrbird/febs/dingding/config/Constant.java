@@ -48,7 +48,20 @@ public class Constant {
     /**
      * 回调host
      */
-    public static final String CALLBACK_URL_HOST = "https://cd804d1.cpolar.io/approval";
+    public static final String CALLBACK_URL_HOST = "http://26ia2v.natappfree.cc/approval";
+
+    /**
+     * 学校入驻审批标识
+     */
+    public static final String SCHOOL_CALLBACK_URL_HOST = "PROC-B2CA87F4-BB2B-4EF8-9672-CCF839FD344C";
+
+    /**
+     * 审批结果
+     */
+    public static class APPROVE_RESULT{
+        public static final String AGREE_RESULT = "AGREE";
+        public static final String DEFEND_RESULT = "DEFEND";
+    }
 
     /**
      * 通讯录回调host

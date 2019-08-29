@@ -33,6 +33,13 @@ public interface ISchoolService extends IService<School> {
     List<School> findSchools(School school);
 
     /**
+     * 根据学校名称全文匹配查找数据
+     * @param schoolName
+     * @return
+     */
+    List<School> findSchoolsByName(String schoolName);
+
+    /**
      * 新增
      *
      * @param school school
@@ -48,8 +55,7 @@ public interface ISchoolService extends IService<School> {
 
     /**
      * 删除
-     *
-     * @param school school
+     * @param schoolIds
      */
     void deleteSchool(String schoolIds); 
 }

@@ -106,6 +106,15 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     }
 
     @Override
+    public List<School> findSchoolsByName(String schoolName) {
+        LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotBlank(schoolName)) {
+            queryWrapper.eq(School::getSchoolName, schoolName);
+        }
+        return this.baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
     @Transactional
     public void createSchool(School school) {
     	school.setCreateTime(new Date());

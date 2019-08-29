@@ -97,7 +97,7 @@ public class ClassroomInfoServiceImpl extends ServiceImpl<ClassroomInfoMapper, C
     
 	@Override
 	public void deleteClassroomInfosByschoolId(List<String> schoolIds) {
-		if(schoolIds.size()>0)
+		if(schoolIds.size() > 0)
 			this.baseMapper.delete(new QueryWrapper<ClassroomInfo>().lambda().in(ClassroomInfo::getSchoolId, schoolIds));
 	}
 }
