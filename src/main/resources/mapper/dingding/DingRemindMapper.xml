@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.dingding.mapper.DingRemindMapper">
+    <select id="selectCourseInfList" parameterType="java.util.Map" resultType="java.util.HashMap">
+        select
+        UNIX_TIMESTAMP(DATE_FORMAT(begin_date,'%Y-%m-%d %H:%i')) as beginTime,
+        <![CDATA[ UNIX_TIMESTAMP(DATE_FORMAT(DATE_ADD(begin_date,INTERVAL 45 MINUTE),'%Y-%m-%d %H:%i')) ]]> as endTime,
+        <!--DATE_FORMAT(DATE_ADD(begin_date,INTERVAL duration MINUTE),'%Y-%m-%d %H:%i'),-->
+        <!--DATE_ADD((begin_date, jdbcType=TIMESTAMP),INTERVAL duration MINUTE ) as endTime,-->
+        <!--<![CDATA[ <=  ]]>-->
+        course_id,user_id,course_name,begin_date,duration,school_id,grade,class_id,subject,term,
+        week,classroom_id,section
+        from jcc_school_timetable
+    </select>
+</mapper>

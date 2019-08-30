@@ -51,5 +51,9 @@ public class URLConstant {
      * 注册企业回调接口url
      */
     public static final String REGISTER_CALLBACK = "https://oapi.dingtalk.com/call_back/register_call_back";
+    /**
+     * 创建ding日程的接口url
+     */
+    public static final String URL_CALENDAR_CREATE = "https://oapi.dingtalk.com/topapi/calendar/create";
 
 }

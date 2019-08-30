@@ -204,6 +204,11 @@ public class ViewController extends BaseController {
     public String basicInfoOperate() {
         return FebsUtil.view("basicInfo/operate/operate");
     }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/dingRemind")
+    public String basicInfodingding() {
+        return FebsUtil.view("basicInfo/dingRemind/dingRemind");
+    }
     //==============================================END==================================================
 
 
