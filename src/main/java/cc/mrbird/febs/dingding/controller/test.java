@@ -13,6 +13,7 @@ import com.dingtalk.api.response.OapiCallBackRegisterCallBackResponse;
 import com.taobao.api.ApiException;
 
 import java.util.Arrays;
+import java.util.Date;
 
 public class test {
     public static void main(String[] args) throws ApiException {
@@ -43,5 +44,6 @@ public class test {
         if (registerResponse.isSuccess()) {
             System.out.println("回调注册成功了！！！");
         }
+
     }
 }

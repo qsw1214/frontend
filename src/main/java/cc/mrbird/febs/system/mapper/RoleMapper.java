@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author MrBird
@@ -29,4 +30,5 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @return IPage<User>
      */
     IPage<Role> findRolePage(Page page, @Param("role") Role role);
+
 }

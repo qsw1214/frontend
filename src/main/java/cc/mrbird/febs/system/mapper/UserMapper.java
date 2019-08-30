@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author MrBird
@@ -38,8 +39,12 @@ public interface UserMapper extends BaseMapper<User> {
      */
     List<User> findUserDetail(@Param("user") User user);
 
-    List<User> findAllUser();
+    /*删除离职用户*/
+    void deleteUser(String userId);
 
-    void updateUser(String username,String roleName,int roleId);
+    /*新增用户*/
+    void insertUser(Map map);
 
+    /*修改用户*/
+    void updateUser(Map map);
 }

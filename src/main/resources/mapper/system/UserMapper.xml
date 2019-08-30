@@ -164,4 +164,26 @@
         u.position,
         u.jobnumber
     </select>
+
+    <!--删除离职用户-->
+    <delete id="deleteUser" parameterType="string">
+        delete from t_user where user_id=#{userId}
+    </delete>
+
+    <!--新增用户-->
+    <insert id="insertUser" parameterType="java.util.Map">
+        insert into t_user(USER_ID,USERNAME,PASSWORD,DEPT_ID,EMAIL,MOBILE,STATUS,CREATE_TIME,MODIFY_TIME,LAST_LOGIN_TIME,
+        SSEX,IS_TAB,THEME,AVATAR,DESCRIPTION,SCHOOL_ID,CLASS_ID,CONTACT,EMER_PHONE,RECENT_LOCATION,unionid,is_leader_in_depts,department
+        ,is_boss,hired_date,is_senior,order_in_depts,active,is_admin,is_hide,jobnumber,position)
+        values(#{userid},#{name},#{password},#{deptId},#{email},#{mobile},1,now(),now(),now(),
+        1,1,'black',#{avatar},null,null,null,null,null,null,#{unionid},#{isLeaderInDepts}
+        ,null,#{isBoss},from_unixtime(#{hiredDate}),#{isSenior},#{orderInDepts},#{active},#{isAdmin},#{isHide},#{jobnumber},#{position})
+    </insert>
+
+    <update id="updateUser" parameterType="java.util.Map">
+        update t_user set username=#{name},password=#{password},dept_id=#{deptId},email=#{email},mobile=#{mobile},modify_time=now(),LAST_LOGIN_TIME=now(),
+        AVATAR=#{avatar},unionid=#{unionid},is_leader_in_depts=#{isLeaderInDepts},is_boss=#{isBoss},hired_date=from_unixtime(#{hiredDate}),is_senior=#{isSenior},
+        order_in_depts=#{orderInDepts},active=#{active},is_admin=#{isAdmin},is_hide=#{isHide},jobnumber=#{jobnumber},position=#{position}
+        where user_id=#{userid}
+    </update>
 </mapper>

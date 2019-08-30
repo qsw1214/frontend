@@ -24,7 +24,6 @@ public class CeShiController {
      */
     public static void main(String[] args) throws ApiException {
         // 先删除企业已有的回调
-
         DingTalkClient client = new DefaultDingTalkClient(URLConstant.DELETE_CALLBACK);
         OapiCallBackDeleteCallBackRequest request = new OapiCallBackDeleteCallBackRequest();
         request.setHttpMethod("GET");
@@ -34,7 +33,7 @@ public class CeShiController {
         client = new DefaultDingTalkClient(URLConstant.REGISTER_CALLBACK);
         OapiCallBackRegisterCallBackRequest registerRequest = new OapiCallBackRegisterCallBackRequest();
         //设置回调路径
-        registerRequest.setUrl(Constant.CALLBACK_URL_HOST + "/callback");
+        registerRequest.setUrl(Constant.CALLBACK_URL_HOST+"/callback");
         //数据加密密钥。用于回调数据的加密，长度固定为43个字符，从a-z, A-Z, 0-9共62个字符中选取,您可以随机生成
         registerRequest.setAesKey(Constant.ENCODING_AES_KEY);
         //加解密需要用到的token，企业可以随机填写。如 "12345"

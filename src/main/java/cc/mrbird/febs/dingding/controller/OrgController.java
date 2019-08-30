@@ -1,8 +1,10 @@
 package cc.mrbird.febs.dingding.controller;
 
+import cc.mrbird.febs.common.utils.MD5Util;
 import cc.mrbird.febs.dingding.config.Constant;
 import cc.mrbird.febs.dingding.util.AddressListUtil;
 import cc.mrbird.febs.system.mapper.DeptMapper;
+import cc.mrbird.febs.system.mapper.UserMapper;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.oapi.lib.aes.Utils;
@@ -16,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dingtalk.oapi.lib.aes.DingTalkEncryptor;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -34,6 +37,9 @@ public class OrgController {
 
     @Autowired
     private DeptMapper deptMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 创建套件后，验证回调URL创建有效事件（第一次保存回调URL之前）
@@ -120,9 +126,45 @@ public class OrgController {
                 deptMapper.deleteDept(obj.getString("DeptId").substring(obj.getString("DeptId").indexOf("[")+1,obj.getString("DeptId").indexOf("]")));
             }else if(USER_ADD_ORG.equals(eventType)){
                 bizLogger.info("通讯录用户增加: " + plainText);
-                Map map=AddressListUtil.userMess(obj.getString("UserId").substring(obj.getString("UserId").indexOf("[")+1,obj.getString("UserId").indexOf("]")));
-                System.out.println(map);
-            }
+                //调取用户详情接口
+                Map map=AddressListUtil.userMess(obj.getString("UserId").substring(obj.getString("UserId").indexOf("\"")+1,obj.getString("UserId").lastIndexOf("\"")));
+                String deptId=map.get("department").toString();
+                map.put("deptId",deptId.substring(deptId.indexOf("[")+1,deptId.indexOf("]")));
+                map.put("password", MD5Util.encrypt("","123456"));
+                map.put("isBoss",Boolean.getBoolean(map.get("isBoss").toString()));
+                map.put("isSenior",Boolean.getBoolean(map.get("isSenior").toString()));
+                map.put("active",Boolean.getBoolean(map.get("active").toString()));
+                map.put("isAdmin",Boolean.getBoolean(map.get("isAdmin").toString()));
+                map.put("isHide",Boolean.getBoolean(map.get("isHide").toString()));
+                userMapper.insertUser(map);
+            }else if(USER_MODIFY_ORG.equals(eventType)){
+                bizLogger.info("通讯录用户更改: " + plainText);
+                Map map=AddressListUtil.userMess(obj.getString("UserId").substring(obj.getString("UserId").indexOf("\"")+1,obj.getString("UserId").lastIndexOf("\"")));
+                String deptId=map.get("department").toString();
+                map.put("deptId",deptId.substring(deptId.indexOf("[")+1,deptId.indexOf("]")));
+                map.put("password", MD5Util.encrypt("","123456"));//初始密码：123456
+                map.put("isBoss",Boolean.getBoolean(map.get("isBoss").toString()));
+                map.put("isSenior",Boolean.getBoolean(map.get("isSenior").toString()));
+                map.put("active",Boolean.getBoolean(map.get("active").toString()));
+                map.put("isAdmin",Boolean.getBoolean(map.get("isAdmin").toString()));
+                map.put("isHide",Boolean.getBoolean(map.get("isHide").toString()));
+                userMapper.updateUser(map);
+            }else if(USER_LEAVE_ORG.equals(eventType)){
+                bizLogger.info("通讯录用户离职: " + plainText);
+                userMapper.deleteUser(obj.getString("UserId").substring(obj.getString("UserId").indexOf("\"")+1,obj.getString("UserId").lastIndexOf("\"")));
+            }/*else if(ORG_ADMIN_ADD.equals(eventType)){
+                bizLogger.info("通讯录用户被设为管理员: " + plainText);
+            }else if(ORG_ADMIN_REMOVE.equals(eventType)){
+                bizLogger.info("通讯录用户被取消设置管理员: " + plainText);
+            }else if(LABEL_USER_CHANGE.equals(eventType)){
+                bizLogger.info("员工角色信息发生变更: " + plainText);
+            }else if(LABEL_CONF_ADD.equals(eventType)){
+                bizLogger.info("增加角色或者角色组: " + plainText);
+            }else if(LABEL_CONF_DEL.equals(eventType)){
+                bizLogger.info("删除角色或者角色组: " + plainText);
+            }else if(LABEL_CONF_MODIFY .equals(eventType)){
+                bizLogger.info("修改角色或者角色组: " + plainText);
+            }*/
 
             // 返回success的加密信息表示回调处理成功
             return dingTalkEncryptor.getEncryptedMap(CALLBACK_RESPONSE_SUCCESS, System.currentTimeMillis(), Utils.getRandomStr(8));

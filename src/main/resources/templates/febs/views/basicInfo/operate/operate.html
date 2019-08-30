@@ -307,10 +307,16 @@
             ,method: 'POST'
             ,accept: 'file'
             ,size: "204800"
+            ,auto: false
+            ,bindAction: '#submit'
+            ,choose: function(obj){
+                obj.preview(function(index, file) {
+                    $("input[name='attachAddress']").val(file.name);
+                })
+            }
             ,done: function(res){//上传完毕回调
                 layer.closeAll('loading');
                 febs.alert.success(res.mess);
-                $("input[name='attachAddress']").val(res.addressName);
             }
             ,error: function(){//请求异常回调
                 layer.closeAll('loading');

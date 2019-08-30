@@ -38,7 +38,7 @@ public class AddressListUtil {
             }
             return deptMap;
         } catch (ApiException e) {
-            bizLogger.error("getDeptInfoUtil failed", e);
+            bizLogger.error("getDepartmentMess failed", e);
             throw new RuntimeException();
         }
     }
@@ -63,7 +63,7 @@ public class AddressListUtil {
             }
             return userMap;
         } catch (ApiException e) {
-            bizLogger.error("getDeptInfoUtil failed", e);
+            bizLogger.error("getUserMess failed", e);
             throw new RuntimeException();
         }
     }
