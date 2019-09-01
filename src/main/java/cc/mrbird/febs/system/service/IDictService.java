@@ -52,4 +52,6 @@ public interface IDictService extends IService<Dict> {
      * @param String dictIds
      */
     void deleteDicts(String dictIds);
+
+	List<Dict> findDictsByField(String field);
 }

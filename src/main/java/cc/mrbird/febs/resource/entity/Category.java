@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * @author MrBird
+ * @author lb
  */
 @Data
 @TableName("r_category")

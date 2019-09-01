@@ -16,9 +16,16 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">关键字：</label>
+            <div class="layui-input-block">
+                <input type="text" name="keywords" maxlength="255" lay-verify="range|keywords"
+                	   autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">资源地址：</label>
             <div class="layui-input-block">
-                <input type="text" name="url" minlength="2" maxlength="255" lay-verify="range|resourceName"
+                <input type="text" name="url" minlength="2" maxlength="255" lay-verify="range|url"
                 	   autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -36,17 +43,6 @@
                         xm-select-radio
                         xm-select-direction="down"
                         xm-select="resource-add-fileType"
-                        xm-select-skin="default">
-                </select>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">学校：</label>
-            <div class="layui-input-block">
-                <select name="schoolId"
-                		xm-select-radio
-                        xm-select-direction="down"
-                        xm-select="resource-add-school"
                         xm-select-skin="default">
                 </select>
             </div>

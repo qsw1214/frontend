@@ -876,6 +876,7 @@ DROP TABLE IF EXISTS `r_resource`;
 CREATE TABLE `r_resource` (
   `resource_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '资源ID',
   `resource_name` varchar(255) NOT NULL COMMENT '资源名称',
+  `keywords` varchar(255) DEFAULT NULL COMMENT '关键字',
   `creator` varchar(50) NOT NULL COMMENT '创建人',
   `avatar` varchar(255) DEFAULT NULL COMMENT '创建人头像',
   `school_id` int(11) DEFAULT NULL COMMENT '学校',

@@ -9,12 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -41,6 +40,16 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
         }
         Page<Dict> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
+    }
+    
+    @Override
+    public List<Dict> findDictsByField(String field) {
+        LambdaQueryWrapper<Dict> queryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isBlank(field)) {
+            return new ArrayList<>();
+        }
+        queryWrapper.eq(Dict::getField, field);
+        return this.baseMapper.selectList(queryWrapper);
     }
 
     @Override

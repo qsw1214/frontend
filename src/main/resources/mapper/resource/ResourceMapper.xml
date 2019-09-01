@@ -26,6 +26,7 @@
         <result column="grade_name" jdbcType="VARCHAR" property="gradeName"/>
         <result column="subject_name" jdbcType="VARCHAR" property="subjectName"/>
     </resultMap>
+    
     <update id="increaseCommentCount">
 		update r_resource
 		<set>comment_count = comment_count + #{num}</set>
@@ -94,4 +95,5 @@
         LEFT JOIN t_dict subj ON r.subject_id = subj.k AND subj.field = 'subject'
         WHERE r.resource_id = #{resourceId}
     </select>
+    
 </mapper>

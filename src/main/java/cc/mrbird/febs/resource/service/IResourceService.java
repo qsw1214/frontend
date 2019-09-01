@@ -58,6 +58,13 @@ public interface IResourceService extends IService<Resource> {
      * @param resource resource
      */
     void createResource(Resource resource);
+    
+    /**
+     * 新增
+     *
+     * @param resources List<Resource>
+     */
+    void createResources(List<Resource> resources);
 
     /**
      * 修改

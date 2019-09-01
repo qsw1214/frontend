@@ -9,7 +9,11 @@ import cc.mrbird.febs.resource.entity.Resource;
 import cc.mrbird.febs.resource.service.IResourceService;
 import cc.mrbird.febs.system.entity.User;
 
+import com.google.common.collect.Lists;
 import com.wuwenze.poi.ExcelKit;
+import com.wuwenze.poi.handler.ExcelReadHandler;
+import com.wuwenze.poi.pojo.ExcelErrorField;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +21,17 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,6 +73,8 @@ public class ResourceController extends BaseController {
         	User user = super.getCurrentUser();
         	resource.setCreator(user.getUsername());
         	resource.setAvatar(user.getAvatar());
+        	if(user.getSchoolId() == null)
+        		return new FebsResponse().fail().data("请完善用户学校信息");
         	resource.setSchoolId(user.getSchoolId());
             this.resourceService.createResource(resource);
             return new FebsResponse().success();
@@ -105,7 +115,7 @@ public class ResourceController extends BaseController {
         }
     }
 
-    @PostMapping("resource/excel")
+    @GetMapping("resource/excel")
     @ResponseBody
     @RequiresPermissions("resource:export")
     public void export(QueryRequest queryRequest, Resource resource, HttpServletResponse response) throws FebsException {
@@ -116,6 +126,54 @@ public class ResourceController extends BaseController {
             String message = "导出Excel失败";
             log.error(message, e);
             throw new FebsException(message);
+        }
+    }
+    
+    @PostMapping("resource/excel")
+    @RequiresPermissions("resource:import")
+    public FebsResponse addVideo(@RequestParam("file") MultipartFile file) throws FebsException {
+        try {
+        	User user = super.getCurrentUser();
+        	String username = user.getUsername();
+        	String avatar = user.getAvatar();
+        	Integer schoolId = user.getSchoolId();
+        	Date now = new Date();
+        	if(schoolId == null)
+        		return new FebsResponse().fail().data("请完善用户学校信息");
+     	
+    	    long beginMillis = System.currentTimeMillis();
+    	    List<Resource> successList = Lists.newArrayList();
+    	    List<Map<String, Object>> errorList = Lists.newArrayList();
+    	    ExcelKit.$Import(Resource.class).readXlsx(file.getInputStream(), new ExcelReadHandler<Resource>() {
+    	    	@Override
+    	        public void onSuccess(int sheetIndex, int rowIndex, Resource entity) {
+    	    		entity.setCreator(username);
+    	    		entity.setAvatar(avatar);
+    	    		entity.setSchoolId(schoolId);
+    	    		entity.setCreateTime(now);
+    	        	successList.add(entity); // 单行读取成功，加入入库队列。
+    	        }
+
+    	        @Override
+    	        public void onError(int sheetIndex, int rowIndex, List<ExcelErrorField> errorFields) {
+    	        	// 读取数据失败，记录了当前行所有失败的数据
+    	        	Map<String, Object> map = new HashMap<>();
+    	        	map.put("sheetIndex", sheetIndex);
+    	        	map.put("rowIndex", rowIndex);
+    	        	map.put("errorFields", errorFields);
+    	        	errorList.add(map);
+    	        }
+    	        });          
+            log.info("解析耗时：", (System.currentTimeMillis() - beginMillis) / 1000L);
+        	// TODO: 执行successList的入库操作。
+        	if(errorList.isEmpty()){
+        		this.resourceService.createResources(successList);
+        		return new FebsResponse().success().data(successList);
+        	}else{
+        		return new FebsResponse().fail().data(errorList);
+        	}      	
+        } catch (Exception e) {
+            throw new FebsException("解析失败");
         }
     }
 }

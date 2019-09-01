@@ -10,9 +10,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.wuwenze.poi.annotation.Excel;
 import com.wuwenze.poi.annotation.ExcelField;
 
-import cc.mrbird.febs.common.converter.TimeConverter;
+import cc.mrbird.febs.common.options.TypeOption;
 
 /**
  *  Entity
@@ -22,6 +23,7 @@ import cc.mrbird.febs.common.converter.TimeConverter;
  */
 @Data
 @TableName("r_resource")
+@Excel("资源信息")
 public class Resource {
 
     /**
@@ -36,7 +38,16 @@ public class Resource {
     @TableField("resource_name")
     @NotBlank(message = "{required}")
     @Size(max = 255, message = "{noMoreThan}")
+    @ExcelField(value="资源名", required = true, maxLength = 255)
     private String resourceName;
+    
+    /**
+     * 资源关键字
+     */
+    @TableField("keywords")
+    @Size(max = 255, message = "{noMoreThan}")
+    @ExcelField(value="资源关键字", maxLength = 255)
+    private String keywords;
 
     /**
      * 创建人
@@ -62,18 +73,21 @@ public class Resource {
      * 年级
      */
     @TableField("grade_id")
+    @ExcelField(value="年级编号")
     private Integer gradeId;
 
     /**
      * 科目
      */
     @TableField("subject_id")
+    @ExcelField(value="科目编号")
     private Integer subjectId;
 
     /**
      * 类别ID
      */
     @TableField("category_id")
+    @ExcelField(value="类别编号")
     private Long categoryId;
     
     /**
@@ -81,6 +95,7 @@ public class Resource {
      */
     @TableField("file_type")
     @Size(max = 30, message = "{noMoreThan}")
+    @ExcelField(value="资源类型", options = TypeOption.class, maxLength = 30)
     private String fileType;
 
     /**
@@ -88,6 +103,7 @@ public class Resource {
      */
     @TableField("pic")
     @Size(max = 255, message = "{noMoreThan}")
+    @ExcelField(value="资源图片", maxLength = 255)
     private String pic;
 
     /**
@@ -96,6 +112,7 @@ public class Resource {
     @TableField("url")
     @NotBlank(message = "{required}")
     @Size(max = 500, message = "{noMoreThan}")
+    @ExcelField(value="资源地址", maxLength = 500)
     private String url;
     
     /**
@@ -109,6 +126,7 @@ public class Resource {
      */
     @TableField("description")
     @Size(max = 500, message = "{noMoreThan}")
+    @ExcelField(value="资源介绍", maxLength = 500)
     private String description;
 
     /**
@@ -139,41 +157,35 @@ public class Resource {
      * 创建时间
      */
     @TableField("create_time")
-    @ExcelField(value = "创建时间", writeConverter = TimeConverter.class)
     private Date createTime;
 
     /**
      * 修改时间
      */
     @TableField("modify_time")
-    @ExcelField(value = "创建时间", writeConverter = TimeConverter.class)
     private Date modifyTime;
     
     /**
      * 类别名称
      */
-    @ExcelField(value = "类别名")
     @TableField(exist = false)
     private String categoryName;
     
     /**
      * 学校名称
      */
-    @ExcelField(value = "学校名")
     @TableField(exist = false)
     private String schoolName;
     
     /**
      * 年级名称
      */
-    @ExcelField(value = "年级名")
     @TableField(exist = false)
     private String gradeName;
     
     /**
      * 科目名称
      */
-    @ExcelField(value = "科目名")
     @TableField(exist = false)
     private String subjectName;
     

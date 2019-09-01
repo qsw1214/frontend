@@ -8,6 +8,7 @@ import cc.mrbird.febs.resource.mapper.ResourceMapper;
 import cc.mrbird.febs.resource.service.ICommentService;
 import cc.mrbird.febs.resource.service.IResourceService;
 import cc.mrbird.febs.resource.service.ISubjectResourceService;
+import cc.mrbird.febs.search.service.IEsResourceService;
 import cc.mrbird.febs.system.entity.User;
 
 import org.springframework.stereotype.Service;
@@ -44,6 +45,8 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     private ISubjectResourceService subjectResourceService;
     @Autowired
     private ICommentService commentService;
+    @Autowired
+    private IEsResourceService esResourceService;
     
     @Override
 	public Resource findDetailById(Long resourceId) {
@@ -119,13 +122,23 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     public void createResource(Resource resource) {
     	resource.setCreateTime(new Date());
         this.save(resource);
+        esResourceService.save(resource.getResourceId());
     }
+    
+    @Override
+	public void createResources(List<Resource> resources) {
+		this.saveBatch(resources);
+		for(int i=0; i<resources.size(); i++){
+			esResourceService.save(resources.get(i).getResourceId());
+		}
+	}
 
     @Override
     @Transactional
     public void updateResource(Resource resource) {
     	resource.setModifyTime(new Date());
         this.saveOrUpdate(resource);
+        esResourceService.save(resource.getResourceId());
     }
 
     @Override
@@ -137,6 +150,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 	        subjectResourceService.deleteSubjectResourcesByResourceId(list); // 删除专题关联
 	        commentService.deleteCommentsByResourceId(list); // 删除评论
     	}
+    	esResourceService.delete(list);
 	}
 
 	@Override
