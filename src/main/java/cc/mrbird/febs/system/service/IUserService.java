@@ -6,9 +6,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
- * @author MrBird
+ * @author psy
  */
 public interface IUserService extends IService<User> {
+
 
     /**
      * 通过用户名查找用户
@@ -109,4 +110,6 @@ public interface IUserService extends IService<User> {
      * @param user 个人信息
      */
     void updateProfile(User user);
+
+    Integer countUserNumByDept(String deptName);
 }

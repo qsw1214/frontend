@@ -26,6 +26,11 @@ public class FebsResponse extends HashMap<String, Object> {
         return this;
     }
 
+    public FebsResponse num(Object num) {
+        this.put("num", num);
+        return this;
+    }
+
     public FebsResponse success() {
         this.code(HttpStatus.OK);
         return this;

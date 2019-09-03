@@ -58,7 +58,11 @@ public interface IDeviceInfoService extends IService<DeviceInfo> {
     /**
      * 通过学校 id 删除
      *
-     * @param List<String> 学校id
+     * @param schoolIds 学校id
      */
     void deleteDeviceInfoByschoolId(List<String> schoolIds);
+
+    Integer countDeviceByDept(String deptName);
+
+    Integer countDeviceBySchool(String schoolName);
 }

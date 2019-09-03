@@ -79,4 +79,14 @@ public class DeviceInfoServiceImpl extends ServiceImpl<DeviceInfoMapper, DeviceI
 		if(schoolIds.size()>0)
 			this.baseMapper.delete(new QueryWrapper<DeviceInfo>().lambda().in(DeviceInfo::getSchoolId, schoolIds));
 	}
+
+    @Override
+    public Integer countDeviceByDept(String deptName){
+        return this.baseMapper.countDeviceByDept(deptName);
+    }
+
+    @Override
+    public Integer countDeviceBySchool(String schoolName){
+        return this.baseMapper.countDeviceBySchool(schoolName);
+    }
 }

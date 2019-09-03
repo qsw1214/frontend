@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.basicInfo.mapper.OnlineClassMapper">
+
+    <sql id="findOnlineClasssInfoDetailSql">
+        SELECT
+          s.school_id schoolId,
+          s.school_name schoolName,
+          d.device_name deviceName,
+          d.firm_name firmName,
+          c.url playUrl,
+          c.subject,
+          c.grade,
+          c.location className,
+        FROM
+        jcc_school_info s
+          LEFT JOIN jcc_device_info d ON (s.school_id = d.school_id)
+          LEFT JOIN jcc_classroom_info c ON (s.school_id = c.school_id)
+        WHERE 1 = 1
+    </sql>
+    <select id="findOnlineClassInfos" parameterType="cc.mrbird.febs.basicInfo.entity.OnlineClass" resultType="cc.mrbird.febs.basicInfo.entity.OnlineClass">
+        <include refid="findOnlineClasssInfoDetailSql"/>
+    </select>
+</mapper>

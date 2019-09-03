@@ -17,9 +17,9 @@ import java.util.Map;
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class DingRemindServiceImpl extends ServiceImpl<DingRemindMapper, User> implements DingRemindService {
+
     @Autowired
     private DingRemindMapper dingRemindMapper;
-
 
     @Override
     public void selectCourseInfList(Map params) {
