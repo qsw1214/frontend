@@ -169,7 +169,8 @@ public class ApiController extends BaseController {
     @GetMapping("curriculum/list")
     @RequiresPermissions("schoolTimetable:list")
     public FebsResponse getAllDeviceInfos(QueryRequest request, SchoolTimetable schoolTimetable) {
-        return new FebsResponse().success().data(schoolTimetableService.findSchoolTimetables(schoolTimetable));
+        return new FebsResponse().success().data(
+                schoolTimetableService.findSchoolTimetables(schoolTimetable));
     }
 
     /**

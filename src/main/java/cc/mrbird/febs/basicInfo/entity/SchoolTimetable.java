@@ -65,6 +65,7 @@ public class SchoolTimetable {
     /**
      * 
      */
+    @ExcelField(value = "年级名称")
     @TableField("grade")
     private String grade;
     /**

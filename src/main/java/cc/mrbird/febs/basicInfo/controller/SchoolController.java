@@ -53,6 +53,15 @@ public class SchoolController extends BaseController {
     @Autowired
     private ISchoolService schoolService;
 
+    @Autowired
+    private IDeviceInfoService deviceInfoService;
+
+    @Autowired
+    private IClassroomInfoService classroomInfoService;
+
+    @Autowired
+    private IClassInfoService classInfoService;
+
     @GetMapping("school")
     @ResponseBody
 //    @RequiresPermissions("school:list")
@@ -89,15 +98,6 @@ public class SchoolController extends BaseController {
             throw new FebsException(message);
         }
     }
-
-    @Autowired
-    private IDeviceInfoService deviceInfoService;
-
-    @Autowired
-    private IClassroomInfoService classroomInfoService;
-
-    @Autowired
-    private IClassInfoService classInfoService;
 
     @Log("删除School")
     @GetMapping("school/delete/{schoolIds}")    
