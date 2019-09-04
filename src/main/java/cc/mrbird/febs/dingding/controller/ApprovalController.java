@@ -1,12 +1,14 @@
 package cc.mrbird.febs.dingding.controller;
 
 import cc.mrbird.febs.dingding.config.Constant;
+import cc.mrbird.febs.dingding.service.IApprovalService;
 import cc.mrbird.febs.dingding.util.ApprovalInfUtil;
 import cc.mrbird.febs.dingding.util.MessageUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.oapi.lib.aes.Utils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,6 +53,9 @@ public class ApprovalController {
      */
     private static final String CALLBACK_RESPONSE_SUCCESS = "success";
 
+    @Autowired
+    private IApprovalService approvalService;
+    
     @RequestMapping(value = "/callback")
     @ResponseBody
     public Map<String, String> callback(@RequestParam(value = "signature", required = false) String signature,
@@ -72,24 +77,30 @@ public class ApprovalController {
 
             if (BPMS_TASK_CHANGE.equals(eventType)) {
                 bizLogger.info("收到审批任务进度更新: " + plainText);
-
                 //todo: 实现审批的业务逻辑，如发消息
-                //审批实例开始，结束
-                //调用审批审批详情接口
-                Map map = ApprovalInfUtil.getToken(obj.getString("processInstanceId"));
-                System.out.println(map);
                 //通过这个map获取到的信息,同步数据库的数据
                 //CallBackService.insertOrUpdateApprovalInf(map);
             } else if (BPMS_INSTANCE_CHANGE.equals(eventType)) {
                 bizLogger.info("收到审批实例状态更新: " + plainText);
                 //调用审批审批详情接口
-                Map map = ApprovalInfUtil.getToken(obj.getString("processInstanceId"));
                 //通过这个map获取到的信息,同步数据库的数据
                 //CallBackService.insertOrUpdateApprovalInf(map);
                 //todo: 实现审批的业务逻辑，如发消息
                 String processInstanceId = obj.getString("processInstanceId");
                 if (obj.containsKey("result") && obj.getString("result").equals("agree")) {
                     MessageUtil.sendMessageToOriginator(processInstanceId);
+                    //审批实例开始，结束
+                    String processCode = obj.getString("processCode");
+                    switch(processCode){
+                        //学校入驻审批实例
+                        case Constant.SCHOOL_CALLBACK_URL_HOST:
+                            //调用审批详情接口，获取详情
+                            Map map = ApprovalInfUtil.getToken(obj.getString("processInstanceId"));
+                            //JSON字符串
+                            String processInstance = (String) map.get("process_instance");
+                            this.approvalService.dealSchoolApprovalData(processInstance);
+                            break;
+                    }
                 }
             } else {
                 // 其他类型事件处理
@@ -102,6 +113,5 @@ public class ApprovalController {
             mainLogger.error("process callback failed！"+params,e);
             return null;
         }
-
     }
 }
