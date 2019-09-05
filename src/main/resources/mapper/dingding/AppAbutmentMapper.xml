@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.dingding.mapper.AppAbutmentMapper">
+
+    <select id="selectAppAbutmentByAppName" parameterType="java.util.Map" resultType="java.util.HashMap">
+       select id,
+        originator_userid,
+        title,
+        result,
+        app_name,
+        app_logo,
+        app_inf,
+        app_main_link,
+        export_ip,
+        pc_main_address,
+        manage_address,
+        create_time,
+        finish_time,
+        city_leader_id,
+        city_approval_time,
+        province_leader_id,
+        province_approval_time,
+        agent_id,
+        app_key,
+        app_secret,
+        is_create,
+        create_app_userid
+        from app_abutment_apply
+        where app_name = #{app_name}
+    </select>
+
+    <insert id="insertAppAbutmentApply" parameterType="java.util.Map">
+        insert into app_abutment_apply(id,
+        originator_userid,
+        title,
+        result,
+        app_name,
+        app_logo,
+        app_inf,
+        app_main_link,
+        export_ip,
+        pc_main_address,
+        manage_address,
+        create_time,
+        finish_time,
+        city_leader_id,
+        city_approval_time,
+        province_leader_id,
+        province_approval_time,
+        is_create,
+        create_app_userid) values(#{id},
+        #{originator_userid},
+        #{title},
+        #{result},
+        #{app_name},
+        #{app_logo},
+        #{app_inf},
+        #{app_main_link},
+        #{export_ip},
+        #{pc_main_address},
+        #{manage_address},
+        #{create_time},
+        #{finish_time},
+        #{city_leader_id},
+        #{city_approval_time},
+        #{province_leader_id},
+        #{province_approval_time},
+        #{is_create},
+        #{create_app_userid}
+        )
+    </insert>
+
+    <select id="selectAppInfByAppName" parameterType="java.util.Map" resultType="java.util.HashMap">
+        select
+        agent_id,app_key,app_secret
+        from app_abutment_apply
+        where app_name = #{app_name}
+    </select>
+</mapper>

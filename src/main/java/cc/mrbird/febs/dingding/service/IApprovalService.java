@@ -12,4 +12,5 @@ public interface IApprovalService {
 
     public void dealSchoolApprovalData(String processInstance);
 
+    public void insertAppAbutmentApply(String processInstance);
 }

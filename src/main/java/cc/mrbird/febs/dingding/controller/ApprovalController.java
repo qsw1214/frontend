@@ -1,13 +1,19 @@
 package cc.mrbird.febs.dingding.controller;
 
+import cc.mrbird.febs.basicInfo.entity.SchoolTimetable;
+import cc.mrbird.febs.common.entity.FebsResponse;
+import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.dingding.config.Constant;
+import cc.mrbird.febs.dingding.service.AppAbutmentService;
 import cc.mrbird.febs.dingding.service.IApprovalService;
 import cc.mrbird.febs.dingding.util.ApprovalInfUtil;
 import cc.mrbird.febs.dingding.util.MessageUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.oapi.lib.aes.Utils;
+import io.micrometer.core.instrument.util.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +23,11 @@ import org.slf4j.LoggerFactory;
 
 import com.dingtalk.oapi.lib.aes.DingTalkEncryptor;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.Map;
+import static cc.mrbird.febs.dingding.util.requestUtil.$params;
 
 /**
  * 审批控制层
@@ -55,6 +65,10 @@ public class ApprovalController {
 
     @Autowired
     private IApprovalService approvalService;
+
+    @Autowired
+    private AppAbutmentService appAbutmentService;
+
     
     @RequestMapping(value = "/callback")
     @ResponseBody
@@ -100,6 +114,15 @@ public class ApprovalController {
                             String processInstance = (String) map.get("process_instance");
                             this.approvalService.dealSchoolApprovalData(processInstance);
                             break;
+                        //第三方应用接入审批实例
+                        case Constant.APP_ABUTMENT_CALLBACK_URL_HOST:
+                            //调用审批详情接口，获取详情
+                            Map abutmentMap = ApprovalInfUtil.getToken(obj.getString("processInstanceId"));
+                            //JSON字符串
+                            String processInstance2 = (String) abutmentMap.get("process_instance");
+                            this.approvalService.insertAppAbutmentApply(processInstance2);
+                            break;
+
                     }
                 }
             } else {
@@ -114,4 +137,29 @@ public class ApprovalController {
             return null;
         }
     }
+
+    /**
+     * 通过app名称获取appKey和appSecret方法
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/reBackAppInf")
+    @ResponseBody
+    public FebsResponse selectAppInfByAppName(HttpServletRequest request, HttpServletResponse response) {
+        Map params = $params(request);
+        params.put("app_name","1");
+        Map appInf = appAbutmentService.selectAppInfByAppName(params);
+        if(appInf == null){
+            return new FebsResponse().success().data("您申请的应用正在审核中...");
+        }else{
+            JSONObject jsonObject = new JSONObject(appInf);
+            return new FebsResponse().success().data(jsonObject);
+        }
+
+
+    }
+
+
+
 }

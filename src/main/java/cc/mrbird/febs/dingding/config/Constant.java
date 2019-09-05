@@ -48,12 +48,17 @@ public class Constant {
     /**
      * 回调host
      */
-    public static final String CALLBACK_URL_HOST = "http://26ia2v.natappfree.cc/approval";
+    public static final String CALLBACK_URL_HOST = "http://fbdff95.cpolar.io/approval";
 
     /**
      * 学校入驻审批标识
      */
     public static final String SCHOOL_CALLBACK_URL_HOST = "PROC-B2CA87F4-BB2B-4EF8-9672-CCF839FD344C";
+
+    /**
+     * 第三方应用申请接入审批标识
+     */
+    public static final String APP_ABUTMENT_CALLBACK_URL_HOST = "PROC-B23A2A20-14A0-4549-8C9F-CD5C583DC0DD";
 
     /**
      * 审批结果
