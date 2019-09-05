@@ -3,6 +3,7 @@ package cc.mrbird.febs.dingding.controller;
 import cc.mrbird.febs.basicInfo.entity.SchoolTimetable;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.dingding.config.Constant;
 import cc.mrbird.febs.dingding.service.AppAbutmentService;
 import cc.mrbird.febs.dingding.service.IApprovalService;
@@ -146,16 +147,23 @@ public class ApprovalController {
      */
     @RequestMapping(value = "/reBackAppInf")
     @ResponseBody
-    public FebsResponse selectAppInfByAppName(HttpServletRequest request, HttpServletResponse response) {
+    public FebsResponse selectAppInfByAppName(HttpServletRequest request, HttpServletResponse response) throws FebsException {
         Map params = $params(request);
         params.put("app_name","1");
-        Map appInf = appAbutmentService.selectAppInfByAppName(params);
-        if(appInf == null){
-            return new FebsResponse().success().data("您申请的应用正在审核中...");
-        }else{
-            JSONObject jsonObject = new JSONObject(appInf);
-            return new FebsResponse().success().data(jsonObject);
+        try {
+            Map appInf = appAbutmentService.selectAppInfByAppName(params);
+            if(appInf == null){
+                return new FebsResponse().success().data("您申请的应用正在审核中...");
+            }else{
+                JSONObject jsonObject = new JSONObject(appInf);
+                return new FebsResponse().success().data(jsonObject);
+            }
+        }catch (Exception e){
+            String message = "获取app信息失败！请联系管理员";
+            log.error(message, e);
+            throw new FebsException(message);
         }
+
 
 
     }
