@@ -68,6 +68,9 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         if (StringUtils.isNotBlank(school.getCountry())) {
             queryWrapper.eq(School::getCountry, school.getCountry());
         }
+        if (StringUtils.isNotBlank(school.getSchoolCategory())) {
+            queryWrapper.eq(School::getSchoolCategory, school.getSchoolCategory());
+        }
         if (school.getState() != null) {
             queryWrapper.eq(School::getState, school.getState());
         }
@@ -92,6 +95,9 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         }
         if (StringUtils.isNotBlank(school.getCountry())) {
             queryWrapper.eq(School::getCountry, school.getCountry());
+        }
+        if (StringUtils.isNotBlank(school.getSchoolCategory())) {
+            queryWrapper.eq(School::getSchoolCategory, school.getSchoolCategory());
         }
         if (school.getState() != null) {
             queryWrapper.eq(School::getState, school.getState());

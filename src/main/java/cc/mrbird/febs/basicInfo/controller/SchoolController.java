@@ -36,6 +36,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,15 +65,14 @@ public class SchoolController extends BaseController {
 
     @GetMapping("school")
     @ResponseBody
-//    @RequiresPermissions("school:list")
+    @RequiresPermissions("school:view")
     public FebsResponse getAllSchools(School school) {
         return new FebsResponse().success().data(schoolService.findSchools(school));
     }
 
     @GetMapping("school/list")
-//    @PostMapping("school/list")
     @ResponseBody
-//    @RequiresPermissions("school:list")
+    @RequiresPermissions("school:view")
     public FebsResponse schoolList(QueryRequest request, School school) {
 //    	User currentUser = getCurrentUser();
 //    	school.setSchoolId(currentUser.getSchoolId());
@@ -83,7 +83,7 @@ public class SchoolController extends BaseController {
     @Log("新增School")
     @PostMapping("school")
     @ResponseBody
-//    @RequiresPermissions("school:add")
+    @RequiresPermissions("school:add")
     public FebsResponse addSchool(@Valid School school, @RequestParam(required=false,value="file") MultipartFile file) throws FebsException {
         try {
 			if (file != null) {
@@ -102,7 +102,7 @@ public class SchoolController extends BaseController {
     @Log("删除School")
     @GetMapping("school/delete/{schoolIds}")    
     @ResponseBody
-//    @RequiresPermissions("school:delete")
+    @RequiresPermissions("school:delete")
     public FebsResponse deleteSchool(@NotBlank(message = "{required}") @PathVariable String schoolIds) throws FebsException {
         try {
             List<String> list = new ArrayList<>();
@@ -126,7 +126,7 @@ public class SchoolController extends BaseController {
     @Log("修改School")
     @PostMapping("school/update")
     @ResponseBody
-//    @RequiresPermissions("school:update")
+    @RequiresPermissions("school:update")
     public FebsResponse updateSchool(School school, @RequestParam(required=false,value="file") MultipartFile file) throws FebsException {
         try {
 			if (file != null) {
@@ -144,7 +144,7 @@ public class SchoolController extends BaseController {
     
     @PostMapping("school/excel")
     @ResponseBody
-//    @RequiresPermissions("school:export")
+    @RequiresPermissions("school:export")
     public void export(QueryRequest queryRequest, School school, HttpServletResponse response) throws FebsException {
         try {
             List<School> schools = this.schoolService.findSchools(queryRequest, school).getRecords();

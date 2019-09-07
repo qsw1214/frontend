@@ -1,9 +1,9 @@
-<div class="layui-fluid layui-anim febs-anim" id="febs-user" lay-title="教室管理">
+<div class="layui-fluid layui-anim febs-anim" id="febs-classroomInfo" lay-title="教室管理">
     <div class="layui-row febs-container">
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-body febs-table-full">
-                    <form class="layui-form layui-table-form" lay-filter="user-table-form">
+                    <form class="layui-form layui-table-form" lay-filter="classroomInfo-table-form">
                         <div class="layui-row">
                             <div class="layui-col-md10">
                                 <div class="layui-form-item">
@@ -34,7 +34,7 @@
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
-                                     shiro:hasAnyPermissions="user:add,user:update,user:password:reset,user:export">
+                                     shiro:hasAnyPermissions="classroomInfo:add,classroomInfo:update,classroomInfo:password:reset,classroomInfo:export">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
                             </div>
@@ -47,15 +47,15 @@
     </div>
 </div>
 
-<script type="text/html" id="user-option">
-    <span shiro:lacksPermission="user:view,user:update,user:delete">
+<script type="text/html" id="classroomInfo-option">
+    <span shiro:lacksPermission="classroomInfo:view,classroomInfo:update,classroomInfo:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
-    <a lay-event="detail" shiro:hasPermission="user:view"><i
+    <a lay-event="detail" shiro:hasPermission="classroomInfo:view"><i
             class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
-    <a lay-event="edit" shiro:hasPermission="user:update"><i
+    <a lay-event="edit" shiro:hasPermission="classroomInfo:update"><i
             class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
-    <a lay-event="del" shiro:hasPermission="user:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+    <a lay-event="del" shiro:hasPermission="classroomInfo:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect'], function () {
@@ -66,7 +66,7 @@
             table = layui.table,
             treeSelect = layui.treeSelect,
             dropdown = layui.dropdown,
-            $view = $('#febs-user'),
+            $view = $('#febs-classroomInfo'),
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
             $searchForm = $view.find('form'),
@@ -92,10 +92,10 @@
                         btn: ['提交', '重置'],
                         area: $(window).width() <= 750 ? '95%' : '50%',
                         yes: function (index, layero) {
-                            $('#user-add').find('#submit').trigger('click');
+                            $('#classroomInfo-add').find('#submit').trigger('click');
                         },
                         btn2: function () {
-                            $('#user-add').find('#reset').trigger('click');
+                            $('#classroomInfo-add').find('#reset').trigger('click');
                             return false;
                         }
                     });
@@ -121,7 +121,7 @@
                         layui.each(checkStatus.data, function (key, item) {
                             usernames.push(item.username)
                         });
-                        febs.post(ctx + 'user/password/reset/' + usernames.join(','), null, function () {
+                        febs.post(ctx + 'classroomInfo/password/reset/' + usernames.join(','), null, function () {
                             febs.alert.success('所选用户密码已重置为1234qwer');
                         });
                     }
@@ -130,25 +130,25 @@
                     var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
                     params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
                     params.pageNum = $view.find(".layui-laypage-em").next().html();
-                    febs.download(ctx + 'user/excel', params, '用户信息表.xlsx');
+                    febs.download(ctx + 'classroomInfo/excel', params, '用户信息表.xlsx');
                 }
             },
             options: [{
                 name: 'add',
                 title: '新增教室',
-                perms: 'user:add'
+                perms: 'classroomInfo:add'
             }, {
                 name: 'delete',
                 title: '删除教室',
-                perms: 'user:delete'
+                perms: 'classroomInfo:delete'
             }, {
                 name: 'reset',
                 title: '密码重置',
-                perms: 'user:password:reset'
+                perms: 'classroomInfo:password:reset'
             }, {
                 name: 'export',
                 title: '导出Excel',
-                perms: 'user:export'
+                perms: 'classroomInfo:export'
             }]
         });
 
@@ -224,7 +224,7 @@
                     {field:'state',title: '状态'},
                     {field: 'subject', title: '课程', minWidth: 180},
                     {field: 'garde', title: '年级'},
-                    {title: '操作', toolbar: '#user-option', minWidth: 140}
+                    {title: '操作', toolbar: '#classroomInfo-option', minWidth: 140}
                 ]]
             });
         }

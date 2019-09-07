@@ -1,59 +1,59 @@
 <style>
-    #febs-user-detail #user-img, #febs-user-detail .user-info {
+    #febs-school-detail #school-img, #febs-school-detail .school-info {
         display: inline-block;
         float: left;
         margin-left: 15px;
     }
 
-    #febs-user-detail #user-img img {
+    #febs-school-detail #school-img img {
         width: 7rem;
         margin: 10px 10px 0 20px;
         border-radius: 50%;
         cursor: pointer;
     }
 
-    #febs-user-detail #user-info-wrapper {
+    #febs-school-detail #school-info-wrapper {
         margin: 0 0 1rem 0;
         display: inline-block;
     }
 
-    #febs-user-detail .user-info div {
+    #febs-school-detail .school-info div {
         margin: 10px 15px;
         max-width: 19rem;
     }
 
-    #febs-user-detail #options-wrapper a {
+    #febs-school-detail #options-wrapper a {
         padding: 4px 6px;
         color: rgba(0, 0, 0, 0.65);
         border: 1px solid #d9d9d9;
         border-radius: 2px;
     }
 
-    #febs-user-detail #options-wrapper a:hover {
+    #febs-school-detail #options-wrapper a:hover {
         color: #40a9ff;
         border-color: #40a9ff;
     }
 
 </style>
-<div class="layui-fluid" id="febs-user-detail" lay-title="个人信息">
-	<div id="user-info-wrapper">
-        <div id="user-img">
-            <img alt="学校图片" title="点我更换图片" data-th-src="@{febs/images/avatar/}+${school.picture}">
+<div class="layui-fluid" id="febs-school-detail" lay-title="个人信息">
+	<div id="school-info-wrapper">
+        <div id="school-img">
+            <img alt="学校图片" title="点我更换图片" data-th-src="@{febs/images/avatar}+${school.picture}">
         </div>
-        <div class="user-info">
-           <div><span class="layui-icon layui-icon-user"></span> 学校名称：
+        <div class="school-info">
+           <div><span class="layui-icon layui-icon-tabs"></span> 学校名称：
                  [[${school.schoolName}]]
             </div> 
             <div><span class="layui-icon layui-icon-trophy"></span> 学校类型：
                 [[${school.schoolType}]]
             </div>
-            <div><span class="layui-icon layui-icon-home"></span> 主负责人：
+            <div><span class="layui-icon layui-icon-username"></span> 主负责人：
                 [[${#strings.defaultString(school.linkMan,'暂无主负责人')}]]
             </div>
-             <div><span class="layui-icon layui-icon-trophy"></span> 联系电话：
+             <div><span class="layui-icon layui-icon-cellphone"></span> 联系电话：
                 [[${#strings.defaultString(school.linkPhone,'暂无联系电话')}]]
             </div>
-             <div><span class="layui-icon layui-icon-skin"></span> 邮编：
+             <div><span class="layui-icon layui-icon-note"></span> 邮编：
                 [[${#strings.defaultString(school.postCode,'暂无邮编')}]]
             </div>
             <div><span class="layui-icon layui-icon-home"></span> 学校所在地：

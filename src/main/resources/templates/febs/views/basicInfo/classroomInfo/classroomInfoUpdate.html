@@ -160,7 +160,7 @@
             febs.post(ctx + 'classroomInfo/update', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('教室信息修改成功');
-                $('#febs-user').find('#query').click();
+                $('#febs-classroomInfo').find('#query').click();
             });
             return false;
         });

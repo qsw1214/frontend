@@ -46,14 +46,14 @@ public class ClassroomInfoController extends BaseController {
 
     @GetMapping("classroomInfo")
     @ResponseBody
-//    @RequiresPermissions("classroomInfo:list")
+    @RequiresPermissions("classroomInfo:view")
     public FebsResponse getAllClassroomInfos(ClassroomInfo classroomInfo) {
         return new FebsResponse().success().data(classroomInfoService.findClassroomInfos(classroomInfo));
     }
 
     @GetMapping("classroomInfo/list")
     @ResponseBody
-//    @RequiresPermissions("classroomInfo:list")
+    @RequiresPermissions("classroomInfo:view")
     public FebsResponse classroomInfoList(QueryRequest request, ClassroomInfo classroomInfo) {
         Map<String, Object> dataTable = getDataTable(this.classroomInfoService.findClassroomInfos(request, classroomInfo));
         return new FebsResponse().success().data(dataTable);
@@ -62,7 +62,7 @@ public class ClassroomInfoController extends BaseController {
     @Log("新增ClassroomInfo")
     @PostMapping("classroomInfo")
     @ResponseBody
-//    @RequiresPermissions("classroomInfo:add")
+    @RequiresPermissions("classroomInfo:add")
     public FebsResponse addClassroomInfo(@Valid ClassroomInfo classroomInfo) throws FebsException {
         try {
             this.classroomInfoService.createClassroomInfo(classroomInfo);
@@ -77,7 +77,7 @@ public class ClassroomInfoController extends BaseController {
     @Log("删除ClassroomInfo")
     @GetMapping("classroomInfo/delete/{classroomIds}")
     @ResponseBody
-//    @RequiresPermissions("classroomInfo:delete")
+    @RequiresPermissions("classroomInfo:delete")
     public FebsResponse deleteClassroomInfo(@NotBlank(message = "{required}") @PathVariable String classroomIds) throws FebsException {
         try {
         	this.classroomInfoService.deleteClassroomInfo(classroomIds);
@@ -92,7 +92,7 @@ public class ClassroomInfoController extends BaseController {
     @Log("修改ClassroomInfo")
     @PostMapping("classroomInfo/update")
     @ResponseBody
-//    @RequiresPermissions("classroomInfo:update")
+    @RequiresPermissions("classroomInfo:update")
     public FebsResponse updateClassroomInfo(ClassroomInfo classroomInfo) throws FebsException {
         try {
             this.classroomInfoService.updateClassroomInfo(classroomInfo);
