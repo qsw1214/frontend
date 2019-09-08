@@ -1,12 +1,21 @@
 package cc.mrbird.febs.dingding.controller;
 
+import cc.mrbird.febs.basicInfo.entity.SchoolTimetable;
+import cc.mrbird.febs.common.entity.FebsResponse;
+import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.dingding.config.Constant;
+import cc.mrbird.febs.dingding.service.AppAbutmentService;
+import cc.mrbird.febs.dingding.service.IApprovalService;
 import cc.mrbird.febs.dingding.util.ApprovalInfUtil;
 import cc.mrbird.febs.dingding.util.MessageUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.oapi.lib.aes.Utils;
+import io.micrometer.core.instrument.util.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +24,11 @@ import org.slf4j.LoggerFactory;
 
 import com.dingtalk.oapi.lib.aes.DingTalkEncryptor;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.Map;
+import static cc.mrbird.febs.dingding.util.requestUtil.$params;
 
 /**
  * 审批控制层
@@ -51,6 +64,13 @@ public class ApprovalController {
      */
     private static final String CALLBACK_RESPONSE_SUCCESS = "success";
 
+    @Autowired
+    private IApprovalService approvalService;
+
+    @Autowired
+    private AppAbutmentService appAbutmentService;
+
+    
     @RequestMapping(value = "/callback")
     @ResponseBody
     public Map<String, String> callback(@RequestParam(value = "signature", required = false) String signature,
@@ -72,24 +92,39 @@ public class ApprovalController {
 
             if (BPMS_TASK_CHANGE.equals(eventType)) {
                 bizLogger.info("收到审批任务进度更新: " + plainText);
-
                 //todo: 实现审批的业务逻辑，如发消息
-                //审批实例开始，结束
-                //调用审批审批详情接口
-                Map map = ApprovalInfUtil.getToken(obj.getString("processInstanceId"));
-                System.out.println(map);
                 //通过这个map获取到的信息,同步数据库的数据
                 //CallBackService.insertOrUpdateApprovalInf(map);
             } else if (BPMS_INSTANCE_CHANGE.equals(eventType)) {
                 bizLogger.info("收到审批实例状态更新: " + plainText);
                 //调用审批审批详情接口
-                Map map = ApprovalInfUtil.getToken(obj.getString("processInstanceId"));
                 //通过这个map获取到的信息,同步数据库的数据
                 //CallBackService.insertOrUpdateApprovalInf(map);
                 //todo: 实现审批的业务逻辑，如发消息
                 String processInstanceId = obj.getString("processInstanceId");
                 if (obj.containsKey("result") && obj.getString("result").equals("agree")) {
                     MessageUtil.sendMessageToOriginator(processInstanceId);
+                    //审批实例开始，结束
+                    String processCode = obj.getString("processCode");
+                    switch(processCode){
+                        //学校入驻审批实例
+                        case Constant.SCHOOL_CALLBACK_URL_HOST:
+                            //调用审批详情接口，获取详情
+                            Map map = ApprovalInfUtil.getToken(obj.getString("processInstanceId"));
+                            //JSON字符串
+                            String processInstance = (String) map.get("process_instance");
+                            this.approvalService.dealSchoolApprovalData(processInstance);
+                            break;
+                        //第三方应用接入审批实例
+                        case Constant.APP_ABUTMENT_CALLBACK_URL_HOST:
+                            //调用审批详情接口，获取详情
+                            Map abutmentMap = ApprovalInfUtil.getToken(obj.getString("processInstanceId"));
+                            //JSON字符串
+                            String processInstance2 = (String) abutmentMap.get("process_instance");
+                            this.approvalService.insertAppAbutmentApply(processInstance2);
+                            break;
+
+                    }
                 }
             } else {
                 // 其他类型事件处理
@@ -102,6 +137,37 @@ public class ApprovalController {
             mainLogger.error("process callback failed！"+params,e);
             return null;
         }
+    }
+
+    /**
+     * 通过app名称获取appKey和appSecret方法
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/reBackAppInf")
+    @ResponseBody
+    public FebsResponse selectAppInfByAppName(HttpServletRequest request, HttpServletResponse response) throws FebsException {
+        Map params = $params(request);
+        params.put("app_name","1");
+        try {
+            Map appInf = appAbutmentService.selectAppInfByAppName(params);
+            if(appInf == null){
+                return new FebsResponse().success().data("您申请的应用正在审核中...");
+            }else{
+                JSONObject jsonObject = new JSONObject(appInf);
+                return new FebsResponse().success().data(jsonObject);
+            }
+        }catch (Exception e){
+            String message = "获取app信息失败！请联系管理员";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+
+
 
     }
+
+
+
 }

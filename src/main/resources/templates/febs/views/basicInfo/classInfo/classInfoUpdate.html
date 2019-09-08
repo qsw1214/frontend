@@ -97,7 +97,7 @@
             febs.post(ctx + 'classInfo/update', data.field, function () {
                 layer.closeAll();
                 febs.alert.success(' 班级信息修改成功');
-                $('#febs-user').find('#query').click();
+                $('#febs-classInfo').find('#query').click();
             });
             return false;
         });

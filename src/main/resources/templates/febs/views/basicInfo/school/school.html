@@ -1,10 +1,10 @@
-<div class="layui-fluid layui-anim febs-anim" id="febs-user" lay-title="学校管理">
+<div class="layui-fluid layui-anim febs-anim" id="febs-school" lay-title="学校管理">
     <div class="layui-row febs-container">
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-body febs-table-full">
-                    <form class="layui-form layui-table-form" lay-filter="user-table-form">
-                        <div class="layui-row">
+                    <form class="layui-form layui-table-form" lay-filter="school-table-form">
+                    	<div class="layui-row">
                             <div class="layui-col-md10">
                                 <div class="layui-form-item">
                                     <div class="layui-inline">
@@ -18,8 +18,8 @@
                                         <div class="layui-input-inline">
                                             <select name="status">
                                                 <option value=""></option>
-                                                <option value="0">主校</option>
-                                                <option value="1">分校</option>
+                                                <option value="主校">主校</option>
+                                                <option value="分校">分校</option>
                                             </select>
                                         </div>
                                     </div>
@@ -30,16 +30,6 @@
                                                 <option value="">请选择省</option>
                                             </select>
                                         </div>
-                                        <!--<div class="layui-input-inline" style="width: 180px;">-->
-                                            <!--<select name="city" class="city-selector"   lay-filter="city-1">-->
-                                                <!--<option value="">请选择市</option>-->
-                                            <!--</select>-->
-                                        <!--</div>-->
-                                        <!--<div class="layui-input-inline" style="width: 180px;">-->
-                                            <!--<select name="country" class="county-selector"  lay-filter="county-1">-->
-                                                <!--<option value="">请选择区</option>-->
-                                            <!--</select>-->
-                                        <!--</div>-->
                                     </div>
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">学校类别</label>
@@ -58,11 +48,11 @@
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
-                                     shiro:hasAnyPermissions="user:add,user:update,user:password:reset,user:export">
+                                     shiro:hasAnyPermissions="school:add,school:update,school:password:reset,school:export">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
                             </div>
-                        </div>
+                        </div>     
                     </form>
                     <table lay-filter="schoolTable" lay-data="{id: 'schoolTable'}" id="LAY_table_user"></table>
                 </div>
@@ -71,7 +61,7 @@
     </div>
 </div>
 <script src="./mods/layarea.js"></script>
-<script type="text/html" id="user-status">
+<script type="text/html" id="school-status">
     {{#
     var status = {
     主校: {title: 主校'},
@@ -80,15 +70,15 @@
     }}
     <span>{{ status.title }}</span>
 </script>
-<script type="text/html" id="user-option">
-    <span shiro:lacksPermission="user:view,user:update,user:delete">
+<script type="text/html" id="school-option">
+    <span shiro:lacksPermission="school:view,school:update,school:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
-    <a lay-event="detail" shiro:hasPermission="user:view"><i
+    <a lay-event="detail" shiro:hasPermission="school:view"><i
             class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
-    <a lay-event="edit" shiro:hasPermission="user:update"><i
+    <a lay-event="edit" shiro:hasPermission="school:update"><i
             class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
-    <a lay-event="del" shiro:hasPermission="user:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+    <a lay-event="del" shiro:hasPermission="school:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect'], function () {
@@ -100,7 +90,7 @@
             table = layui.table,
             treeSelect = layui.treeSelect,
             dropdown = layui.dropdown,
-            $view = $('#febs-user'),
+            $view = $('#febs-school'),
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
             $searchForm = $view.find('form'),
@@ -126,10 +116,11 @@
                 success:function (res) {
                     var items=res.data;
                     if (res.data.length==0){
-                        schoolCategory.append('<option value="'+""+'">'+""+'</option>');
+                        schoolCategory.append('<option value="">'+'请选择'+'</option>');
                     }else{
+                    	schoolCategory.append('<option value="">'+'请选择'+'</option>');
                         for (var i=0;i<items.length;i++) {
-                            $('#schoolCategory').append('<option value="' + '' + '">' + items[i].v + '</option>');
+                            $('#schoolCategory').append('<option value='+items[i].v+'>'+items[i].v+'</option>');
                         }
                     }
                     form.render('select');
@@ -145,10 +136,10 @@
                         btn: ['提交', '重置'],
                         area: $(window).width() <= 750 ? '95%' : '50%',
                         yes: function (index, layero) {
-                            $('#user-add').find('#submit').trigger('click');
+                            $('#school-add').find('#submit').trigger('click');
                         },
                         btn2: function () {
-                            $('#user-add').find('#reset').trigger('click');
+                            $('#school-add').find('#reset').trigger('click');
                             return false;
                         }
                     });
@@ -176,15 +167,15 @@
             options: [{
                 name: 'add',
                 title: '新增学校',
-                perms: 'user:add'
+                perms: 'school:add'
             }, {
                 name: 'delete',
                 title: '删除学校',
-                perms: 'user:delete'
+                perms: 'school:delete'
             }, {
                 name: 'export',
                 title: '导出Excel',
-                perms: 'user:export'
+                perms: 'school:export'
             }]
         });
 
@@ -251,13 +242,12 @@
                     {field: 'linkPhone', title: '联系电话', minWidth: 165},
                     {field: 'postCode', title: '邮编'},
                     {field: 'address', title: '学校所在地', minWidth: 210},
-                    {title: '操作', toolbar: '#user-option', minWidth: 140}
+                    {title: '操作', toolbar: '#school-option', minWidth: 140}
                 ]]
             });
         }
 
         function getQueryParams() {
-//            console.log($searchForm.find("select[name='province']").val());   北京
             return {
             	schoolName: $searchForm.find('input[name="school"]').val().trim(),
             	schoolType: $searchForm.find("select[name='status']").val(),

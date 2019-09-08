@@ -38,9 +38,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> implements ISchoolService {
 
     @Autowired
-    private SchoolMapper schoolMapper;
-    
-    @Autowired
     private IClassInfoService classInfoService;
   
     @Autowired
@@ -71,6 +68,9 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         if (StringUtils.isNotBlank(school.getCountry())) {
             queryWrapper.eq(School::getCountry, school.getCountry());
         }
+        if (StringUtils.isNotBlank(school.getSchoolCategory())) {
+            queryWrapper.eq(School::getSchoolCategory, school.getSchoolCategory());
+        }
         if (school.getState() != null) {
             queryWrapper.eq(School::getState, school.getState());
         }
@@ -95,6 +95,9 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         }
         if (StringUtils.isNotBlank(school.getCountry())) {
             queryWrapper.eq(School::getCountry, school.getCountry());
+        }
+        if (StringUtils.isNotBlank(school.getSchoolCategory())) {
+            queryWrapper.eq(School::getSchoolCategory, school.getSchoolCategory());
         }
         if (school.getState() != null) {
             queryWrapper.eq(School::getState, school.getState());
@@ -146,4 +149,20 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
 
     	}
 	}
+
+    public Integer getCountOfCity(String country){
+        LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotBlank(country)) {
+            queryWrapper.eq(School::getCountry, country);
+        }
+        return this.baseMapper.selectCount(queryWrapper);
+    }
+
+    public Integer getCountOfCountry(String country){
+        LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotBlank(country)) {
+            queryWrapper.eq(School::getCountry, country);
+        }
+        return this.baseMapper.selectCount(queryWrapper);
+    }
 }

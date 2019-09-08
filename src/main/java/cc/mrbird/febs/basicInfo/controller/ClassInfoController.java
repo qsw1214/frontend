@@ -46,14 +46,14 @@ public class ClassInfoController extends BaseController {
 
     @GetMapping("classInfo")
     @ResponseBody
-    //@RequiresPermissions("classInfo:list")
+    @RequiresPermissions("classInfo:view")
     public FebsResponse getAllClassInfos(ClassInfo classInfo) {
         return new FebsResponse().success().data(classInfoService.findClassInfos(classInfo));
     }
 
     @GetMapping("classInfo/list")
     @ResponseBody
-    //@RequiresPermissions("classInfo:list")
+    @RequiresPermissions("classInfo:view")
     public FebsResponse classInfoList(QueryRequest request, ClassInfo classInfo) {
         Map<String, Object> dataTable = getDataTable(this.classInfoService.findClassInfos(request, classInfo));
         return new FebsResponse().success().data(dataTable);
@@ -62,7 +62,7 @@ public class ClassInfoController extends BaseController {
     @Log("新增ClassInfo")
     @PostMapping("classInfo")
     @ResponseBody
-    //@RequiresPermissions("classInfo:add")
+    @RequiresPermissions("classInfo:add")
     public FebsResponse addClassInfo(@Valid ClassInfo classInfo) throws FebsException {
     	System.out.println(classInfo);
         try {
@@ -78,7 +78,7 @@ public class ClassInfoController extends BaseController {
     @Log("删除ClassInfo")
     @GetMapping("classInfo/delete/{classIds}")
     @ResponseBody
-    //@RequiresPermissions("classInfo:delete")
+    @RequiresPermissions("classInfo:delete")
     public FebsResponse deleteClassInfo(@NotBlank(message = "{required}") @PathVariable String classIds) throws FebsException {
         try {
             this.classInfoService.deleteClassInfo(classIds);
@@ -93,7 +93,7 @@ public class ClassInfoController extends BaseController {
     @Log("修改ClassInfo")
     @PostMapping("classInfo/update")
     @ResponseBody
-    //@RequiresPermissions("classInfo:update")
+    @RequiresPermissions("classInfo:update")
     public FebsResponse updateClassInfo(ClassInfo classInfo) throws FebsException {
         try {
             this.classInfoService.updateClassInfo(classInfo);
@@ -107,7 +107,7 @@ public class ClassInfoController extends BaseController {
 
     @PostMapping("classInfo/excel")
     @ResponseBody
-    //@RequiresPermissions("classInfo:export")
+    @RequiresPermissions("classInfo:export")
     public void export(QueryRequest queryRequest, ClassInfo classInfo, HttpServletResponse response) throws FebsException {
         try {
             List<ClassInfo> classInfos = this.classInfoService.findClassInfos(queryRequest, classInfo).getRecords();

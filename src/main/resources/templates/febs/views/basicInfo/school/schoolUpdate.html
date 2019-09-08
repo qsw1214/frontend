@@ -129,7 +129,7 @@
                         schoolCategory.append('<option value="'+""+'">'+""+'</option>');
                     }else{
                         for (var i=0;i<items.length;i++) {
-                            $('#schoolCate').append('<option value="' + items[i].v + '">' + items[i].v + '</option>');
+                            $('#schoolCate').append('<option value=' + items[i].v + '>' + items[i].v + '</option>');
                         }
                     }
                     form.render('select');
@@ -171,7 +171,7 @@
             febs.post(ctx + 'school/update', data.field, function () {
                 layer.closeAll();
                 febs.alert.success(' 学校信息修改成功');
-                $('#febs-user').find('#reset').click();
+                $('#febs-school').find('#reset').click();
             });
             return false;
         });

@@ -1,5 +1,6 @@
 package cc.mrbird.febs.system.service.impl;
 
+import cc.mrbird.febs.basicInfo.entity.DeviceInfo;
 import cc.mrbird.febs.common.authentication.ShiroRealm;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
@@ -9,6 +10,7 @@ import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.entity.UserRole;
 import cc.mrbird.febs.system.mapper.UserMapper;
+import cc.mrbird.febs.system.service.IDeptService;
 import cc.mrbird.febs.system.service.IUserRoleService;
 import cc.mrbird.febs.system.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -190,5 +192,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userRoles.add(ur);
         });
         userRoleService.saveBatch(userRoles);
+    }
+
+    public Integer countUserNumByDept(String deptName){
+        // TODO 设置查询条件
+        return this.baseMapper.countUserNumByDept(deptName);
     }
 }

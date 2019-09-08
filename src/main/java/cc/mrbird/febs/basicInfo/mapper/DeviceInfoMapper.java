@@ -19,8 +19,12 @@ public interface DeviceInfoMapper extends BaseMapper<DeviceInfo> {
      * 查找设备详细信息
      *
      * @param page 分页对象
-     * @param user 设备对象，用于传递查询条件
+     * @param deviceInfo 设备对象，用于传递查询条件
      * @return Ipage
      */
     IPage<DeviceInfo> findDeviceDetailInfos(Page page, @Param("deviceInfo") DeviceInfo deviceInfo);
+
+    public Integer countDeviceByDept(String deptName);
+
+    public Integer countDeviceBySchool(String schoolName);
 }

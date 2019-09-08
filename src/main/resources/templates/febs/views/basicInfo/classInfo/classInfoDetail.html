@@ -1,47 +1,47 @@
 <style>
-    #febs-user-detail #user-img, #febs-user-detail .user-info {
+    #febs-classInfo-detail #classInfo-img, #febs-classInfo-detail .classInfo-info {
         display: inline-block;
         float: left;
         margin-left: 15px;
     }
 
-    #febs-user-detail #user-img img {
+    #febs-classInfo-detail #classInfo-img img {
         width: 7rem;
         margin: 10px 10px 0 20px;
         border-radius: 50%;
         cursor: pointer;
     }
 
-    #febs-user-detail #user-info-wrapper {
+    #febs-classInfo-detail #classInfo-info-wrapper {
         margin: 0 0 1rem 0;
         display: inline-block;
     }
 
-    #febs-user-detail .user-info div {
+    #febs-classInfo-detail .classInfo-info div {
         margin: 10px 15px;
         max-width: 19rem;
     }
 
-    #febs-user-detail #options-wrapper a {
+    #febs-classInfo-detail #options-wrapper a {
         padding: 4px 6px;
         color: rgba(0, 0, 0, 0.65);
         border: 1px solid #d9d9d9;
         border-radius: 2px;
     }
 
-    #febs-user-detail #options-wrapper a:hover {
+    #febs-classInfo-detail #options-wrapper a:hover {
         color: #40a9ff;
         border-color: #40a9ff;
     }
 
 </style>
-<div class="layui-fluid" id="febs-user-detail" lay-title="班级信息">
-	<div id="user-info-wrapper">
-        <div class="user-info">
-           <div><span class="layui-icon layui-icon-user"></span> 班级名称：
+<div class="layui-fluid" id="febs-classInfo-detail" lay-title="班级信息">
+	<div id="classInfo-info-wrapper">
+        <div class="classInfo-info">
+           <div><span class="layui-icon layui-icon-group"></span> 班级名称：
                  [[${classInfo.className}]]
             </div>
-            <div><span class="layui-icon layui-icon-home"></span> 班主任：
+            <div><span class="layui-icon layui-icon-username"></span> 班主任：
                 [[${#strings.defaultString(classInfo.username,'暂无班主任')}]]
             </div>
              <div><span class="layui-icon layui-icon-trophy"></span> 年级：

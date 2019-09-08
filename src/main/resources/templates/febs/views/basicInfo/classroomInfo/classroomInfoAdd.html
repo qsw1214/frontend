@@ -1,13 +1,13 @@
 <style>
-    #user-add {
+    #classroomInfo-add {
         padding: 20px 25px 25px 0;
     }
-    #user-add .layui-treeSelect .ztree li a, .ztree li span {
+    #classroomInfo-add .layui-treeSelect .ztree li a, .ztree li span {
         margin: 0 0 2px 3px !important;
     }
 </style>
-<div class="layui-fluid" id="user-add">
-    <form class="layui-form" action="" lay-filter="user-add-form">
+<div class="layui-fluid" id="classroomInfo-add">
+    <form class="layui-form" action="" lay-filter="classroomInfo-add-form">
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">学校名称：</label>
             <div class="layui-input-block">
@@ -54,7 +54,7 @@
             </div>
         </div>
         <div class="layui-form-item febs-hide">
-            <button class="layui-btn" lay-submit="" lay-filter="user-add-form-submit" id="submit"></button>
+            <button class="layui-btn" lay-submit="" lay-filter="classroomInfo-add-form-submit" id="submit"></button>
             <button type="reset" class="layui-btn" id="reset"></button>
         </div>
     </form>
@@ -68,7 +68,7 @@
             formSelects = layui.formSelects,
             treeSelect = layui.treeSelect,
             form = layui.form,
-            $view = $('#user-add'),
+            $view = $('#classroomInfo-add'),
             classInfo=$('#classInfo'),
             subjectInfo=$('#subjectInfo'),
             school=$('#schoolId'),
@@ -84,7 +84,7 @@
 
 
 
-        formSelects.config('user-add-role', {
+        formSelects.config('classroomInfo-add-role', {
             searchUrl: ctx + 'role',
             response: {
                 statusCode: 200
@@ -152,12 +152,12 @@
                 }
             });
         }
-        form.on('submit(user-add-form-submit)', function (data) {
+        form.on('submit(classroomInfo-add-form-submit)', function (data) {
             console.log(data.field);
             febs.post(ctx + 'classroomInfo', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('新增教室成功');
-                $('#febs-user').find('#query').click();
+                $('#febs-classroomInfo').find('#query').click();
             });
             return false;
         });

@@ -75,6 +75,18 @@
             </div>
         </div>
 
+        <div class="layui-form-item">
+            <label class="layui-form-label">适用年级：</label>
+            <div class="layui-input-block">
+                <select name="gradeId"
+                        xm-select-radio
+                        xm-select-direction="down"
+                        xm-select="schoolTimetable-add-grade"
+                        xm-select-skin="default">
+                </select>
+            </div>
+        </div>
+
         <div class="layui-form-item febs-form-item-require">
             <label class="layui-form-label febs-form-item-require">所属班级：</label>
             <div class="layui-input-block">
@@ -119,7 +131,7 @@
         formSelects.render();
 
         formSelects.config('schoolTimetable-add-school', {
-            searchUrl: ctx + 'school/getAllSchools',
+            searchUrl: ctx + 'school',
             response: {
                 statusCode: 200
             },
@@ -142,7 +154,7 @@
         });
 
         formSelects.config('schoolTimetable-add-class', {
-            searchUrl: ctx + 'class/getAllClass',
+            searchUrl: ctx + 'classInfo',
             response: {
                 statusCode: 200
             },
@@ -164,8 +176,31 @@
             }
         });
 
+        formSelects.config('schoolTimetable-add-grade', {
+            searchUrl: ctx + 'dict?field=grade',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].v,
+                        value: data[i].k
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取年级列表失败');
+            }
+        });
+
         formSelects.config('schoolTimetable-add-classroom', {
-            searchUrl: ctx + 'classroom/getAllClassroom',
+            searchUrl: ctx + 'classroomInfo',
             response: {
                 statusCode: 200
             },

@@ -54,24 +54,26 @@ public class ViewController extends BaseController {
     //==============================================START==================================================
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classroomInfo")
+    @RequiresPermissions("classroomInfo:view")
     private String classroomIndex(){
         return FebsUtil.view("basicInfo/classroomInfo/classroomInfo");
     }
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classroomInfo/classroomInfoAdd")
+    @RequiresPermissions("classroomInfo:add")
     private String classroomAdd(){
         return FebsUtil.view("basicInfo/classroomInfo/classroomInfoAdd");
     }
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classroomInfo/detail/{classroomId}")
-//  @RequiresPermissions("schoolInfo:view")
+    @RequiresPermissions("classroomInfo:view")
     public String classroomInfoDetail(@PathVariable Integer classroomId, Model model) {
         resolveClassrModel(classroomId,model, true);
         return FebsUtil.view("basicInfo/classroomInfo/classroomInfoDetail");
     }
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classroomInfo/update/{classInfoId}")
-    //@RequiresPermissions("classInfo:update")
+    @RequiresPermissions("classroomInfo:update")
     public String classroomInfoUpdate(@PathVariable Integer classInfoId, Model model) {
         resolveClassrModel(classInfoId,model, true);
         return FebsUtil.view("basicInfo/classroomInfo/classroomInfoUpdate");
@@ -81,55 +83,57 @@ public class ViewController extends BaseController {
 
     //==============================================START==================================================
 
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/grade")
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classInfo")
+    @RequiresPermissions("classInfo:view")
     private String gradeIndex(){
-        return FebsUtil.view("basicInfo/grade/grade");
+        return FebsUtil.view("basicInfo/classInfo/classInfo");
     }
 
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/grade/gradeAdd")
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classInfo/classInfoAdd")
+    @RequiresPermissions("classInfo:add")
     private String gradeAdd(){
 
-        return FebsUtil.view("basicInfo/grade/gradeAdd");
+        return FebsUtil.view("basicInfo/classInfo/classInfoAdd");
     }
 
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/grade/detail/{classInfoId}")
-//  @RequiresPermissions("classInfo:view")
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classInfo/detail/{classInfoId}")
+    @RequiresPermissions("classInfo:view")
     public String gradeDetail(@PathVariable Integer classInfoId, Model model) {
         resolveClassrModel(classInfoId,model, true);
-        return FebsUtil.view("basicInfo/grade/gradeDetail");
+        return FebsUtil.view("basicInfo/classInfo/classInfoDetail");
     }
 
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/grade/update/{classInfoId}")
-    //@RequiresPermissions("classInfo:update")
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classInfo/update/{classInfoId}")
+    @RequiresPermissions("classInfo:update")
     public String gradeUpdate(@PathVariable Integer classInfoId, Model model) {
         resolveClassrModel(classInfoId,model, true);
-        return FebsUtil.view("basicInfo/grade/gradeUpdate");
+        return FebsUtil.view("basicInfo/classInfo/classInfoUpdate");
     }
-
     //==============================================END==================================================
 
     //==============================================START==================================================
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/school")
+    @RequiresPermissions("school:view")
     private String schoolIndex(){
         return FebsUtil.view("basicInfo/school/school");
     }
 
     @GetMapping(FebsConstant.VIEW_PREFIX +  "basicInfo/school/schoolAdd")
-//  @RequiresPermissions("school:add")
+    @RequiresPermissions("school:add")
     public String schoolAdd() {
         return FebsUtil.view("basicInfo/school/schoolAdd");
     }
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/school/detail/{schoolId}")
-//  @RequiresPermissions("schoolInfo:view")
+    @RequiresPermissions("school:view")
     public String systemUserDetail(@PathVariable Long schoolId, Model model) {
         resolveSchoolrModel(schoolId,model, true);
         return FebsUtil.view("basicInfo/school/schoolDetail");
     }
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/school/update/{schoolId}")
-    //@RequiresPermissions("schoolInfo:update")
+    @RequiresPermissions("school:update")
     public String systemUserUpdate(@PathVariable Long schoolId, Model model) {
         resolveSchoolrModel(schoolId,model, true);
         return FebsUtil.view("basicInfo/school/schoolUpdate");

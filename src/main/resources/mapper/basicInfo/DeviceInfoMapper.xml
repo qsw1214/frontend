@@ -53,4 +53,17 @@
     <select id="findDeviceDetailInfos" parameterType="cc.mrbird.febs.basicInfo.entity.DeviceInfo" resultMap="deviceInfoMap">
         <include refid="findDeviceInfoDetailSql"/>
     </select>
+
+    <select id="countDeviceByDept" parameterType="string" resultType="integer">
+        SELECT count(1) FROM jcc_device_info device
+        LEFT JOIN jcc_school_info school ON (school.school_id = device.school_id)
+        LEFT JOIN t_dept dept ON (dept.dept_id = school.dept_id)
+        WHERE  dept.dept_name = #{deptName}
+    </select>
+
+    <select id="countDeviceBySchool" parameterType="string" resultType="integer">
+        SELECT count(1) FROM jcc_device_info device
+        LEFT JOIN jcc_school_info school ON (school.school_id = device.school_id)
+        WHERE  school.school_name = #{schoolName}
+    </select>
 </mapper>

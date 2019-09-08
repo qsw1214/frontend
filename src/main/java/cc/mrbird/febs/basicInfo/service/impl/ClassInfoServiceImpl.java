@@ -43,6 +43,9 @@ public class ClassInfoServiceImpl extends ServiceImpl<ClassInfoMapper, ClassInfo
         if (StringUtils.isNotBlank(classInfo.getClassName())) {
             queryWrapper.eq(ClassInfo::getClassName, classInfo.getClassName());
         }
+        if (StringUtils.isNotBlank(classInfo.getGrade())) {
+            queryWrapper.eq(ClassInfo::getGrade, classInfo.getGrade());
+        }
         if (classInfo.getSchoolId() != null) {
             queryWrapper.eq(ClassInfo::getSchoolId, classInfo.getSchoolId());
         }
@@ -55,6 +58,9 @@ public class ClassInfoServiceImpl extends ServiceImpl<ClassInfoMapper, ClassInfo
 	    LambdaQueryWrapper<ClassInfo> queryWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotBlank(classInfo.getClassName())) {
             queryWrapper.eq(ClassInfo::getClassName, classInfo.getClassName());
+        }
+        if (StringUtils.isNotBlank(classInfo.getGrade())) {
+            queryWrapper.eq(ClassInfo::getGrade, classInfo.getGrade());
         }
         if (classInfo.getSchoolId() != null) {
             queryWrapper.eq(ClassInfo::getSchoolId, classInfo.getSchoolId());

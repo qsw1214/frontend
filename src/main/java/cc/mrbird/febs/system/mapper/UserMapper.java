@@ -47,4 +47,6 @@ public interface UserMapper extends BaseMapper<User> {
 
     /*修改用户*/
     void updateUser(Map map);
+
+    Integer countUserNumByDept(String deptName);
 }

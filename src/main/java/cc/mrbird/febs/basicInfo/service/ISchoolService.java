@@ -57,5 +57,9 @@ public interface ISchoolService extends IService<School> {
      * 删除
      * @param schoolIds
      */
-    void deleteSchool(String schoolIds); 
+    void deleteSchool(String schoolIds);
+
+    Integer getCountOfCity(String city);
+
+    Integer getCountOfCountry(String country);
 }

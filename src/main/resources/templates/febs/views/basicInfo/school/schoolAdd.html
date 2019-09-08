@@ -1,13 +1,13 @@
 <style>
-    #user-add {
+    #school-add {
         padding: 20px 25px 25px 0;
     }
-    #user-add .layui-treeSelect .ztree li a, .ztree li span {
+    #school-add .layui-treeSelect .ztree li a, .ztree li span {
         margin: 0 0 2px 3px !important;
     }
 </style>
-<div class="layui-fluid" id="user-add">
-    <form class="layui-form" action="" lay-filter="user-add-form" id="fm" enctype="multipart/form-data">
+<div class="layui-fluid" id="school-add">
+    <form class="layui-form" action="" lay-filter="school-add-form" id="fm" enctype="multipart/form-data">
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">学校名称：</label>
             <div class="layui-input-block">
@@ -104,7 +104,7 @@
 //            treeSelect = layui.treeSelect,
             form = layui.form,
             $form = $('form'),
-            $view = $('#user-add'),
+            $view = $('#school-add'),
             schoolCategory=$('#schoolCate'),
             laydate = layui.laydate,
             layarea = layui.layarea,
@@ -125,10 +125,11 @@
                 success:function (res) {
                     var items=res.data;
                     if (res.data.length==0){
-                        schoolCategory.append('<option value="'+""+'">'+""+'</option>');
+                    	schoolCategory.append('<option value="">'+'请选择'+'</option>');
                     }else{
+                    	schoolCategory.append('<option value="">'+'请选择'+'</option>');
                         for (var i=0;i<items.length;i++) {
-                            $('#schoolCate').append('<option value="' + '' + '">' + items[i].v + '</option>');
+                            $('#schoolCate').append('<option value='+ items[i].v + '>' + items[i].v + '</option>');
                         }
                     }
                     form.render('select');
@@ -150,7 +151,7 @@
         });
 
      
-        formSelects.config('user-add-role', {
+        formSelects.config('school-add-role', {
             searchUrl: ctx + 'role',
             response: {
                 statusCode: 200
@@ -211,7 +212,7 @@
                 success:function(data){
                     layer.closeAll();
                     febs.alert.success('新增学校成功');
-                    $('#febs-user').find('#reset').click();
+                    $('#febs-school').find('#reset').click();
                 }
             });
             return false;

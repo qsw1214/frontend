@@ -128,10 +128,11 @@
                 success:function (res) {
                     var items=res.data;
                     if (res.data.length==0){
-                        schoolCategory.append('<option value="'+""+'">'+""+'</option>');
+                    	 schoolCategory.append('<option value="">'+'请选择'+'</option>');
                     }else{
+                    	 schoolCategory.append('<option value="">'+'请选择'+'</option>');
                         for (var i=0;i<items.length;i++) {
-                            $('#schoolCategory').append('<option value="' + '' + '">' + items[i].v + '</option>');
+                            $('#schoolCategory').append('<option value="' + items[i].v + '">' + items[i].v + '</option>');
                         }
                     }
                     form.render('select');

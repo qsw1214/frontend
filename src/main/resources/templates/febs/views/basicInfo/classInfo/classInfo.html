@@ -1,9 +1,9 @@
-<div class="layui-fluid layui-anim febs-anim" id="febs-user" lay-title="班级管理">
+<div class="layui-fluid layui-anim febs-anim" id="febs-classInfo" lay-title="班级管理">
     <div class="layui-row febs-container">
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-body febs-table-full">
-                    <form class="layui-form layui-table-form" lay-filter="user-table-form">
+                    <form class="layui-form layui-table-form" lay-filter="classInfo-table-form">
                         <div class="layui-row">
                             <div class="layui-col-md10">
                                 <div class="layui-form-item">
@@ -18,8 +18,6 @@
                                         <div class="layui-input-inline">
                                             <select name="grade" id="grade">
                                             </select>
-                                            <!--<input type="text" name="grade" id="grade" lay-filter="dept"-->
-                                                   <!--class="layui-input">-->
                                         </div>
                                     </div>
                                 </div>
@@ -32,7 +30,7 @@
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
-                                     shiro:hasAnyPermissions="user:add,user:update,user:password:reset,user:export">
+                                     shiro:hasAnyPermissions="classInfo:add,classInfo:update,classInfo:password:reset,classInfo:export">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
                             </div>
@@ -45,15 +43,15 @@
     </div>
 </div>
 
-<script type="text/html" id="user-option">
-    <span shiro:lacksPermission="user:view,user:update,user:delete">
+<script type="text/html" id="classInfo-option">
+    <span shiro:lacksPermission="classInfo:view,classInfo:update,classInfo:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
-    <a lay-event="detail" shiro:hasPermission="user:view"><i
+    <a lay-event="detail" shiro:hasPermission="classInfo:view"><i
             class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
-    <a lay-event="edit" shiro:hasPermission="user:update"><i
+    <a lay-event="edit" shiro:hasPermission="classInfo:update"><i
             class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
-    <a lay-event="del" shiro:hasPermission="user:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+    <a lay-event="del" shiro:hasPermission="classInfo:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect'], function () {
@@ -64,7 +62,7 @@
             table = layui.table,
             treeSelect = layui.treeSelect,
             dropdown = layui.dropdown,
-            $view = $('#febs-user'),
+            $view = $('#febs-classInfo'),
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
             $searchForm = $view.find('form'),
@@ -88,36 +86,30 @@
                 success:function (res) {
                     var items=res.data;
                     if (res.data.length==0){
-                        grade.append('<option value="'+""+'">'+""+'</option>');
+                        grade.append('<option value="">'+'请选择'+'</option>');
                     }else{
+                    	grade.append('<option value="">'+'请选择'+'</option>');
                         for (var i=0;i<items.length;i++) {
-                            $('#grade').append('<option value="' + items[i].v + '">' + items[i].v + '</option>');
+                            $('#grade').append('<option value="'+ items[i].v +'">'+items[i].v+'</option>');
                         }
                     }
                     form.render('select');
                 }
             });
         }
-//        treeSelect.render({
-//            elem: $view.find('#grade'),
-//            type: 'get',
-//            data: ctx + 'dict?field=grade',
-//            placeholder: '请选择',
-//            search: false,
-//        });
         dropdown.render({
             elem: $view.find('.action-more'),
             click: function (name, elem, event) {
                 var checkStatus = table.checkStatus('gradeTable');
                 if (name === 'add') {
-                    febs.modal.open('新增班级', 'basicInfo/grade/gradeAdd', {
+                    febs.modal.open('新增班级', 'basicInfo/classInfo/classInfoAdd', {
                         btn: ['提交', '重置'],
                         area: $(window).width() <= 750 ? '95%' : '50%',
                         yes: function (index, layero) {
-                            $('#user-add').find('#submit').trigger('click');
+                            $('#classInfo-add').find('#submit').trigger('click');
                         },
                         btn2: function () {
-                            $('#user-add').find('#reset').trigger('click');
+                            $('#classInfo-add').find('#reset').trigger('click');
                             return false;
                         }
                     });
@@ -145,15 +137,15 @@
             options: [{
                 name: 'add',
                 title: '新增班级',
-                perms: 'user:add'
+                perms: 'classInfo:add'
             }, {
                 name: 'delete',
                 title: '删除班级',
-                perms: 'user:delete'
+                perms: 'classInfo:delete'
             }, {
                 name: 'export',
                 title: '导出Excel',
-                perms: 'user:export'
+                perms: 'classInfo:export'
             }]
         });
 
@@ -161,7 +153,7 @@
             var data = obj.data;
                 layEvent = obj.event;
             if (layEvent === 'detail') {
-                febs.modal.view('班级信息', 'basicInfo/grade/detail/' + data.classId, {
+                febs.modal.view('班级信息', 'basicInfo/classInfo/detail/' + data.classId, {
                     area: $(window).width() <= 750 ? '95%' : '660px'
                 });
             }
@@ -171,7 +163,7 @@
                 });
             }
             if (layEvent === 'edit') {
-                febs.modal.open('修改班级', 'basicInfo/grade/update/' + data.classId, {
+                febs.modal.open('修改班级', 'basicInfo/classInfo/update/' + data.classId, {
                     area: $(window).width() <= 750 ? '90%' : '50%',
                     btn: ['提交', '取消'],
                     yes: function (index, layero) {
@@ -201,9 +193,9 @@
         });
 
         $reset.on('click', function () {
-            treeSelect.revokeNode('grade');
+/*             treeSelect.revokeNode('grade'); */
             $searchForm[0].reset();
-            tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
+            tableIns.reload({page: {curr: 1}});
         });
 
         function initTable() {
@@ -216,7 +208,7 @@
                     {field: 'className', title: '班级名称', minWidth: 150},
                     {field: 'username', title: '班主任',minWidth: 100},
                     {field: 'grade', title: '年级',minWidth: 100},
-                    {title: '操作', toolbar: '#user-option', minWidth: 140}
+                    {title: '操作', toolbar: '#classInfo-option', minWidth: 140}
                 ]]
             });
         }
@@ -224,7 +216,6 @@
         function getQueryParams() {
             return {
                 className: $searchForm.find('input[name="class"]').val(),
-//                grade: $searchForm.find("input[name='grade']").val(),
                 grade: $searchForm.find("select[name='grade']").val(),
                 invalidate_ie_cache: new Date()
             };

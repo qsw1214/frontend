@@ -1,13 +1,13 @@
 <style>
-    #user-add {
+    #classInfo-add {
         padding: 20px 25px 25px 0;
     }
-    #user-add .layui-treeSelect .ztree li a, .ztree li span {
+    #classInfo-add .layui-treeSelect .ztree li a, .ztree li span {
         margin: 0 0 2px 3px !important;
     }
 </style>
-<div class="layui-fluid" id="user-add">
-    <form class="layui-form" action="" lay-filter="user-add-form" id="fm" enctype="multipart/form-data">
+<div class="layui-fluid" id="classInfo-add">
+    <form class="layui-form" action="" lay-filter="classInfo-add-form" id="fm" enctype="multipart/form-data">
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">学校名称：</label>
             <div class="layui-input-block">
@@ -50,7 +50,7 @@
             formSelects = layui.formSelects,
             form = layui.form,
             $form = $('form'),
-            $view = $('#user-add'),
+            $view = $('#classInfo-add'),
             layarea = layui.layarea,
             validate = layui.validate,
             classInfo=$('#classInfo'),
@@ -97,7 +97,7 @@
             febs.post(ctx+'classInfo',data.field,function () {
                 layer.closeAll();
                 febs.alert.success('新增班级成功');
-                $('#febs-user').find('#query').click();
+                $('#febs-classInfo').find('#query').click();
             });
 
             return false;
