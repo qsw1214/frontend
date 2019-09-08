@@ -174,7 +174,7 @@
 
     <!--删除离职用户-->
     <delete id="deleteUser" parameterType="string">
-        delete from t_user where user_id=#{userId}
+        delete from t_user where user_id=#{userid}
     </delete>
 
     <!--新增用户-->
@@ -188,7 +188,7 @@
     </insert>
 
     <update id="updateUser" parameterType="java.util.Map">
-        update t_user set username=#{name},password=#{password},dept_id=#{deptId},email=#{email},mobile=#{mobile},modify_time=now(),LAST_LOGIN_TIME=now(),
+        update t_user set username=#{name},password=#{password},email=#{email},mobile=#{mobile},modify_time=now(),LAST_LOGIN_TIME=now(),
         AVATAR=#{avatar},unionid=#{unionid},is_leader_in_depts=#{isLeaderInDepts},is_boss=#{isBoss},hired_date=from_unixtime(#{hiredDate}),is_senior=#{isSenior},
         order_in_depts=#{orderInDepts},active=#{active},is_admin=#{isAdmin},is_hide=#{isHide},jobnumber=#{jobnumber},position=#{position}
         where user_id=#{userid}

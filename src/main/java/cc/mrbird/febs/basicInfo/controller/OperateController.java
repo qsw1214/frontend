@@ -7,6 +7,7 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
+import cc.mrbird.febs.common.interceptor.Token;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.schema.Server;
@@ -49,6 +50,7 @@ public class OperateController extends BaseController {
     }
 
     @Log("新增Operate")
+    @Token(remove = true)
     @PostMapping
     @RequiresPermissions("operate:add")
     public FebsResponse addArea(@Valid Operate operate) throws FebsException {

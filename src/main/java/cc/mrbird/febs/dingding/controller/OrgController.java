@@ -4,12 +4,14 @@ import cc.mrbird.febs.common.utils.MD5Util;
 import cc.mrbird.febs.dingding.config.Constant;
 import cc.mrbird.febs.dingding.util.AddressListUtil;
 import cc.mrbird.febs.system.mapper.DeptMapper;
+import cc.mrbird.febs.system.mapper.UserDeptMapper;
 import cc.mrbird.febs.system.mapper.UserMapper;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.oapi.lib.aes.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import net.sf.json.JSONArray;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +20,9 @@ import org.slf4j.LoggerFactory;
 
 import com.dingtalk.oapi.lib.aes.DingTalkEncryptor;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,6 +44,9 @@ public class OrgController {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private UserDeptMapper userDeptMapper;
 
     /**
      * 创建套件后，验证回调URL创建有效事件（第一次保存回调URL之前）
@@ -106,59 +113,110 @@ public class OrgController {
             String encryptMsg = json.getString("encrypt");
             String plainText = dingTalkEncryptor.getDecryptMsg(signature, timestamp, nonce, encryptMsg);
             JSONObject obj = JSON.parseObject(plainText);
-            System.out.println(obj);
 
             //根据回调数据类型做不同的业务处理
             String eventType = obj.getString("EventType");
-
+            System.out.println(eventType);
             if (ORG_DEPT_CREATE.equals(eventType)) {
                 bizLogger.info("通讯录企业部门创建: " + plainText);
                 //调用部门详情接口
-                Map map = AddressListUtil.departmentMess(obj.getString("DeptId").substring(obj.getString("DeptId").indexOf("[")+1,obj.getString("DeptId").indexOf("]")));
-                deptMapper.insertDept(map);
+                com.alibaba.fastjson.JSONArray deptId=obj.getJSONArray("DeptId");
+                for (int i = 0; i < deptId.size(); i++) {
+                    Map map = AddressListUtil.departmentMess(deptId.get(i).toString());
+                    String parentId=map.get("parentid").toString();
+
+                    if(parentId.equals("1")){//如果父级id为1，为固定第一级
+                        map.put("deptGrade", 1);
+                        deptMapper.insertDept(map);
+                    }else {
+                        Long grade = deptMapper.findGradeByParentId(parentId);//根据查询父级id所在部门的等级
+                        map.put("deptGrade", grade + 1);
+                        deptMapper.insertDept(map);
+                    }
+                }
             } else if (ORG_DEPT_MODIFY.equals(eventType)) {
                 bizLogger.info("通讯录企业部门修改: " + plainText);
                 //调用部门详情接口
-                Map map = AddressListUtil.departmentMess(obj.getString("DeptId").substring(obj.getString("DeptId").indexOf("[")+1,obj.getString("DeptId").indexOf("]")));
-                deptMapper.updateDept(map);
+                com.alibaba.fastjson.JSONArray deptId=obj.getJSONArray("DeptId");
+                for (int i = 0; i < deptId.size(); i++) {
+                    Map map = AddressListUtil.departmentMess(deptId.get(i).toString());
+                    String parentId=map.get("parentid").toString();
+                    Long grade=deptMapper.findGradeByParentId(parentId);
+                    map.put("deptGrade",grade+1);
+                    deptMapper.updateDept(map);
+                }
             } else if(ORG_DEPT_RMOVE.equals(eventType)){
                 bizLogger.info("通讯录企业部门删除: " + plainText);
-                deptMapper.deleteDept(obj.getString("DeptId").substring(obj.getString("DeptId").indexOf("[")+1,obj.getString("DeptId").indexOf("]")));
+                com.alibaba.fastjson.JSONArray deptId=obj.getJSONArray("DeptId");
+                for (int i = 0; i < deptId.size(); i++) {
+                    deptMapper.deleteDept(deptId.get(i).toString());
+                }
             }else if(USER_ADD_ORG.equals(eventType)){
                 bizLogger.info("通讯录用户增加: " + plainText);
                 //调取用户详情接口
-                Map map=AddressListUtil.userMess(obj.getString("UserId").substring(obj.getString("UserId").indexOf("\"")+1,obj.getString("UserId").lastIndexOf("\"")));
-                String deptId=map.get("department").toString();
-                map.put("deptId",deptId.substring(deptId.indexOf("[")+1,deptId.indexOf("]")));
-                map.put("password", MD5Util.encrypt("","123456"));
-                map.put("isBoss",Boolean.getBoolean(map.get("isBoss").toString()));
-                map.put("isSenior",Boolean.getBoolean(map.get("isSenior").toString()));
-                map.put("active",Boolean.getBoolean(map.get("active").toString()));
-                map.put("isAdmin",Boolean.getBoolean(map.get("isAdmin").toString()));
-                map.put("isHide",Boolean.getBoolean(map.get("isHide").toString()));
-                userMapper.insertUser(map);
+                String userid=obj.getString("UserId");
+                JSONArray jsonArray=JSONArray.fromObject(userid);
+                for(int i=0;i<jsonArray.size();i++) {//遍历json数组内容  
+                    Object object = jsonArray.get(i);
+                    Map map = AddressListUtil.userMess(object.toString());
+                    String deptId = map.get("department").toString();
+                    deptId=deptId.substring(deptId.indexOf("[")+1,deptId.indexOf("]"));
+                    List<String> lis = Arrays.asList(deptId.split(","));
+                    for (String string : lis) {
+                        userDeptMapper.insertUserDept(jsonArray.get(i).toString(),string);
+                    }
+                    map.put("password", MD5Util.encrypt("", "123456"));
+                    map.put("isBoss", Boolean.getBoolean(map.get("isBoss").toString()));
+                    map.put("isSenior", Boolean.getBoolean(map.get("isSenior").toString()));
+                    map.put("active", Boolean.getBoolean(map.get("active").toString()));
+                    map.put("isAdmin", Boolean.getBoolean(map.get("isAdmin").toString()));
+                    map.put("isHide", Boolean.getBoolean(map.get("isHide").toString()));
+                    userMapper.insertUser(map);
+                }
             }else if(USER_MODIFY_ORG.equals(eventType)){
                 bizLogger.info("通讯录用户更改: " + plainText);
-                Map map=AddressListUtil.userMess(obj.getString("UserId").substring(obj.getString("UserId").indexOf("\"")+1,obj.getString("UserId").lastIndexOf("\"")));
-                String deptId=map.get("department").toString();
-                map.put("deptId",deptId.substring(deptId.indexOf("[")+1,deptId.indexOf("]")));
-                map.put("password", MD5Util.encrypt("","123456"));//初始密码：123456
-                map.put("isBoss",Boolean.getBoolean(map.get("isBoss").toString()));
-                map.put("isSenior",Boolean.getBoolean(map.get("isSenior").toString()));
-                map.put("active",Boolean.getBoolean(map.get("active").toString()));
-                map.put("isAdmin",Boolean.getBoolean(map.get("isAdmin").toString()));
-                map.put("isHide",Boolean.getBoolean(map.get("isHide").toString()));
-                userMapper.updateUser(map);
+                String userid=obj.getString("UserId");
+                JSONArray jsonArray=JSONArray.fromObject(userid);//userList:"["12315","15616"]"
+                for(int i=0;i<jsonArray.size();i++) {//遍历json数组内容 
+                    Object object = jsonArray.get(i);
+                    Map map = AddressListUtil.userMess(object.toString());
+                    map.put("password", MD5Util.encrypt("", "123456"));//初始密码：123456
+                    map.put("isBoss", Boolean.getBoolean(map.get("isBoss").toString()));
+                    map.put("isSenior", Boolean.getBoolean(map.get("isSenior").toString()));
+                    map.put("active", Boolean.getBoolean(map.get("active").toString()));
+                    map.put("isAdmin", Boolean.getBoolean(map.get("isAdmin").toString()));
+                    map.put("isHide", Boolean.getBoolean(map.get("isHide").toString()));
+                    userMapper.updateUser(map);
+                }
             }else if(USER_LEAVE_ORG.equals(eventType)){
                 bizLogger.info("通讯录用户离职: " + plainText);
-                userMapper.deleteUser(obj.getString("UserId").substring(obj.getString("UserId").indexOf("\"")+1,obj.getString("UserId").lastIndexOf("\"")));
-            }/*else if(ORG_ADMIN_ADD.equals(eventType)){
+                String userid=obj.getString("UserId");
+                JSONArray jsonArray=JSONArray.fromObject(userid);
+                for(int i=0;i<jsonArray.size();i++) {//遍历json数组内容  
+                    Object object = jsonArray.get(i);
+                    userDeptMapper.deleteUserDept(object.toString());//先删除用户部门关系
+                    userMapper.deleteUser(object.toString());//删除用户
+                }
+            }else if(ORG_ADMIN_ADD.equals(eventType)){
                 bizLogger.info("通讯录用户被设为管理员: " + plainText);
             }else if(ORG_ADMIN_REMOVE.equals(eventType)){
                 bizLogger.info("通讯录用户被取消设置管理员: " + plainText);
             }else if(LABEL_USER_CHANGE.equals(eventType)){
                 bizLogger.info("员工角色信息发生变更: " + plainText);
-            }else if(LABEL_CONF_ADD.equals(eventType)){
+                String userid=obj.getString("UserIdList");
+                JSONArray jsonArray=JSONArray.fromObject(userid);//userList:"["12315","15616"]"
+                for(int i=0;i<jsonArray.size();i++) {//遍历json数组内容 
+                    Object object = jsonArray.get(i);
+                    Map map = AddressListUtil.userMess(object.toString());
+                    String deptId = map.get("department").toString();//depart:"[1234,6456]"
+                    deptId=deptId.substring(deptId.indexOf("[")+1,deptId.indexOf("]"));
+                    List<String> lis = Arrays.asList(deptId.split(","));
+                    userDeptMapper.deleteUserDept(jsonArray.get(i).toString());
+                    for (String string : lis) {
+                        userDeptMapper.insertUserDept(jsonArray.get(i).toString(), string);
+                    }
+                }
+            }/*else if(LABEL_CONF_ADD.equals(eventType)){
                 bizLogger.info("增加角色或者角色组: " + plainText);
             }else if(LABEL_CONF_DEL.equals(eventType)){
                 bizLogger.info("删除角色或者角色组: " + plainText);

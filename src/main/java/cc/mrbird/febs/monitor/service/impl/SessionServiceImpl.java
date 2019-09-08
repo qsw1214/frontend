@@ -22,7 +22,7 @@ import java.util.List;
  * @author MrBird
  */
 @Service
-public class SessionServiceImpl implements ISessionService {
+public class  SessionServiceImpl implements ISessionService {
 
     @Autowired
     private SessionDAO sessionDAO;

@@ -61,4 +61,10 @@ public class Dept implements Serializable {
     @ExcelField(value = "修改时间", writeConverter = TimeConverter.class)
     private Date modifyTime;
 
+
+    /**
+     * 部门 等级
+     */
+    @TableId(value = "DEPT_GRADE")
+    private Long deptGrade;
 }

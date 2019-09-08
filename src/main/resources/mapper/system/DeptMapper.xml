@@ -3,16 +3,21 @@
 <mapper namespace="cc.mrbird.febs.system.mapper.DeptMapper">
     <!--新增部门-->
     <insert id="insertDept" parameterType="java.util.Map">
-        insert into t_dept(DEPT_ID,PARENT_ID,DEPT_NAME,ORDER_NUM,CREATE_TIME,MODIFY_TIME) values (#{id},#{parentid},#{name},#{order},now(),now())
+        insert into t_dept(DEPT_ID,PARENT_ID,DEPT_NAME,ORDER_NUM,CREATE_TIME,MODIFY_TIME,DEPT_GRADE) values (#{id},#{parentid},#{name},#{order},now(),now(),#{deptGrade})
     </insert>
 
     <!--更加id更新部门-->
     <update id="updateDept" parameterType="java.util.Map">
-        update t_dept set PARENT_ID=#{parentid},DEPT_NAME=#{name},ORDER_NUM=#{order},MODIFY_TIME=now() where DEPT_ID=#{id}
+        update t_dept set PARENT_ID=#{parentid},DEPT_NAME=#{name},ORDER_NUM=#{order},MODIFY_TIME=now(),DEPT_GRADE=#{deptGrade} where DEPT_ID=#{id}
     </update>
 
     <!--根据id删除部门-->
     <delete id="deleteDept" parameterType="string">
         delete from t_dept where DEPT_ID=#{deptId}
     </delete>
+
+
+    <select id="findGradeByParentId" parameterType="string" resultType="Long">
+        select DEPT_GRADE from t_dept where DEPT_ID=#{parentId}
+    </select>
 </mapper>

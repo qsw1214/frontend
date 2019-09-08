@@ -17,4 +17,7 @@ public interface DeptMapper extends BaseMapper<Dept> {
 
     //删除部门
     void deleteDept(String deptId);
+
+    //根据父级部门id查询所在等级
+    Long findGradeByParentId (String parentId);
 }
