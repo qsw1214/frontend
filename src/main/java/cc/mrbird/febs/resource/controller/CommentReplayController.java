@@ -9,6 +9,7 @@ import cc.mrbird.febs.resource.entity.CommentReplay;
 import cc.mrbird.febs.resource.service.ICommentReplayService;
 import cc.mrbird.febs.system.entity.User;
 
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -80,7 +82,11 @@ public class CommentReplayController extends BaseController {
     @RequiresPermissions("comment:delete")
     public FebsResponse deleteCommentReplay(@NotBlank(message = "{required}") @PathVariable String commentReplayIds) throws FebsException {
         try {
-            this.commentReplayService.deleteCommentReplays(commentReplayIds);
+        	User user = super.getCurrentUser();
+        	List<String> list = Arrays.asList(commentReplayIds.split(StringPool.COMMA));
+        	if(!this.commentReplayService.checkCreator(list, user.getUsername()))
+        		return new FebsResponse().fail().data("无权限");
+            this.commentReplayService.deleteCommentReplays(list);
             return new FebsResponse().success();
         } catch (Exception e) {
             String message = "删除CommentReplay失败";

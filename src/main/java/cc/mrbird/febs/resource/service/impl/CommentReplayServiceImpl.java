@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +18,6 @@ import org.apache.commons.lang3.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
@@ -79,11 +77,10 @@ public class CommentReplayServiceImpl extends ServiceImpl<CommentReplayMapper, C
 
     @Override
     @Transactional
-    public void deleteCommentReplays(String commentReplayIds) {
-    	List<String> list = Arrays.asList(commentReplayIds.split(StringPool.COMMA));
-    	if(list.size()>0){
-    		CommentReplay cr = this.baseMapper.selectById(list.get(0));
-    		int n = this.baseMapper.delete(new QueryWrapper<CommentReplay>().lambda().in(CommentReplay::getCommentReplayId, list));
+    public void deleteCommentReplays(List<String> commentReplayIds) {
+    	if(commentReplayIds.size()>0){
+    		CommentReplay cr = this.baseMapper.selectById(commentReplayIds.get(0));
+    		int n = this.baseMapper.delete(new QueryWrapper<CommentReplay>().lambda().in(CommentReplay::getCommentReplayId, commentReplayIds));
     		commentService.increaseReplayCount(cr.getCommentId(), -n);
     	}
 	}
@@ -93,6 +90,17 @@ public class CommentReplayServiceImpl extends ServiceImpl<CommentReplayMapper, C
 		if(commentIds.size()>0){
 			this.baseMapper.delete(new QueryWrapper<CommentReplay>().lambda().in(CommentReplay::getCommentId, commentIds));
 		}
+	}
+	
+	@Override
+	public boolean checkCreator(List<String> commentReplayIds, String username) {
+    	LambdaQueryWrapper<CommentReplay> queryWrapper = new LambdaQueryWrapper<>();
+    	queryWrapper.in(CommentReplay::getCommentReplayId, commentReplayIds);
+    	queryWrapper.ne(CommentReplay::getUserName, username);
+    	List<CommentReplay> list = this.baseMapper.selectList(queryWrapper);
+    	if(list.size() > 0)
+    		return false;
+		return true;
 	}
 	
 }

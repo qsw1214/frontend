@@ -87,7 +87,7 @@
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
-                                     shiro:hasAnyPermissions="resource:add,resource:update,resource:export">
+                                     shiro:hasAnyPermissions="resource:add,resource:export">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
                                 <button type="button" class="layui-btn layui-btn-sm" style="margin-top:10px;" id="resourceUpload">
@@ -110,6 +110,9 @@
     2: {title: '审核未通过', color: 'volcano'}
     }[d.status];
     }}
+    <span class="layui-badge febs-tag-{{status.color}}">{{ status.title }}</span>
+</script>
+<script type="text/html" id="resource-status">
     <span class="layui-badge febs-tag-{{status.color}}">{{ status.title }}</span>
 </script>
 <script type="text/html" id="comment">
@@ -197,7 +200,10 @@
             class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
     <a lay-event="edit" shiro:hasPermission="resource:update"><i
             class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
-    <a lay-event="del" shiro:hasPermission="resource:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+    <a lay-event="del" shiro:hasPermission="resource:delete"><i 
+			class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+    <a lay-event="audit" shiro:hasPermission="resource:audit"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe63f;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect', 'formSelects', 'laytpl', 'upload'], function () {
@@ -276,6 +282,39 @@
                         });
                     }
                 }
+                if (name === 'audit') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择需要审核的资源');
+                    } else {
+                    	var resourceIds = [];
+                        layui.each(checkStatus.data, function (key, item) {
+                            resourceIds.push(item.resourceId)
+                        });
+                    	layer.open({
+                    		  title: '资源审核'
+                    		  ,btnAlign: 'c'
+                    		  ,btn: ['通过', '不通过']
+                    		  ,yes: function(index, layero){
+                    			  auditResources(resourceIds, 1);
+                    			  layer.closeAll();
+                    		  }
+                    		  ,btn2: function(index, layero){
+                    			  auditResources(resourceIds, 2);
+                    		  }
+                    		});
+                    }
+                }
+                if (name === 'auditNo') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择需要审核的资源');
+                    } else {
+                    	var resourceIds = [];
+                        layui.each(checkStatus.data, function (key, item) {
+                            resourceIds.push(item.resourceId)
+                        });
+                        auditResources(resourceIds, 2);
+                    }
+                }
                 if (name === 'export') {
                     var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
                     params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
@@ -287,6 +326,10 @@
                 name: 'add',
                 title: '新增资源',
                 perms: 'resource:add'
+            }, {
+                name: 'audit',
+                title: '审核',
+                perms: 'resource:audit'
             }, {
                 name: 'delete',
                 title: '删除资源',
@@ -410,6 +453,20 @@
                     }
                 });
             }
+            if (layEvent == 'audit') {
+            	layer.open({
+          		  title: '资源审核'
+          		  ,btnAlign: 'c'
+          		  ,btn: ['通过', '不通过']
+          		  ,yes: function(index, layero){
+          			auditResources([data.resourceId], 1);
+          			layer.closeAll();
+          		  }
+          		  ,btn2: function(index, layero){
+          			auditResources([data.resourceId], 2);
+          		  }
+          		});
+            }
         });
 
         table.on('sort(resourceTable)', function (obj) {
@@ -469,6 +526,16 @@
         function deleteResources(resourceIds) {
             febs.get(ctx + 'resource/delete/' + resourceIds, null, function () {
                 febs.alert.success('删除资源成功');
+                $query.click();
+            });
+        }
+        
+        function auditResources(resourceIds, status) {
+        	febs.post(ctx + 'resource/audit', {
+        		"resourceIds": resourceIds,
+        		"status": status
+        	}, function () {
+                febs.alert.success('资源审核成功');
                 $query.click();
             });
         }

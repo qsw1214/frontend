@@ -53,7 +53,7 @@ public interface ICommentReplayService extends IService<CommentReplay> {
      *
      * @param String commentReplayIds
      */
-    void deleteCommentReplays(String commentReplayIds);
+    void deleteCommentReplays(List<String> commentReplayIds);
     
     /**
      * 通过评论 id 删除
@@ -61,5 +61,13 @@ public interface ICommentReplayService extends IService<CommentReplay> {
      * @param List<String> commentIds
      */
     void deleteCommentReplaysByCommentId(List<String> commentIds);
+    
+    /**
+	 * 检查创建者是否为当前用户
+	 * @param commentIds
+	 * @param username
+	 * @return
+	 */
+	boolean checkCreator(List<String> commentReplayIds, String username);
     
 }

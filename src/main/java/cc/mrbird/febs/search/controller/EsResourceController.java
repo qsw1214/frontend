@@ -22,7 +22,7 @@ import cc.mrbird.febs.search.service.IEsResourceService;
  * Created by lb on 2019/8/31.
  */
 @RestController
-@RequestMapping("/esResource")
+@RequestMapping("/api/esResource")
 public class EsResourceController extends BaseController{
 	@Autowired
     private IEsResourceService esResourceService;
