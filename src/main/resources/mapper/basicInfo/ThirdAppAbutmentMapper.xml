@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.basicInfo.mapper.ThirdAppAbutmentMapper">
+
+    <resultMap id="abutment" type="cc.mrbird.febs.basicInfo.entity.Abutment">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="originator_userid" jdbcType="BIGINT" property="originatorUserid"/>
+        <result column="apply_school" jdbcType="VARCHAR" property="applySchool"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="result" jdbcType="BIGINT" property="result"/>
+        <result column="app_name" jdbcType="VARCHAR" property="appName"/>
+        <result column="app_logo" jdbcType="VARCHAR" property="appLogo"/>
+        <result column="app_inf" jdbcType="VARCHAR" property="appInf"/>
+        <result column="app_main_link" jdbcType="VARCHAR" property="appMainLink"/>
+        <result column="export_ip" jdbcType="VARCHAR" property="exportIp"/>
+        <result column="pc_main_address" jdbcType="VARCHAR" property="pcMainAddress"/>
+        <result column="manage_address" jdbcType="VARCHAR" property="manageAddress"/>
+        <result column="create_time" jdbcType="DATE" property="createTime"/>
+        <result column="finish_time" jdbcType="DATE" property="finishTime"/>
+        <result column="city_leader_id" jdbcType="BIGINT" property="cityLeaderId"/>
+        <result column="city_approval_time" jdbcType="DATE" property="cityApprovalTime"/>
+        <result column="province_leader_id" jdbcType="BIGINT" property="provinceLeaderId"/>
+        <result column="province_approval_time" jdbcType="DATE" property="provinceApprovalTime"/>
+        <result column="agent_id" jdbcType="BIGINT" property="agentId"/>
+        <result column="app_key" jdbcType="VARCHAR" property="appKey"/>
+        <result column="app_secret" jdbcType="VARCHAR" property="appSecret"/>
+        <result column="is_create" jdbcType="BIGINT" property="isCreate"/>
+        <result column="create_app_userid" jdbcType="BIGINT" property="createAppUserid"/>
+    </resultMap>
+</mapper>

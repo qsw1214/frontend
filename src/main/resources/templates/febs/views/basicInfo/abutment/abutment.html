@@ -1,0 +1,281 @@
+<div class="layui-fluid layui-anim febs-anim" id="febs-user" lay-title="第三方移动应用接入">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="user-table-form">
+                        <div class="layui-row">
+                            <div class="layui-col-md10">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">学校名称</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="applySchool" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">应用名称</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="appName" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                            <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="query">
+                                    <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
+                                </div>
+                                <!--<div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
+                                     shiro:hasAnyPermissions="user:add,user:update,user:password:reset,user:export">
+                                    <i class="layui-icon">&#xe875;</i>
+                                </div>-->
+                            </div>
+                        </div>
+                    </form>
+                    <table lay-filter="schoolTable" lay-data="{id: 'schoolTable'}" id="LAY_table_user"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./mods/layarea.js"></script>
+<script type="text/html" id="user-status">
+    {{#
+    var status = {
+    主校: {title: 主校'},
+    分校: {title: 分校'}
+    }[d.status];
+    }}
+    <span>{{ status.title }}</span>
+</script>
+<script type="text/html" id="abutment-option">
+    <span shiro:lacksPermission="abutment:view,abutment:update,abutment:delete">
+        <span class="layui-badge-dot febs-bg-orange"></span> 无权限
+    </span>
+    <a lay-event="detail" shiro:hasPermission="abutment:view"><i
+            class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
+    <a lay-event="edit" shiro:hasPermission="abutment:update"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
+    <a lay-event="del" shiro:hasPermission="abutment:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect'], function () {
+        var $ = layui.jquery,
+            laydate = layui.laydate,
+            layarea = layui.layarea,
+            febs = layui.febs,
+            form = layui.form,
+            table = layui.table,
+            treeSelect = layui.treeSelect,
+            dropdown = layui.dropdown,
+            $view = $('#febs-user'),
+            $query = $view.find('#query'),
+            $reset = $view.find('#reset'),
+            $searchForm = $view.find('form'),
+            schoolCategory=$('#schoolCategory'),
+            sortObject = {field: 'schoolName', type: null},
+            tableIns;
+        getschoolCategory();
+        form.render();
+
+        initTable();
+        layarea.render({
+            elem: '#area',
+        });
+        laydate.render({
+            elem: '#createTime',
+            range: true,
+            trigger: 'click'
+        });
+        function getschoolCategory() {
+            $.ajax({
+                type:'get',
+                url: ctx + 'menu/tree',
+                success:function (res) {
+                    var items=res.data;
+                    if (res.data.length==0){
+                        schoolCategory.append('<option value="'+""+'">'+""+'</option>');
+                    }else{
+                        for (var i=0;i<items.length;i++) {
+                            $('#schoolCategory').append('<option value="' + '' + '">' + items[i].v + '</option>');
+                        }
+                    }
+                    form.render('select');
+                }
+            });
+        }
+        dropdown.render({
+            elem: $view.find('.action-more'),
+            click: function (name, elem, event) {
+                var checkStatus = table.checkStatus('schoolTable');
+                if (name === 'add') {
+                    febs.modal.open('新增学校', 'basicInfo/school/schoolAdd', {
+                        btn: ['提交', '重置'],
+                        area: $(window).width() <= 750 ? '95%' : '50%',
+                        yes: function (index, layero) {
+                            $('#user-add').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            $('#user-add').find('#reset').trigger('click');
+                            return false;
+                        }
+                    });
+                }
+                if (name === 'delete') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择需要删除的学校');
+                    } else {
+                        febs.modal.confirm('删除学校', '确定删除该学校？', function () {
+                            var schoolIds = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                            	schoolIds.push(item.schoolId)
+                            });
+                            deleteUsers(schoolIds.join(','));
+                        });
+                    }
+                }
+                if (name === 'export') {
+                    var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+                    params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
+                    params.pageNum = $view.find(".layui-laypage-em").next().html();
+                    febs.download(ctx + 'school/excel', params, '学校信息表.xlsx');
+                }
+            },
+            options: [{
+                name: 'add',
+                title: '新增学校',
+                perms: 'user:add'
+            }, {
+                name: 'delete',
+                title: '删除学校',
+                perms: 'user:delete'
+            }, {
+                name: 'export',
+                title: '导出Excel',
+                perms: 'user:export'
+            }]
+        });
+
+        table.on('tool(schoolTable)', function (obj) {
+            var data = obj.data,
+                layEvent = obj.event;
+            if (layEvent === 'detail') {
+                febs.modal.view('申请应用信息', 'basicInfo/abutment/detail/' + data.id, {
+                    area: $(window).width() <= 750 ? '95%' : '660px'
+                });
+            }
+            if (layEvent === 'del') {
+                febs.modal.confirm('删除学校', '确定删除该学校？', function () {
+                    deleteUsers(data.schoolId);
+                });
+            }
+            if (layEvent === 'edit') {
+                febs.modal.open('修改应用申请', 'basicInfo/abutment/update/' + data.id, {
+                    area: $(window).width() <= 750 ? '90%' : '50%',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#abutment-update').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+        });
+
+        table.on('sort(schoolTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({
+                initSort: obj,
+                where: $.extend(getQueryParams(), {
+                     field: obj.field,
+                    order: obj.type
+                })
+            });
+        });
+
+
+
+        $query.on('click', function () {
+        	tableIns.reload({where: getQueryParams(), page: {curr: 1}});
+        });
+
+        $reset.on('click', function () {
+            $searchForm[0].reset();
+            tableIns.reload({page: {curr: 1}});
+        });
+
+        function initTable() {
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'schoolTable',
+                url: ctx + 'abutment/list',
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'applySchool', title: '申请学校', minWidth: 150},
+                    {field: 'appName', title: '应用名称', minWidth: 150},
+                    {field: 'appInf', title: '应用信息',minWidth: 100},
+                    {field: 'appMainLink', title: '应用首页链接',minWidth: 100},
+                    {field: 'appLogo', title: '应用logo地址'},
+                    {field: 'exportIp', title: '出口IP', minWidth: 165},
+                    {field: 'pcMainAddress', title: 'PC端首页地址'},
+                    {field: 'manageAddress', title: '后台管理地址', minWidth: 210},
+                    {field: 'createTime', title: '审批创建时间', minWidth: 210},
+                    {field: 'finishTime', title: '审批完成时间', minWidth: 210},
+                    {title: '操作', toolbar: '#abutment-option', minWidth: 140}
+                ]]
+            });
+        }
+
+        function getQueryParams() {
+//            console.log($searchForm.find("select[name='province']").val());   北京
+            return {
+            	applySchool: $searchForm.find('input[name="applySchool"]').val().trim(),
+            	appName: $searchForm.find('input[name="appName"]').val().trim(),
+            	schoolType: $searchForm.find("select[name='status']").val(),
+                province:$searchForm.find("select[name='province']").val(),
+//                city:$searchForm.find("select[name='city']").val(),
+//                country:$searchForm.find("select[name='country']").val(),
+                schoolCategory:$searchForm.find("select[name='schoolCategory']").val(),
+            	invalidate_ie_cache: new Date()
+            };
+        }
+
+        function deleteUsers(schoolIds) {
+            febs.get(ctx + 'school/delete/' + schoolIds, null, function () {
+                febs.alert.success('删除学校成功');
+                $reset.click();
+            });
+        }
+
+        //监听指定开关
+        form.on('switch(switchTest)', function(data){
+            var ceshiData = data.schoolName;
+            alert(data.schoolName);
+            var judge = this.checked ? 'true' : 'false';
+            layer.msg(judge);
+            $.ajax({
+                type:'post',
+                url: ctx + 'dingRemind/dingRemind?ceshiData='+ceshiData,
+                success:function (res) {
+                    var items=res.data;
+                    if (items.length==0){
+                        classInfo.append('<option>'+""+'</option>');
+                    }else{
+                        for (var i=0;i<items.length;i++) {
+                            classInfo.append('<option>' + items[i].v + '</option>');
+                        }
+                    }
+                    form.render('select');
+                }
+            });
+            //layer.tips('温馨提示：请注意开关状态的文字可以随意定义，而不仅仅是ON|OFF', data.othis);
+        });
+    })
+</script>

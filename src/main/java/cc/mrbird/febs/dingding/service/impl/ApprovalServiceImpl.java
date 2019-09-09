@@ -105,11 +105,18 @@ public class ApprovalServiceImpl implements IApprovalService{
         for (Form_component_values formObjValue : formValuesList) {
             String name = formObjValue.getName();
             switch (name) {
+                case "申请学校":
+                    paramsMap.put("apply_school", formObjValue.getValue());
+                    break;
+                case "联系电话":
+                    paramsMap.put("phone", formObjValue.getValue());
+                    break;
                 case "应用名称":
                     paramsMap.put("app_name", formObjValue.getValue());
                     break;
                 case "应用logo":
-                    paramsMap.put("app_logo", formObjValue.getValue());
+                    String logo = formObjValue.getValue().substring(2,formObjValue.getValue().length()-2);
+                    paramsMap.put("app_logo", logo);
                     break;
                 case "应用简介":
                     paramsMap.put("app_inf", formObjValue.getValue());

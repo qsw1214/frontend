@@ -5,6 +5,8 @@
     <select id="selectAppAbutmentByAppName" parameterType="java.util.Map" resultType="java.util.HashMap">
        select id,
         originator_userid,
+        apply_school,
+        phone,
         title,
         result,
         app_name,
@@ -32,6 +34,8 @@
     <insert id="insertAppAbutmentApply" parameterType="java.util.Map">
         insert into app_abutment_apply(id,
         originator_userid,
+        apply_school,
+        phone,
         title,
         result,
         app_name,
@@ -50,6 +54,8 @@
         is_create,
         create_app_userid) values(#{id},
         #{originator_userid},
+        #{apply_school},
+        #{phone},
         #{title},
         #{result},
         #{app_name},

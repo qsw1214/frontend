@@ -48,7 +48,7 @@ public class Constant {
     /**
      * 回调host
      */
-    public static final String CALLBACK_URL_HOST = "http://fbdff95.cpolar.io/approval";
+    public static final String CALLBACK_URL_HOST = "http://72524b49.cpolar.io/approval";
 
     /**
      * 学校入驻审批标识

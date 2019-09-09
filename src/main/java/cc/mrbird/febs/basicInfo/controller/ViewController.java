@@ -1,13 +1,7 @@
 package cc.mrbird.febs.basicInfo.controller;
 
-import cc.mrbird.febs.basicInfo.entity.ClassInfo;
-import cc.mrbird.febs.basicInfo.entity.DeviceInfo;
-import cc.mrbird.febs.basicInfo.entity.School;
-import cc.mrbird.febs.basicInfo.entity.SchoolTimetable;
-import cc.mrbird.febs.basicInfo.service.IClassInfoService;
-import cc.mrbird.febs.basicInfo.service.IDeviceInfoService;
-import cc.mrbird.febs.basicInfo.service.ISchoolService;
-import cc.mrbird.febs.basicInfo.service.ISchoolTimetableService;
+import cc.mrbird.febs.basicInfo.entity.*;
+import cc.mrbird.febs.basicInfo.service.*;
 import cc.mrbird.febs.common.authentication.ShiroHelper;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsConstant;
@@ -50,6 +44,9 @@ public class ViewController extends BaseController {
 
     @Autowired
     private ShiroHelper shiroHelper;
+
+    @Autowired
+    private ThirdAppAbutmentService thirdAppAbutmentService;
 
     //==============================================START==================================================
 
@@ -215,6 +212,44 @@ public class ViewController extends BaseController {
     }
     //==============================================END==================================================
 
+    /**
+     * 第三方移动应用接入
+     * @return
+     */
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/abutment")
+    public String basicInfoAbutment() {
+        return FebsUtil.view("basicInfo/abutment/abutment");
+    }
+
+    /**
+     * 第三方移动应用详情信息
+     * @param abutmentId
+     * @param model
+     * @return
+     */
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/abutment/detail/{abutmentId}")
+//  @RequiresPermissions("abutment:view")
+    public String abutMentDetail(@PathVariable Long abutmentId, Model model) {
+        resolveAbutmentModel(abutmentId,model, true);
+        return FebsUtil.view("basicInfo/abutment/abutmentDetail");
+    }
+
+    /**
+     * 修改第三方移动应用
+     * @param abutmentId
+     * @param model
+     * @return
+     */
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/abutment/update/{abutmentId}")
+    //@RequiresPermissions("abutment:update")
+    public String abutmentUpdate(@PathVariable Long abutmentId, Model model) {
+        resolveAbutmentModel(abutmentId,model, true);
+        return FebsUtil.view("basicInfo/abutment/abutmentUpdate");
+    }
+
+
+    //==============================================END==================================================
+
 
     private void resolveDeviceModel(Integer deviceId, Model model, Boolean transform) {
         DeviceInfo deviceInfo = deviceInfoService.findDeviceById(deviceId);
@@ -235,6 +270,11 @@ public class ViewController extends BaseController {
     private void resolveSchoolrModel(Long schoolId, Model model, Boolean transform) {
         School school = this.schoolService.getById(schoolId);
         model.addAttribute("school", school);
+    }
+
+    private void resolveAbutmentModel(Long abutmentId, Model model, Boolean transform) {
+        Abutment abutment = this.thirdAppAbutmentService.getById(abutmentId);
+        model.addAttribute("abutment", abutment);
     }
 
     private void resolveClassrModel(Integer classInfoId, Model model, Boolean transform) {

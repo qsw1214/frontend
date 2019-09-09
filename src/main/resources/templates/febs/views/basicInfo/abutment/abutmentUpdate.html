@@ -1,0 +1,159 @@
+<style>
+    #abutment-update {
+        padding: 20px 25px 25px 0;
+    }
+
+    #abutment-update .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="abutment-update">
+    <form class="layui-form" action="" lay-filter="abutment-update-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">申请学校：</label>
+            <div class="layui-input-block">
+                <input type="text" name="applySchool" minlength="4" maxlength="10"
+                       autocomplete="off" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">应用名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="appName" minlength="4" maxlength="10"
+                       autocomplete="off" class="layui-input" >
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">申请人ID：</label>
+            <div class="layui-input-block">
+                <input type="text" name="originatorUserid" minlength="2" maxlength="10"
+                       autocomplete="off" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系电话：</label>
+            <div class="layui-input-block">
+                <input type="tel" name="phone" lay-verify="phone" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">应用首页链接：</label>
+            <div class="layui-input-block">
+                <input type="text" name="appMainLink"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">服务器出口IP：</label>
+            <div class="layui-input-block">
+                <input type="text" name="exportIp"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">PC端首页地址：</label>
+            <div class="layui-input-block">
+                <input type="text" name="pcMainAddress"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">管理后台地址：</label>
+            <div class="layui-input-block">
+                <input type="text" name="manageAddress"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="abutment-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+<script src="./mods/layarea.js"></script>
+<script data-th-inline="javascript">
+
+    layui.use(['febs', 'form', 'formSelects', 'laydate','validate', 'treeSelect'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+//            treeSelect = layui.treeSelect,
+            laydate = layui.laydate,
+            form = layui.form,
+            layarea = layui.layarea,
+            $form = $('form'),
+            abutment = [[${abutment}]],
+            abutmentCategory=$('#abutmentCate'),
+            $view = $('#abutment-update'),
+            validate = layui.validate;
+        laydate.render({
+            elem: '#createTime',
+            type: 'datetime',
+//            range: true,
+//            trigger: 'click'
+        });
+        getabutmentCategory();
+        form.verify(validate);
+        form.render();
+        initUserValue();
+        function getabutmentCategory() {
+            $.ajax({
+                type:'get',
+                url: ctx+"dict?field=category",
+                success:function (res) {
+                    var items=res.data;
+                    if (res.data.length==0){
+                        abutmentCategory.append('<option value="'+""+'">'+""+'</option>');
+                    }else{
+                        for (var i=0;i<items.length;i++) {
+                            $('#abutmentCate').append('<option value="' + items[i].v + '">' + items[i].v + '</option>');
+                        }
+                    }
+                    form.render('select');
+                }
+            });
+        }
+        function initUserValue() {
+            var dateee = new Date(abutment.createTime).toJSON();
+            var date = new Date(+new Date(dateee)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+            form.val("abutment-update-form", {
+                "applySchool": abutment.applySchool,
+                "appName": abutment.appName,
+                "originatorUserid": abutment.originatorUserid,
+                "phone": abutment.phone,
+                "appMainLink": abutment.appMainLink,
+                "exportIp": abutment.exportIp,
+                "pcMainAddress": abutment.pcMainAddress,
+                "manageAddress": abutment.manageAddress,
+                "postCode": abutment.postCode,
+                "areaCode":abutment.areaCode,
+                "address":abutment.address,
+                "createTime":date
+            });
+        }
+        layarea.render({
+            elem: '#area-picker',
+             data: {
+                 province: abutment.province,
+                 city: abutment.city,
+                 county: abutment.country,
+            },
+        });
+
+
+        form.on('submit(abutment-update-form-submit)', function (data) {
+            alert("进来了");
+        	data.field.id=abutment.id;
+        	console.log(data.field);
+            if (febs.nativeEqual(data.field, abutment)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'abutment/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success(' 学校信息修改成功');
+                $('#febs-user').find('#reset').click();
+            });
+            return false;
+        });
+    });
+</script>
