@@ -12,12 +12,12 @@
     </update>
 
     <!--根据id删除部门-->
-    <delete id="deleteDept" parameterType="string">
+    <delete id="deleteDept" parameterType="Long">
         delete from t_dept where DEPT_ID=#{deptId}
     </delete>
 
 
-    <select id="findGradeByParentId" parameterType="string" resultType="Long">
+    <select id="findGradeByParentId" parameterType="Long" resultType="Long">
         select DEPT_GRADE from t_dept where DEPT_ID=#{parentId}
     </select>
 </mapper>

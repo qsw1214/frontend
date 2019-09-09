@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 public interface UserDeptMapper extends BaseMapper<UserDept> {
 
-    void insertUserDept(String userid,String deptId);
+    void insertUserDept(Long userid,Long deptId);
 
 
-    void deleteUserDept(String userid);
+    void deleteUserDept(Long userid);
 }

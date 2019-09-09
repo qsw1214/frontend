@@ -18,13 +18,13 @@ public class UserDept implements Serializable {
      * 用户ID
      */
     @TableField("USER_ID")
-    private String userId;
+    private Long userId;
 
     /**
      * 部门ID
      */
     @TableField("DEPT_ID")
-    private String deptId;
+    private Long deptId;
 
 
 }

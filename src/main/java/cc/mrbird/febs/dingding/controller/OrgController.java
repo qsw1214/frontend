@@ -123,9 +123,9 @@ public class OrgController {
                 com.alibaba.fastjson.JSONArray deptId=obj.getJSONArray("DeptId");
                 for (int i = 0; i < deptId.size(); i++) {
                     Map map = AddressListUtil.departmentMess(deptId.get(i).toString());
-                    String parentId=map.get("parentid").toString();
+                    Long parentId=Long.parseLong(map.get("parentid").toString());
 
-                    if(parentId.equals("1")){//如果父级id为1，为固定第一级
+                    if(parentId==1){//如果父级id为1，为固定第一级
                         map.put("deptGrade", 1);
                         deptMapper.insertDept(map);
                     }else {
@@ -140,7 +140,7 @@ public class OrgController {
                 com.alibaba.fastjson.JSONArray deptId=obj.getJSONArray("DeptId");
                 for (int i = 0; i < deptId.size(); i++) {
                     Map map = AddressListUtil.departmentMess(deptId.get(i).toString());
-                    String parentId=map.get("parentid").toString();
+                    Long parentId=Long.parseLong(map.get("parentid").toString());
                     Long grade=deptMapper.findGradeByParentId(parentId);
                     map.put("deptGrade",grade+1);
                     deptMapper.updateDept(map);
@@ -149,7 +149,7 @@ public class OrgController {
                 bizLogger.info("通讯录企业部门删除: " + plainText);
                 com.alibaba.fastjson.JSONArray deptId=obj.getJSONArray("DeptId");
                 for (int i = 0; i < deptId.size(); i++) {
-                    deptMapper.deleteDept(deptId.get(i).toString());
+                    deptMapper.deleteDept(Long.parseLong(deptId.get(i).toString()));
                 }
             }else if(USER_ADD_ORG.equals(eventType)){
                 bizLogger.info("通讯录用户增加: " + plainText);
@@ -163,7 +163,7 @@ public class OrgController {
                     deptId=deptId.substring(deptId.indexOf("[")+1,deptId.indexOf("]"));
                     List<String> lis = Arrays.asList(deptId.split(","));
                     for (String string : lis) {
-                        userDeptMapper.insertUserDept(jsonArray.get(i).toString(),string);
+                        userDeptMapper.insertUserDept(Long.parseLong(jsonArray.get(i).toString()),Long.parseLong(string));
                     }
                     map.put("password", MD5Util.encrypt("", "123456"));
                     map.put("isBoss", Boolean.getBoolean(map.get("isBoss").toString()));
@@ -194,7 +194,7 @@ public class OrgController {
                 JSONArray jsonArray=JSONArray.fromObject(userid);
                 for(int i=0;i<jsonArray.size();i++) {//遍历json数组内容  
                     Object object = jsonArray.get(i);
-                    userDeptMapper.deleteUserDept(object.toString());//先删除用户部门关系
+                    userDeptMapper.deleteUserDept(Long.parseLong(object.toString()));//先删除用户部门关系
                     userMapper.deleteUser(object.toString());//删除用户
                 }
             }else if(ORG_ADMIN_ADD.equals(eventType)){
@@ -211,9 +211,9 @@ public class OrgController {
                     String deptId = map.get("department").toString();//depart:"[1234,6456]"
                     deptId=deptId.substring(deptId.indexOf("[")+1,deptId.indexOf("]"));
                     List<String> lis = Arrays.asList(deptId.split(","));
-                    userDeptMapper.deleteUserDept(jsonArray.get(i).toString());
+                    userDeptMapper.deleteUserDept(Long.parseLong(jsonArray.get(i).toString()));
                     for (String string : lis) {
-                        userDeptMapper.insertUserDept(jsonArray.get(i).toString(), string);
+                        userDeptMapper.insertUserDept(Long.parseLong(jsonArray.get(i).toString()), Long.parseLong(string));
                     }
                 }
             }/*else if(LABEL_CONF_ADD.equals(eventType)){
