@@ -141,7 +141,6 @@
 
 
         form.on('submit(abutment-update-form-submit)', function (data) {
-            alert("进来了");
         	data.field.id=abutment.id;
         	console.log(data.field);
             if (febs.nativeEqual(data.field, abutment)) {

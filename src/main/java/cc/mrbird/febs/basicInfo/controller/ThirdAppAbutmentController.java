@@ -1,14 +1,12 @@
 package cc.mrbird.febs.basicInfo.controller;
 
 import cc.mrbird.febs.basicInfo.entity.Abutment;
-import cc.mrbird.febs.basicInfo.entity.School;
 import cc.mrbird.febs.basicInfo.service.*;
 import cc.mrbird.febs.common.annotation.Log;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
-import cc.mrbird.febs.common.utils.Tools;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -1,7 +1,6 @@
 package cc.mrbird.febs.basicInfo.service;
 
 import cc.mrbird.febs.basicInfo.entity.Abutment;
-import cc.mrbird.febs.basicInfo.entity.School;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
