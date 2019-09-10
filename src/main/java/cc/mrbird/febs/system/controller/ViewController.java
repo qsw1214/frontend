@@ -47,10 +47,9 @@ public class ViewController extends BaseController {
 
     @GetMapping("unauthorized")
     public String unauthorized() {
+
         return FebsUtil.view("error/403");
     }
-
-
 
     @GetMapping("/")
     public String redirectIndex() {
@@ -160,6 +159,7 @@ public class ViewController extends BaseController {
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "500")
     public String error500() {
+
         return FebsUtil.view("error/500");
     }
 

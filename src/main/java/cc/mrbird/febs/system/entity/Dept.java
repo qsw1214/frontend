@@ -26,7 +26,7 @@ public class Dept implements Serializable {
     /**
      * 部门 ID
      */
-    @TableId(value = "DEPT_ID", type = IdType.AUTO)
+    @TableId(value = "DEPT_ID")
     private Long deptId;
 
     /**

@@ -7,12 +7,14 @@ import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.common.utils.TreeUtil;
 import cc.mrbird.febs.system.entity.Dept;
 import cc.mrbird.febs.system.mapper.DeptMapper;
+import cc.mrbird.febs.system.mapper.LoginMapper;
 import cc.mrbird.febs.system.service.IDeptService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,9 @@ import java.util.List;
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements IDeptService {
+
+    @Autowired
+    private DeptMapper deptMapper;
 
     @Override
     public List<DeptTree<Dept>> findDepts() {
@@ -106,5 +111,9 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
             depts.forEach(d -> deptIdList.add(String.valueOf(d.getDeptId())));
             this.delete(deptIdList);
         }
+    }
+
+    public long findGradeByParentId(long parentId){
+        return this.deptMapper.findGradeByParentId(parentId);
     }
 }

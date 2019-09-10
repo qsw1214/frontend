@@ -9,6 +9,8 @@ import cc.mrbird.febs.basicInfo.service.ISchoolService;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.resource.entity.Resource;
 
+import cc.mrbird.febs.system.entity.Dept;
+import cc.mrbird.febs.system.service.IDeptService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
@@ -46,6 +48,9 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     @Autowired
     private IDeviceInfoService deviceInfoService;
 
+    @Autowired
+    private IDeptService deptService;
+
     @Override
     public IPage<School> findSchools(QueryRequest request, School school) {
         LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
@@ -58,15 +63,6 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         }
         if (StringUtils.isNotBlank(school.getSchoolType())) {
             queryWrapper.eq(School::getSchoolType, school.getSchoolType());
-        }
-        if (StringUtils.isNotBlank(school.getProvince())) {
-            queryWrapper.eq(School::getProvince, school.getProvince());
-        }
-        if (StringUtils.isNotBlank(school.getCity())) {
-            queryWrapper.eq(School::getCity, school.getCity());
-        }
-        if (StringUtils.isNotBlank(school.getCountry())) {
-            queryWrapper.eq(School::getCountry, school.getCountry());
         }
         if (StringUtils.isNotBlank(school.getSchoolCategory())) {
             queryWrapper.eq(School::getSchoolCategory, school.getSchoolCategory());
@@ -86,15 +82,6 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         }
         if (StringUtils.isNotBlank(school.getSchoolType())) {
             queryWrapper.eq(School::getSchoolType, school.getSchoolType());
-        }
-        if (StringUtils.isNotBlank(school.getProvince())) {
-            queryWrapper.eq(School::getProvince, school.getProvince());
-        }
-        if (StringUtils.isNotBlank(school.getCity())) {
-            queryWrapper.eq(School::getCity, school.getCity());
-        }
-        if (StringUtils.isNotBlank(school.getCountry())) {
-            queryWrapper.eq(School::getCountry, school.getCountry());
         }
         if (StringUtils.isNotBlank(school.getSchoolCategory())) {
             queryWrapper.eq(School::getSchoolCategory, school.getSchoolCategory());
@@ -127,6 +114,7 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     @Override
     @Transactional
     public void updateSchool(School school) {
+
         this.saveOrUpdate(school);
     }
 
@@ -150,18 +138,24 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     	}
 	}
 
-    public Integer getCountOfCity(String country){
+    public Integer getCountOfCity(String cityName){
         LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
-        if (StringUtils.isNotBlank(country)) {
-            queryWrapper.eq(School::getCountry, country);
+        if (StringUtils.isNotBlank(cityName)) {
+            LambdaQueryWrapper<Dept> queryDeptWrapper = new LambdaQueryWrapper<>();
+            queryDeptWrapper.eq(Dept::getDeptName, cityName);
+            Dept dept = this.deptService.getOne(queryDeptWrapper);
+            queryWrapper.eq(School::getCityDeptId, dept.getDeptId());
         }
         return this.baseMapper.selectCount(queryWrapper);
     }
 
-    public Integer getCountOfCountry(String country){
+    public Integer getCountOfCountry(String countryName){
         LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
-        if (StringUtils.isNotBlank(country)) {
-            queryWrapper.eq(School::getCountry, country);
+        if (StringUtils.isNotBlank(countryName)) {
+            LambdaQueryWrapper<Dept> queryDeptWrapper = new LambdaQueryWrapper<>();
+            queryDeptWrapper.eq(Dept::getDeptName, countryName);
+            Dept dept = this.deptService.getOne(queryDeptWrapper);
+            queryWrapper.eq(School::getCountryDeptId, dept.getDeptId());
         }
         return this.baseMapper.selectCount(queryWrapper);
     }

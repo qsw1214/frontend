@@ -1,14 +1,22 @@
 package cc.mrbird.febs.dingding.controller;
 
+import cc.mrbird.febs.basicInfo.entity.School;
+import cc.mrbird.febs.basicInfo.service.ISchoolService;
+import cc.mrbird.febs.common.utils.DateUtil;
 import cc.mrbird.febs.common.utils.MD5Util;
 import cc.mrbird.febs.dingding.config.Constant;
 import cc.mrbird.febs.dingding.util.AddressListUtil;
+import cc.mrbird.febs.dingding.vo.DeptInfoDetailVO;
+import cc.mrbird.febs.dingding.vo.DeptInfoVO;
+import cc.mrbird.febs.system.entity.Dept;
 import cc.mrbird.febs.system.mapper.DeptMapper;
 import cc.mrbird.febs.system.mapper.UserDeptMapper;
 import cc.mrbird.febs.system.mapper.UserMapper;
+import cc.mrbird.febs.system.service.IDeptService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.oapi.lib.aes.Utils;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import net.sf.json.JSONArray;
@@ -21,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import com.dingtalk.oapi.lib.aes.DingTalkEncryptor;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,13 +47,16 @@ public class OrgController {
     private static final Logger mainLogger = LoggerFactory.getLogger(OrgController.class);
 
     @Autowired
-    private DeptMapper deptMapper;
-
-    @Autowired
     private UserMapper userMapper;
 
     @Autowired
     private UserDeptMapper userDeptMapper;
+
+    @Autowired
+    private IDeptService deptService;
+
+    @Autowired
+    private ISchoolService schoolService;
 
     /**
      * 创建套件后，验证回调URL创建有效事件（第一次保存回调URL之前）
@@ -99,6 +109,35 @@ public class OrgController {
      */
     private static final String CALLBACK_RESPONSE_SUCCESS = "success";
 
+    public long checkSynchParentDeptInfo(long deptId){
+        Dept dept = deptService.getById(deptId);
+        if(dept == null){
+            dept = new Dept();
+            //本地数据库没有父级部门，需要先行同步父级部门数据
+            DeptInfoDetailVO deptDetailVO = AddressListUtil.departmentMess(deptId);
+            long parentId = deptDetailVO.getParentid();
+            dept.setDeptId(deptDetailVO.getOrder());
+            dept.setCreateTime(DateUtil.getNowDateTime());
+            dept.setModifyTime(DateUtil.getNowDateTime());
+            dept.setDeptName(deptDetailVO.getName());
+            dept.setOrderNum(deptDetailVO.getOrder());
+            if(parentId == 1){    //如果父级id为1，为固定第一级
+                dept.setDeptGrade(1l);
+                dept.setParentId(1l);
+                this.deptService.saveOrUpdate(dept);
+                return 1l;
+            }else{
+                long parentDeptGrade = checkSynchParentDeptInfo(parentId);
+                dept.setDeptGrade(parentDeptGrade + 1l);
+                dept.setParentId(parentId);
+                this.deptService.saveOrUpdate(dept);
+                return dept.getDeptGrade();
+            }
+        }else{
+            return dept.getDeptGrade();
+        }
+    }
+
     @RequestMapping(value = "/callback")
     @ResponseBody
     public Map<String, String> callback(@RequestParam(value = "signature", required = false) String signature,
@@ -117,39 +156,53 @@ public class OrgController {
             //根据回调数据类型做不同的业务处理
             String eventType = obj.getString("EventType");
             System.out.println(eventType);
-            if (ORG_DEPT_CREATE.equals(eventType)) {
-                bizLogger.info("通讯录企业部门创建: " + plainText);
-                //调用部门详情接口
-                com.alibaba.fastjson.JSONArray deptId=obj.getJSONArray("DeptId");
-                for (int i = 0; i < deptId.size(); i++) {
-                    Map map = AddressListUtil.departmentMess(deptId.get(i).toString());
-                    Long parentId=Long.parseLong(map.get("parentid").toString());
+            Gson gson = new Gson();
+            if (ORG_DEPT_CREATE.equals(eventType) || ORG_DEPT_MODIFY.equals(eventType)) {
+                bizLogger.info("通讯录企业部门创建或修改: " + plainText);
+                DeptInfoVO deptInfoVO = gson.fromJson(plainText,DeptInfoVO.class);
+                List<Long> deptIds = deptInfoVO.getDeptId();
+                Dept dept = null;
+                for (long deptId:deptIds) {
+                    DeptInfoDetailVO deptInfoDetailVO = AddressListUtil.departmentMess(deptId);
+                    String deptName = deptInfoDetailVO.getName();
+                    dept = this.deptService.getById(deptId);
+                    if(dept == null){  //若本地不存在，则视为新建
+                        dept = new Dept();
+                        dept.setCreateTime(DateUtil.getNowDateTime());
+                    }
+                    long parentId = deptInfoDetailVO.getParentid();
+                    long parentDeptGrade = checkSynchParentDeptInfo(parentId);
+                    dept.setParentId(parentId);
+                    dept.setDeptId(deptInfoDetailVO.getOrder());
+                    dept.setDeptGrade(parentDeptGrade + 1l);
+                    dept.setModifyTime(DateUtil.getNowDateTime());
+                    dept.setDeptName(deptName);
+                    dept.setOrderNum(deptInfoDetailVO.getOrder());
+                    this.deptService.saveOrUpdate(dept);
 
-                    if(parentId==1){//如果父级id为1，为固定第一级
-                        map.put("deptGrade", 1);
-                        deptMapper.insertDept(map);
-                    }else {
-                        Long grade = deptMapper.findGradeByParentId(parentId);//根据查询父级id所在部门的等级
-                        map.put("deptGrade", grade + 1);
-                        deptMapper.insertDept(map);
+                    if(dept.getDeptGrade() == 4) { // 级别为4的 是代表学校部门
+                        //同步省市区编号到学校信息表
+                        List<School> schools = this.schoolService.findSchoolsByName(deptName);
+                        if(schools != null && schools.size() == 1){
+                            long countryDeptId = parentId;
+                            Dept countryDept = this.deptService.getById(countryDeptId);
+                            long cityDeptId = countryDept.getParentId();
+                            Dept cityDept = this.deptService.getById(cityDeptId);
+                            long provinceDeptId = cityDept.getParentId();
+                            School school = schools.get(0);
+                            school.setCountryDeptId(countryDeptId);
+                            school.setCityDeptId(cityDeptId);
+                            school.setProvinceDeptId(provinceDeptId);
+                            this.schoolService.updateSchool(school);
+                        }
                     }
                 }
-            } else if (ORG_DEPT_MODIFY.equals(eventType)) {
-                bizLogger.info("通讯录企业部门修改: " + plainText);
-                //调用部门详情接口
-                com.alibaba.fastjson.JSONArray deptId=obj.getJSONArray("DeptId");
-                for (int i = 0; i < deptId.size(); i++) {
-                    Map map = AddressListUtil.departmentMess(deptId.get(i).toString());
-                    Long parentId=Long.parseLong(map.get("parentid").toString());
-                    Long grade=deptMapper.findGradeByParentId(parentId);
-                    map.put("deptGrade",grade+1);
-                    deptMapper.updateDept(map);
-                }
-            } else if(ORG_DEPT_RMOVE.equals(eventType)){
+            }else if(ORG_DEPT_RMOVE.equals(eventType)){
                 bizLogger.info("通讯录企业部门删除: " + plainText);
-                com.alibaba.fastjson.JSONArray deptId=obj.getJSONArray("DeptId");
-                for (int i = 0; i < deptId.size(); i++) {
-                    deptMapper.deleteDept(Long.parseLong(deptId.get(i).toString()));
+                DeptInfoVO deptInfoVO = gson.fromJson(plainText,DeptInfoVO.class);
+                List<Long> deptIds = deptInfoVO.getDeptId();
+                for (long deptId:deptIds) {
+                    this.deptService.removeById(deptId);
                 }
             }else if(USER_ADD_ORG.equals(eventType)){
                 bizLogger.info("通讯录用户增加: " + plainText);
