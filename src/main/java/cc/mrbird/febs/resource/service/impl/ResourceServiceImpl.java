@@ -9,13 +9,10 @@ import cc.mrbird.febs.resource.service.ICommentService;
 import cc.mrbird.febs.resource.service.IResourceService;
 import cc.mrbird.febs.resource.service.ISubjectResourceService;
 import cc.mrbird.febs.search.service.IEsResourceService;
-import cc.mrbird.febs.system.entity.User;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
@@ -137,20 +133,20 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     @Transactional
     public void updateResource(Resource resource) {
     	resource.setModifyTime(new Date());
+    	resource.setStatus(null);
         this.saveOrUpdate(resource);
         esResourceService.save(resource.getResourceId());
     }
 
     @Override
     @Transactional
-    public void deleteResources(String resourceIds) {
-    	List<String> list = Arrays.asList(resourceIds.split(StringPool.COMMA));
-    	if(list.size()>0){
-	        this.baseMapper.delete(new QueryWrapper<Resource>().lambda().in(Resource::getResourceId, list));
-	        subjectResourceService.deleteSubjectResourcesByResourceId(list); // 删除专题关联
-	        commentService.deleteCommentsByResourceId(list); // 删除评论
+    public void deleteResources(List<String> resourceIds) {
+    	if(resourceIds.size()>0){
+	        this.baseMapper.delete(new QueryWrapper<Resource>().lambda().in(Resource::getResourceId, resourceIds));
+	        subjectResourceService.deleteSubjectResourcesByResourceId(resourceIds); // 删除专题关联
+	        commentService.deleteCommentsByResourceId(resourceIds); // 删除评论
     	}
-    	esResourceService.delete(list);
+    	esResourceService.delete(resourceIds);
 	}
 
 	@Override
@@ -161,6 +157,26 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 	@Override
 	public void increaseReadCount(Long resourceId, Integer num) {
 		resourceMapper.increaseReadCount(resourceId, num);
+	}
+	
+	@Override
+	public boolean checkCreator(List<String> resourceIds, String username) {
+    	LambdaQueryWrapper<Resource> queryWrapper = new LambdaQueryWrapper<>();
+    	queryWrapper.in(Resource::getResourceId, resourceIds);
+    	queryWrapper.ne(Resource::getCreator, username);
+    	List<Resource> list = this.baseMapper.selectList(queryWrapper);
+    	if(list.size() > 0)
+    		return false;
+		return true;
+	}
+	
+	@Override
+	public int updateStatus(List<String> resourceIds, Integer status){
+		LambdaQueryWrapper<Resource> queryWrapper = new LambdaQueryWrapper<>();
+		queryWrapper.in(Resource::getResourceId, resourceIds);
+		Resource resource = new Resource();
+		resource.setStatus(status);
+		return this.baseMapper.update(resource, queryWrapper);
 	}
 
 }

@@ -9,6 +9,7 @@ import cc.mrbird.febs.resource.entity.Comment;
 import cc.mrbird.febs.resource.service.ICommentService;
 import cc.mrbird.febs.system.entity.User;
 
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +42,8 @@ public class CommentController extends BaseController {
 
     @Autowired
     private ICommentService commentService;
+    
+    private int maxPageSize = 1000;
 
     @GetMapping("comment")
     @ResponseBody
@@ -52,6 +56,8 @@ public class CommentController extends BaseController {
     @ResponseBody
     @RequiresPermissions("comment:view")
     public FebsResponse commentList(QueryRequest request, Comment comment) {
+    	if(request.getPageSize() > maxPageSize)
+    		return new FebsResponse().fail().data("pageSize不能超过"+maxPageSize);
         Map<String, Object> dataTable = getDataTable(this.commentService.findComments(request, comment));
         return new FebsResponse().success().data(dataTable);
     }
@@ -80,7 +86,11 @@ public class CommentController extends BaseController {
     @RequiresPermissions("comment:delete")
     public FebsResponse deleteComment(@NotBlank(message = "{required}") @PathVariable String commentIds) throws FebsException {
         try {
-            this.commentService.deleteComments(commentIds);
+        	User user = super.getCurrentUser();
+        	List<String> list = Arrays.asList(commentIds.split(StringPool.COMMA));
+        	if(!this.commentService.checkCreator(list, user.getUsername()))
+        		return new FebsResponse().fail().data("无权限");
+            this.commentService.deleteComments(list);
             return new FebsResponse().success();
         } catch (Exception e) {
             String message = "删除Comment失败";

@@ -4,12 +4,9 @@ import cc.mrbird.febs.resource.entity.Resource;
 
 import cc.mrbird.febs.common.entity.QueryRequest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
 
 /**
  *  Service接口
@@ -77,7 +74,7 @@ public interface IResourceService extends IService<Resource> {
      * 删除
      * @param resourceIds
      */
-    void deleteResources(String resourceIds);
+    void deleteResources(List<String> resourceIds);
     
     /**
 	 * 增加评论数
@@ -92,4 +89,14 @@ public interface IResourceService extends IService<Resource> {
 	 * @param num
 	 */
 	void increaseReadCount(Long resourceId, Integer num);
+
+	/**
+	 * 检查创建者是否为当前用户
+	 * @param commentIds
+	 * @param username
+	 * @return
+	 */
+	boolean checkCreator(List<String> resourceIds, String username);
+	
+	int updateStatus(List<String> resourceIds, Integer status);
 }

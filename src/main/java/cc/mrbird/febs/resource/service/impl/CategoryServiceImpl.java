@@ -7,8 +7,6 @@ import cc.mrbird.febs.common.utils.TreeUtil;
 import cc.mrbird.febs.resource.entity.Category;
 import cc.mrbird.febs.resource.mapper.CategoryMapper;
 import cc.mrbird.febs.resource.service.ICategoryService;
-import cc.mrbird.febs.system.entity.Dept;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;

@@ -1,30 +1,30 @@
 package cc.mrbird.febs.system.entity;
 
+
+import lombok.Data;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-
-import java.io.Serializable;
 
 /**
- * @author MrBird
+ * 用户部门关联表 Entity
+ *
+ * @author lb
+ * @date 2019-09-08 16:53:13
  */
 @Data
-@TableName("t_user_role")
-public class UserDept implements Serializable {
+@TableName("t_user_dept")
+public class UserDept {
 
-    private static final long serialVersionUID = 1321465;
     /**
      * 用户ID
      */
-    @TableField("USER_ID")
+    @TableField("user_id")
     private Long userId;
 
     /**
      * 部门ID
      */
-    @TableField("DEPT_ID")
+    @TableField("dept_id")
     private Long deptId;
-
 
 }
