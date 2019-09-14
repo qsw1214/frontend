@@ -8,8 +8,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 /**
  *  Service接口
  *
@@ -53,7 +51,7 @@ public interface ICommentService extends IService<Comment> {
      *
      * @param String commentIds
      */
-    void deleteComments(String commentIds);
+    void deleteComments(List<String> commentIds);
     
     /**
      * 通过资源 id 删除
@@ -68,4 +66,12 @@ public interface ICommentService extends IService<Comment> {
 	 * @param num
 	 */
 	void increaseReplayCount(Long commentId, Integer num);
+
+	/**
+	 * 检查创建者是否为当前用户
+	 * @param commentIds
+	 * @param username
+	 * @return
+	 */
+	boolean checkCreator(List<String> commentIds, String username);
 }
