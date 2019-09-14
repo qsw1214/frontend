@@ -116,7 +116,7 @@ public class OrgController {
             //本地数据库没有父级部门，需要先行同步父级部门数据
             DeptInfoDetailVO deptDetailVO = AddressListUtil.departmentMess(deptId);
             long parentId = deptDetailVO.getParentid();
-            dept.setDeptId(deptDetailVO.getOrder());
+            dept.setDeptId(deptDetailVO.getId());
             dept.setCreateTime(DateUtil.getNowDateTime());
             dept.setModifyTime(DateUtil.getNowDateTime());
             dept.setDeptName(deptDetailVO.getName());
@@ -173,7 +173,7 @@ public class OrgController {
                     long parentId = deptInfoDetailVO.getParentid();
                     long parentDeptGrade = checkSynchParentDeptInfo(parentId);
                     dept.setParentId(parentId);
-                    dept.setDeptId(deptInfoDetailVO.getOrder());
+                    dept.setDeptId(deptInfoDetailVO.getId());
                     dept.setDeptGrade(parentDeptGrade + 1l);
                     dept.setModifyTime(DateUtil.getNowDateTime());
                     dept.setDeptName(deptName);
