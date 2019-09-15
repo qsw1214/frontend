@@ -57,6 +57,14 @@ public interface IUserDeptService extends IService<UserDept> {
     /**
 	 * 获取用户所属部门
 	 * @param userId
+	 * 
 	 */
-    List<Dept> getUserDepts(long userId);
+    List<Dept> getDeptByUserId(Long userId);
+    
+    /**
+	 * 根据userId和deptId获取部门
+	 * @param userId
+	 * @param deptId
+	 */
+    Dept getDeptByUserIdAndDeptId(Long userId, Long deptId);
 }

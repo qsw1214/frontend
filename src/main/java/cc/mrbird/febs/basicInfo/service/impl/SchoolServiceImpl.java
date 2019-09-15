@@ -10,7 +10,10 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.resource.entity.Resource;
 
 import cc.mrbird.febs.system.entity.Dept;
+import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IDeptService;
+import cc.mrbird.febs.system.service.IUserDeptService;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
@@ -18,8 +21,10 @@ import org.springframework.transaction.annotation.Propagation;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -50,14 +55,15 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
 
     @Autowired
     private IDeptService deptService;
-
+    
+    @Autowired
+	private IUserDeptService userDeptService;
+    
+ 
     @Override
     public IPage<School> findSchools(QueryRequest request, School school) {
-        LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
-        // TODO 设置查询条件
-//        if (school.getSchoolId() != 62) {
-//        	queryWrapper.eq(School::getSchoolId, school.getSchoolId());
-//        }
+    	LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();     
+        // TODO 设置查询条件   
         if (StringUtils.isNotBlank(school.getSchoolName())) {
             queryWrapper.eq(School::getSchoolName, school.getSchoolName());
         }
@@ -159,4 +165,32 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         }
         return this.baseMapper.selectCount(queryWrapper);
     }
+
+	@Override
+	public IPage<School> findSchoolsByDept(QueryRequest request, School school, Long deptId) {
+		User user = (User) SecurityUtils.getSubject().getPrincipal();
+			
+    	// 获取用户所属部门
+		Dept dept = userDeptService.getDeptByUserIdAndDeptId(user.getUserId(), deptId);
+		if(dept == null){
+			return new Page<School>();
+		}
+		
+    	LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
+    	if (StringUtils.isNotBlank(school.getSchoolName())) {
+            queryWrapper.eq(School::getSchoolName, school.getSchoolName());
+        }
+    	
+    	if(dept.getDeptGrade() == 1){
+    		queryWrapper.eq(School::getProvinceDeptId, deptId);
+    	}else if(dept.getDeptGrade() == 2){
+    		queryWrapper.eq(School::getCityDeptId, deptId);
+    	}else if(dept.getDeptGrade() == 3){
+    		queryWrapper.eq(School::getCountryDeptId, deptId);
+    	}
+    	
+    	Page<School> page = new Page<>(request.getPageNum(), request.getPageSize());
+        return this.page(page, queryWrapper);
+
+	}
 }

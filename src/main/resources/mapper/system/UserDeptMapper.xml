@@ -12,7 +12,7 @@
         delete from t_user_dept where user_id=#{userid}
     </delete>
     
-    <select id="getUserDepts" parameterType="long" resultType="dept">
+    <select id="getDeptByUserId" parameterType="long" resultType="dept">
         SELECT 
         d.dept_id deptId,
         d.parent_id parentId,
@@ -22,7 +22,22 @@
         d.create_time createTime,
         d.modify_time modifyTime
         FROM t_user_dept ud 
-        LEFT JOIN t_dept d ON (ud.user_id = d.user_id)
-        WHERE  d.user_id = #{userId}
+        LEFT JOIN t_dept d ON (ud.dept_id = d.dept_id)
+        WHERE ud.user_id = #{userId}
+        ORDER BY d.dept_grade
+    </select>
+    
+    <select id="getDeptByUserIdAndDeptId" parameterType="long" resultType="dept">
+        SELECT 
+        d.dept_id deptId,
+        d.parent_id parentId,
+        d.dept_name deptName,
+        d.order_num orderNum,
+        d.dept_grade deptGrade,
+        d.create_time createTime,
+        d.modify_time modifyTime
+        FROM t_user_dept ud 
+        LEFT JOIN t_dept d ON (ud.dept_id = d.dept_id)
+        WHERE ud.user_id = #{userId} And ud.dept_id = #{deptId}
     </select>
 </mapper>

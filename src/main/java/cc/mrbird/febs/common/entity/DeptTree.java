@@ -1,6 +1,5 @@
 package cc.mrbird.febs.common.entity;
 
-import cc.mrbird.febs.system.entity.Dept;
 import lombok.Data;
 
 import java.io.Serializable;
