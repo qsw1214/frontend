@@ -967,3 +967,12 @@ CREATE TABLE `r_comment_replay` (
   `create_time` datetime DEFAULT NULL COMMENT '回复时间',
   PRIMARY KEY (`comment_replay_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='资源评价回复表';
+
+-- ----------------------------
+-- Table structure for t_user_dept
+-- ----------------------------
+DROP TABLE IF EXISTS `t_user_dept`;
+CREATE TABLE `t_user_dept` (
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `dept_id` bigint(20) NOT NULL COMMENT '部门ID'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='用户部门关联表';

@@ -2,7 +2,6 @@ package cc.mrbird.febs.resource.controller;
 
 import cc.mrbird.febs.common.annotation.Log;
 import cc.mrbird.febs.common.controller.BaseController;
-import cc.mrbird.febs.common.entity.DeptTree;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.MenuTree;
 import cc.mrbird.febs.common.exception.FebsException;
@@ -44,7 +43,7 @@ public class CategoryController extends BaseController {
     }
     
     @GetMapping("select/tree")
-    public List<DeptTree<Category>> getDeptTree() throws FebsException {
+    public List<MenuTree<Category>> getDeptTree() throws FebsException {
         try {
             return this.categoryService.findCategorys();
         } catch (Exception e) {

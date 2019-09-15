@@ -15,6 +15,7 @@ import java.util.List;
  * @date 2019-08-18 01:39:43
  */
 public interface ISchoolService extends IService<School> {
+	
     /**
      * 查询（分页）
      *
@@ -62,4 +63,13 @@ public interface ISchoolService extends IService<School> {
     Integer getCountOfCity(String city);
 
     Integer getCountOfCountry(String country);
+    
+    /**
+     * 按部门查询（分页）
+     *
+     * @param request QueryRequest
+     * @param school school
+     * @return IPage<School>
+     */
+    IPage<School> findSchoolsByDept(QueryRequest request, School school, Long deptId);
 }
