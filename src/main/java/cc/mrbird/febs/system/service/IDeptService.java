@@ -55,4 +55,9 @@ public interface IDeptService extends IService<Dept> {
     void deleteDepts(String[] deptIds);
 
     long findGradeByParentId(long deptId);
+
+    /**
+     * 同步钉钉部门数据至本地
+     */
+    void synchDingDeptData();
 }

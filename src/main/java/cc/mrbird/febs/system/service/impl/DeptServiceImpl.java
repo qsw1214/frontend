@@ -3,9 +3,12 @@ package cc.mrbird.febs.system.service.impl;
 import cc.mrbird.febs.common.entity.DeptTree;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.utils.DateUtil;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.common.utils.TreeUtil;
 import cc.mrbird.febs.dingding.util.AddressListUtil;
+import cc.mrbird.febs.dingding.vo.Department;
+import cc.mrbird.febs.dingding.vo.DepartmentListIFVO;
 import cc.mrbird.febs.system.entity.Dept;
 import cc.mrbird.febs.system.mapper.DeptMapper;
 import cc.mrbird.febs.system.service.IDeptService;
@@ -178,6 +181,51 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     }
 
     public long findGradeByParentId(long parentId){
+
         return this.deptMapper.findGradeByParentId(parentId);
+    }
+
+    /**
+     * 同步钉钉部门数据
+     */
+    public void synchDingDeptData(){
+        DepartmentListIFVO departmentListIFVO = AddressListUtil.synchDingDeptData();
+        List<Department> departments = departmentListIFVO.getDepartment();
+        for (int i = 0; i < departments.size(); i++){
+            Department department = departments.get(i);
+            Dept dept = new Dept();
+            dept.setDeptId(department.getId());
+            dept.setDeptName(department.getName());
+            dept.setParentId(department.getParentid());
+            dept.setOrderNum(department.getId());
+            dept.setModifyTime(DateUtil.getNowDateTime());
+            dept.setDeptGrade(0l);
+            this.saveOrUpdate(dept);
+        }
+        // 设置部门级别值
+        for (int i = 0 ; i < departments.size(); i++) {
+            Department department = departments.get(i);
+            long deptId = department.getId();
+            long deptGrade = 0;
+            long parentId = department.getParentid();
+            if(parentId != 0){
+                long parentDeptGrade = checkSynchParentDeptInfo(parentId);
+                Dept dept = new Dept();
+                dept.setDeptId(department.getId());
+                dept.setDeptGrade(parentDeptGrade + 1l);
+                this.saveOrUpdate(dept);
+            }
+        }
+    }
+
+    public long checkSynchParentDeptInfo(long deptId){
+        Dept dept = this.getById(deptId);
+        long parentId = dept.getParentId();
+        if(parentId == 0){ //网络联校部门
+            return 0l;
+        }else{
+            long parentDeptGrade = checkSynchParentDeptInfo(parentId);
+            return parentDeptGrade + 1;
+        }
     }
 }

@@ -64,6 +64,18 @@ public class DeptController extends BaseController {
 		}
 	}
 
+	@PostMapping("synchDingDeptData")
+	public FebsResponse synchDingDeptData() throws FebsException {
+		try {
+			this.deptService.synchDingDeptData();
+			return new FebsResponse().success();
+		} catch (Exception e) {
+			String message = "同步钉钉部门数据失败";
+			log.error(message, e);
+			throw new FebsException(message);
+		}
+	}
+
 	@Log("新增部门")
 	@PostMapping
 	@RequiresPermissions("dept:add")

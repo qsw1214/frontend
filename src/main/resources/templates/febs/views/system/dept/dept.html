@@ -2,7 +2,13 @@
     <div class="layui-row layui-col-space8 febs-container">
         <div class="layui-col-md4 layui-col-sm4 layui-col-xs8">
             <div class="layui-card">
-            	<div class="layui-card-header" id="form-header">部门列表</div>
+            	<div class="layui-card-header" id="form-dept-header">
+                    <span>部门列表</span>&nbsp;&nbsp;
+                    <div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="query">
+                        <!--<i class="layui-icon">&#xe848;</i>-->
+                        同步钉钉部门至本地
+                    </div>
+                </div>
                 <div class="layui-card-body febs-table-full">  
                     <div class="dept-tree" lay-filter="deptTree" style="margin-left: 1rem"></div>
                 </div>
@@ -13,7 +19,7 @@
          </div>
         <div class="layui-col-md8 layui-col-sm8 layui-col-xs16">
             <div class="layui-card">
-                <div class="layui-card-header" id="form-header">学校列表</div>
+                <div class="layui-card-header" id="form-school-header">学校列表</div>
                 <div class="layui-card-body febs-table-full">
                     <table lay-filter="deptSchoolTable" lay-data="{id: 'deptSchoolTable'}"></table>
                 </div>
@@ -33,6 +39,7 @@
             $view = $('#febs-dept'),
             _currentDeptData,
             _deptTree,
+            $query = $view.find('#query'),
             tableIns;
 
         renderDeptTree();
@@ -90,6 +97,12 @@
         function reloadDeptTree() {
             _deptTree = renderDeptTree();
         }
+
+        $query.on('click', function () {
+            febs.post(ctx + 'dept/synchDingDeptData', null, function () {
+                febs.alert.success('部门数据同步成功');
+            });
+        });
 
     });
 </script>

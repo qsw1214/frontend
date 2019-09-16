@@ -1,5 +1,6 @@
 package cc.mrbird.febs.dingding.util;
 
+import cc.mrbird.febs.dingding.vo.DepartmentListIFVO;
 import cc.mrbird.febs.dingding.vo.DeptInfoDetailVO;
 import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.api.DefaultDingTalkClient;
@@ -102,6 +103,21 @@ public class AddressListUtil {
             return userMap;
         } catch (ApiException e) {
             bizLogger.error("getUserMess failed", e);
+            throw new RuntimeException();
+        }
+    }
+
+    public static DepartmentListIFVO  synchDingDeptData(){
+        try {
+            DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/department/list");
+            OapiDepartmentGetRequest request = new OapiDepartmentGetRequest();
+            request.setHttpMethod("GET");
+            OapiDepartmentGetResponse response = client.execute(request, AccessTokenUtil.getToken());
+            String body = response.getBody();
+            DepartmentListIFVO departmentListIFVO = gson.fromJson(body,DepartmentListIFVO.class);
+            return departmentListIFVO;
+        } catch (ApiException e) {
+            bizLogger.error("getDepartmentMess failed", e);
             throw new RuntimeException();
         }
     }
