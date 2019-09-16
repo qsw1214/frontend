@@ -183,6 +183,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         updateById(user);
     }
 
+    @Override
+    public void deleteUser(Long userId) {
+        baseMapper.deleteById(userId);
+    }
+
     private void setUserRoles(User user, String[] roles) {
         List<UserRole> userRoles = new ArrayList<>();
         Arrays.stream(roles).forEach(roleId -> {

@@ -6,13 +6,15 @@ import cc.mrbird.febs.common.utils.DateUtil;
 import cc.mrbird.febs.common.utils.MD5Util;
 import cc.mrbird.febs.dingding.config.Constant;
 import cc.mrbird.febs.dingding.util.AddressListUtil;
-import cc.mrbird.febs.dingding.vo.DeptInfoDetailVO;
-import cc.mrbird.febs.dingding.vo.DeptInfoVO;
+import cc.mrbird.febs.dingding.vo.*;
 import cc.mrbird.febs.system.entity.Dept;
+import cc.mrbird.febs.system.entity.Role;
+import cc.mrbird.febs.system.entity.User;
+import cc.mrbird.febs.system.entity.UserRole;
 import cc.mrbird.febs.system.mapper.DeptMapper;
 import cc.mrbird.febs.system.mapper.UserDeptMapper;
 import cc.mrbird.febs.system.mapper.UserMapper;
-import cc.mrbird.febs.system.service.IDeptService;
+import cc.mrbird.febs.system.service.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.oapi.lib.aes.Utils;
@@ -29,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import com.dingtalk.oapi.lib.aes.DingTalkEncryptor;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +50,7 @@ public class OrgController {
     private static final Logger mainLogger = LoggerFactory.getLogger(OrgController.class);
 
     @Autowired
-    private UserMapper userMapper;
+    private IUserService userService;
 
     @Autowired
     private UserDeptMapper userDeptMapper;
@@ -57,6 +60,13 @@ public class OrgController {
 
     @Autowired
     private ISchoolService schoolService;
+
+    @Autowired
+    private IRoleService roleService;
+
+    @Autowired
+    private IUserRoleService userRoleService;
+
 
     /**
      * 创建套件后，验证回调URL创建有效事件（第一次保存回调URL之前）
@@ -138,6 +148,7 @@ public class OrgController {
         }
     }
 
+
     @RequestMapping(value = "/callback")
     @ResponseBody
     public Map<String, String> callback(@RequestParam(value = "signature", required = false) String signature,
@@ -207,48 +218,83 @@ public class OrgController {
             }else if(USER_ADD_ORG.equals(eventType)){
                 bizLogger.info("通讯录用户增加: " + plainText);
                 //调取用户详情接口
-                String userid=obj.getString("UserId");
-                JSONArray jsonArray=JSONArray.fromObject(userid);
-                for(int i=0;i<jsonArray.size();i++) {//遍历json数组内容  
-                    Object object = jsonArray.get(i);
-                    Map map = AddressListUtil.userMess(object.toString());
-                    String deptId = map.get("department").toString();
-                    deptId=deptId.substring(deptId.indexOf("[")+1,deptId.indexOf("]"));
-                    List<String> lis = Arrays.asList(deptId.split(","));
-                    for (String string : lis) {
-                        userDeptMapper.insertUserDept(Long.parseLong(jsonArray.get(i).toString()),Long.parseLong(string));
+                UserInfoVO userInfoVO = gson.fromJson(plainText, UserInfoVO.class);
+                List<Long> userIds=userInfoVO.getUserId();
+                User user=new User();
+                for(long userid:userIds) {//遍历json数组内容  
+                    UserInfoDetailVO userInfoDetailVO = AddressListUtil.userMess(userid);
+                    List<Long> deptIds=userInfoDetailVO.getDepartment();
+                   // userDeptMapper.deleteById(userid);
+
+                    UserInfoDetailVO map = AddressListUtil.userMess(userid);
+                    user.setUserId(userid);
+                    user.setUsername(map.getName());
+                    user.setPassword(MD5Util.encrypt("", "123456"));
+                    user.setAvatar(map.getAvatar());
+                    user.setBoss(map.isBoss());
+                    user.setStatus("1");
+                    user.setCreateTime(new Date());
+                    user.setModifyTime(new Date());
+                    user.setEmail(map.getEmail());
+                    user.setSenior(map.isSenior());
+                    user.setActive(map.isActive());
+                    user.setPosition(map.getPosition());
+                    user.setHide(map.isHide());
+                    user.setUnionid(map.getUnionid());
+                    user.setAdmin(map.isAdmin());
+                    userService.save(user);
+
+                    for (long deptId : deptIds) {
+                        userDeptMapper.insertUserDept(userid, deptId);
                     }
-                    map.put("password", MD5Util.encrypt("", "123456"));
-                    map.put("isBoss", Boolean.getBoolean(map.get("isBoss").toString()));
-                    map.put("isSenior", Boolean.getBoolean(map.get("isSenior").toString()));
-                    map.put("active", Boolean.getBoolean(map.get("active").toString()));
-                    map.put("isAdmin", Boolean.getBoolean(map.get("isAdmin").toString()));
-                    map.put("isHide", Boolean.getBoolean(map.get("isHide").toString()));
-                    userMapper.insertUser(map);
+
+                    List<RolesInfoVO> roles=map.getRoles();
+                    UserRole userRole=new UserRole();
+                    for(int i=0;i<roles.size();i++) {
+                        userRole.setRoleId(roles.get(i).getId());
+                        userRole.setUserId(userid);
+                        userRoleService.insertUserRole(userRole);//插入用户角色
+
+                        if(roleService.getById(userRole.getRoleId())==null){
+                            Role role=new Role();
+                            role.setRoleId(roles.get(i).getId());
+                            role.setRoleName(roles.get(i).getName());
+                            roleService.save(role);
+                        }
+                    }
                 }
             }else if(USER_MODIFY_ORG.equals(eventType)){
                 bizLogger.info("通讯录用户更改: " + plainText);
-                String userid=obj.getString("UserId");
-                JSONArray jsonArray=JSONArray.fromObject(userid);//userList:"["12315","15616"]"
-                for(int i=0;i<jsonArray.size();i++) {//遍历json数组内容 
-                    Object object = jsonArray.get(i);
-                    Map map = AddressListUtil.userMess(object.toString());
-                    map.put("password", MD5Util.encrypt("", "123456"));//初始密码：123456
-                    map.put("isBoss", Boolean.getBoolean(map.get("isBoss").toString()));
-                    map.put("isSenior", Boolean.getBoolean(map.get("isSenior").toString()));
-                    map.put("active", Boolean.getBoolean(map.get("active").toString()));
-                    map.put("isAdmin", Boolean.getBoolean(map.get("isAdmin").toString()));
-                    map.put("isHide", Boolean.getBoolean(map.get("isHide").toString()));
-                    userMapper.updateUser(map);
+                UserInfoVO userInfoVO = gson.fromJson(plainText,UserInfoVO.class);
+                List<Long> userIds=userInfoVO.getUserId();
+                User user = new User();
+                for(long userId:userIds) {//遍历json数组内容 
+                    UserInfoDetailVO map = AddressListUtil.userMess(userId);
+                    user.setUserId(userId);
+                    user.setUsername(map.getName());
+                    user.setPassword(MD5Util.encrypt("", "123456"));
+                    user.setAvatar(map.getAvatar());
+                    user.setBoss(map.isBoss());
+                    user.setStatus("1");
+                    user.setModifyTime(new Date());
+                    user.setEmail(map.getEmail());
+                    user.setSenior(map.isSenior());
+                    user.setActive(map.isActive());
+                    user.setPosition(map.getPosition());
+                    user.setHide(map.isHide());
+                    user.setUnionid(map.getUnionid());
+                    user.setAdmin(map.isAdmin());
+                    userService.updateProfile(user);
+
                 }
             }else if(USER_LEAVE_ORG.equals(eventType)){
                 bizLogger.info("通讯录用户离职: " + plainText);
-                String userid=obj.getString("UserId");
-                JSONArray jsonArray=JSONArray.fromObject(userid);
-                for(int i=0;i<jsonArray.size();i++) {//遍历json数组内容  
-                    Object object = jsonArray.get(i);
-                    userDeptMapper.deleteUserDept(Long.parseLong(object.toString()));//先删除用户部门关系
-                    userMapper.deleteUser(object.toString());//删除用户
+                UserInfoVO userInfoVO = gson.fromJson(plainText,UserInfoVO.class);
+                List<Long> userIds=userInfoVO.getUserId();
+                for(long userId:userIds){
+                    userDeptMapper.deleteUserDept(userId);//先删除用户部门关系
+                    roleService.removeById(userId);//删除用户角色关系
+                    userService.deleteUser(userId);//删除用户
                 }
             }else if(ORG_ADMIN_ADD.equals(eventType)){
                 bizLogger.info("通讯录用户被设为管理员: " + plainText);
@@ -256,27 +302,39 @@ public class OrgController {
                 bizLogger.info("通讯录用户被取消设置管理员: " + plainText);
             }else if(LABEL_USER_CHANGE.equals(eventType)){
                 bizLogger.info("员工角色信息发生变更: " + plainText);
-                String userid=obj.getString("UserIdList");
-                JSONArray jsonArray=JSONArray.fromObject(userid);//userList:"["12315","15616"]"
-                for(int i=0;i<jsonArray.size();i++) {//遍历json数组内容 
-                    Object object = jsonArray.get(i);
-                    Map map = AddressListUtil.userMess(object.toString());
-                    String deptId = map.get("department").toString();//depart:"[1234,6456]"
-                    deptId=deptId.substring(deptId.indexOf("[")+1,deptId.indexOf("]"));
-                    List<String> lis = Arrays.asList(deptId.split(","));
-                    userDeptMapper.deleteUserDept(Long.parseLong(jsonArray.get(i).toString()));
-                    for (String string : lis) {
-                        userDeptMapper.insertUserDept(Long.parseLong(jsonArray.get(i).toString()), Long.parseLong(string));
+                UserInfoVO userInfoVO = gson.fromJson(plainText,UserInfoVO.class);
+                List<Long> userIds=userInfoVO.getUserIdList();
+                for(long userid:userIds) {//遍历json数组内容 
+                    UserInfoDetailVO map = AddressListUtil.userMess(userid);
+                    List<RolesInfoVO> roles=map.getRoles();
+                    UserRole userRole=new UserRole();
+                    userRoleService.deleteUserRole(userid);//删除用户角色
+                    for(int i=0;i<roles.size();i++) {
+                        userRole.setRoleId(roles.get(i).getId());
+                        userRole.setUserId(userid);
+                        userRoleService.insertUserRole(userRole);//插入用户角色
+
+                        if(roleService.getById(userRole.getRoleId())==null){
+                            Role role=new Role();
+                            role.setRoleId(roles.get(i).getId());
+                            role.setRoleName(roles.get(i).getName());
+                            role.setCreateTime(new Date());
+                            roleService.save(role);
+                        }
+                    }
+                    List<Long> deptIds=map.getDepartment();
+                    userDeptMapper.deleteUserDept(userid);
+                    for (long deptId : deptIds) {
+                        userDeptMapper.insertUserDept(userid, deptId);
                     }
                 }
-            }/*else if(LABEL_CONF_ADD.equals(eventType)){
+            }else if(LABEL_CONF_ADD.equals(eventType)){
                 bizLogger.info("增加角色或者角色组: " + plainText);
             }else if(LABEL_CONF_DEL.equals(eventType)){
                 bizLogger.info("删除角色或者角色组: " + plainText);
             }else if(LABEL_CONF_MODIFY .equals(eventType)){
                 bizLogger.info("修改角色或者角色组: " + plainText);
-            }*/
-
+            }
             // 返回success的加密信息表示回调处理成功
             return dingTalkEncryptor.getEncryptedMap(CALLBACK_RESPONSE_SUCCESS, System.currentTimeMillis(), Utils.getRandomStr(8));
         } catch (Exception e) {

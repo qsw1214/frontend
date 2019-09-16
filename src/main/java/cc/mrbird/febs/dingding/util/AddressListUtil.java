@@ -2,6 +2,7 @@ package cc.mrbird.febs.dingding.util;
 
 import cc.mrbird.febs.dingding.vo.DepartmentListIFVO;
 import cc.mrbird.febs.dingding.vo.DeptInfoDetailVO;
+import cc.mrbird.febs.dingding.vo.UserInfoDetailVO;
 import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
@@ -83,24 +84,16 @@ public class AddressListUtil {
     }*/
 
     //获取用户详情
-    public static Map userMess(String userId)throws RuntimeException {
+    public static UserInfoDetailVO userMess(Long userId)throws RuntimeException {
         try {
             DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/user/get");
             OapiUserGetRequest request = new OapiUserGetRequest();
-            request.setUserid(userId);
+            request.setUserid(userId.toString());
             request.setHttpMethod("GET");
             OapiUserGetResponse response = client.execute(request, AccessTokenUtil.getToken());
             String userBody = response.getBody();
-            JSONObject jo = JSONObject.parseObject(new String(userBody));
-            Iterator<String> it = jo.keySet().iterator();
-            Map userMap = new HashMap();
-            while (it.hasNext()) {
-                // 获得key
-                String key = it.next();
-                String value = jo.getString(key);
-                userMap.put(key, value);
-            }
-            return userMap;
+            UserInfoDetailVO userInfoDetailVO = gson.fromJson(userBody,UserInfoDetailVO.class);
+            return userInfoDetailVO;
         } catch (ApiException e) {
             bizLogger.error("getUserMess failed", e);
             throw new RuntimeException();

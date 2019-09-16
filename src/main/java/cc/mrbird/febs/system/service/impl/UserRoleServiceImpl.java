@@ -29,4 +29,14 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
     public void deleteUserRolesByUserId(List<String> userIds) {
         this.baseMapper.delete(new QueryWrapper<UserRole>().lambda().in(UserRole::getUserId, userIds));
     }
+
+    public void insertUserRole(UserRole userRole){
+        this.baseMapper.insert(userRole);
+    }
+
+    @Override
+    public void deleteUserRole(Long userid) {
+        this.baseMapper.delete(new QueryWrapper<UserRole>().lambda().in(UserRole::getUserId,userid));
+    }
+
 }

@@ -23,4 +23,15 @@ public interface IUserRoleService extends IService<UserRole> {
      * @param userIds 用户 id
      */
     void deleteUserRolesByUserId(List<String> userIds);
+
+
+    /*
+     * 新增
+     * */
+    void insertUserRole(UserRole userRole);
+
+    /*
+    * 删除
+    * */
+    void deleteUserRole(Long userid);
 }

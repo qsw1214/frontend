@@ -111,5 +111,8 @@ public interface IUserService extends IService<User> {
      */
     void updateProfile(User user);
 
+    /*删除离职用户*/
+    void deleteUser(Long userId);
+
     Integer countUserNumByDept(String deptName);
 }

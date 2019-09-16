@@ -40,13 +40,8 @@ public interface UserMapper extends BaseMapper<User> {
     List<User> findUserDetail(@Param("user") User user);
 
     /*删除离职用户*/
-    void deleteUser(String userId);
+    void deleteUser(Long userId);
 
-    /*新增用户*/
-    void insertUser(Map map);
-
-    /*修改用户*/
-    void updateUser(Map map);
 
     Integer countUserNumByDept(String deptName);
 }

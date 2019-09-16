@@ -54,7 +54,7 @@ public class User implements Serializable {
     /**
      * 用户 ID
      */
-    @TableId(value = "USER_ID", type = IdType.AUTO)
+    @TableId(value = "USER_ID")
     private Long userId;
 
     /**
@@ -71,12 +71,6 @@ public class User implements Serializable {
      */
     @TableField("PASSWORD")
     private String password;
-
-    /**
-     * 部门 ID
-     */
-    @TableField("DEPT_ID")
-    private Long deptId;
 
     /**
      * 邮箱
@@ -211,9 +205,6 @@ public class User implements Serializable {
 
     @TableField("IS_HIDE")
     private boolean isHide;   //是否号码隐藏，true表示隐藏，false表示不隐藏
-
-    @TableField("DEPARTMENT")
-    private String department; //成员所属部门id列表
 
     @TableField("POSITION")
     private String position;  //职位信息
