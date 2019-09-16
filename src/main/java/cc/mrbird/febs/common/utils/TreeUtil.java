@@ -5,9 +5,7 @@ import cc.mrbird.febs.common.entity.DeptTree;
 import cc.mrbird.febs.common.entity.MenuTree;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author MrBird
@@ -50,14 +48,14 @@ public class TreeUtil {
         return root;
     }
 
-    public static <T> List<DeptTree<T>> buildDeptTree(List<DeptTree<T>> nodes) {
+    public static <T> List<DeptTree<T>> buildDeptTree(List<DeptTree<T>> nodes, String idParam) {
         if (nodes == null) {
             return null;
         }
         List<DeptTree<T>> result = new ArrayList<>();
         nodes.forEach(children -> {
             String pid = children.getParentId();
-            if (pid == null || "0".equals(pid)) {
+            if (pid == null || idParam.equals(pid)) {
                 result.add(children);
                 return;
             }

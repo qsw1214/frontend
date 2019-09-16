@@ -60,7 +60,12 @@ public class UserDeptServiceImpl extends ServiceImpl<UserDeptMapper, UserDept> i
 	}
 
 	@Override
-	public List<Dept> getUserDepts(long userId) {
-		return this.baseMapper.getUserDepts(userId);
+	public List<Dept> getDeptByUserId(Long userId) {
+		return this.baseMapper.getDeptByUserId(userId);
+	}
+	
+	@Override
+	public Dept getDeptByUserIdAndDeptId(Long userId, Long deptId) {
+		return this.baseMapper.getDeptByUserIdAndDeptId(userId, deptId);
 	}
 }

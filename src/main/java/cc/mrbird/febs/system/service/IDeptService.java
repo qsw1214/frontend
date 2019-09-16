@@ -21,11 +21,8 @@ public interface IDeptService extends IService<Dept> {
 
     /**
      * 获取部门列表（树形列表）
-     *
-     * @param dept 部门对象（传递查询参数）
-     * @return 部门树
      */
-    List<DeptTree<Dept>> findDepts(Dept dept);
+    List<DeptTree<Dept>> getLimitDeptTree(Long userId);
 
     /**
      * 获取部门树（供Excel导出）
