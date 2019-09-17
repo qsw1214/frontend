@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 
-
+import cc.mrbird.febs.dingding.config.Constant;
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiGettokenRequest;
@@ -27,7 +27,7 @@ public class ApprovalInfUtil {
         	 DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/processinstance/get");
              OapiProcessinstanceGetRequest request = new OapiProcessinstanceGetRequest();
              request.setProcessInstanceId(processInstanceId);
-             OapiProcessinstanceGetResponse response = client.execute(request,AccessTokenUtil.getToken());
+             OapiProcessinstanceGetResponse response = client.execute(request,AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET));
              String userInfBody = response.getBody();
              JSONObject jo = JSONObject.parseObject(new String(userInfBody));
              Iterator<String> it = jo.keySet().iterator();

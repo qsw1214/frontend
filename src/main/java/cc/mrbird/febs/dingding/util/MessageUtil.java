@@ -26,7 +26,7 @@ public class MessageUtil {
             OapiProcessinstanceGetRequest request = new OapiProcessinstanceGetRequest();
             //审批实例id
             request.setProcessInstanceId(processInstanceId);
-            OapiProcessinstanceGetResponse response = client.execute(request, AccessTokenUtil.getToken());
+            OapiProcessinstanceGetResponse response = client.execute(request, AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET));
             //发起人,接受人
             String recieverUserId = response.getProcessInstance().getOriginatorUserid();
 
@@ -43,7 +43,7 @@ public class MessageUtil {
             msg.getText().setContent("代换课申请通过了!!!");
             messageRequest.setMsg(msg);
 
-            OapiMessageCorpconversationAsyncsendV2Response rsp = client.execute(messageRequest,AccessTokenUtil.getToken());
+            OapiMessageCorpconversationAsyncsendV2Response rsp = client.execute(messageRequest,AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET));
         } catch (ApiException e) {
             bizLogger.error("send message failed", e);
             throw new RuntimeException();
