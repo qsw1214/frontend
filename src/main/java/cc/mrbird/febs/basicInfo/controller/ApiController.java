@@ -24,8 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -258,8 +263,12 @@ public class ApiController extends BaseController {
     @GetMapping("comment/delete/{commentIds}")
     @RequiresPermissions("comment:delete")
     public FebsResponse deleteComment(@NotBlank(message = "{required}") @PathVariable String commentIds) throws FebsException {
-        try {
-            this.commentService.deleteComments(commentIds);
+    	try {
+        	User user = super.getCurrentUser();
+        	List<String> list = Arrays.asList(commentIds.split(StringPool.COMMA));
+        	if(!this.commentService.checkCreator(list, user.getUsername()))
+        		return new FebsResponse().fail().data("无权限");
+            this.commentService.deleteComments(list);
             return new FebsResponse().success();
         } catch (Exception e) {
             String message = "删除Comment失败";

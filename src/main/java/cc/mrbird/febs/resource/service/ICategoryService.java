@@ -24,7 +24,7 @@ public interface ICategoryService extends IService<Category> {
      *
      * @return 部门树集合
      */
-    List<DeptTree<Category>> findCategorys();
+    List<MenuTree<Category>> findCategorys();
 
     /**
      * 查找所有的类别

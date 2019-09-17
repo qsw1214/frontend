@@ -8,8 +8,6 @@ import cc.mrbird.febs.resource.entity.Subject;
 import cc.mrbird.febs.resource.mapper.SubjectMapper;
 import cc.mrbird.febs.resource.service.ISubjectResourceService;
 import cc.mrbird.febs.resource.service.ISubjectService;
-import cc.mrbird.febs.system.entity.Role;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
@@ -31,7 +29,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 /**
  *  Service实现
  *
- * @author psy
+ * @author lb
  * @date 2019-08-17 19:45:05
  */
 @Service

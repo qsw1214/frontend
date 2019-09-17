@@ -14,6 +14,8 @@ import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.basicInfo.entity.School;
 import cc.mrbird.febs.basicInfo.service.ISchoolService;
 import cc.mrbird.febs.system.service.IRoleService;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
 
@@ -156,5 +158,13 @@ public class SchoolController extends BaseController {
         }
     }
 
+    @GetMapping("schoolByDept/list")
+    @ResponseBody
+    @RequiresPermissions("school:view")
+    public FebsResponse schoolListByDept(QueryRequest request, School school, Long deptId) {
+    	IPage<School> p = this.schoolService.findSchoolsByDept(request, school, deptId);
+        Map<String, Object> dataTable = getDataTable(p);
+        return new FebsResponse().success().data(dataTable);
+    }
 
 }

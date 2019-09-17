@@ -38,6 +38,17 @@ public class DateUtil {
         return simpleDateFormat.format(date);
     }
 
+    public static Date getNowDateTime(){
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(FULL_TIME_SPLIT_PATTERN, Locale.CHINA);
+        try {
+            return simpleDateFormat.parse(simpleDateFormat.format(date));
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+        }
+        return date;
+    }
+
     public static String formatCSTTime(String date, String format) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(CST_TIME_PATTERN, Locale.US);
         Date usDate = simpleDateFormat.parse(date);

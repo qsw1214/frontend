@@ -9,6 +9,7 @@ import cc.mrbird.febs.resource.entity.Resource;
 import cc.mrbird.febs.resource.service.IResourceService;
 import cc.mrbird.febs.system.entity.User;
 
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.google.common.collect.Lists;
 import com.wuwenze.poi.ExcelKit;
 import com.wuwenze.poi.handler.ExcelReadHandler;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -86,19 +88,45 @@ public class ResourceController extends BaseController {
     }
 
     @Log("删除Resource")
-    @GetMapping("resource/delete/{resourceIds}")
-    @ResponseBody
-    @RequiresPermissions("resource:delete")
-    public FebsResponse deleteResource(@NotBlank(message = "{required}") @PathVariable String resourceIds) throws FebsException {
-        try {
-            this.resourceService.deleteResources(resourceIds);
-            return new FebsResponse().success();
-        } catch (Exception e) {
-            String message = "删除Resource失败";
-            log.error(message, e);
-            throw new FebsException(message);
-        }
-    }
+	@GetMapping("resource/delete/{resourceIds}")
+	@ResponseBody
+	@RequiresPermissions("resource:delete")
+	public FebsResponse deleteResource(@NotBlank(message = "{required}") @PathVariable String resourceIds)
+			throws FebsException {
+		try {
+			User user = super.getCurrentUser();
+			List<String> list = Arrays.asList(resourceIds.split(StringPool.COMMA));
+			if (!this.resourceService.checkCreator(list, user.getUsername()))
+				return new FebsResponse().fail().data("无权限");
+			this.resourceService.deleteResources(list);
+			return new FebsResponse().success();
+		} catch (Exception e) {
+			String message = "删除Resource失败";
+			log.error(message, e);
+			throw new FebsException(message);
+		}
+	}
+
+	@Log("审核Resource")
+	@PostMapping("resource/audit")
+	@ResponseBody
+	@RequiresPermissions("resource:audit")
+	public FebsResponse audit(@RequestParam(value = "resourceIds[]") String[] resourceIds,
+			@RequestParam("status") Integer status) throws FebsException {
+		try {
+			if (resourceIds == null || resourceIds.length == 0)
+				return new FebsResponse().fail().data("resourceIds为空");
+			if (status == null || status < 0 || status > 2)
+				return new FebsResponse().fail().data("status参数非法");
+			List<String> list = Arrays.asList(resourceIds);
+			int count = this.resourceService.updateStatus(list, status);
+			return new FebsResponse().success().data(count);
+		} catch (Exception e) {
+			String message = "删除Resource失败";
+			log.error(message, e);
+			throw new FebsException(message);
+		}
+	}
 
     @Log("修改Resource")
     @PostMapping("resource/update")

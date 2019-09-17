@@ -5,7 +5,9 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.utils.DateUtil;
 import cc.mrbird.febs.common.utils.FebsUtil;
+import cc.mrbird.febs.system.entity.Dept;
 import cc.mrbird.febs.system.entity.User;
+import cc.mrbird.febs.system.service.IUserDeptService;
 import cc.mrbird.febs.system.service.IUserService;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,6 +37,9 @@ public class ViewController extends BaseController {
 
     @Autowired
     private ShiroHelper shiroHelper;
+    
+    @Autowired
+    private IUserDeptService userDeptService;
 
     @GetMapping("login")
     @ResponseBody
@@ -47,10 +55,9 @@ public class ViewController extends BaseController {
 
     @GetMapping("unauthorized")
     public String unauthorized() {
+
         return FebsUtil.view("error/403");
     }
-
-
 
     @GetMapping("/")
     public String redirectIndex() {
@@ -133,7 +140,13 @@ public class ViewController extends BaseController {
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/dept")
     @RequiresPermissions("dept:view")
-    public String systemDept() {
+    public String systemDept(Model model) {
+    	Long userId = super.getCurrentUser().getUserId();
+    	List<Dept> list = userDeptService.getDeptByUserId(userId);
+    	String userDeptIds = "";
+    	for(int i=0; i<list.size(); i++)
+    		userDeptIds = userDeptIds + list.get(i).getDeptId();
+    	model.addAttribute("userDeptIds", userDeptIds);
         return FebsUtil.view("system/dept/dept");
     }
 
@@ -160,6 +173,7 @@ public class ViewController extends BaseController {
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "500")
     public String error500() {
+
         return FebsUtil.view("error/500");
     }
 

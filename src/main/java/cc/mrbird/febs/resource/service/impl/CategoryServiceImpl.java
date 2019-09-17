@@ -1,14 +1,12 @@
 package cc.mrbird.febs.resource.service.impl;
 
 import cc.mrbird.febs.common.authentication.ShiroRealm;
-import cc.mrbird.febs.common.entity.DeptTree;
+import cc.mrbird.febs.common.entity.MenuTree;
 import cc.mrbird.febs.common.entity.MenuTree;
 import cc.mrbird.febs.common.utils.TreeUtil;
 import cc.mrbird.febs.resource.entity.Category;
 import cc.mrbird.febs.resource.mapper.CategoryMapper;
 import cc.mrbird.febs.resource.service.ICategoryService;
-import cc.mrbird.febs.system.entity.Dept;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
@@ -49,16 +47,16 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     }
     
     @Override
-	public List<DeptTree<Category>> findCategorys() {
+	public List<MenuTree<Category>> findCategorys() {
         List<Category> categorys = this.baseMapper.selectList(new QueryWrapper<>());
-        List<DeptTree<Category>> trees = this.convertDepts(categorys);
-        return TreeUtil.buildDeptTree(trees);
+        List<MenuTree<Category>> trees = this.convertMenus(categorys);
+        return TreeUtil.buildList(trees, "0");
 	}
     
-    private List<DeptTree<Category>> convertDepts(List<Category> categorys){
-    	List<DeptTree<Category>> trees = new ArrayList<>();
+    private List<MenuTree<Category>> convertMenus(List<Category> categorys){
+    	List<MenuTree<Category>> trees = new ArrayList<>();
         categorys.forEach(category -> {
-        	DeptTree<Category> tree = new DeptTree<>();
+        	MenuTree<Category> tree = new MenuTree<>();
             tree.setId(String.valueOf(category.getCategoryId()));
             tree.setParentId(String.valueOf(category.getParentId()));
             tree.setName(category.getCategoryName());

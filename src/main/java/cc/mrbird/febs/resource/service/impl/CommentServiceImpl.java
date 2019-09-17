@@ -13,14 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
@@ -78,13 +76,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     @Override
     @Transactional
-    public void deleteComments(String commentIds) {
-    	List<String> list = Arrays.asList(commentIds.split(StringPool.COMMA));
-    	if(list.size()>0){
-    		Comment comment = this.baseMapper.selectById(list.get(0));
-	        int n = this.baseMapper.delete(new QueryWrapper<Comment>().lambda().in(Comment::getCommentId, list)); // 删除评论
+    public void deleteComments(List<String> commentIds) {
+    	if(commentIds.size()>0){
+    		Comment comment = this.baseMapper.selectById(commentIds.get(0));
+	        int n = this.baseMapper.delete(new QueryWrapper<Comment>().lambda().in(Comment::getCommentId, commentIds)); // 删除评论
 	        resourceService.increaseCommentCount(comment.getResourceId(), -n);
-	        commentReplayService.deleteCommentReplaysByCommentId(list); // 删除回复
+	        commentReplayService.deleteCommentReplaysByCommentId(commentIds); // 删除回复
     	}
 	}
 
@@ -104,5 +101,16 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 			this.baseMapper.delete(new QueryWrapper<Comment>().lambda().in(Comment::getCommentId, list)); // 删除评论
 			commentReplayService.deleteCommentReplaysByCommentId(commentIds); // 删除回复
 		}
+	}
+	
+	@Override
+	public boolean checkCreator(List<String> commentIds, String username) {
+    	LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
+    	queryWrapper.in(Comment::getCommentId, commentIds);
+    	queryWrapper.ne(Comment::getUserName, username);
+    	List<Comment> list = this.baseMapper.selectList(queryWrapper);
+    	if(list.size() > 0)
+    		return false;
+		return true;
 	}
 }

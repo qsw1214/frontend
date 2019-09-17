@@ -21,11 +21,8 @@ public interface IDeptService extends IService<Dept> {
 
     /**
      * 获取部门列表（树形列表）
-     *
-     * @param dept 部门对象（传递查询参数）
-     * @return 部门树
      */
-    List<DeptTree<Dept>> findDepts(Dept dept);
+    List<DeptTree<Dept>> getLimitDeptTree(Long userId);
 
     /**
      * 获取部门树（供Excel导出）
@@ -56,4 +53,11 @@ public interface IDeptService extends IService<Dept> {
      * @param deptIds 部门 ID集合
      */
     void deleteDepts(String[] deptIds);
+
+    long findGradeByParentId(long deptId);
+
+    /**
+     * 同步钉钉部门数据至本地
+     */
+    void synchDingDeptData();
 }
