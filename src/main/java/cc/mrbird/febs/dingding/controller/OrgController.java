@@ -291,7 +291,13 @@ public class OrgController {
                     user.setHide(map.isHide());
                     user.setUnionid(map.getUnionid());
                     user.setAdmin(map.isAdmin());
-                    userService.updateProfile(user);
+
+                    if(userService.getById(userId)==null) {
+                        user.setCreateTime(new Date());
+                        userService.save(user);
+                    }else{
+                        userService.updateProfile(user);
+                    }
                 }
             }else if(USER_LEAVE_ORG.equals(eventType)){
                 bizLogger.info("通讯录用户离职: " + plainText);
