@@ -27,7 +27,7 @@ public class CeShiController {
         DingTalkClient client = new DefaultDingTalkClient(URLConstant.DELETE_CALLBACK);
         OapiCallBackDeleteCallBackRequest request = new OapiCallBackDeleteCallBackRequest();
         request.setHttpMethod("GET");
-        client.execute(request, AccessTokenUtil.getToken());
+        client.execute(request, AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET));
 
         // 重新为企业注册回调
         client = new DefaultDingTalkClient(URLConstant.REGISTER_CALLBACK);
@@ -39,7 +39,7 @@ public class CeShiController {
         //加解密需要用到的token，企业可以随机填写。如 "12345"
         registerRequest.setToken(Constant.TOKEN);
         registerRequest.setCallBackTag(Arrays.asList("bpms_instance_change", "bpms_task_change"));
-        OapiCallBackRegisterCallBackResponse registerResponse = client.execute(registerRequest,AccessTokenUtil.getToken());
+        OapiCallBackRegisterCallBackResponse registerResponse = client.execute(registerRequest,AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET));
         if (registerResponse.isSuccess()) {
             System.out.println("回调注册成功了！！！");
         }

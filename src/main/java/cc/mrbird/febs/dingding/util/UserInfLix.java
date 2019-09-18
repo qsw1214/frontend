@@ -1,5 +1,6 @@
 package cc.mrbird.febs.dingding.util;
 
+import cc.mrbird.febs.dingding.config.Constant;
 import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.api.request.OapiSnsGetuserinfoBycodeRequest;
 import org.slf4j.Logger;
@@ -18,22 +19,16 @@ public class UserInfLix {
         try {
             OapiSnsGetuserinfoBycodeRequest req = new OapiSnsGetuserinfoBycodeRequest();
             req.setTmpAuthCode(tmpAuthCode);
-            String unionId = UnionIdUtil.getUnionId(req);
+            String unionId = UnionIdUtil.getUnionId(req, Constant.ACCESSKEY,Constant.ACCESSSECRET);
              /* 获取accessToken
             【注意】正常情况下access_token有效期为7200秒，有效期内重复获取返回相同结果，并自动续期。
             */
-            //针对不同jar包的转json写法
-            JSONObject jo = JSONObject.parseObject(new String(""));
             //获取access_token
-            String accessToken = AccessTokenUtil.getToken();
+            String accessToken = AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET);
             //通过access_token和unionId获取userId
-            String userId = UserIdUtil.getUserId(unionId);
+            String userId = UserIdUtil.getUserId(unionId,accessToken);
             //通过userId获取用户详情
-            JSONObject jsonObject = UserInfUtil.getUserInf(userId);
-            //通过用户详情里的权限去绑定自已系统的权限{"roles":[{"groupName":"默认","id":475171896,"name":"主管理员","type":101}]}
-           /* String roles = String.valueOf(jsonObject.get("roles"));
-            String roles2 = roles.substring(1, roles.length() - 1);
-            JSONObject rolesData = JSONObject.parseObject(roles2);*/
+            JSONObject jsonObject = UserInfUtil.getUserInf(userId,accessToken);
             Iterator<String> it = jsonObject.keySet().iterator();
             Map userMap = new HashMap();
             while(it.hasNext()){

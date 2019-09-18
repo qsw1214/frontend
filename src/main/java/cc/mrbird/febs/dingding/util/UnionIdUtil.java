@@ -14,10 +14,10 @@ import static cc.mrbird.febs.dingding.config.URLConstant.URL_GET_USER_INFO_BYCOD
 public class UnionIdUtil {
     private static final Logger bizLogger = LoggerFactory.getLogger(UnionIdUtil.class);
 
-    public static String getUnionId(OapiSnsGetuserinfoBycodeRequest req) throws RuntimeException {
+    public static String getUnionId(OapiSnsGetuserinfoBycodeRequest req,String AccessKey,String AccessSecret) throws RuntimeException {
         try {
             DefaultDingTalkClient client = new DefaultDingTalkClient(URL_GET_USER_INFO_BYCODE);
-            OapiSnsGetuserinfoBycodeResponse response2 = client.execute(req, Constant.ACCESSKEY, Constant.ACCESSSECRET);
+            OapiSnsGetuserinfoBycodeResponse response2 = client.execute(req, AccessKey, AccessSecret);
             String unionIdDemo = response2.getBody();
             JSONObject jo = JSONObject.parseObject(unionIdDemo);
             String userInf = String.valueOf(jo.get("user_info"));

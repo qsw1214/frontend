@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 public class UserIdUtil {
     private static final Logger bizLogger = LoggerFactory.getLogger(UserIdUtil.class);
 
-    public static String getUserId(String unionId) throws RuntimeException {
+    public static String getUserId(String unionId,String accessToken) throws RuntimeException {
         try {
             DingTalkClient clientUserId = new DefaultDingTalkClient(URLConstant.URL_GET_USERID_BY_UNIONID);
             OapiUserGetUseridByUnionidRequest requestUserId = new OapiUserGetUseridByUnionidRequest();
@@ -24,7 +24,7 @@ public class UserIdUtil {
             requestUserId.setUnionid(unionId);
             requestUserId.setHttpMethod("GET");
 
-            OapiUserGetUseridByUnionidResponse responseUserId = clientUserId.execute(requestUserId, AccessTokenUtil.getToken());
+            OapiUserGetUseridByUnionidResponse responseUserId = clientUserId.execute(requestUserId, accessToken);
             String userIdBody = responseUserId.getBody();
             JSONObject jo = JSONObject.parseObject(new String(userIdBody));
             String userId = String.valueOf(jo.get("userid"));

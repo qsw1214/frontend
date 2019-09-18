@@ -84,7 +84,7 @@ public class UserInfTest {
             JSONObject jo = JSONObject.parseObject(new String(s));
             //获取access_token
             //String accessToken = String.valueOf(jo.get("access_token"));
-            String accessToken = AccessTokenUtil.getToken();
+            String accessToken = AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET);
             //通过access_token和unionId获取userId
             DingTalkClient clientUserId = new DefaultDingTalkClient(URLConstant.URL_GET_USERID_BY_UNIONID);
             OapiUserGetUseridByUnionidRequest requestUserId = new OapiUserGetUseridByUnionidRequest();
