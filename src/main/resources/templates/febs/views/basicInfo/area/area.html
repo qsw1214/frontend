@@ -252,6 +252,7 @@
         }
 
         form.on('submit(area-form-submit)', function (data) {
+            $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
             addOrUpdateArea(data.field);
             return false;
         });
@@ -268,11 +269,13 @@
                 febs.post(ctx + 'area/update', data, function () {
                     febs.alert.success('修改地区成功');
                     $query.trigger('click');
+                    $("#submit").removeClass("layui-btn layui-btn-radius layui-btn-disabled").addClass("layui-btn layui-btn-normal").prop("disabled",false);
                 });
             } else {
                 febs.post(ctx + 'area', data, function () {
                     febs.alert.success('新增地区成功');
                     $query.trigger('click');
+                    $("#submit").removeClass("layui-btn layui-btn-radius layui-btn-disabled").addClass("layui-btn layui-btn-normal").prop("disabled",false);
                 });
             }
         }

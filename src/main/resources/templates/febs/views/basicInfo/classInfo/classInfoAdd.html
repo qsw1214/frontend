@@ -93,6 +93,7 @@
         }
 
         form.on('submit(grade-add-form-submit)', function (data) {
+            $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
             data.field.grade=$("#classInfo option:selected").val();
             febs.post(ctx+'classInfo',data.field,function () {
                 layer.closeAll();

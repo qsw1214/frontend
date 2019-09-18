@@ -186,7 +186,7 @@ public class OrgController {
                     dept.setParentId(parentId);
                     dept.setDeptId(deptInfoDetailVO.getId());
                     dept.setDeptGrade(parentDeptGrade + 1l);
-                    dept.setModifyTime(DateUtil.getNowDateTime());
+                    dept.setModifyTime(new Date());
                     dept.setDeptName(deptName);
                     dept.setOrderNum(deptInfoDetailVO.getOrder());
                     this.deptService.saveOrUpdate(dept);
@@ -223,8 +223,7 @@ public class OrgController {
                 User user=new User();
                 for(long userid:userIds) {//遍历json数组内容  
                     UserInfoDetailVO userInfoDetailVO = AddressListUtil.userMess(userid);
-                    List<Long> deptIds=userInfoDetailVO.getDepartment();
-                   // userDeptMapper.deleteById(userid);
+                    List<Long> deptIds = userInfoDetailVO.getDepartment();
 
                     UserInfoDetailVO map = AddressListUtil.userMess(userid);
                     user.setUserId(userid);
@@ -244,24 +243,32 @@ public class OrgController {
                     user.setAdmin(map.isAdmin());
                     userService.save(user);
 
+                    userDeptMapper.deleteUserDept(userid);//先删用户部门表
                     for (long deptId : deptIds) {
-                        userDeptMapper.insertUserDept(userid, deptId);
+                        userDeptMapper.insertUserDept(userid, deptId);//插入用户部门数据
                     }
 
-                    List<RolesInfoVO> roles=map.getRoles();
-                    UserRole userRole=new UserRole();
-                    for(int i=0;i<roles.size();i++) {
-                        userRole.setRoleId(roles.get(i).getId());
+                    List<RolesInfoVO> roles = map.getRoles();
+                    UserRole userRole = new UserRole();
+                    Role role = new Role();
+                    if (roles == null) {
                         userRole.setUserId(userid);
-                        userRoleService.insertUserRole(userRole);//插入用户角色
+                        userRole.setRoleId(2L);
+                        userRoleService.insertUserRole(userRole);
+                    } else {
+                        for (int i = 0; i < roles.size(); i++) {
+                            userRole.setRoleId(roles.get(i).getId());
+                            userRole.setUserId(userid);
+                            userRoleService.insertUserRole(userRole);//插入用户角色
 
-                        if(roleService.getById(userRole.getRoleId())==null){
-                            Role role=new Role();
-                            role.setRoleId(roles.get(i).getId());
-                            role.setRoleName(roles.get(i).getName());
-                            roleService.save(role);
+                            if (roleService.getById(userRole.getRoleId()) == null) {
+                                role.setRoleId(roles.get(i).getId());
+                                role.setRoleName(roles.get(i).getName());
+                                roleService.save(role);
+                            }
                         }
                     }
+
                 }
             }else if(USER_MODIFY_ORG.equals(eventType)){
                 bizLogger.info("通讯录用户更改: " + plainText);
@@ -285,7 +292,6 @@ public class OrgController {
                     user.setUnionid(map.getUnionid());
                     user.setAdmin(map.isAdmin());
                     userService.updateProfile(user);
-
                 }
             }else if(USER_LEAVE_ORG.equals(eventType)){
                 bizLogger.info("通讯录用户离职: " + plainText);
@@ -293,7 +299,7 @@ public class OrgController {
                 List<Long> userIds=userInfoVO.getUserId();
                 for(long userId:userIds){
                     userDeptMapper.deleteUserDept(userId);//先删除用户部门关系
-                    roleService.removeById(userId);//删除用户角色关系
+                    userRoleService.deleteUserRole(userId);//删除用户角色关系
                     userService.deleteUser(userId);//删除用户
                 }
             }else if(ORG_ADMIN_ADD.equals(eventType)){
@@ -309,23 +315,30 @@ public class OrgController {
                     List<RolesInfoVO> roles=map.getRoles();
                     UserRole userRole=new UserRole();
                     userRoleService.deleteUserRole(userid);//删除用户角色
-                    for(int i=0;i<roles.size();i++) {
-                        userRole.setRoleId(roles.get(i).getId());
+                    if(roles==null){
                         userRole.setUserId(userid);
-                        userRoleService.insertUserRole(userRole);//插入用户角色
+                        userRole.setRoleId(2L);
+                        userRoleService.insertUserRole(userRole);
+                    }else {
+                        for (int i = 0; i < roles.size(); i++) {
+                            userRole.setRoleId(roles.get(i).getId());
+                            userRole.setUserId(userid);
+                            userRoleService.insertUserRole(userRole);//插入用户角色
 
-                        if(roleService.getById(userRole.getRoleId())==null){
-                            Role role=new Role();
-                            role.setRoleId(roles.get(i).getId());
-                            role.setRoleName(roles.get(i).getName());
-                            role.setCreateTime(new Date());
-                            roleService.save(role);
+                            if (roleService.getById(userRole.getRoleId()) == null) {
+                                Role role = new Role();
+                                role.setRoleId(roles.get(i).getId());
+                                role.setRoleName(roles.get(i).getName());
+                                role.setCreateTime(new Date());
+                                role.setModifyTime(new Date());
+                                roleService.save(role);
+                            }
                         }
-                    }
-                    List<Long> deptIds=map.getDepartment();
-                    userDeptMapper.deleteUserDept(userid);
-                    for (long deptId : deptIds) {
-                        userDeptMapper.insertUserDept(userid, deptId);
+                        List<Long> deptIds = map.getDepartment();
+                        userDeptMapper.deleteUserDept(userid);
+                        for (long deptId : deptIds) {
+                            userDeptMapper.insertUserDept(userid, deptId);
+                        }
                     }
                 }
             }else if(LABEL_CONF_ADD.equals(eventType)){
