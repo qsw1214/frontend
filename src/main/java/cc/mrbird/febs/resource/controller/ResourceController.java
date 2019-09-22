@@ -75,9 +75,6 @@ public class ResourceController extends BaseController {
         	User user = super.getCurrentUser();
         	resource.setCreator(user.getUsername());
         	resource.setAvatar(user.getAvatar());
-        	if(user.getSchoolId() == null)
-        		return new FebsResponse().fail().data("请完善用户学校信息");
-        	resource.setSchoolId(user.getSchoolId());
             this.resourceService.createResource(resource);
             return new FebsResponse().success();
         } catch (Exception e) {
@@ -177,7 +174,6 @@ public class ResourceController extends BaseController {
     	        public void onSuccess(int sheetIndex, int rowIndex, Resource entity) {
     	    		entity.setCreator(username);
     	    		entity.setAvatar(avatar);
-    	    		entity.setSchoolId(schoolId);
     	    		entity.setCreateTime(now);
     	        	successList.add(entity); // 单行读取成功，加入入库队列。
     	        }

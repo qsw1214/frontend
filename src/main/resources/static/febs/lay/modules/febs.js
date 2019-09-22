@@ -549,12 +549,12 @@ layui.extend({
     };
 
     // ajax post请求
-    self.post = function (url, params, success) {
+    self.post = function (url, params, success, error) {
         if (params) {
             params.invalidate_ie_cache = new Date();
         }
         $.post(url, params, function (r) {
-            resolveResponse(r, success);
+            resolveResponse(r, success, error);
         })
     };
 
@@ -607,7 +607,7 @@ layui.extend({
         return true;
     };
 
-    function resolveResponse(r, f) {
+    function resolveResponse(r, f, e) {
         if (r.code === 200) {
             f(r) && (f)();
         } else if (r.code === 401) {
@@ -617,6 +617,9 @@ layui.extend({
         } else if (r.code === 403) {
             self.alert.warn('对不起，您暂无该操作权限');
         } else {
+        	if(e){
+        		e(r) && (e)();
+        	}
             self.alert.error(r.message ? r.message : '操作失败');
             console.error(r);
         }

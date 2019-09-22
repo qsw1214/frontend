@@ -5,7 +5,7 @@
         <id column="resource_id" jdbcType="DECIMAL" property="resourceId"/>
         <result column="resource_name" jdbcType="VARCHAR" property="resourceName"/>
         <result column="creator" jdbcType="VARCHAR" property="creator"/>
-        <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
+        <result column="dept_id" jdbcType="INTEGER" property="deptId"/>
         <result column="grade_id" jdbcType="INTEGER" property="gradeId"/>
         <result column="subject_id" jdbcType="INTEGER" property="subjectId"/>
         <result column="category_id" jdbcType="INTEGER" property="categoryId"/>
@@ -21,7 +21,7 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
         <result column="category_name" jdbcType="VARCHAR" property="categoryName"/>
-        <result column="school_name" jdbcType="VARCHAR" property="schoolName"/>
+        <result column="dept_name" jdbcType="VARCHAR" property="deptName"/>
         <result column="grade_name" jdbcType="VARCHAR" property="gradeName"/>
         <result column="subject_name" jdbcType="VARCHAR" property="subjectName"/>
     </resultMap>
@@ -29,13 +29,13 @@
         SELECT
         r.*,
         c.category_name,
-        s.school_name,
+        d.dept_name,
         g.v grade_name,
         subj.v subject_name
         FROM
         r_resource r
         LEFT JOIN r_category c ON r.category_id = c.category_id
-        LEFT JOIN jcc_school_info s ON r.school_id = s.school_id   
+        LEFT JOIN t_dept d ON r.dept_id = d.dept_id
         LEFT JOIN t_dict g ON r.grade_id = g.k AND g.field = 'grade'
         LEFT JOIN t_dict subj ON r.subject_id = subj.k AND subj.field = 'subject'
         where 1=1

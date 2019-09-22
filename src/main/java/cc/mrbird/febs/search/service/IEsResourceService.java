@@ -47,4 +47,20 @@ public interface IEsResourceService {
     Page<EsResource> recommend(Long id, Integer pageNum, Integer pageSize);
 
 	void deleteAll();
+
+	/**
+	 * 默认使用中文ik_smart分词
+	 * @param index 索引index
+	 * @param text 需要被分析的词语
+	 * @return
+	 */
+	String[] getAnalyzes(String index, String text);
+
+	/**
+	 * 搜索建议
+	 * @param clazz 指定的索引index实体类类型
+	 * @param text 搜索建议关键词
+	 * @return
+	 */
+	String[] getSuggestion(Class clazz, String text);
 }

@@ -1,9 +1,13 @@
 package cc.mrbird.febs.search.controller;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,18 +18,41 @@ import org.springframework.web.bind.annotation.RestController;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.search.entity.EsResource;
+import cc.mrbird.febs.search.entity.KeywordCount;
 import cc.mrbird.febs.search.service.IEsResourceService;
+import cc.mrbird.febs.search.service.IKeywordCountService;
+import lombok.extern.slf4j.Slf4j;
 
 
 /**
  * 搜索资源管理Controller
  * Created by lb on 2019/8/31.
  */
+@Slf4j
 @RestController
 @RequestMapping("/esResource")
 public class EsResourceController extends BaseController{
 	@Autowired
     private IEsResourceService esResourceService;
+	@Autowired
+    private IKeywordCountService keywordCountService;
+	
+	private static final Logger keywordLog = LoggerFactory.getLogger("keyword");
+	
+	@RequestMapping(value = "/search/import", method = RequestMethod.GET)
+    @ResponseBody
+    public FebsResponse importAll() {
+        return new FebsResponse().success().data(esResourceService.importAll());
+    }
+	
+	@RequestMapping(value = "/search/topKeyWord", method = RequestMethod.GET)
+    @ResponseBody
+    public FebsResponse topkWord(@RequestParam(required = false, defaultValue = "5") Integer k) {
+		KeywordCount latestRecord = keywordCountService.getLatestKeyword();
+		if( latestRecord != null )
+			return new FebsResponse().success().data(keywordCountService.findKeywordsByDate(k, latestRecord.getSearchDate()));
+		return new FebsResponse().success().data(new ArrayList<>());
+    }
 
     @RequestMapping(value = "/search/simple", method = RequestMethod.GET)
     @ResponseBody
@@ -44,6 +71,10 @@ public class EsResourceController extends BaseController{
                                                       @RequestParam(required = false, defaultValue = "0") Integer pageNum,
                                                       @RequestParam(required = false, defaultValue = "5") Integer pageSize,
                                                       @RequestParam(required = false, defaultValue = "0") Integer sort) {
+    	if(keyword != null && !keyword.equals("")){
+    		String[] words = esResourceService.getAnalyzes("rms", keyword);  		
+    		keywordLog.info(keyword + "|" + StringUtils.join(words, ","));
+    	}
         Page<EsResource> esResourcePage = esResourceService.search(keyword, resource, pageNum, pageSize, sort);
         Map<String, Object> dataTable = getDataTable(esResourcePage);
         return new FebsResponse().success().data(dataTable);

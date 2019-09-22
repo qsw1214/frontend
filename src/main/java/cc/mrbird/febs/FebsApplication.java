@@ -20,7 +20,7 @@ import java.util.TimerTask;
 /**
  * @author MrBird
  */
-//@EnableScheduling
+@EnableScheduling
 @SpringBootApplication
 @EnableAsync
 @EnableTransactionManagement

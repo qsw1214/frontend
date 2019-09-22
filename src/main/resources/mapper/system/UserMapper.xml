@@ -88,8 +88,7 @@
     <select id="findUserDetail" parameterType="user" resultType="user">
         <include refid="findUserDetailSql"/>
     </select>
-
-
+ 
     <select id="countUserNumByDept" parameterType="string" resultType="integer">
         SELECT count(1) FROM t_user u
             LEFT JOIN t_dept d ON (u.dept_id = d.dept_id)

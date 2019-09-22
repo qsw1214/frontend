@@ -823,6 +823,7 @@ INSERT INTO `t_dict` VALUES (null, '6', '生物', 'subject');
 INSERT INTO `t_dict` VALUES (null, '7', '地理', 'subject');
 INSERT INTO `t_dict` VALUES (null, '8', '政治', 'subject');
 INSERT INTO `t_dict` VALUES (null, '9', '历史', 'subject');
+INSERT INTO `t_dict` VALUES (null, 'unknown', '未知', 'file_type');
 INSERT INTO `t_dict` VALUES (null, 'avi', '视频文件', 'file_type');
 INSERT INTO `t_dict` VALUES (null, 'doc', 'word文档', 'file_type');
 INSERT INTO `t_dict` VALUES (null, 'pdf', 'pdf文档', 'file_type');
@@ -879,10 +880,10 @@ CREATE TABLE `r_resource` (
   `keywords` varchar(255) DEFAULT NULL COMMENT '关键字',
   `creator` varchar(50) NOT NULL COMMENT '创建人',
   `avatar` varchar(255) DEFAULT NULL COMMENT '创建人头像',
-  `school_id` int(11) DEFAULT NULL COMMENT '学校',
-  `grade_id` int(11) DEFAULT NULL COMMENT '年级',
-  `subject_id` int(11) DEFAULT NULL COMMENT '科目',
-  `category_id` int(11) DEFAULT NULL COMMENT '类别ID',
+  `dept_id` bigint(20) DEFAULT NULL COMMENT '部门id',
+  `grade_id` int(11) DEFAULT NULL COMMENT '年级id',
+  `subject_id` int(11) DEFAULT NULL COMMENT '科目id',
+  `category_id` int(11) DEFAULT NULL COMMENT '类别id',
   `file_type` varchar(30) DEFAULT NULL COMMENT '文件类型',
   `pic` varchar(255) DEFAULT NULL COMMENT '资源图片',
   `url` varchar(500) NOT NULL COMMENT '资源地址',
@@ -976,3 +977,17 @@ CREATE TABLE `t_user_dept` (
   `user_id` bigint(20) NOT NULL COMMENT '用户ID',
   `dept_id` bigint(20) NOT NULL COMMENT '部门ID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='用户部门关联表';
+
+-- ----------------------------
+-- Table structure for r_search_keyword
+-- ----------------------------
+DROP TABLE IF EXISTS `r_keyword_count`;
+CREATE TABLE `r_keyword_count` (
+  `keyword_count_id` bigint(20) NOT NULL AUTO_INCREMENT  COMMENT 'id',
+  `keyword` varchar(500) DEFAULT NULL COMMENT '热词',
+  `count` int(11) DEFAULT NULL COMMENT '数量',
+  `search_date` date DEFAULT NULL COMMENT '搜索日期',
+  PRIMARY KEY (`keyword_count_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='搜索热词统计表';
+
+

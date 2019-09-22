@@ -66,8 +66,8 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         if (StringUtils.isNotBlank(resource.getCreator())) {
             queryWrapper.eq(Resource::getCreator, resource.getCreator());
         }
-        if (resource.getSchoolId() != null) {
-            queryWrapper.eq(Resource::getSchoolId, resource.getSchoolId());
+        if (resource.getDeptId() != null) {
+            queryWrapper.eq(Resource::getDeptId, resource.getDeptId());
         }
         if (resource.getSubjectId() !=null ) {
             queryWrapper.eq(Resource::getSubjectId, resource.getSubjectId());
@@ -95,8 +95,8 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         if (StringUtils.isNotBlank(resource.getCreator())) {
             queryWrapper.eq(Resource::getCreator, resource.getCreator());
         }
-        if (resource.getSchoolId() != null) {
-            queryWrapper.eq(Resource::getSchoolId, resource.getSchoolId());
+        if (resource.getDeptId() != null) {
+            queryWrapper.eq(Resource::getDeptId, resource.getDeptId());
         }
         if (resource.getSubjectId() !=null ) {
             queryWrapper.eq(Resource::getSubjectId, resource.getSubjectId());

@@ -363,7 +363,7 @@ public class ApiController extends BaseController {
                     num = this.schoolService.getCountOfCountry(country);
                     break;
                 case "user":
-                    num = this.userService.countUserNumByDept(country);
+//                    num = this.userService.countUserNumByDept(country);
                     break;
                 case "device":
                     //该区县有多少所学校，对应统计有多少设备

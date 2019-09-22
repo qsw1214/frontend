@@ -173,20 +173,6 @@
   </div>
 </div>
 </script>
-<script type="text/html" id="file-type">
-    {{#
-    var fileType = {
-    avi: {title: '视频文件'},
-    doc: {title: 'word文档'},
-    pdf: {title: 'pdf文档'},
-    xls: {title: 'excel表'},
-	txt: {title: '文本文档'},
-	zip: {title: '压缩包'},
-	image: {title: '图片'}
-    }[d.fileType];
-    }}
-    <span>{{ fileType.title }}</span>
-</script>
 <script type="text/html" id="resource-option">
     <span shiro:lacksPermission="resource:view,resource:update,resource:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
@@ -253,15 +239,7 @@
                 var checkStatus = table.checkStatus('resourceTable');
                 if (name === 'add') {
                     febs.modal.open('新增资源', 'resource/resource/add', {
-                        btn: ['提交', '重置'],
-                        area: $(window).width() <= 750 ? '95%' : '50%',
-                        yes: function (index, layero) {
-                            $('#resource-add').find('#submit').trigger('click');
-                        },
-                        btn2: function () {
-                            $('#resource-add').find('#reset').trigger('click');
-                            return false;
-                        }
+                        area: $(window).width() <= 750 ? '95%' : '50%'
                     });
                 }
                 if (name === 'delete') {
@@ -472,7 +450,7 @@
                 cols: [[
                     {type: 'checkbox'},
                     {field: 'resourceName', title: '资源名', minWidth: 100},
-                    {title: '文件类型', templet: '#file-type'},
+                    {field: 'fileType',title: '文件类型'},
                     {field: 'creator', title: '作者'},
                     {field: 'schoolName', title: '学校'},
                     {title: '评论', templet: '#comment'},

@@ -217,4 +217,5 @@ public class User implements Serializable {
 
     @TableField("IS_SENIOR")
     private boolean isSenior;  //是否是高管
+    
 }

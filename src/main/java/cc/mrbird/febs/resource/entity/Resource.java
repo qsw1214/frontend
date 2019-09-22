@@ -64,10 +64,11 @@ public class Resource {
     private String avatar;
 
     /**
-     * 学校
+     * 部门
      */
-    @TableField("school_id")
-    private Integer schoolId;
+    @TableField("dept_id")
+    @ExcelField(value="部门id")
+    private Integer deptId;
 
     /**
      * 年级
@@ -172,10 +173,10 @@ public class Resource {
     private String categoryName;
     
     /**
-     * 学校名称
+     * 部门名称
      */
     @TableField(exist = false)
-    private String schoolName;
+    private String deptName;
     
     /**
      * 年级名称

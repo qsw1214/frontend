@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.search.mapper.KeywordCountMapper">
+
+    <resultMap id="keywordCount" type="cc.mrbird.febs.search.entity.KeywordCount">
+        <id column="keyword_count_id" jdbcType="DECIMAL" property="keywordCountId"/>
+        <result column="keyword" jdbcType="VARCHAR" property="keyword"/>
+        <result column="count" jdbcType="INTEGER" property="count"/>
+        <result column="search_date" jdbcType="DATE" property="searchDate"/>
+    </resultMap>
+    
+    <select id="findKeywordsByDate" resultMap="keywordCount">
+        SELECT * from r_keyword_count
+        WHERE datediff(search_date,#{searchDate})=0
+        ORDER BY count DESC limit #{k}
+	</select>        
+</mapper>

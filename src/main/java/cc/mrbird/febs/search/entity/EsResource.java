@@ -6,8 +6,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
-
-import cc.mrbird.febs.resource.entity.Resource;
 import lombok.Data;
 /**
  * 搜索中的资源信息
@@ -47,10 +45,10 @@ public class EsResource {
     private String avatar;
 
     /**
-     * 学校
+     * 部门
      */
 	@Field(type = FieldType.Integer)
-    private Integer schoolId;
+    private Integer deptId;
 
     /**
      * 年级

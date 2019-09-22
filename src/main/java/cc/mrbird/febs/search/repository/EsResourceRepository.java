@@ -19,5 +19,6 @@ public interface EsResourceRepository extends ElasticsearchRepository<EsResource
      * @param page              分页信息
      * @return
      */
-    Page<EsResource> findByResourceNameOrKeywords(String resourceName, String keywords,Pageable page);    
+    Page<EsResource> findByResourceNameOrKeywords(String resourceName, String keywords,Pageable page);
+   
 }

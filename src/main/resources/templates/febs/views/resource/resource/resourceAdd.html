@@ -5,6 +5,10 @@
     #resource-add .layui-treeSelect .ztree li a, .ztree li span {
         margin: 0 0 2px 3px !important;
     }
+    .layui-anim {
+    	-webkit-animation-duration: 1s!important;
+    	animation-duration: 1s!important;
+    }
 </style>
 <div class="layui-fluid" id="resource-add">
     <form class="layui-form" action="" lay-filter="resource-add-form">
@@ -25,7 +29,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">资源地址：</label>
             <div class="layui-input-block">
-                <input type="text" name="url" minlength="2" maxlength="255" lay-verify="range|url"
+                <input type="text" name="url" minlength="2" maxlength="255" lay-verify="range"
                 	   autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -81,9 +85,11 @@
                 <textarea name="description" maxlength="500" class="layui-textarea"></textarea>
             </div>
         </div>
-        <div class="layui-form-item febs-hide">
-            <button class="layui-btn" lay-submit="" lay-filter="resource-add-form-submit" id="submit"></button>
-            <button type="reset" class="layui-btn" id="reset"></button>
+        <div class="layui-form-item" style="text-align:center">
+            <button class="layui-btn" lay-submit lay-filter="resource-add-form-submit" id="submit">
+            	提交 <i id="submit-loading" style="display: none;" class="layui-icon layui-icon-loading-2 layui-anim layui-anim-rotate layui-anim-loop">&#xe63d;</i> 
+            </button>
+            <button type="reset" class="layui-btn layui-btn-primary" id="reset">重置</button>
         </div>
     </form>
 </div>
@@ -182,11 +188,19 @@
         });
 
         form.on('submit(resource-add-form-submit)', function (data) {
+        	$('#submit').attr("disabled",true);
+        	$('#submit-loading').show();
             febs.post(ctx + 'resource', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('新增资源成功');
                 $('#febs-resource').find('#query').click();
-            });
+                $('#submit').attr("disabled",false);
+                $('#submit-loading').hide()
+            },
+            function (r) {
+	            $('#submit').attr("disabled",false);
+	            $('#submit-loading').hide()
+		    })
             return false;
         });
     });
