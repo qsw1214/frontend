@@ -8,8 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.Date;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
+import java.util.Map;
 
 /**
  * 搜索热词统计表 Service接口
@@ -33,7 +32,16 @@ public interface IKeywordCountService extends IService<KeywordCount> {
      * @param countDate 日期
      * @return
      */
-    List<KeywordCount> findKeywordsByDate(Integer k, Date countDate);
+    List<Map<String, Object>> findKeywordsByDate(Integer k, Date countDate);
+    
+    /**
+     * 按时间段统计热词搜索次数，获取前k个词
+     * @param k
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    List<Map<String, Object>> countKeywords(Integer k, Date startDate, Date endDate);
 
     /**
      * 新增

@@ -97,7 +97,7 @@ public class KeyWordTask {
 				kc.setSearchDate(date);
 				records.add(kc);
 			}
-			List<KeywordCount> old = keywordCountService.findKeywordsByDate(1, date);
+			List<Map<String,Object>> old = keywordCountService.findKeywordsByDate(1, date);
 			if(old.isEmpty()){
 				log.info("save result");
 				keywordCountService.saveBatch(records);
