@@ -58,8 +58,9 @@
         </div>
 
 
-        <div class="layui-form-item febs-hide">
-            <button class="layui-btn" lay-submit="" lay-filter="school-update-form-submit" id="submit"></button>
+        <div class="layui-form-item" style="text-align: right">
+            <button class="layui-btn" lay-submit="" lay-filter="classroomInfo-update-form-submit" id="submit">提交</button>
+            <button class="layui-btn layui-btn-primary" id="remove">取消</button>
         </div>
     </form>
 </div>
@@ -77,6 +78,7 @@
             school=$('#schoolId'),
             classroomInfo = [[${classroomInfo}]],
             $view = $('#school-update'),
+            $remove=$view.find('#remove'),
             validate = layui.validate;
         getSchool();
         getGrade();
@@ -147,9 +149,11 @@
             });
         }
 
+        $remove.on("click",function(){
+            layer.closeAll();
+        })
 
-
-        form.on('submit(school-update-form-submit)', function (data) {
+        form.on('submit(classroomInfo-update-form-submit)', function (data) {
         	data.field.schoolId=classroomInfo.schoolId;
         	data.field.id =classroomInfo.id;
             data.field.grade=$("#classInfo option:selected").val();
@@ -157,6 +161,8 @@
                 febs.alert.warn('数据未作任何修改！');
                 return false;
             }
+
+            $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
             febs.post(ctx + 'classroomInfo/update', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('教室信息修改成功');

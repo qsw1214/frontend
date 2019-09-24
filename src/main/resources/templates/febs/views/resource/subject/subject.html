@@ -163,15 +163,7 @@
                 var checkStatus = table.checkStatus('subjectTable');
                 if (name === 'add') {
                     febs.modal.open('新增专题', 'resource/subject/add', {
-                        btn: ['提交', '重置'],
-                        area: $(window).width() <= 750 ? '95%' : '50%',
-                        yes: function (index, layero) {
-                            $('#subject-add').find('#submit').trigger('click');
-                        },
-                        btn2: function () {
-                            $('#subject-add').find('#reset').trigger('click');
-                            return false;
-                        }
+                        area: $(window).width() <= 750 ? '95%' : '50%'
                     });
                 }
                 if (name === 'delete') {
@@ -238,14 +230,7 @@
             }
             if (layEvent === 'edit') {
                 febs.modal.open('修改专题', 'resource/subject/update/' + data.subjectId, {
-                    area: $(window).width() <= 750 ? '90%' : '50%',
-                    btn: ['提交', '取消'],
-                    yes: function (index, layero) {
-                        $('#subject-update').find('#submit').trigger('click');
-                    },
-                    btn2: function () {
-                        layer.closeAll();
-                    }
+                    area: $(window).width() <= 750 ? '90%' : '50%'
                 });
             }
         });

@@ -252,14 +252,18 @@
                     febs.alert.warn('数据未作任何修改！');
                     return false;
                 }
+                $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
                 febs.post(ctx + 'category/update', data.field, function () {
                     febs.alert.success('修改成功');
+                    $("#submit").removeClass("layui-btn layui-btn-radius layui-btn-disabled").addClass("layui-btn layui-btn-normal").prop("disabled",false);
                     reloadMenuTree();
                     reset();
                 })
             } else {
+                $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
                 febs.post(ctx + 'category', data.field, function () {
                     febs.alert.success('新增成功');
+                    $("#submit").removeClass("layui-btn layui-btn-radius layui-btn-disabled").addClass("layui-btn layui-btn-normal").prop("disabled",false);
                     reloadMenuTree();
                     reset();
                 })

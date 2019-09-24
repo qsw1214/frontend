@@ -82,9 +82,10 @@
                 <textarea name="description" maxlength="500" class="layui-textarea"></textarea>
             </div>
         </div>
-        <div class="layui-form-item febs-hide">
-            <button class="layui-btn" lay-submit="" lay-filter="resource-update-form-submit" id="submit"></button>
-        </div>
+        <div class="layui-form-item" style="text-align: right">
+        <button class="layui-btn" lay-submit="" lay-filter="resource-update-form-submit" id="submit">提交</button>
+        <button class="layui-btn layui-btn-primary" id="remove">取消</button>
+</div>
     </form>
 </div>
 
@@ -98,6 +99,7 @@
             form = layui.form,
             resource = [[${resource}]],
             $view = $('#resource-update'),
+            $remove=$view.find('#remove'),
             validate = layui.validate;
 
         form.verify(validate);
@@ -209,11 +211,17 @@
             });
         }
 
+        $remove.on("click",function(){
+            layer.closeAll();
+        })
+
         form.on('submit(resource-update-form-submit)', function (data) {
             if (febs.nativeEqual(data.field, resource)) {
                 febs.alert.warn('数据未作任何修改！');
                 return false;
             }
+
+            $('#submit').attr("disabled",true);
             febs.post(ctx + 'resource/update', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('资源数据修改成功');

@@ -90,16 +90,7 @@
                 var checkStatus = table.checkStatus('schoolTimetableTable');
                 if (name === 'add') {
                     febs.modal.open('新增课表信息', 'basicInfo/schoolTimetable/add', {
-                        btn: ['提交', '重置'],
                         area: $(window).width() <= 750 ? '95%' : '50%',
-                        yes: function (index, layero) {
-                            //alert("222");
-                            $('#schoolTimetable-add').find('#submit').trigger('click');
-                        },
-                        btn2: function () {
-                            $('#schoolTimetable-add').find('#reset').trigger('click');
-                            return false;
-                        }
                     });
                 }
                 if (name === 'delete') {
@@ -147,14 +138,7 @@
             }
             if (layEvent === 'edit') {
                 febs.modal.open('修改课表信息', 'basicInfo/schoolTimetable/update/' + data.courseId, {
-                    area: $(window).width() <= 750 ? '90%' : '50%',
-                    btn: ['提交', '取消'],
-                    yes: function (index, layero) {
-                        $('#schoolTimetable-update').find('#submit').trigger('click');
-                    },
-                    btn2: function () {
-                        layer.closeAll();
-                    }
+                    area: $(window).width() <= 750 ? '90%' : '50%'
                 });
             }
         });

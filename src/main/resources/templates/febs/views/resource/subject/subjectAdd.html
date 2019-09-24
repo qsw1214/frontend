@@ -41,9 +41,9 @@
                 <textarea name="description" maxlength="500" class="layui-textarea"></textarea>
             </div>
         </div>
-        <div class="layui-form-item febs-hide">
-            <button class="layui-btn" lay-submit="" lay-filter="subject-add-form-submit" id="submit"></button>
-            <button type="reset" class="layui-btn" id="reset"></button>
+        <div class="layui-form-item " style="text-align: right">
+            <button class="layui-btn" lay-submit="" lay-filter="subject-add-form-submit" id="submit">提交</button>
+            <button type="reset" class="layui-btn" id="reset">重置</button>
         </div>
     </form>
 </div>
@@ -70,6 +70,7 @@
         });
         
         form.on('submit(subject-add-form-submit)', function (data) {
+            $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
             febs.post(ctx + 'subject', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('新增专题成功');

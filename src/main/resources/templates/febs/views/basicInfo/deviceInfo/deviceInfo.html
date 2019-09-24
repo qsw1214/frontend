@@ -121,16 +121,7 @@
                 var checkStatus = table.checkStatus('deviceInfoTable');
                 if (name === 'add') {
                     febs.modal.open('新增设备信息', 'basicInfo/deviceInfo/add', {
-                        btn: ['提交', '重置'],
-                        area: $(window).width() <= 750 ? '95%' : '50%',
-                        yes: function (index, layero) {
-                            //alert("222");
-                            $('#deviceInfo-add').find('#submit').trigger('click');
-                        },
-                        btn2: function () {
-                            $('#deviceInfo-add').find('#reset').trigger('click');
-                            return false;
-                        }
+                        area: $(window).width() <= 750 ? '95%' : '50%'
                     });
                 }
                 if (name === 'delete') {
@@ -181,20 +172,12 @@
                 layEvent = obj.event;
             if (layEvent === 'del') {
                 febs.modal.confirm('删除设备信息', '确定删除该设备信息？', function () {
-                    //alert(data.deviceId);
                     deleteDeviceInfo(data.deviceId);
                 });
             }
             if (layEvent === 'edit') {
                 febs.modal.open('修改设备信息', 'basicInfo/deviceInfo/update/' + data.deviceId, {
-                    area: $(window).width() <= 750 ? '90%' : '50%',
-                    btn: ['提交', '取消'],
-                    yes: function (index, layero) {
-                        $('#deviceInfo-update').find('#submit').trigger('click');
-                    },
-                    btn2: function () {
-                        layer.closeAll();
-                    }
+                    area: $(window).width() <= 750 ? '90%' : '50%'
                 });
             }
         });
@@ -217,7 +200,6 @@
 
         $reset.on('click', function () {
             $searchForm[0].reset();
-            //treeSelect.revokeNode('dept');
             sortObject.type = 'null';
             tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
         });

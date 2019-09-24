@@ -272,6 +272,7 @@
 
 
         form.on('submit(operate-form-submit)', function (data) {
+            $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
             addOrUpdateOperate(data.field);
             return false;
         });
@@ -282,11 +283,13 @@
                 febs.post(ctx + 'operate/update', data, function () {
                     febs.alert.success('修改操作指南成功');
                     $query.trigger('click');
+                    $("#submit").removeClass("layui-btn layui-btn-radius layui-btn-disabled").addClass("layui-btn layui-btn-normal").prop("disabled",false);
                 });
             } else {
                 febs.post(ctx + 'operate', data, function () {
                     febs.alert.success('新增操作指南成功');
                     $query.trigger('click');
+                    $("#submit").removeClass("layui-btn layui-btn-radius layui-btn-disabled").addClass("layui-btn layui-btn-normal").prop("disabled",false);
                 });
             }
         }

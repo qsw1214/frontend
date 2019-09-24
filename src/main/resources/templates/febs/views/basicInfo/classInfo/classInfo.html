@@ -103,15 +103,7 @@
                 var checkStatus = table.checkStatus('gradeTable');
                 if (name === 'add') {
                     febs.modal.open('新增班级', 'basicInfo/classInfo/classInfoAdd', {
-                        btn: ['提交', '重置'],
                         area: $(window).width() <= 750 ? '95%' : '50%',
-                        yes: function (index, layero) {
-                            $('#classInfo-add').find('#submit').trigger('click');
-                        },
-                        btn2: function () {
-                            $('#classInfo-add').find('#reset').trigger('click');
-                            return false;
-                        }
                     });
                 }
                 if (name === 'delete') {
@@ -164,14 +156,7 @@
             }
             if (layEvent === 'edit') {
                 febs.modal.open('修改班级', 'basicInfo/classInfo/update/' + data.classId, {
-                    area: $(window).width() <= 750 ? '90%' : '50%',
-                    btn: ['提交', '取消'],
-                    yes: function (index, layero) {
-                        $('#school-update').find('#submit').trigger('click');
-                    },
-                    btn2: function () {
-                        layer.closeAll();
-                    }
+                    area: $(window).width() <= 750 ? '90%' : '50%'
                 });
             }
         });

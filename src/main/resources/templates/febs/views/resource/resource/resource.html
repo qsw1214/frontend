@@ -393,14 +393,7 @@
             }
             if (layEvent === 'edit') {
                 febs.modal.open('修改资源', 'resource/resource/update/' + data.resourceId, {
-                    area: $(window).width() <= 750 ? '90%' : '50%',
-                    btn: ['提交', '取消'],
-                    yes: function (index, layero) {
-                        $('#resource-update').find('#submit').trigger('click');
-                    },
-                    btn2: function () {
-                        layer.closeAll();
-                    }
+                    area: $(window).width() <= 750 ? '90%' : '50%'
                 });
             }
             if (layEvent == 'audit') {

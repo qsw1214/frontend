@@ -102,8 +102,9 @@
                 </select>
             </div>
         </div>-->
-        <div class="layui-form-item febs-hide">
-            <button class="layui-btn" lay-submit="" lay-filter="schoolTimetable-update-form-submit" id="submit"></button>
+        <div class="layui-form-item" style="text-align: right">
+            <button class="layui-btn" lay-submit="" lay-filter="schoolTimetable-update-form-submit" id="submit">提交</button>
+            <button class="layui-btn layui-btn-primary" id="remove">取消</button>
         </div>
     </form>
 </div>
@@ -119,6 +120,7 @@
             schoolTimetable = [[${schoolTimetable}]],
             beginDate = [[${beginDate}]],
             $view = $('#schoolTimetable-update'),
+            $remove=$view.find('#remove'),
             validate = layui.validate;
 
         form.verify(validate);
@@ -221,12 +223,18 @@
             });
         }
 
+        $remove.on("click",function(){
+            layer.closeAll();
+        })
+
         form.on('submit(schoolTimetable-update-form-submit)', function (data) {
             //alert("xxx23");
             if (febs.nativeEqual(data.field, schoolTimetable)) {
                 febs.alert.warn('数据未作任何修改！');
                 return false;
             }
+
+            $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
             data.field.beginDate = new Date(data.field.beginDate);
             febs.post(ctx + 'schoolTimetable/update', data.field, function () {
                 layer.closeAll();

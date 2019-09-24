@@ -77,7 +77,7 @@ function getPath(){
         return localhostPaht;
 }
 $('#username').blur(function(){
-	if ((/^[a-z0-9_-]{2,8}$/).test($("#username").val())){
+	if ((/^[a-z0-9\u4e00-\u9fa5]{2,8}$/).test($("#username").val())){
 		$('#username_hint').html("✔").css("color","green");
 		user_Boolean = true;
 	}else {
@@ -110,7 +110,7 @@ $('#pwd').blur(function(){
             code_Boolean=true;
         }
     });
-
+    $('#login').disable = false;
     function btn() {
         var username = $('#username').val().trim();
         var pwd = $('#pwd').val().trim();
@@ -125,13 +125,14 @@ $('#pwd').blur(function(){
                 datatype: "json",
                 success: function (data) {
                     window.location.href = '/index';
+                    $('#login').disable = false;
                 },
                 error: function (data) {
                     alert('登陆失败')
                     window.location.back();
-
                 }
             });
+
         } else {
             alert('请完善用户密码信息');
         }

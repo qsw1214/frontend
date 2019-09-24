@@ -89,15 +89,7 @@
                 var checkStatus = table.checkStatus('userTable');
                 if (name === 'add') {
                     febs.modal.open('新增教室', 'basicInfo/classroomInfo/classroomInfoAdd', {
-                        btn: ['提交', '重置'],
                         area: $(window).width() <= 750 ? '95%' : '50%',
-                        yes: function (index, layero) {
-                            $('#classroomInfo-add').find('#submit').trigger('click');
-                        },
-                        btn2: function () {
-                            $('#classroomInfo-add').find('#reset').trigger('click');
-                            return false;
-                        }
                     });
                 }
                 if (name === 'delete') {
@@ -175,14 +167,7 @@
             }
             if (layEvent === 'edit') {
                 febs.modal.open('修改教室', 'basicInfo/classroomInfo/update/' + data.id, {
-                    area: $(window).width() <= 750 ? '90%' : '50%',
-                    btn: ['提交', '取消'],
-                    yes: function (index, layero) {
-                        $('#school-update').find('#submit').trigger('click');
-                    },
-                    btn2: function () {
-                        layer.closeAll();
-                    }
+                    area: $(window).width() <= 750 ? '90%' : '50%'
                 });
             }
         });

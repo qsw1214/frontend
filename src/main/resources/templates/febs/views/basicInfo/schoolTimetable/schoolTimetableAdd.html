@@ -107,9 +107,9 @@
                 </select>
             </div>
         </div>
-        <div class="layui-form-item febs-hide">
-            <button class="layui-btn" lay-submit="" lay-filter="schoolTimetable-add-form-submit" id="submit"></button>
-            <button type="reset" class="layui-btn" id="reset"></button>
+        <div class="layui-form-item " style="text-align:right">
+            <button class="layui-btn" lay-submit="" lay-filter="schoolTimetable-add-form-submit" id="submit">提交</button>
+            <button type="reset" class="layui-btn" id="reset">重置</button>
         </div>
     </form>
 </div>
@@ -223,6 +223,7 @@
         });
 
         form.on('submit(schoolTimetable-add-form-submit)', function (data) {
+            $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
             //alert("xxx");
             data.field.beginDate = new Date(data.field.beginDate);
             febs.post(ctx + 'schoolTimetable', data.field, function () {
