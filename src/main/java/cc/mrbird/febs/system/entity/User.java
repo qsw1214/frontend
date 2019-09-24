@@ -2,7 +2,6 @@ package cc.mrbird.febs.system.entity;
 
 import cc.mrbird.febs.common.annotation.IsMobile;
 import cc.mrbird.febs.common.converter.TimeConverter;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -218,4 +217,6 @@ public class User implements Serializable {
     @TableField("IS_SENIOR")
     private boolean isSenior;  //是否是高管
     
+    @TableField(exist = false)
+    private String deptIds;
 }

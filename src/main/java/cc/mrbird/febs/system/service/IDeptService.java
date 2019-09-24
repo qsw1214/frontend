@@ -60,4 +60,11 @@ public interface IDeptService extends IService<Dept> {
      * 同步钉钉部门数据至本地
      */
     void synchDingDeptData();
+    
+    /**
+     * 获取用户所有父部门
+     * @param userId
+     * @return
+     */
+    List<List<Dept>> getAllParentDept(Long userId);
 }

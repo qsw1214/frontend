@@ -158,7 +158,7 @@ public class SchoolController extends BaseController {
         }
     }
 
-    @GetMapping("schoolByDept/list")
+    @GetMapping("school/bydept/list")
     @ResponseBody
     @RequiresPermissions("school:view")
     public FebsResponse schoolListByDept(QueryRequest request, School school, Long deptId) {

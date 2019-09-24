@@ -28,17 +28,16 @@
         u.jobnumber,
         u.school_id schoolId,
         GROUP_CONCAT(r.role_id) roleId,
-        GROUP_CONCAT(r.ROLE_NAME) roleName
+        GROUP_CONCAT(r.ROLE_NAME) roleName,
+        GROUP_CONCAT(ud.dept_id) deptIds
         FROM
         t_user u
         LEFT JOIN t_user_role ur ON (u.user_id = ur.user_id)
         LEFT JOIN t_role r ON r.role_id = ur.role_id
+        LEFT JOIN t_user_dept ud ON (u.user_id = ud.user_id)
         WHERE 1 = 1
         <if test="user.username != null and user.username != ''">
             AND u.username = #{user.username}
-        </if>
-        <if test="user.schoolId != null and user.schoolId != ''">
-            AND u.school_id = #{user.schoolId}
         </if>
         <if test="user.sex != null and user.sex != ''">
             AND u.ssex = #{user.sex}
@@ -55,31 +54,7 @@
         <if test="user.createTimeTo!= null and user.createTimeTo !=''">
             And u.create_time &lt; #{user.createTimeTo}
         </if>
-        GROUP BY
-        u.username,
-        u.user_id,
-        u.email,
-        u.mobile,
-        u.status,
-        u.create_time,
-        u.ssex,
-        u.school_id,
-        u.last_login_time,
-        u.modify_time,
-        u.description,
-        u.avatar,
-        u.unionid,
-        u.active,
-        u.order_in_depts,
-        u.is_admin,
-        u.is_boss,
-        u.department,
-        u.hired_date,
-        u.is_senior,
-        u.is_leader_in_depts,
-        u.is_hide,
-        u.position,
-        u.jobnumber
+        GROUP BY u.user_id
     </sql>
     <select id="findUserDetailPage" parameterType="user" resultType="user">
         <include refid="findUserDetailSql"/>
@@ -125,39 +100,15 @@
         u.position,
         u.jobnumber,
         GROUP_CONCAT(r.role_id) roleId,
-        GROUP_CONCAT(r.ROLE_NAME) roleName
+        GROUP_CONCAT(r.ROLE_NAME) roleName,
+        GROUP_CONCAT(ud.dept_id) deptIds
         FROM
         t_user u
         LEFT JOIN t_user_role ur ON (u.user_id = ur.user_id)
         LEFT JOIN t_role r ON r.role_id = ur.role_id
+        LEFT JOIN t_user_dept ud ON (u.user_id = ud.user_id)
         WHERE  u.username = #{username}
-        GROUP BY
-        u.username,
-        u.user_id,
-        u.email,
-        u.mobile,
-        u.password,
-        u.status,
-        u.create_time,
-        u.ssex,
-        u.school_id,
-        u.last_login_time,
-        u.modify_time,
-        u.description,
-        u.avatar,
-        u.theme,
-        u.unionid,
-        u.active,
-        u.order_in_depts,
-        u.is_admin,
-        u.is_boss,
-        u.department,
-        u.hired_date,
-        u.is_senior,
-        u.is_leader_in_depts,
-        u.is_hide,
-        u.position,
-        u.jobnumber
+        GROUP BY u.user_id
     </select>
 
     <!--删除离职用户-->

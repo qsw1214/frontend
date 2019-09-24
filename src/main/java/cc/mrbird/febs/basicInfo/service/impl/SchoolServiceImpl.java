@@ -8,11 +8,13 @@ import cc.mrbird.febs.basicInfo.service.IDeviceInfoService;
 import cc.mrbird.febs.basicInfo.service.ISchoolService;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.resource.entity.Resource;
-
+import cc.mrbird.febs.system.controller.DeptController;
 import cc.mrbird.febs.system.entity.Dept;
 import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IDeptService;
 import cc.mrbird.febs.system.service.IUserDeptService;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +42,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  * @author MrBird
  * @date 2019-08-18 01:39:43
  */
+@Slf4j
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> implements ISchoolService {

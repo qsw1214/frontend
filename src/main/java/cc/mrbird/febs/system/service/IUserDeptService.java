@@ -67,4 +67,5 @@ public interface IUserDeptService extends IService<UserDept> {
 	 * @param deptId
 	 */
     Dept getDeptByUserIdAndDeptId(Long userId, Long deptId);
+    
 }

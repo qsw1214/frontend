@@ -39,6 +39,17 @@ public class DeptController extends BaseController {
 
 	@Autowired
 	private IDeptService deptService;
+	
+	@GetMapping("parents")
+	public List<List<Dept>> getParents(@RequestParam Long userId) throws FebsException {
+		try {
+			return this.deptService.getAllParentDept(userId);
+		} catch (Exception e) {
+			String message = "获取父部门失败";
+			log.error(message, e);
+			throw new FebsException(message);
+		}
+	}
 
 	@GetMapping("select/tree")
 	public List<DeptTree<Dept>> getDeptTree() throws FebsException {

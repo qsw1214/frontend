@@ -8,6 +8,8 @@ import cc.mrbird.febs.system.service.IUserDeptService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
+
+import java.util.ArrayList;
 import java.util.List;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -68,4 +70,5 @@ public class UserDeptServiceImpl extends ServiceImpl<UserDeptMapper, UserDept> i
 	public Dept getDeptByUserIdAndDeptId(Long userId, Long deptId) {
 		return this.baseMapper.getDeptByUserIdAndDeptId(userId, deptId);
 	}
+
 }

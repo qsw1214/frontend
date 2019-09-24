@@ -13,8 +13,6 @@ import cc.mrbird.febs.system.entity.Dept;
 import cc.mrbird.febs.system.mapper.DeptMapper;
 import cc.mrbird.febs.system.service.IDeptService;
 import cc.mrbird.febs.system.service.IUserDeptService;
-import net.sf.json.JSONArray;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
@@ -56,26 +54,29 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 
     @Override
     public List<DeptTree<Dept>> getLimitDeptTree(Long userId) {
+//    	 获取所有父部门
+//    	String arrays = AddressListUtil.getUserParentDepts(userId);
+//    	if(arrays == null)
+//    		return new ArrayList<DeptTree<Dept>>();
+//		List<Long> parentIds = new ArrayList<>();
+//		JSONArray jsonArray = JSONArray.fromObject(arrays);
+//		for (int i = 0; i < jsonArray.size(); i++) {
+//			JSONArray array = jsonArray.getJSONArray(i);
+//			for (int j = 0; j < array.size(); j++){
+//				if(!parentIds.contains(array.getLong(j)))
+//					parentIds.add(array.getLong(j));
+//			}
+//		}
+//		LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
+//        queryWrapper.in(Dept::getDeptId, parentIds);
+//        queryWrapper.lt(Dept::getDeptGrade, maxDeptGrade);
+//        queryWrapper.orderByAsc(Dept::getOrderNum);
+//        List<Dept> parentDepts = this.baseMapper.selectList(queryWrapper);
+    	
     	// 获取所有父部门
-    	String arrays = AddressListUtil.getUserParentDepts(userId);
-    	if(arrays == null)
-    		return new ArrayList<DeptTree<Dept>>();
-		List<Long> parentIds = new ArrayList<>();
-		JSONArray jsonArray = JSONArray.fromObject(arrays);
-		for (int i = 0; i < jsonArray.size(); i++) {
-			JSONArray array = jsonArray.getJSONArray(i);
-			for (int j = 0; j < array.size(); j++){
-				if(!parentIds.contains(array.getLong(j)))
-					parentIds.add(array.getLong(j));
-			}
-		}
-		LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.in(Dept::getDeptId, parentIds);
-        queryWrapper.lt(Dept::getDeptGrade, maxDeptGrade);
-        queryWrapper.orderByAsc(Dept::getOrderNum);
-        List<Dept> parentDepts = this.baseMapper.selectList(queryWrapper);
-		
-		// 获取用户所属部门
+    	List<List<Dept>> parentDepts = getAllParentDept(userId);
+    	
+		// 获取用户所属部门    	
 		List<Dept> userDepts = userDeptService.getDeptByUserId(userId);
 		List<Long> deptIds1 = new ArrayList<>(); // 一级部门id
 		List<Long> deptIds2 = new ArrayList<>(); // 二级部门id
@@ -91,6 +92,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 		List<Dept> depts2 = new ArrayList<>();
 		List<Dept> depts3 = new ArrayList<>();		
 		// 获取二级部门
+		LambdaQueryWrapper<Dept> queryWrapper;
 		if(!deptIds1.isEmpty()){
 			queryWrapper = new LambdaQueryWrapper<>();
 			queryWrapper.in(Dept::getParentId, deptIds1);
@@ -113,8 +115,11 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 		depts.addAll(depts2);
 		depts.addAll(depts3);
 		for(int i=0; i<parentDepts.size(); i++){
-			if(!depts.contains(parentDepts.get(i)))
-				depts.add(parentDepts.get(i));
+			List<Dept> list = parentDepts.get(i);
+			for(int j=0; j<list.size(); j++){
+				if(list.get(j).getDeptGrade() < 4 && !depts.contains(list.get(j)))
+					depts.add(list.get(j));
+			}
 		}
 		
         List<DeptTree<Dept>> trees =  this.convertDepts(depts);
@@ -228,4 +233,23 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
             return parentDeptGrade + 1;
         }
     }
+    
+    @Override
+	public List<List<Dept>> getAllParentDept(Long userId) {
+		List<List<Dept>> result = new ArrayList<>();
+		List<Dept> list = this.userDeptService.getDeptByUserId(userId);
+		Long parentId;
+		for(Dept dept: list){
+			List<Dept> parents = new ArrayList<>();
+			parents.add(dept);
+			parentId = dept.getParentId();
+			while(parentId != 1 && parents.size() < 5){
+				Dept parentDept = this.baseMapper.selectById(parentId);
+				parents.add(parentDept);
+				parentId = parentDept.getParentId();
+			}
+			result.add(parents);
+		}
+		return result;
+	}
 }
