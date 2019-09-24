@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,8 +29,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class KeywordCountServiceImpl extends ServiceImpl<KeywordCountMapper, KeywordCount> implements IKeywordCountService {
 
-    @Autowired
-    private KeywordCountMapper keywordCountMapper;
 
     @Override
     public IPage<KeywordCount> findKeywordCounts(QueryRequest request, KeywordCount keywordCount) {
@@ -40,7 +39,7 @@ public class KeywordCountServiceImpl extends ServiceImpl<KeywordCountMapper, Key
     }
 
     @Override
-    public List<KeywordCount> findKeywordsByDate(Integer k, Date countDate) {
+    public List<Map<String, Object>> findKeywordsByDate(Integer k, Date countDate) {
 		return this.baseMapper.findKeywordsByDate(k, countDate);
     }
 
@@ -70,5 +69,10 @@ public class KeywordCountServiceImpl extends ServiceImpl<KeywordCountMapper, Key
 		wapper.orderByDesc(KeywordCount::getKeywordCountId);
 		wapper.last("LIMIT 1");
 		return this.baseMapper.selectOne(wapper);
+	}
+	
+	@Override
+	public List<Map<String, Object>> countKeywords(Integer k, Date startDate, Date endDate) {
+		return this.baseMapper.countKeywords(k, startDate, endDate);
 	}
 }

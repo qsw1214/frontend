@@ -13,5 +13,15 @@
         SELECT * from r_keyword_count
         WHERE datediff(search_date,#{searchDate})=0
         ORDER BY count DESC limit #{k}
-	</select>        
+	</select>
+	
+	<select id="countKeywords" resultType="map">
+        select
+        keyword,
+        sum(count) count
+        from r_keyword_count where
+        search_date &gt;= #{startDate} And search_date &lt;= #{endDate}
+        group by keyword
+        ORDER BY count DESC limit #{k}
+    </select>    
 </mapper>

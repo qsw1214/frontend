@@ -36,6 +36,7 @@ public class EsResourceController extends BaseController{
     private IEsResourceService esResourceService;
 	@Autowired
     private IKeywordCountService keywordCountService;
+	private final long nd = 1000 * 24 * 60 * 60;
 	
 	private static final Logger keywordLog = LoggerFactory.getLogger("keyword");
 	
@@ -45,14 +46,34 @@ public class EsResourceController extends BaseController{
         return new FebsResponse().success().data(esResourceService.importAll());
     }
 	
-	@RequestMapping(value = "/search/topKeyWord", method = RequestMethod.GET)
-    @ResponseBody
-    public FebsResponse topkWord(@RequestParam(required = false, defaultValue = "5") Integer k) {
-		KeywordCount latestRecord = keywordCountService.getLatestKeyword();
-		if( latestRecord != null )
-			return new FebsResponse().success().data(keywordCountService.findKeywordsByDate(k, latestRecord.getSearchDate()));
-		return new FebsResponse().success().data(new ArrayList<>());
-    }
+	@RequestMapping(value = "/search/keyword/date", method = RequestMethod.GET)
+	@ResponseBody
+	public FebsResponse keywordByDate(@RequestParam(required = false, defaultValue = "5") Integer k, Date date) {
+		if (date == null) {
+			KeywordCount latestRecord = keywordCountService.getLatestKeyword();
+			if (latestRecord == null)
+				return new FebsResponse().success().data(new ArrayList<>());
+			date = latestRecord.getSearchDate();
+		}
+		return new FebsResponse().success().data(keywordCountService.findKeywordsByDate(k, date));
+	}
+
+	@RequestMapping(value = "/search/keyword/period", method = RequestMethod.GET)
+	@ResponseBody
+	public FebsResponse keywordByPeriod(@RequestParam(required = false, defaultValue = "5") Integer k, Date startDate,
+			Date endDate) {
+		if (startDate == null || endDate == null)
+			return new FebsResponse().fail().data("startDate or endDate is null");
+		// 获得两个时间的毫秒时间差异
+		long diff = endDate.getTime() - startDate.getTime();
+		if (diff < 0)
+			return new FebsResponse().fail().data("开始日期不能小于结束日期");
+		// 计算差多少天
+		long day = diff / nd;
+		if (day > 31)
+			return new FebsResponse().fail().data("时间间隔不能超过31天");
+		return new FebsResponse().success().data(keywordCountService.countKeywords(k, startDate, endDate));
+	}
 
     @RequestMapping(value = "/search/simple", method = RequestMethod.GET)
     @ResponseBody
