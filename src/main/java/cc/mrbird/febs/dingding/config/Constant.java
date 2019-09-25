@@ -71,5 +71,5 @@ public class Constant {
     /**
      * 通讯录回调host
      */
-    public static final String CALLBACK_URL_ORG = "http://kvs54h.natappfree.cc/org";
+    public static final String CALLBACK_URL_ORG = "http://e7ps6h.natappfree.cc/org";
 }
