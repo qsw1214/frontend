@@ -8,9 +8,9 @@
     </select>
     <!--添加用户信息-->
     <insert id="insertUserInf" parameterType="java.util.Map"  useGeneratedKeys="true" keyProperty="userId2" keyColumn="USER_ID">
-        insert into t_user(USERNAME,PASSWORD,DEPT_ID,EMAIL,MOBILE,STATUS,CREATE_TIME,MODIFY_TIME,LAST_LOGIN_TIME,
+        insert into t_user(user_id,USERNAME,PASSWORD,EMAIL,MOBILE,STATUS,CREATE_TIME,MODIFY_TIME,LAST_LOGIN_TIME,
         SSEX,IS_TAB,THEME,AVATAR,DESCRIPTION)
-        values(#{name},#{password},#{department},'',#{mobile},1,now(),now(),now(),
+        values(#{userid},#{name},#{password},'',#{mobile},1,now(),now(),now(),
         1,1,'black','gaOngJwsRYRaVAuXXcmB.png','')
     </insert>
     <!--添加用户权限信息-->
