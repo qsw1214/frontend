@@ -115,14 +115,14 @@ public class ViewController {
     }
     
     @GetMapping(FebsConstant.VIEW_PREFIX + "resource/subject/{subjectId}/addResource")
-    @RequiresPermissions("subject:update")
+    @RequiresPermissions("subjectResource:update")
     public String subjectRelate(@PathVariable String subjectId, Model model) {
         model.addAttribute("subjectId", subjectId);
         return FebsUtil.view("resource/subjectResource/addResource");
     }
     
     @GetMapping(FebsConstant.VIEW_PREFIX + "resource/subject/{subjectId}/resources")
-    @RequiresPermissions("subject:update")
+    @RequiresPermissions("subjectResource:update")
     public String subjectResources(@PathVariable String subjectId, Model model) {
         model.addAttribute("subject", this.subjectService.getById(subjectId));
         return FebsUtil.view("resource/subjectResource/subjectResource");

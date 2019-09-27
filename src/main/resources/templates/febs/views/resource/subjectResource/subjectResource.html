@@ -36,7 +36,7 @@
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
-                                     shiro:hasAnyPermissions="subject:add,subject:update,subjectResource:password:reset,subjectResource:export">
+                                     shiro:hasAnyPermissions="subjectResource:add,subjectResource:update,subjectResource:password:reset,subjectResource:export">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
                             </div>
@@ -142,12 +142,12 @@
     <span>{{ fileType.title }}</span>
 </script>
 <script type="text/html" id="subjectResource-option">
-    <span shiro:lacksPermission="subject:view,subject:update,subject:delete">
+    <span shiro:lacksPermission="subjectResource:view,subjectResource:update,subjectResource:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
-    <a lay-event="detail" shiro:hasPermission="subject:view"><i
+    <a lay-event="detail" shiro:hasPermission="subjectResource:view"><i
             class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
-    <a lay-event="del" shiro:hasPermission="subject:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+    <a lay-event="del" shiro:hasPermission="subjectResource:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'form', 'table', 'febs', 'laytpl'], function () {

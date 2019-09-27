@@ -42,6 +42,10 @@ public class SubjectResourceServiceImpl extends ServiceImpl<SubjectResourceMappe
         if (subjectResource.getResourceId() != null) {
             queryWrapper.eq(SubjectResource::getResourceId, subjectResource.getResourceId());
         }
+
+		if (subjectResource.getSubjectId() != null) {
+			queryWrapper.eq(SubjectResource::getSubjectId, subjectResource.getSubjectId());
+		}
         return this.page(page, queryWrapper);
     }
 
@@ -52,6 +56,10 @@ public class SubjectResourceServiceImpl extends ServiceImpl<SubjectResourceMappe
 	    if (subjectResource.getResourceId() != null) {
             queryWrapper.eq(SubjectResource::getResourceId, subjectResource.getResourceId());
         }
+
+		if (subjectResource.getSubjectId() != null) {
+			queryWrapper.eq(SubjectResource::getSubjectId, subjectResource.getSubjectId());
+		}
 		return this.baseMapper.selectList(queryWrapper);
     }
 
