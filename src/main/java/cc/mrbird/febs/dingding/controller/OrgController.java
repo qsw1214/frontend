@@ -226,22 +226,25 @@ public class OrgController {
                     List<Long> deptIds = userInfoDetailVO.getDepartment();
 
                     UserInfoDetailVO map = AddressListUtil.userMess(userid);
-                    user.setUserId(userid);
-                    user.setUsername(map.getName());
-                    user.setPassword(MD5Util.encrypt("", "123456"));
-                    user.setAvatar(map.getAvatar());
-                    user.setBoss(map.isBoss());
-                    user.setStatus("1");
-                    user.setCreateTime(new Date());
-                    user.setModifyTime(new Date());
-                    user.setEmail(map.getEmail());
-                    user.setSenior(map.isSenior());
-                    user.setActive(map.isActive());
-                    user.setPosition(map.getPosition());
-                    user.setHide(map.isHide());
-                    user.setUnionid(map.getUnionid());
-                    user.setAdmin(map.isAdmin());
-                    userService.save(user);
+
+                    if(userService.getById(userid)==null){
+                        user.setUserId(userid);
+                        user.setUsername(map.getName());
+                        user.setPassword(MD5Util.encrypt("", "123456"));
+                        user.setAvatar(map.getAvatar());
+                        user.setBoss(map.isBoss());
+                        user.setStatus("1");
+                        user.setCreateTime(new Date());
+                        user.setModifyTime(new Date());
+                        user.setEmail(map.getEmail());
+                        user.setSenior(map.isSenior());
+                        user.setActive(map.isActive());
+                        user.setPosition(map.getPosition());
+                        user.setHide(map.isHide());
+                        user.setUnionid(map.getUnionid());
+                        user.setAdmin(map.isAdmin());
+                        userService.save(user);
+                    }
 
                     userDeptMapper.deleteUserDept(userid);//先删用户部门表
                     for (long deptId : deptIds) {
@@ -251,7 +254,7 @@ public class OrgController {
                     List<RolesInfoVO> roles = map.getRoles();
                     UserRole userRole = new UserRole();
                     Role role = new Role();
-                    if (roles == null) {
+                    if (roles == null) {//如果没有角色 那就是普通用户
                         userRole.setUserId(userid);
                         userRole.setRoleId(2L);
                         userRoleService.insertUserRole(userRole);
