@@ -36,7 +36,7 @@
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
-                                     shiro:hasAnyPermissions="subjectResource:add,subjectResource:update,subjectResource:password:reset,subjectResource:export">
+                                     shiro:hasAnyPermissions="subject:add,subject:update,subjectResource:password:reset,subjectResource:export">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
                             </div>
@@ -87,7 +87,7 @@
   </div>
   <div class="detail-row">
     <label class="label1">学校:</label>
-    <label class="label2">{{d.schoolName}}</label>
+    <label class="label2">{{d.deptName}}</label>
   </div>
   <div class="detail-row">
     <label class="label1">年级:</label>
@@ -142,12 +142,12 @@
     <span>{{ fileType.title }}</span>
 </script>
 <script type="text/html" id="subjectResource-option">
-    <span shiro:lacksPermission="subjectResource:view,subjectResource:update,subjectResource:delete">
+    <span shiro:lacksPermission="subject:view,subject:update,subject:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
-    <a lay-event="detail" shiro:hasPermission="subjectResource:view"><i
+    <a lay-event="detail" shiro:hasPermission="subject:view"><i
             class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
-    <a lay-event="del" shiro:hasPermission="subjectResource:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+    <a lay-event="del" shiro:hasPermission="subject:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'form', 'table', 'febs', 'laytpl'], function () {
@@ -271,7 +271,7 @@
                     {field: 'resourceName', title: '资源名', minWidth: 100},
                     {title: '文件类型', templet: '#file-type'},
                     {field: 'creator', title: '作者'},
-                    {field: 'schoolName', title: '学校'},
+                    {field: 'deptName', title: '学校'},
                     {field: 'commentCount', title: '评论数'},
                     {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
                     {title: '审核状态', templet: '#subjectResource-status'},
@@ -282,7 +282,7 @@
 
         function deleteSubjectResources(subjectResourceIds) {
             febs.get(ctx + 'subjectResource/delete/' + subjectResourceIds, null, function () {
-                febs.alert.success('删除资源成功');
+                febs.alert.success('移除资源成功');
                 $query.click();
             });
         }

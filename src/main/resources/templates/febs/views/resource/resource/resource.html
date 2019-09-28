@@ -45,9 +45,9 @@
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <label class="layui-form-label layui-form-label-sm">学校名称</label>
+                                        <label class="layui-form-label layui-form-label-sm">部门</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="schoolName" autocomplete="off" class="layui-input">
+                                            <input type="text" name="deptName" autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline">
@@ -433,7 +433,7 @@
             treeSelect.revokeNode('category');
             sortObject.type = 'null';
             tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
-        });
+        });  
 
         function initTable() {
             tableIns = febs.table.init({
@@ -445,7 +445,7 @@
                     {field: 'resourceName', title: '资源名', minWidth: 100},
                     {field: 'fileType',title: '文件类型'},
                     {field: 'creator', title: '作者'},
-                    {field: 'schoolName', title: '学校'},
+                    {field: 'deptName', title: '部门'},
                     {title: '评论', templet: '#comment'},
                     {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
                     {title: '审核状态', templet: '#resource-status'},
@@ -459,7 +459,7 @@
                 resourceName: $searchForm.find('input[name="resourceName"]').val(),
                 status: $searchForm.find("select[name='status']").val(),
                 categoryId: $searchForm.find("input[name='category']").val(),
-                schoolName: $searchForm.find("input[name='schoolName']").val(),
+                schoolName: $searchForm.find("input[name='deptName']").val(),
                 gradeId: $searchForm.find("input[name='gradeId']").val(),
                 subjectId: $searchForm.find("input[name='subjectId']").val(),
                 invalidate_ie_cache: new Date()

@@ -39,14 +39,9 @@
                        </div>
                    </div>
                    <div class="layui-inline">
-                        <label class="layui-form-label layui-form-label-sm">学校</label>
+                        <label class="layui-form-label layui-form-label-sm">部门名称</label>
                         <div class="layui-input-inline">
-			                <select name="schoolId"
-			                		xm-select-radio
-			                        xm-select-direction="down"
-			                        xm-select="school"
-			                        xm-select-skin="default">
-			                </select>
+                        	<input type="text" name="deptName" class="layui-input">
 		           		</div>
                    </div>
                    <div class="layui-inline">
@@ -247,7 +242,7 @@
                     {type: 'checkbox'},
                     {field: 'resourceName', title: '资源名', minWidth: 100},
                     {field: 'creator', title: '作者'},
-                    {field: 'schoolName', title: '学校'}
+                    {field: 'deptName', title: '部门'}
                 ]]
             });
         }
@@ -257,7 +252,7 @@
             	resourceName: $searchForm.find('input[name="resourceName"]').val(),
                 status: $searchForm.find("select[name='status']").val(),
                 categoryId: $searchForm.find("input[name='category']").val(),
-                schoolId: $searchForm.find("input[name='schoolId']").val(),
+                schoolId: $searchForm.find("input[name='deptName']").val(),
                 gradeId: $searchForm.find("input[name='gradeId']").val(),
                 subjectId: $searchForm.find("input[name='subjectId']").val(),
                 invalidate_ie_cache: new Date()

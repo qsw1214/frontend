@@ -141,10 +141,10 @@ public class EsResource {
     private String categoryName;
     
     /**
-     * 学校名称
+     * 部门名称
      */
 	@Field(analyzer = "ik_max_word",type = FieldType.Text)
-    private String schoolName;
+    private String deptName;
     
     /**
      * 年级名称

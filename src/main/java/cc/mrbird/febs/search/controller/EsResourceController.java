@@ -14,21 +14,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.search.entity.EsResource;
 import cc.mrbird.febs.search.entity.KeywordCount;
 import cc.mrbird.febs.search.service.IEsResourceService;
 import cc.mrbird.febs.search.service.IKeywordCountService;
-import lombok.extern.slf4j.Slf4j;
 
 
 /**
  * 搜索资源管理Controller
  * Created by lb on 2019/8/31.
  */
-@Slf4j
 @RestController
 @RequestMapping("/esResource")
 public class EsResourceController extends BaseController{
@@ -46,6 +43,21 @@ public class EsResourceController extends BaseController{
         return new FebsResponse().success().data(esResourceService.importAll());
     }
 	
+	/**
+     * 获取资源数量(deptId为null时，返回所有资源总数)
+     * @param deptId 指定部门
+     */
+	@RequestMapping(value = "/reource/count", method = RequestMethod.GET)
+    @ResponseBody
+    public FebsResponse getCount(@RequestParam(required = false) Long deptId) {
+        return new FebsResponse().success().data(esResourceService.getCount(deptId));
+    }
+	
+	/**
+	 * 获取搜索热词
+	 * @param k 热词数量
+	 * @param date 指定日期
+	 */
 	@RequestMapping(value = "/search/keyword/date", method = RequestMethod.GET)
 	@ResponseBody
 	public FebsResponse keywordByDate(@RequestParam(required = false, defaultValue = "5") Integer k, Date date) {
@@ -58,6 +70,12 @@ public class EsResourceController extends BaseController{
 		return new FebsResponse().success().data(keywordCountService.findKeywordsByDate(k, date));
 	}
 
+	/**
+	 * 获取搜索热词
+	 * @param k 热词数量
+	 * @param startDate 开始日期
+	 * @param endDate 介绍日期
+	 */
 	@RequestMapping(value = "/search/keyword/period", method = RequestMethod.GET)
 	@ResponseBody
 	public FebsResponse keywordByPeriod(@RequestParam(required = false, defaultValue = "5") Integer k, Date startDate,
@@ -74,6 +92,18 @@ public class EsResourceController extends BaseController{
 			return new FebsResponse().fail().data("时间间隔不能超过31天");
 		return new FebsResponse().success().data(keywordCountService.countKeywords(k, startDate, endDate));
 	}
+	
+	/**
+     * 获取资源详情
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public FebsResponse detail(Long id) {
+    	EsResource r = esResourceService.get(id);
+        return new FebsResponse().success().data(r);
+    }
 
     @RequestMapping(value = "/search/simple", method = RequestMethod.GET)
     @ResponseBody
@@ -84,14 +114,14 @@ public class EsResourceController extends BaseController{
         Map<String, Object> dataTable = getDataTable(esResourcePage);
         return new FebsResponse().success().data(dataTable);
     }
-
-    // "排序字段:0->按相关度；1->按新品；2->按阅读量；3->评分从高到低"
+    
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     @ResponseBody
     public FebsResponse search(@RequestParam(required = false) String keyword, EsResource resource,
                                                       @RequestParam(required = false, defaultValue = "0") Integer pageNum,
                                                       @RequestParam(required = false, defaultValue = "5") Integer pageSize,
                                                       @RequestParam(required = false, defaultValue = "0") Integer sort) {
+    	// 将搜索词记录到日志,便于统计热词
     	if(keyword != null && !keyword.equals("")){
     		String[] words = esResourceService.getAnalyzes("rms", keyword);  		
     		keywordLog.info(keyword + "|" + StringUtils.join(words, ","));

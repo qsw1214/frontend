@@ -20,4 +20,9 @@ public class FebsConstant {
 
     // 允许下载的文件类型，根据需求自己添加（小写）
     public static final String[] VALID_FILE_TYPE = {"xlsx", "zip"};
+    
+    // 缓存前缀
+    public static final String USER_PREFIX = "user.";
+    
+    public static final String RES_VISIT_PREFIX = "res.visit.";
 }

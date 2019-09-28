@@ -41,14 +41,14 @@ public class SubjectResourceController extends BaseController {
 
     @GetMapping("subjectResource")
     @ResponseBody
-    @RequiresPermissions("subjectResource:view")
+    @RequiresPermissions("subject:view")
     public FebsResponse getAllSubjectResources(SubjectResource subjectResource) {
         return new FebsResponse().success().data(subjectResourceService.findSubjectResources(subjectResource));
     }
 
     @GetMapping("subjectResource/list")
     @ResponseBody
-    //@RequiresPermissions("subjectResource:view")
+    @RequiresPermissions("subject:view")
     public FebsResponse subjectResourceList(QueryRequest request, SubjectResource subjectResource) {
         Map<String, Object> dataTable = getDataTable(this.subjectResourceService.findSubjectResources(request, subjectResource));
         return new FebsResponse().success().data(dataTable);
@@ -57,7 +57,7 @@ public class SubjectResourceController extends BaseController {
     @Log("新增SubjectResource")
     @PostMapping("subjectResource")
     @ResponseBody
-    @RequiresPermissions("subjectResource:add")
+    @RequiresPermissions("subject:add")
     public FebsResponse addSubjectResource(@Valid SubjectResource subjectResource) throws FebsException {
         try {
             this.subjectResourceService.createSubjectResource(subjectResource);
@@ -71,7 +71,7 @@ public class SubjectResourceController extends BaseController {
     
     @Log("新增SubjectResource")
     @PostMapping("subjectResources")
-    @RequiresPermissions("subjectResource:add")
+    @RequiresPermissions("subject:add")
     public FebsResponse addSubjectResources(Long subjectId, String resourceIds) throws FebsException {
         try {
         	this.subjectResourceService.addSubjectResources(subjectId, resourceIds);
@@ -86,7 +86,7 @@ public class SubjectResourceController extends BaseController {
     @Log("删除SubjectResource")
     @GetMapping("subjectResource/delete/{subjectResourceIds}")
     @ResponseBody
-    @RequiresPermissions("subjectResource:delete")
+    @RequiresPermissions("subject:delete")
     public FebsResponse deleteSubjectResources(@NotBlank(message = "{required}") @PathVariable String subjectResourceIds) throws FebsException {
         try {
             this.subjectResourceService.deleteSubjectResources(subjectResourceIds);
@@ -101,7 +101,7 @@ public class SubjectResourceController extends BaseController {
     @Log("修改SubjectResource")
     @PostMapping("subjectResource/update")
     @ResponseBody
-    @RequiresPermissions("subjectResource:update")
+    @RequiresPermissions("subject:update")
     public FebsResponse updateSubjectResource(SubjectResource subjectResource) throws FebsException {
         try {
             this.subjectResourceService.updateSubjectResource(subjectResource);
@@ -115,7 +115,7 @@ public class SubjectResourceController extends BaseController {
 
     @PostMapping("subjectResource/excel")
     @ResponseBody
-    @RequiresPermissions("subjectResource:export")
+    @RequiresPermissions("subject:export")
     public void export(QueryRequest queryRequest, SubjectResource subjectResource, HttpServletResponse response) throws FebsException {
         try {
             List<SubjectResource> subjectResources = this.subjectResourceService.findSubjectResources(queryRequest, subjectResource).getRecords();

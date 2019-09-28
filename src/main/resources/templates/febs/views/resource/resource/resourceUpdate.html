@@ -48,6 +48,17 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">所属部门：</label>
+            <div class="layui-input-block">
+                <select name="deptId"
+                		xm-select-radio
+                        xm-select-direction="down"
+                        xm-select="resource-update-dept"
+                        xm-select-skin="default">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">适用年级：</label>
             <div class="layui-input-block">
                 <select name="gradeId"
@@ -98,6 +109,10 @@
             treeSelect = layui.treeSelect,
             form = layui.form,
             resource = [[${resource}]],
+            depts = [[${depts}]],
+            grades = [[${grades}]],
+            subjects = [[${subjects}]],
+            fileTypes = [[${fileTypes}]],
             $view = $('#resource-update'),
             $remove=$view.find('#remove'),
             validate = layui.validate;
@@ -108,6 +123,7 @@
         initResourceValue();
 
         formSelects.render();
+        initSelects();
 
         treeSelect.render({
             elem: $view.find('#resource-update-category'),
@@ -116,85 +132,8 @@
             placeholder: '请选择',
             search: false,
             success: function () {
-                treeSelect.checkNode('resource-update-category', resource.categoryId);
-            }
-        });
-
-        formSelects.config('resource-update-fileType', {
-            searchUrl: ctx + 'dict?field=file_type',
-            response: {
-                statusCode: 200
-            },
-            beforeSuccess: function (id, url, searchVal, result) {
-                var data = result.data;
-                var tranData = [];
-                for (var i = 0; i < data.length; i++) {
-                    tranData.push({
-                        name: data[i].v,
-                        value: data[i].k
-                    })
-                }
-                result.data = tranData;
-                return result;
-            },
-            success: function () {
-                formSelects.value('resource-update-fileType', [resource.fileType]);
-            },
-            error: function (id, url, searchVal, err) {
-                console.error(err);
-                febs.alert.error('获取文件类型列表失败');
-            }
-        });
-
-        formSelects.config('resource-update-grade', {
-            searchUrl: ctx + 'dict?field=grade',
-            response: {
-                statusCode: 200
-            },
-            beforeSuccess: function (id, url, searchVal, result) {
-                var data = result.data;
-                var tranData = [];
-                for (var i = 0; i < data.length; i++) {
-                    tranData.push({
-                        name: data[i].v,
-                        value: data[i].k
-                    })
-                }
-                result.data = tranData;
-                return result;
-            },
-            success: function () {
-                formSelects.value('resource-update-grade', [resource.grade]);
-            },
-            error: function (id, url, searchVal, err) {
-                console.error(err);
-                febs.alert.error('获取年级列表失败');
-            }
-        });
-        
-        formSelects.config('resource-update-subject', {
-            searchUrl: ctx + 'dict?field=subject',
-            response: {
-                statusCode: 200
-            },
-            beforeSuccess: function (id, url, searchVal, result) {
-                var data = result.data;
-                var tranData = [];
-                for (var i = 0; i < data.length; i++) {
-                    tranData.push({
-                        name: data[i].v,
-                        value: data[i].k
-                    })
-                }
-                result.data = tranData;
-                return result;
-            },
-            success: function () {
-                formSelects.value('resource-update-subject', [resource.subject]);
-            },
-            error: function (id, url, searchVal, err) {
-                console.error(err);
-                febs.alert.error('获取科目列表失败');
+            	if(resource.categoryId)
+                	treeSelect.checkNode('resource-update-category', resource.categoryId);
             }
         });
 
@@ -204,6 +143,7 @@
                 "url": resource.url,
                 "pic": resource.pic,
                 "fileType": resource.fileType,
+                "deptId": resource.deptId,
                 "gradeId": resource.gradeId,
                 "subjectId": resource.subjectId,
                 "categoryId": resource.categoryId,
@@ -229,5 +169,40 @@
             });
             return false;
         });
+        
+        function initSelects() {
+        	selectDepts = [];
+        	depts.forEach(function(d){  
+        		selectDepts.push({"name": d.deptName, "value": d.deptId});
+        	});
+        	selectGrades = [];
+        	grades.forEach(function(d){  
+        		selectGrades.push({"name": d.v, "value": d.k});
+        	});
+        	selectSubjects = [];
+        	subjects.forEach(function(d){  
+        		selectSubjects.push({"name": d.v, "value": d.k});
+        	});
+        	selectFileTypes = [];
+        	fileTypes.forEach(function(d){  
+        		selectFileTypes.push({"name": d.v, "value": d.k});
+        	});      	
+        	formSelects.data('resource-update-dept', 'local', {
+                arr: selectDepts
+            });
+        	formSelects.data('resource-update-grade', 'local', {
+                arr: selectGrades
+            });
+        	formSelects.data('resource-update-subject', 'local', {
+                arr: selectSubjects
+            });
+        	formSelects.data('resource-update-fileType', 'local', {
+                arr: selectFileTypes
+            });
+        	formSelects.value('resource-update-dept', [resource.deptId]);
+        	formSelects.value('resource-update-subject', [resource.subjectId]);
+        	formSelects.value('resource-update-grade', [resource.gradeId]);
+        	formSelects.value('resource-update-fileType', [resource.fileType]);
+        }
     });
 </script>

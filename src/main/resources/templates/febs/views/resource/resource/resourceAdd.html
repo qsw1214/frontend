@@ -52,6 +52,17 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">所属部门：</label>
+            <div class="layui-input-block">
+                <select name="deptId" id="resource-add-dept"
+                		xm-select-radio
+                        xm-select-direction="down"
+                        xm-select="resource-add-dept"
+                        xm-select-skin="default">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">适用年级：</label>
             <div class="layui-input-block">
                 <select name="gradeId"
@@ -94,11 +105,15 @@
     </form>
 </div>
 
-<script>
+<script data-th-inline="javascript">
     layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect'], function () {
         var $ = layui.$,
             febs = layui.febs,
             layer = layui.layer,
+            depts = [[${depts}]],
+            grades = [[${grades}]],
+            subjects = [[${subjects}]],
+            fileTypes = [[${fileTypes}]],
             formSelects = layui.formSelects,
             treeSelect = layui.treeSelect,
             form = layui.form,
@@ -109,6 +124,7 @@
         form.render();
 
         formSelects.render();
+        initSelects();
 
         treeSelect.render({
             elem: $view.find('#resource-add-category'),
@@ -116,77 +132,8 @@
             data: ctx + 'category/select/tree',
             placeholder: '请选择',
             search: false
-        });
-        
-        formSelects.config('resource-add-fileType', {
-            searchUrl: ctx + 'dict?field=file_type',
-            response: {
-                statusCode: 200
-            },
-            beforeSuccess: function (id, url, searchVal, result) {
-                var data = result.data;
-                var tranData = [];
-                for (var i = 0; i < data.length; i++) {
-                    tranData.push({
-                        name: data[i].v,
-                        value: data[i].k
-                    })
-                }
-                result.data = tranData;
-                return result;
-            },
-            error: function (id, url, searchVal, err) {
-                console.error(err);
-                febs.alert.error('获取文件类型列表失败');
-            }
-        });
-
-        formSelects.config('resource-add-grade', {
-            searchUrl: ctx + 'dict?field=grade',
-            response: {
-                statusCode: 200
-            },
-            beforeSuccess: function (id, url, searchVal, result) {
-                var data = result.data;
-                var tranData = [];
-                for (var i = 0; i < data.length; i++) {
-                    tranData.push({
-                        name: data[i].v,
-                        value: data[i].k
-                    })
-                }
-                result.data = tranData;
-                return result;
-            },
-            error: function (id, url, searchVal, err) {
-                console.error(err);
-                febs.alert.error('获取年级列表失败');
-            }
-        });
-        
-        formSelects.config('resource-add-subject', {
-            searchUrl: ctx + 'dict?field=subject',
-            response: {
-                statusCode: 200
-            },
-            beforeSuccess: function (id, url, searchVal, result) {
-                var data = result.data;
-                var tranData = [];
-                for (var i = 0; i < data.length; i++) {
-                    tranData.push({
-                        name: data[i].v,
-                        value: data[i].k
-                    })
-                }
-                result.data = tranData;
-                return result;
-            },
-            error: function (id, url, searchVal, err) {
-                console.error(err);
-                febs.alert.error('获取科目列表失败');
-            }
-        });
-
+        });       
+            
         form.on('submit(resource-add-form-submit)', function (data) {
         	$('#submit').attr("disabled",true);
         	$('#submit-loading').show();
@@ -203,5 +150,35 @@
 		    })
             return false;
         });
+        function initSelects() {
+        	selectDepts = [];
+        	depts.forEach(function(d){  
+        		selectDepts.push({"name": d.deptName, "value": d.deptId});
+        	});
+        	selectGrades = [];
+        	grades.forEach(function(d){  
+        		selectGrades.push({"name": d.v, "value": d.k});
+        	});
+        	selectSubjects = [];
+        	subjects.forEach(function(d){  
+        		selectSubjects.push({"name": d.v, "value": d.k});
+        	});
+        	selectFileTypes = [];
+        	fileTypes.forEach(function(d){  
+        		selectFileTypes.push({"name": d.v, "value": d.k});
+        	});      	
+        	formSelects.data('resource-add-dept', 'local', {
+                arr: selectDepts
+            });
+        	formSelects.data('resource-add-grade', 'local', {
+                arr: selectGrades
+            });
+        	formSelects.data('resource-add-subject', 'local', {
+                arr: selectSubjects
+            });
+        	formSelects.data('resource-add-fileType', 'local', {
+                arr: selectFileTypes
+            });
+        }
     });
 </script>

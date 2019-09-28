@@ -6,17 +6,13 @@ import cc.mrbird.febs.common.entity.DeptTree;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
-import cc.mrbird.febs.dingding.util.AddressListUtil;
 import cc.mrbird.febs.system.entity.Dept;
-import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IDeptService;
 import cc.mrbird.febs.system.service.IUserDeptService;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -39,6 +33,8 @@ public class DeptController extends BaseController {
 
 	@Autowired
 	private IDeptService deptService;
+	@Autowired
+	private IUserDeptService userDeptService;
 	
 	@GetMapping("parents")
 	public List<List<Dept>> getParents(@RequestParam Long userId) throws FebsException {
@@ -46,6 +42,17 @@ public class DeptController extends BaseController {
 			return this.deptService.getAllParentDept(userId);
 		} catch (Exception e) {
 			String message = "获取父部门失败";
+			log.error(message, e);
+			throw new FebsException(message);
+		}
+	}
+	
+	@GetMapping("userDepts")
+	public List<Dept> getUserDepts(@RequestParam Long userId) throws FebsException {
+		try {
+			return this.userDeptService.getDeptByUserId(userId);
+		} catch (Exception e) {
+			String message = "获取用户所属部门失败";
 			log.error(message, e);
 			throw new FebsException(message);
 		}

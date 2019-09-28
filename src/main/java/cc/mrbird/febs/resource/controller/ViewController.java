@@ -1,5 +1,7 @@
 package cc.mrbird.febs.resource.controller;
 
+import java.util.List;
+
 import javax.validation.constraints.NotBlank;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -8,11 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import cc.mrbird.febs.common.authentication.ShiroHelper;
+import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsConstant;
-import cc.mrbird.febs.common.utils.DateUtil;
 import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.resource.entity.Comment;
 import cc.mrbird.febs.resource.entity.Resource;
@@ -20,7 +19,10 @@ import cc.mrbird.febs.resource.entity.Subject;
 import cc.mrbird.febs.resource.service.ICommentService;
 import cc.mrbird.febs.resource.service.IResourceService;
 import cc.mrbird.febs.resource.service.ISubjectService;
-import cc.mrbird.febs.system.entity.User;
+import cc.mrbird.febs.system.entity.Dept;
+import cc.mrbird.febs.system.entity.Dict;
+import cc.mrbird.febs.system.service.IDictService;
+import cc.mrbird.febs.system.service.IUserDeptService;
 
 /**
  *  Controller
@@ -29,7 +31,7 @@ import cc.mrbird.febs.system.entity.User;
  * @date 2019-08-17 19:44:02
  */
 @Controller("resourceView")
-public class ViewController {
+public class ViewController extends BaseController{
 	
 	@Autowired
     private IResourceService resourceService;
@@ -37,6 +39,10 @@ public class ViewController {
     private ICommentService commentService;
 	@Autowired
     private ISubjectService subjectService;
+	@Autowired
+	private IUserDeptService userDeptService;
+	@Autowired
+	private IDictService dictService;
     
     @GetMapping(FebsConstant.VIEW_PREFIX + "resource/{resourceId}/comment")
     @RequiresPermissions("comment:view")
@@ -76,13 +82,22 @@ public class ViewController {
     
     @GetMapping(FebsConstant.VIEW_PREFIX + "resource/resource")
     @RequiresPermissions("resource:view")
-    public String resourceIndex(){
+    public String resourceIndex(Model model){
         return FebsUtil.view("resource/resource/resource");
     }
     
     @GetMapping(FebsConstant.VIEW_PREFIX + "resource/resource/add")
     @RequiresPermissions("resource:add")
-    public String resourceAdd() {
+    public String resourceAdd(Model model) {
+    	Long userId = super.getCurrentUser().getUserId();
+    	List<Dept> depts = userDeptService.getDeptByUserId(userId);
+    	List<Dict> grades = dictService.findDictsByField("grade");
+    	List<Dict> subjects = dictService.findDictsByField("subject");
+    	List<Dict> fileTypes = dictService.findDictsByField("file_type");
+    	model.addAttribute("depts", depts);
+    	model.addAttribute("grades", grades);
+    	model.addAttribute("subjects", subjects);
+    	model.addAttribute("fileTypes", fileTypes);
         return FebsUtil.view("resource/resource/resourceAdd");
     }
     
@@ -90,7 +105,16 @@ public class ViewController {
     @RequiresPermissions("resource:update")
     public String resourceUpdate(@PathVariable String resourceId, Model model) {
     	Resource resource = resourceService.getById(resourceId);
-        model.addAttribute("resource", resource);
+    	Long userId = super.getCurrentUser().getUserId();
+    	List<Dept> depts = userDeptService.getDeptByUserId(userId);
+    	List<Dict> grades = dictService.findDictsByField("grade");
+    	List<Dict> subjects = dictService.findDictsByField("subject");
+    	List<Dict> fileTypes = dictService.findDictsByField("file_type");
+    	model.addAttribute("depts", depts);
+    	model.addAttribute("grades", grades);
+    	model.addAttribute("subjects", subjects);
+    	model.addAttribute("fileTypes", fileTypes);
+        model.addAttribute("resource", resource);    
         return FebsUtil.view("resource/resource/resourceUpdate");
     }
     
@@ -115,14 +139,14 @@ public class ViewController {
     }
     
     @GetMapping(FebsConstant.VIEW_PREFIX + "resource/subject/{subjectId}/addResource")
-    @RequiresPermissions("subjectResource:update")
+    @RequiresPermissions("subject:update")
     public String subjectRelate(@PathVariable String subjectId, Model model) {
         model.addAttribute("subjectId", subjectId);
         return FebsUtil.view("resource/subjectResource/addResource");
     }
     
     @GetMapping(FebsConstant.VIEW_PREFIX + "resource/subject/{subjectId}/resources")
-    @RequiresPermissions("subjectResource:update")
+    @RequiresPermissions("subject:update")
     public String subjectResources(@PathVariable String subjectId, Model model) {
         model.addAttribute("subject", this.subjectService.getById(subjectId));
         return FebsUtil.view("resource/subjectResource/subjectResource");

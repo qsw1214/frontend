@@ -32,6 +32,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -67,6 +68,21 @@ public class EsResourceServiceImpl implements IEsResourceService {
 		}
 		return result;
 	}
+	
+	@Override
+	public EsResource get(Long id) {
+		return resourceRepository.findById(id).get();
+	}
+	
+	@Override
+	public Long getCount(Long deptId) {
+		if(deptId == null)
+			return resourceRepository.count();
+		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+		boolQueryBuilder.must(QueryBuilders.termQuery("deptId", deptId));	
+		SearchQuery searchQuery = new NativeSearchQueryBuilder().withFilter(boolQueryBuilder).build();
+		return elasticsearchTemplate.count(searchQuery);
+	}
 
 	@Override
 	public void delete(Long id) {
@@ -101,7 +117,7 @@ public class EsResourceServiceImpl implements IEsResourceService {
 			resourceRepository.deleteAll(esResourceList);
 		}
 	}
-
+	
 	@Override
 	public Page<EsResource> search(String keyword, Integer pageNum, Integer pageSize) {
 		Pageable pageable = PageRequest.of(pageNum, pageSize);
@@ -113,6 +129,7 @@ public class EsResourceServiceImpl implements IEsResourceService {
 			Integer sort) {
 		Pageable pageable = PageRequest.of(pageNum, pageSize);
 		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
+		
 		// 分页
 		nativeSearchQueryBuilder.withPageable(pageable);
 		// 过滤
@@ -168,8 +185,11 @@ public class EsResourceServiceImpl implements IEsResourceService {
 			// 按相关度
 			nativeSearchQueryBuilder.withSort(SortBuilders.scoreSort().order(SortOrder.DESC));
 		}
-		nativeSearchQueryBuilder.withSort(SortBuilders.scoreSort().order(SortOrder.DESC));
-		NativeSearchQuery searchQuery = nativeSearchQueryBuilder.build();
+		
+		//String[] fields = {"resourceId","resourceName","creator",};
+		//SourceFilter sf = new FetchSourceFilter(fields, null);
+		//nativeSearchQueryBuilder.withSourceFilter(sf);
+		NativeSearchQuery searchQuery = nativeSearchQueryBuilder.build();		
 		// LOGGER.info("DSL:{}", searchQuery.getQuery().toString());
 		return resourceRepository.search(searchQuery);
 	}
