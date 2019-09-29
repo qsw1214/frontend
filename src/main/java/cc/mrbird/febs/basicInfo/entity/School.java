@@ -104,21 +104,21 @@ public class School {
      * 省
      */
     @TableField("province_dept_id")
-    @NotBlank(message = "{required}")
+    //@NotBlank(message = "{required}")
     private Long provinceDeptId;
 
     /**
      * 市
      */
     @TableField("city_dept_id")
-    @NotBlank(message = "{required}")
+    //@NotBlank(message = "{required}")
     private Long cityDeptId;
 
     /**
      * 县
      */
     @TableField("country_dept_id")
-    @NotBlank(message = "{required}")
+    //@NotBlank(message = "{required}")
     private Long countryDeptId;
 
     /**
