@@ -50,6 +50,13 @@ public class SchoolTimetable {
     @TableField(exist = false)
     private String location;
 
+    @ExcelField(value = "巡课路径")
+    @TableField(exist = false)
+    private String url;
+
+    @ExcelField(value = "巡课状态")
+    @TableField(exist = false)
+    private String state;
     /**
      * 
      */
@@ -102,9 +109,10 @@ public class SchoolTimetable {
     @TableField("user_id")
     private Long userId;
 
+
     @ExcelField(value = "授课教师")
-    @TableField(exist = false)
-    private String userName;
+    @TableField("user_name")
+    private String username;
     /**
      * 
      */

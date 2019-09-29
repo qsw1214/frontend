@@ -9,6 +9,7 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.basicInfo.entity.SchoolTimetable;
 import cc.mrbird.febs.basicInfo.service.ISchoolTimetableService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -40,6 +41,7 @@ public class SchoolTimetableController extends BaseController {
     @GetMapping("list")
     @RequiresPermissions("schoolTimetable:view")
     public FebsResponse schoolTimetableList(SchoolTimetable schoolTimetable, QueryRequest request) {
+        IPage test = this.schoolTimetableService.findSchoolTimetables(request,schoolTimetable);
         Map<String, Object> dataTable = getDataTable(this.schoolTimetableService.findSchoolTimetables(request,schoolTimetable));
         return new FebsResponse().success().data(dataTable);
     }

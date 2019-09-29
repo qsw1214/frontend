@@ -6,7 +6,7 @@
         <result column="course_id" jdbcType="INTEGER" property="courseId"/>
         <result column="course_name" jdbcType="CHAR" property="courseName"/>
         <result column="user_id" jdbcType="BIGINT" property="userId"/>
-
+        <result column="user_name" jdbcType="VARCHAR" property="username"/>
         <result column="begin_date" jdbcType="DATE" property="beginDate"/>
         <result column="class_id" jdbcType="CHAR" property="classId"/>
         <result column="classroom_id" jdbcType="INTEGER" property="classroomId"/>
@@ -24,11 +24,11 @@
     <sql id="findSchoolTimetableDetailSql">
         SELECT
         d.course_id,d.course_name,d.begin_date,
-        d.duration,d.grade,d.section,d.subject,d.term,
+        d.duration,d.grade,d.section,d.subject,d.term,d.week,d.user_name,
         u.user_id,u.username,
         s.school_id,s.school_name schoolName,
         c.class_id,c.class_name className,
-        cr.id classroom_id,cr.location
+        cr.id classroom_id,cr.location,cr.state,cr.url
         FROM
         jcc_school_timetable d
         LEFT JOIN jcc_school_info s ON (s.school_id = d.school_id)

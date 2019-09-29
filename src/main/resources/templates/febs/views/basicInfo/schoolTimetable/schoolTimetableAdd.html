@@ -42,13 +42,21 @@
                        class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item">
+        <!--<div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">星期：</label>
             <div class="layui-input-block">
                 <input type="text" name="week" lay-verify="week" maxlength="1" autocomplete="off"
                        class="layui-input">
             </div>
+        </div>-->
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">星期:</label>
+            <div class="layui-input-block"  style="width: 180px;">
+                <select name="week" id="weekInfo">
+                </select>
+            </div>
         </div>
+
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">节次：</label>
             <div class="layui-input-block">
@@ -78,7 +86,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">适用年级：</label>
             <div class="layui-input-block">
-                <select name="gradeId"
+                <select name="grade"
                         xm-select-radio
                         xm-select-direction="down"
                         xm-select="schoolTimetable-add-grade"
@@ -122,13 +130,33 @@
             formSelects = layui.formSelects,
             treeSelect = layui.treeSelect,
             form = layui.form,
+            weekInfo = $('#weekInfo'),
             $view = $('#schoolTimetable-add'),
             validate = layui.validate;
 
+        getWeek();
         form.verify(validate);
         form.render();
 
         formSelects.render();
+
+        function getWeek() {
+            $.ajax({
+                type:'get',
+                url: ctx+"dict?field=week",
+                success:function (res) {
+                    var items=res.data;
+                    if (items.length==0){
+                        weekInfo.append('<option>'+""+'</option>');
+                    }else{
+                        for (var i=0;i<items.length;i++) {
+                            weekInfo.append('<option>' + items[i].v + '</option>');
+                        }
+                    }
+                    form.render('select');
+                }
+            });
+        }
 
         formSelects.config('schoolTimetable-add-school', {
             searchUrl: ctx + 'school',
@@ -187,8 +215,9 @@
                 for (var i = 0; i < data.length; i++) {
                     tranData.push({
                         name: data[i].v,
-                        value: data[i].k
+                        value: data[i].v
                     })
+                    //alert("年级name"+data[i].v+"年级value"+data[i].k);
                 }
                 result.data = tranData;
                 return result;
@@ -210,7 +239,7 @@
                 for (var i = 0; i < data.length; i++) {
                     tranData.push({
                         name: data[i].location,
-                        value: data[i].classroomId
+                        value: data[i].id
                     })
                 }
                 result.data = tranData;

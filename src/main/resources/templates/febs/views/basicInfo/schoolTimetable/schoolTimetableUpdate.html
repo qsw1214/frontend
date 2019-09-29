@@ -48,11 +48,18 @@
                        class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item">
+        <!--<div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">星期：</label>
             <div class="layui-input-block">
                 <input type="text" name="week" lay-verify="week" maxlength="1" autocomplete="off"
                        class="layui-input">
+            </div>
+        </div>-->
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">星期:</label>
+            <div class="layui-input-block"  style="width: 180px;">
+                <select name="week" id="weekInfo">
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
@@ -119,18 +126,42 @@
             form = layui.form,
             schoolTimetable = [[${schoolTimetable}]],
             beginDate = [[${beginDate}]],
+            week=$('#weekInfo'),
+            weekInfo = [[${weekInfo}]],
             $view = $('#schoolTimetable-update'),
             $remove=$view.find('#remove'),
             validate = layui.validate;
 
+        getWeek();
         form.verify(validate);
         form.render();
 
         initSchoolTimetableValue();
         formSelects.render();
 
+        function getWeek() {
+            $.ajax({
+                type:'get',
+                url: ctx+"dict?field=week",
+                success:function (res) {
+                    var items=res.data;
+                    if (res.data.length==0){
+                        week.append('<option value="'+""+'">'+""+'</option>');
+                    }else{
+                        for (var i=0;i<items.length;i++) {
+                            if (items[i].v===schoolTimetable.week){
+                                week.append('<option selected="selected">' + items[i].v + '</option>');
+                            }
+                            else{week.append('<option>' + items[i].v + '</option>');}
+                        }
+                    }
+                    form.render('select');
+                }
+            });
+        }
+
         formSelects.config('schoolTimetable-update-school', {
-            searchUrl: ctx + 'school/getAllSchools',
+            searchUrl: ctx + 'school',
             response: {
                 statusCode: 200
             },
