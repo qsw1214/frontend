@@ -13,9 +13,9 @@
         <result column="address" jdbcType="VARCHAR" property="address"/>
         <result column="lng" jdbcType="VARCHAR" property="lng"/>
         <result column="lat" jdbcType="VARCHAR" property="lat"/>
-        <result column="province" jdbcType="VARCHAR" property="province"/>
-        <result column="city" jdbcType="VARCHAR" property="city"/>
-        <result column="country" jdbcType="VARCHAR" property="country"/>
+        <result column="province_dept_id" jdbcType="BIGINT" property="provinceDeptId"/>
+        <result column="city_dept_id" jdbcType="BIGINT" property="cityDeptId"/>
+        <result column="country_dept_id" jdbcType="BIGINT" property="countryDeptId"/>
         <result column="school_category" jdbcType="VARCHAR" property="schoolCategory"/>
         <result column="city_leader_name" jdbcType="VARCHAR" property="cityLeaderName"/>
         <result column="province_leader_name" jdbcType="VARCHAR" property="provinceLeaderName"/>

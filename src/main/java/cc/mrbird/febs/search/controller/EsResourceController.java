@@ -114,7 +114,9 @@ public class EsResourceController extends BaseController{
         Map<String, Object> dataTable = getDataTable(esResourcePage);
         return new FebsResponse().success().data(dataTable);
     }
-    
+
+
+	// "排序字段:0->按相关度；1->按新品；2->按阅读量；3->评分从高到低"
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     @ResponseBody
     public FebsResponse search(@RequestParam(required = false) String keyword, EsResource resource,
