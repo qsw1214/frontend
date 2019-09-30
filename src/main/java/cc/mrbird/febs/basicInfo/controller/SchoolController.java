@@ -25,11 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -37,10 +33,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 学校表 Controller
@@ -92,7 +85,13 @@ public class SchoolController extends BaseController {
 				String path = Tools.saveFile(file, "school");
 				school.setPicture(path);
 			}
-            this.schoolService.createSchool(school);
+
+			School s=this.schoolService.createSchool(school);
+
+			if(s.getBelongId()==null){
+			    s.setBelongId(s.getSchoolId());
+                this.schoolService.updateSchool(s);
+            }
             return new FebsResponse().success();
         } catch (Exception e) {
             String message = "新增School失败";
@@ -166,5 +165,6 @@ public class SchoolController extends BaseController {
         Map<String, Object> dataTable = getDataTable(p);
         return new FebsResponse().success().data(dataTable);
     }
+
 
 }

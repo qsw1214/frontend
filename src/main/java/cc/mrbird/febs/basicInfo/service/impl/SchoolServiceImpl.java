@@ -79,6 +79,10 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         if (school.getState() != null) {
             queryWrapper.eq(School::getState, school.getState());
         }
+        if (school.getBelongId() != null) {
+            queryWrapper.eq(School::getBelongId, school.getBelongId());
+        }
+
         Page<School> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
     }
@@ -101,6 +105,10 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         if (school.getSchoolId() != null) {
             queryWrapper.eq(School::getSchoolId, school.getSchoolId());
         }
+
+        if (school.getBelongId() != null) {
+            queryWrapper.eq(School::getBelongId, school.getBelongId());
+        }
 		return this.baseMapper.selectList(queryWrapper);
     }
 
@@ -115,9 +123,10 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
 
     @Override
     @Transactional
-    public void createSchool(School school) {
+    public School createSchool(School school) {
     	school.setCreateTime(new Date());
         this.save(school);
+        return school;
     }
 
     @Override
@@ -196,4 +205,6 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         return this.page(page, queryWrapper);
 
 	}
+
+
 }

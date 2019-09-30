@@ -18,6 +18,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
  */
 @Data
 @TableName("jcc_school_info")
+
 public class School {
 
     /**
@@ -156,5 +157,11 @@ public class School {
      */
     @TableField("create_time")
     private Date createTime;
+
+    /**
+     * 所属学校
+     */
+    @TableField( "belongId")
+    private Integer belongId;
 
 }

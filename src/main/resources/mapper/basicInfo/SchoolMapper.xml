@@ -24,5 +24,7 @@
         <result column="create_time" jdbcType="DATE" property="createTime"/>
         <result column="picture" jdbcType="VARCHAR" property="picture"/>
         <result column="state" jdbcType="INTEGER" property="picture"/>
+        <result column="belongId" jdbcType="INTEGER" property="belongId"/>
     </resultMap>
+
 </mapper>

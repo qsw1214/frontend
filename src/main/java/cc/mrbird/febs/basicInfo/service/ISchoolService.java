@@ -45,7 +45,7 @@ public interface ISchoolService extends IService<School> {
      *
      * @param school school
      */
-    void createSchool(School school);
+    School createSchool(School school);
 
     /**
      * 修改
