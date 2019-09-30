@@ -37,6 +37,17 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">所属学校：</label>
+            <div class="layui-input-block">
+                <select name="schoolId"
+                        lay-verify="required"
+                        xm-select-direction="down"
+                        xm-select="schoolTimetable-update-school"
+                        xm-select-skin="default">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">主负责人：</label>
             <div class="layui-input-block">
                 <input type="text" name="linkMan" minlength="2" maxlength="10"
@@ -138,6 +149,33 @@
                 }
             });
         }
+        //所属主校
+        formSelects.config('schoolTimetable-update-school', {
+            searchUrl: ctx + 'school?schoolType=主校',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].schoolName,
+                        value: data[i].schoolId
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            success: function () {
+                formSelects.value('schoolTimetable-update-school', [school.schoolId]);
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取学校列表失败');
+            }
+        });
+
         function initUserValue() {
             var dateee = new Date(school.createTime).toJSON();
             var date = new Date(+new Date(dateee)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
