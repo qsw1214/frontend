@@ -117,6 +117,35 @@ public class RedisServiceImpl implements RedisService {
     public Set<String> getKeys(String pattern) throws RedisConnectException {
         return this.excuteByJedis(j -> j.keys(pattern));
     }
+    
+    @Override
+    public String get(String key) throws RedisConnectException {
+        return this.excuteByJedis(j -> j.get(key));
+    }
+    
+    @Override
+    public Long getLong(String key) {
+        try {
+			String s = this.excuteByJedis(j -> j.get(key));
+			if(s != null)
+				return Long.valueOf(s);
+		} catch (RedisConnectException e) {
+			log.error("redis connect error");
+		}
+        return 0L;
+    }
+
+    @Override
+    public String set(String key, String value) throws RedisConnectException {
+        return this.excuteByJedis(j -> j.set(key, value));
+    }
+
+    @Override
+    public String set(String key, String value, Long milliscends) throws RedisConnectException {
+        String result = this.set(key, value);
+        this.pexpire(key, milliscends);
+        return result;
+    }
 
     @Override
     public Object get(String key, Class c) {
@@ -124,7 +153,7 @@ public class RedisServiceImpl implements RedisService {
 			String cacheStr = this.excuteByJedis(j -> j.get(key));
 			return this.mapper.readValue(cacheStr, c);
 		} catch (Exception e) {
-			log.error("redis缓存读取失败", e);
+			log.error("redis connect error");
 		}
 		return null;
     }
@@ -137,7 +166,7 @@ public class RedisServiceImpl implements RedisService {
 				return this.excuteByJedis(j -> j.set(key, str));
 			}
 		} catch (Exception e) {
-			log.error("redis缓存写入失败", e);
+			log.error("redis connect error");
 		}	
         return null;
     }
@@ -149,7 +178,7 @@ public class RedisServiceImpl implements RedisService {
 			this.pexpire(key, milliscends);
 			return result;
 		} catch (RedisConnectException e) {
-			log.error("redis缓存写入失败", e);
+			log.error("redis connect error");
 		}
         return null;
     }
@@ -200,8 +229,13 @@ public class RedisServiceImpl implements RedisService {
     }
     
     @Override
-    public String hget(String key, String field) throws RedisConnectException {
-        return this.excuteByJedis(j -> j.hget(key, field));
+    public String hget(String key, String field) {
+    	try {
+    		return this.excuteByJedis(j -> j.hget(key, field));
+    	} catch (RedisConnectException e) {
+			log.error("redis connect error");
+		}
+		return null;
     }
     
     @Override
@@ -215,8 +249,53 @@ public class RedisServiceImpl implements RedisService {
     }
     
     @Override
-    public Long hincrby(String key, String field, Long increment) throws RedisConnectException {
-        return this.excuteByJedis(j -> j.hincrBy(key, field, increment));
+    public Long hincrby(String key, String field, Long increment) {
+    	try {
+    		return this.excuteByJedis(j -> j.hincrBy(key, field, increment));
+    	} catch (RedisConnectException e) {
+			log.error("redis connect error");
+		}
+		return 0L;
     }
+
+	@Override
+	public Long incr(String key) {	
+		try {
+			return this.excuteByJedis(j -> j.incr(key));
+		} catch (RedisConnectException e) {
+			log.error("redis connect error");
+		}
+		return 0L;
+	}
+
+	@Override
+	public Long incrBy(String key, long increment){
+		try {
+			return this.excuteByJedis(j -> j.incrBy(key, increment));
+		} catch (RedisConnectException e) {
+			log.error("redis connect error");
+		}
+		return 0L;
+	}
+
+	@Override
+	public Set<String> hkeys(String key) {
+		try {
+			return this.excuteByJedis(j -> j.hkeys(key));
+		} catch (RedisConnectException e) {
+			log.error("redis connect error");
+		}
+		return null;
+	}
+
+	@Override
+	public Long hdel(String key, String fields) {
+		try {
+			return this.excuteByJedis(j -> j.hdel(key, fields));
+		} catch (RedisConnectException e) {
+			log.error("redis connect error");
+		}
+		return null;
+	}
     
 }

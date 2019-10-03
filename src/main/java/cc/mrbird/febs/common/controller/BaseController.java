@@ -47,7 +47,7 @@ public class BaseController {
     protected Map<String, Object> getDataTable(Page<?> pageInfo) {
         Map<String, Object> data = new HashMap<>();
         data.put("rows", pageInfo.getContent());
-        data.put("total", pageInfo.getTotalPages());
+        data.put("total", pageInfo.getTotalElements());
         return data;
     }
 

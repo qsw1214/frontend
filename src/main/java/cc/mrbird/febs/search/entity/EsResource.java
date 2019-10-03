@@ -102,7 +102,7 @@ public class EsResource {
      * 阅读数
      */
 	@Field(type = FieldType.Integer)
-    private Integer readCount;
+    private Long readCount;
 
     /**
      * 评论数
@@ -143,7 +143,7 @@ public class EsResource {
     /**
      * 部门名称
      */
-	@Field(analyzer = "ik_max_word",type = FieldType.Text)
+	@Field(type = FieldType.Keyword)
     private String deptName;
     
     /**

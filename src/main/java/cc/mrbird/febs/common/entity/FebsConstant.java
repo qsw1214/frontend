@@ -24,5 +24,10 @@ public class FebsConstant {
     // 缓存前缀
     public static final String USER_PREFIX = "user.";
     
-    public static final String RES_VISIT_PREFIX = "res.visit.";
+    public static final String RES_READ_PREFIX = "res.read.";
+    
+    // 缓存 hashset key
+    public static final String RES_DETAIL_API_VISIT = "res.detail.api.visit";
+    
+    public static final String RES_VISIT = "res.visit";
 }

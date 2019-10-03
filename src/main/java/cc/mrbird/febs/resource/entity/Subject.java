@@ -69,7 +69,7 @@ public class Subject {
      * 阅读数
      */
     @TableField("read_count")
-    private Integer readCount;
+    private Long readCount;
     
     /**
      * 资源数

@@ -1,9 +1,9 @@
 package cc.mrbird.febs.search.controller;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import cc.mrbird.febs.common.controller.BaseController;
+import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.FebsResponse;
+import cc.mrbird.febs.common.service.RedisService;
 import cc.mrbird.febs.search.entity.EsResource;
 import cc.mrbird.febs.search.entity.KeywordCount;
 import cc.mrbird.febs.search.service.IEsResourceService;
@@ -33,9 +35,12 @@ public class EsResourceController extends BaseController{
     private IEsResourceService esResourceService;
 	@Autowired
     private IKeywordCountService keywordCountService;
+	@Autowired
+    private RedisService redisService;
+	
 	private final long nd = 1000 * 24 * 60 * 60;
 	
-	private static final Logger keywordLog = LoggerFactory.getLogger("keyword");
+	private static final Logger searchLog = LoggerFactory.getLogger("search");
 	
 	@RequestMapping(value = "/search/import", method = RequestMethod.GET)
     @ResponseBody
@@ -47,10 +52,29 @@ public class EsResourceController extends BaseController{
      * 获取资源数量(deptId为null时，返回所有资源总数)
      * @param deptId 指定部门
      */
-	@RequestMapping(value = "/reource/count", method = RequestMethod.GET)
+	@RequestMapping(value = "/count", method = RequestMethod.GET)
     @ResponseBody
     public FebsResponse getCount(@RequestParam(required = false) Long deptId) {
         return new FebsResponse().success().data(esResourceService.getCount(deptId));
+    }
+	
+	/**
+     * 获取资源详情接口访问量
+     */
+	@RequestMapping(value = "/detail/visit", method = RequestMethod.GET)
+    @ResponseBody
+    public FebsResponse getApiVisit() {
+		Map<String, String> map = new HashMap<>();
+		for(int i=0; i<24; i++){
+			String key = ""+i;
+			if(i<10)
+				key = "0" + i;
+			if(redisService.hget(FebsConstant.RES_DETAIL_API_VISIT, key) != null)
+				map.put(key, redisService.hget(FebsConstant.RES_DETAIL_API_VISIT, key));
+			else
+				map.put(key, "0");
+		}
+		return new FebsResponse().success().data(map);
     }
 	
 	/**
@@ -100,8 +124,18 @@ public class EsResourceController extends BaseController{
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public FebsResponse detail(Long id) {
+    public FebsResponse detail(@PathVariable Long id) {   	
     	EsResource r = esResourceService.get(id);
+    	//获取整小时
+    	Date date =new Date(System.currentTimeMillis()); 
+    	SimpleDateFormat formatter = new SimpleDateFormat("HH"); 
+    	String time = formatter.format(date);
+    	redisService.hincrby(FebsConstant.RES_DETAIL_API_VISIT, time, 1L);
+    	if(r != null){
+    		redisService.hincrby(FebsConstant.RES_VISIT, id.toString(), 1L);
+    		String num = redisService.hget(FebsConstant.RES_VISIT, id.toString());
+			r.setReadCount(r.getReadCount() + Long.valueOf(num));
+    	}
         return new FebsResponse().success().data(r);
     }
 
@@ -110,7 +144,11 @@ public class EsResourceController extends BaseController{
     public FebsResponse search(@RequestParam(required = false) String keyword,
                                                       @RequestParam(required = false, defaultValue = "0") Integer pageNum,
                                                       @RequestParam(required = false, defaultValue = "5") Integer pageSize) {
-        Page<EsResource> esResourcePage = esResourceService.search(keyword, pageNum, pageSize);
+    	// 将搜索词记录到日志,便于统计热词
+    	if(keyword != null && !keyword.equals("")){  		
+    		searchLog.info("keyword|" + keyword);
+    	}
+    	Page<EsResource> esResourcePage = esResourceService.search(keyword, pageNum, pageSize);
         Map<String, Object> dataTable = getDataTable(esResourcePage);
         return new FebsResponse().success().data(dataTable);
     }
@@ -124,11 +162,10 @@ public class EsResourceController extends BaseController{
                                                       @RequestParam(required = false, defaultValue = "5") Integer pageSize,
                                                       @RequestParam(required = false, defaultValue = "0") Integer sort) {
     	// 将搜索词记录到日志,便于统计热词
-    	if(keyword != null && !keyword.equals("")){
-    		String[] words = esResourceService.getAnalyzes("rms", keyword);  		
-    		keywordLog.info(keyword + "|" + StringUtils.join(words, ","));
+    	if(keyword != null && !keyword.equals("")){  		
+    		searchLog.info("keyword|" + keyword);
     	}
-        Page<EsResource> esResourcePage = esResourceService.search(keyword, resource, pageNum, pageSize, sort);
+        Page<EsResource> esResourcePage = esResourceService.search(keyword, resource, pageNum, pageSize, sort); 
         Map<String, Object> dataTable = getDataTable(esResourcePage);
         return new FebsResponse().success().data(dataTable);
     }
@@ -143,44 +180,4 @@ public class EsResourceController extends BaseController{
         return new FebsResponse().success().data(dataTable);
     }
     
-    /*
-    @RequestMapping(value = "/importAll", method = RequestMethod.POST)
-    @ResponseBody
-    public FebsResponse importAllList() {
-        int count = esResourceService.importAll();
-        return new FebsResponse().success().data(count);
-    }
-
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    public FebsResponse delete(@PathVariable Long id) {
-        esResourceService.delete(id);
-        return new FebsResponse().success();
-    }
-    
-    @RequestMapping(value = "/deleteAll", method = RequestMethod.GET)
-    @ResponseBody
-    public FebsResponse deleteAll() {
-        esResourceService.deleteAll();
-        return new FebsResponse().success();
-    }
-
-    @RequestMapping(value = "/delete/batch", method = RequestMethod.POST)
-    @ResponseBody
-    public FebsResponse delete(@RequestParam("ids") List<String> ids) {
-        esResourceService.delete(ids);
-        return new FebsResponse().success();
-    }
-
-    @RequestMapping(value = "/create/{id}", method = RequestMethod.POST)
-    @ResponseBody
-    public FebsResponse create(@PathVariable Long id) {
-        EsResource esResource = esResourceService.save(id);
-        if (esResource != null) {
-            return new FebsResponse().success().data(esResource);
-        } else {
-            return new FebsResponse().fail();
-        }
-    }
-    */
 }

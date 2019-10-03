@@ -99,4 +99,5 @@ public interface IResourceService extends IService<Resource> {
 	boolean checkCreator(List<String> resourceIds, String username);
 	
 	int updateStatus(List<String> resourceIds, Integer status);
+	
 }

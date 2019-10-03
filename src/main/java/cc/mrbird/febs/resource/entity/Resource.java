@@ -134,7 +134,7 @@ public class Resource {
      * 阅读数
      */
     @TableField("read_count")
-    private Integer readCount;
+    private Long readCount;
 
     /**
      * 评论数

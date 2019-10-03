@@ -37,12 +37,47 @@ public interface RedisService {
      * @return Set
      */
     Set<String> getKeys(String pattern) throws RedisConnectException;
-
+    
     /**
      * get命令
      *
      * @param key key
      * @return String
+     */
+    String get(String key) throws RedisConnectException;
+    
+    /**
+     * get命令
+     *
+     * @param key key
+     * @return Long
+     */
+    Long getLong(String key);
+
+    /**
+     * set命令
+     *
+     * @param key   key
+     * @param value value
+     * @return String
+     */
+    String set(String key, String value) throws RedisConnectException;
+
+    /**
+     * set 命令
+     *
+     * @param key         key
+     * @param value       value
+     * @param milliscends 毫秒
+     * @return String
+     */
+    String set(String key, String value, Long milliscends) throws RedisConnectException;
+
+    /**
+     * get命令
+     *
+     * @param key key
+     * @return Object
      */
     Object get(String key, Class c);
 
@@ -136,16 +171,24 @@ public interface RedisService {
      * @return Long
      */
     Long zrem(String key, String... members) throws RedisConnectException;
+    
+    Long incr(String key);
+    
+    Long incrBy(String key, long integer);
 
     // hash操作
 	Long hset(String key, String field, String value) throws RedisConnectException;
 
-	String hget(String key, String field) throws RedisConnectException;
+	String hget(String key, String field);
 	
 	Map<String, String> hgetAll(String key) throws RedisConnectException;
 
 	boolean hexists(String key, String field) throws RedisConnectException;
 
-	Long hincrby(String key, String field, Long increment) throws RedisConnectException;
+	Long hincrby(String key, String field, Long increment);
+	
+	Set<String> hkeys(String key);
+	
+	Long hdel(String key, String field);
    
 }

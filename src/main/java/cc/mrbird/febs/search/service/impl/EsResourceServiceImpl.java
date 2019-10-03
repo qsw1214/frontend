@@ -104,6 +104,11 @@ public class EsResourceServiceImpl implements IEsResourceService {
 		}
 		return result;
 	}
+	
+	@Override
+	public EsResource save(EsResource esResource) {
+		return resourceRepository.save(esResource);
+	}
 
 	@Override
 	public void delete(List<String> ids) {

@@ -8,7 +8,10 @@ import cc.mrbird.febs.resource.mapper.ResourceMapper;
 import cc.mrbird.febs.resource.service.ICommentService;
 import cc.mrbird.febs.resource.service.IResourceService;
 import cc.mrbird.febs.resource.service.ISubjectResourceService;
+import cc.mrbird.febs.search.entity.EsResource;
 import cc.mrbird.febs.search.service.IEsResourceService;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
@@ -31,6 +34,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  * @author lb
  * @date 2019-08-17 19:44:02
  */
+@Slf4j
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> implements IResourceService {
@@ -43,6 +47,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     private ICommentService commentService;
     @Autowired
     private IEsResourceService esResourceService;
+    
     
     @Override
 	public Resource findDetailById(Long resourceId) {
@@ -157,6 +162,12 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 	@Override
 	public void increaseReadCount(Long resourceId, Integer num) {
 		resourceMapper.increaseReadCount(resourceId, num);
+		Resource r = this.baseMapper.selectById(resourceId);
+		// 更新elasticsearch资源阅读量
+		EsResource esResource = new EsResource();
+		esResource.setResourceId(resourceId);
+		esResource.setReadCount(r.getReadCount());
+		esResourceService.save(esResource);
 	}
 	
 	@Override

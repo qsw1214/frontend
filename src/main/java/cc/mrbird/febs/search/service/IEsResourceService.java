@@ -15,7 +15,6 @@ public interface IEsResourceService {
      * 从数据库中导入所有资源到ES
      */
     int importAll();
-   
     
     /**
      * 获取资源数量(deptId为null时，返回所有资源总数)
@@ -37,6 +36,13 @@ public interface IEsResourceService {
      * 根据id保存资源
      */
     EsResource save(Long id);
+    
+    /**
+     * 
+     * @param 保存资源
+     * @return
+     */
+    EsResource save(EsResource esResource);
 
     /**
      * 批量删除资源
