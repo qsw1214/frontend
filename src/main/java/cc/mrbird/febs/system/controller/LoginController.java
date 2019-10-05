@@ -16,7 +16,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wf.captcha.Captcha;
 import org.apache.poi.ss.formula.functions.T;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
+
+import java.io.Serializable;
 import java.util.*;
 
 import static cc.mrbird.febs.dingding.util.requestUtil.$params;
@@ -97,7 +101,7 @@ public class LoginController extends BaseController {
                 loginLog.setUsername(String.valueOf(userInfMap.get("name")));
                 loginLog.setSystemBrowserInfo();
                 this.loginLogService.saveLoginLog(loginLog);
-
+                
                 return new FebsResponse().success();
             } catch (UnknownAccountException | IncorrectCredentialsException | LockedAccountException e) {
                 throw new FebsException("用户信息验证失败！请联系管理员");
@@ -120,8 +124,12 @@ public class LoginController extends BaseController {
                 loginLog.setUsername(username);
                 loginLog.setSystemBrowserInfo();
                 this.loginLogService.saveLoginLog(loginLog);
+                
+                // token信息, 即sessionId
+                Subject subject = SecurityUtils.getSubject();
+                Serializable tokenId = subject.getSession().getId();
 
-                return new FebsResponse().success();
+                return new FebsResponse().success().data(tokenId);
             } catch (UnknownAccountException | IncorrectCredentialsException | LockedAccountException e) {
                 throw new FebsException(e.getMessage());
             } catch (AuthenticationException e) {
