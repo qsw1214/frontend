@@ -1,14 +1,14 @@
 <style>
-    #school-update {
+    #classroomInfo-update {
         padding: 20px 25px 25px 0;
     }
 
-    #school-update .layui-treeSelect .ztree li a, .ztree li span {
+    #classroomInfo-update .layui-treeSelect .ztree li a, .ztree li span {
         margin: 0 0 2px 3px !important;
     }
 </style>
-<div class="layui-fluid" id="school-update">
-    <form class="layui-form" action="" lay-filter="school-update-form">
+<div class="layui-fluid" id="classroomInfo">
+    <form class="layui-form" action="" lay-filter="classroomInfo-update-form">
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">学校名称：</label>
             <div class="layui-input-block">
@@ -34,33 +34,32 @@
         <div class="layui-form-item">
             <label class="layui-form-label">位置：</label>
             <div class="layui-input-block">
-                <input type="text" name="location" class="layui-input">
+                <input type="text" name="location" id = "location" class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">数量：</label>
             <div class="layui-input-block">
-                <input type="text" name="containNum" class="layui-input">
+                <input type="text" name="containNum" id="containNum" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">简介：</label>
             <div class="layui-input-block">
-                <textarea name="introduce" maxlength="100" class="layui-textarea"></textarea>
+                <textarea name="introduce" id="introduce" maxlength="100" class="layui-textarea"></textarea>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">播放地址：</label>
             <div class="layui-input-block">
-                <input type="text" name="url" class="layui-input">
+                <input type="text" name="url" id="url" class="layui-input" readonly="readonly">
             </div>
         </div>
 
 
-        <div class="layui-form-item" style="text-align: right">
-            <button class="layui-btn" lay-submit="" lay-filter="classroomInfo-update-form-submit" id="submit">提交</button>
-            <button class="layui-btn layui-btn-primary" id="remove">取消</button>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="classroomInfo-update-form-submit" id="submit"></button>
         </div>
     </form>
 </div>
@@ -76,9 +75,8 @@
             grade=$('#classInfo'),
             subjectInfo=$('#subjectInfo'),
             school=$('#schoolId'),
+            $view = $('#classroomInfo-update'),
             classroomInfo = [[${classroomInfo}]],
-            $view = $('#school-update'),
-            $remove=$view.find('#remove'),
             validate = layui.validate;
         getSchool();
         getGrade();
@@ -139,7 +137,7 @@
             });
         }
         function initUserValue() {
-            form.val("school-update-form", {
+            form.val("classroomInfo-update-form", {
                 "location": classroomInfo.location,
                 "containNum": classroomInfo.containNum,
                 "introduce": classroomInfo.introduce,
@@ -149,20 +147,14 @@
             });
         }
 
-        $remove.on("click",function(){
-            layer.closeAll();
-        })
-
         form.on('submit(classroomInfo-update-form-submit)', function (data) {
         	data.field.schoolId=classroomInfo.schoolId;
-        	data.field.id =classroomInfo.id;
+        	data.field.id = classroomInfo.id;
             data.field.grade=$("#classInfo option:selected").val();
             if (febs.nativeEqual(data.field, classroomInfo)) {
                 febs.alert.warn('数据未作任何修改！');
                 return false;
             }
-
-            $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
             febs.post(ctx + 'classroomInfo/update', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('教室信息修改成功');

@@ -20,12 +20,11 @@
             <div class="layui-input-block"  style="width: 180px;">
                 <select name="subject" id="subjectInfo">
                 </select>
-            </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">年级:</label>
             <div class="layui-input-block"  style="width: 180px;">
-                <select name="grade" id="classInfo">
+                <select name="grade" id="grade">
                 </select>
             </div>
         </div>
@@ -39,24 +38,24 @@
         <div class="layui-form-item">
             <label class="layui-form-label">数量：</label>
             <div class="layui-input-block">
-                <input type="text" name="containNum" class="layui-input">
+                <input type="text" name="containNum"  id="containNum" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">简介：</label>
             <div class="layui-input-block">
-                <textarea name="introduce" maxlength="100" class="layui-textarea"></textarea>
+                <textarea name="introduce" id="introduce" maxlength="100" class="layui-textarea"></textarea>
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">播放地址：</label>
-            <div class="layui-input-block">
-                <input type="text" name="url" class="layui-input">
+<!--        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">播放地址：</label>
+            <div class="layui-input-block ">
+                <input type="text" name="url" id="url" class="layui-input">
             </div>
-        </div>
-        <div class="layui-form-item" style="text-align:right">
-            <button class="layui-btn" lay-submit="" lay-filter="classroom-add-form-submit" id="submit">提交</button>
-            <button type="reset" class="layui-btn layui-btn-primary" id="reset">重置</button>
+        </div>-->
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="classroomInfo-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
         </div>
     </form>
 </div>
@@ -70,21 +69,19 @@
             treeSelect = layui.treeSelect,
             form = layui.form,
             $view = $('#classroomInfo-add'),
-            classInfo=$('#classInfo'),
-            subjectInfo=$('#subjectInfo'),
+            // classroomInfo = [[${classroomInfo}]],
+            subjectInfo = $('#subjectInfo'),
             school=$('#schoolId'),
             validate = layui.validate;
-
+        // alert(classroomInfo.url);
         getSchool();
         getGrade();
         getSubject();
+        initClassroomInfoValue();
         form.verify(validate);
         form.render();
 
         formSelects.render();
-
-
-
         formSelects.config('classroomInfo-add-role', {
             searchUrl: ctx + 'role',
             response: {
@@ -108,6 +105,12 @@
             }
         });
 
+        function initClassroomInfoValue() {
+            // form.val("classroomInfo-add-form", {
+            //     "url": classroomInfo.url
+            // });
+        }
+
         function getSchool() {
             febs.get(ctx+'school/list',null,function (res) {
                 var items=res.data;
@@ -126,10 +129,10 @@
                 success:function (res) {
                     var items=res.data;
                     if (items.length==0){
-                        classInfo.append('<option>'+""+'</option>');
+                        grade.append('<option>'+""+'</option>');
                     }else{
                         for (var i=0;i<items.length;i++) {
-                            classInfo.append('<option>' + items[i].v + '</option>');
+                            grade.append('<option>' + items[i].v + '</option>');
                         }
                     }
                     form.render('select');
@@ -154,8 +157,7 @@
             });
         }
         form.on('submit(classroomInfo-add-form-submit)', function (data) {
-            $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
-            $("#reset").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
+            console.log(data.field);
             febs.post(ctx + 'classroomInfo', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('新增教室成功');

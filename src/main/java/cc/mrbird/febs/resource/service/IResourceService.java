@@ -92,12 +92,13 @@ public interface IResourceService extends IService<Resource> {
 
 	/**
 	 * 检查创建者是否为当前用户
-	 * @param commentIds
+	 * @param resourceIds
 	 * @param username
 	 * @return
 	 */
 	boolean checkCreator(List<String> resourceIds, String username);
 	
 	int updateStatus(List<String> resourceIds, Integer status);
-	
+
+	int getResourceCount(Integer provinceId, Integer cityDeptId, Integer countryDeptId);
 }

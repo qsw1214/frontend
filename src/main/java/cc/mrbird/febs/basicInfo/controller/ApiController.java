@@ -6,6 +6,8 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
+import cc.mrbird.febs.common.utils.DateUtil;
+import cc.mrbird.febs.common.utils.LiveRadioReqUtil;
 import cc.mrbird.febs.common.utils.Tools;
 import cc.mrbird.febs.resource.entity.Comment;
 import cc.mrbird.febs.resource.entity.Resource;
@@ -30,6 +32,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -398,5 +401,69 @@ public class ApiController extends BaseController {
         }
         FebsResponse febsResponse = new FebsResponse();
         return new FebsResponse().num(num).success();
+    }
+
+    /**
+     * 根据省市区条件进行统计开课数量统计
+     * @param request
+     * @param cityDeptId
+     * @param countryDeptId
+     * @return
+     */
+    @GetMapping("netCLassCount")
+//    @RequiresPermissions("count:netClassCount")
+    public FebsResponse getNetClassCount(QueryRequest request,Integer provinceId,Integer cityDeptId,Integer countryDeptId){
+        //1、根据省市区条件获取所有符合条件的学校列表
+        //2、学校关联教室，获取其所有的教室列表对应的URL地址
+        //3、以2019-10-01为起始时间，至当前时间，作为查询条件，统计其推流次数即开课数量统计
+        List<ClassroomInfo> classroomLists = this.classroomInfoService.getClassroomInfoByCityCountry(provinceId,cityDeptId,countryDeptId);
+        Integer count = 0;
+        for (int i = 0 ; i < classroomLists.size() ; i++){
+            ClassroomInfo info = classroomLists.get(i);
+            String url = info.getUrl();
+            String byear = "2019",bmonth = "10",bday = "01";
+            String eyear = DateUtil.getLatestYear() + "";
+            String emonth = DateUtil.getLatestMonth() + "";
+            String eday = DateUtil.getLatestDay() + "";
+            Map<String,Integer> map = LiveRadioReqUtil.getRadioPlayCount(byear,bmonth,bday,eyear,emonth,eday,url);
+            count += map.get(url);
+        }
+        return new FebsResponse().num(count).success();
+    }
+
+    /**
+     * 根据省市区条件获取教室数量
+     * @param request
+     * @param provinceId
+     * @param cityDeptId
+     * @param countryDeptId
+     * @return
+     */
+    @GetMapping("classroomCount")
+//    @RequiresPermissions("count:classroomCount")
+    public FebsResponse getClassroomCount(QueryRequest request,Integer provinceId,Integer cityDeptId,Integer countryDeptId){
+        Integer count = this.classroomInfoService.getClassroomCount(provinceId,cityDeptId,countryDeptId);
+        return new FebsResponse().num(count).success();
+    }
+
+    /**
+     * 根据省市区进行资源统计
+     * @return
+     */
+    @GetMapping("resourceCount")
+//    @RequiresPermissions("count:resourceCount")
+    public FebsResponse getResourceCount(QueryRequest request,Integer provinceId,Integer cityDeptId,Integer countryDeptId){
+        Integer count = this.resourceService.getResourceCount(provinceId,cityDeptId,countryDeptId);
+        return new FebsResponse().num(count).success();
+    }
+
+    /**
+     * 根据省市区条件进行学校数量统计
+     */
+    @GetMapping("schoolCount")
+//    @RequiresPermissions("count:schoolCount")
+    public FebsResponse getSchoolCount(QueryRequest request,Integer provinceId,Integer cityDeptId,Integer countryDeptId){
+        Integer count = this.schoolService.getSchoolCount(provinceId,cityDeptId,countryDeptId);
+        return new FebsResponse().num(count).success();
     }
 }

@@ -7,6 +7,8 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.utils.DateUtil;
 import cc.mrbird.febs.common.utils.FebsUtil;
+import cc.mrbird.febs.common.utils.HttpUtils;
+import cc.mrbird.febs.dingding.config.Constant;
 import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IUserService;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -43,6 +45,9 @@ public class ViewController extends BaseController {
     private IClassInfoService classInfoService;
 
     @Autowired
+    private IClassroomInfoService classroomInfoService;
+
+    @Autowired
     private ShiroHelper shiroHelper;
 
     @Autowired
@@ -58,7 +63,7 @@ public class ViewController extends BaseController {
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classroomInfo/classroomInfoAdd")
     @RequiresPermissions("classroomInfo:add")
-    private String classroomAdd(){
+    private String classroomAdd(Model model){
         return FebsUtil.view("basicInfo/classroomInfo/classroomInfoAdd");
     }
 
@@ -69,10 +74,10 @@ public class ViewController extends BaseController {
         return FebsUtil.view("basicInfo/classroomInfo/classroomInfoDetail");
     }
 
-    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classroomInfo/update/{classInfoId}")
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classroomInfo/update/{classroomInfoId}")
     @RequiresPermissions("classroomInfo:update")
-    public String classroomInfoUpdate(@PathVariable Integer classInfoId, Model model) {
-        resolveClassrModel(classInfoId,model, true);
+    public String classroomInfoUpdate(@PathVariable Integer classroomInfoId, Model model) {
+        resolveClassrModel(classroomInfoId,model, true);
         return FebsUtil.view("basicInfo/classroomInfo/classroomInfoUpdate");
     }
 
@@ -210,6 +215,7 @@ public class ViewController extends BaseController {
     public String basicInfodingding() {
         return FebsUtil.view("basicInfo/dingRemind/dingRemind");
     }
+
     //==============================================END==================================================
 
     /**
@@ -277,9 +283,8 @@ public class ViewController extends BaseController {
         model.addAttribute("abutment", abutment);
     }
 
-    private void resolveClassrModel(Integer classInfoId, Model model, Boolean transform) {
-        ClassInfo classInfo = this.classInfoService.getById(classInfoId);
-        model.addAttribute("classInfo", classInfo);
-
+    private void resolveClassrModel(Integer classroomInfoId, Model model, Boolean transform) {
+        ClassroomInfo classroomInfo = this.classroomInfoService.getById(classroomInfoId);
+        model.addAttribute("classroomInfo", classroomInfo);
     }
 }

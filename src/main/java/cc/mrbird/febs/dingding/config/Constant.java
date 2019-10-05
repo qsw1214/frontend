@@ -72,4 +72,6 @@ public class Constant {
      * 通讯录回调host
      */
     public static final String CALLBACK_URL_ORG = "http://6bb30bd0.cpolar.io/org";
+
+
 }

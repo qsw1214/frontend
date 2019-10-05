@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import java.util.Map;
+
 /**
  *  Mapper
  *
@@ -44,4 +46,6 @@ public interface ResourceMapper extends BaseMapper<Resource> {
 	 * @param num
 	 */
 	void increaseReadCount(@Param("resourceId") Long resourceId, @Param("num") Integer num);
+
+	public Integer getResourceCount(@Param("map") Map<String,Integer> map);
 }

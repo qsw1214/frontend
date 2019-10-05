@@ -8,16 +8,15 @@ import cc.mrbird.febs.resource.mapper.ResourceMapper;
 import cc.mrbird.febs.resource.service.ICommentService;
 import cc.mrbird.febs.resource.service.IResourceService;
 import cc.mrbird.febs.resource.service.ISubjectResourceService;
-import cc.mrbird.febs.search.entity.EsResource;
 import cc.mrbird.febs.search.service.IEsResourceService;
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  * @author lb
  * @date 2019-08-17 19:44:02
  */
-@Slf4j
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> implements IResourceService {
@@ -47,7 +45,6 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     private ICommentService commentService;
     @Autowired
     private IEsResourceService esResourceService;
-    
     
     @Override
 	public Resource findDetailById(Long resourceId) {
@@ -162,12 +159,6 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 	@Override
 	public void increaseReadCount(Long resourceId, Integer num) {
 		resourceMapper.increaseReadCount(resourceId, num);
-		Resource r = this.baseMapper.selectById(resourceId);
-		// 更新elasticsearch资源阅读量
-		EsResource esResource = new EsResource();
-		esResource.setResourceId(resourceId);
-		esResource.setReadCount(r.getReadCount());
-		esResourceService.save(esResource);
 	}
 	
 	@Override
@@ -189,5 +180,26 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 		resource.setStatus(status);
 		return this.baseMapper.update(resource, queryWrapper);
 	}
+
+    /**
+     * 根据省市区统计资源总量
+     * @param provinceId
+     * @param cityDeptId
+     * @param countryDeptId
+     * @return
+     */
+    @Override
+    public int getResourceCount(Integer provinceId,Integer cityDeptId,Integer countryDeptId){
+        Map<String,Integer> map = new HashMap<String,Integer>();
+        // 以最小单位为部门查询条件统计即可；
+        if(countryDeptId != null){
+            map.put("deptId",countryDeptId);
+        }else if(countryDeptId != null){
+            map.put("deptId",cityDeptId);
+        }else{
+            map.put("deptId",provinceId);
+        }
+        return this.baseMapper.getResourceCount(map);
+    }
 
 }

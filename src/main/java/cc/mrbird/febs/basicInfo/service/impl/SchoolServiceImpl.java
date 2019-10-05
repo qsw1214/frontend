@@ -16,6 +16,7 @@ import cc.mrbird.febs.system.service.IUserDeptService;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
@@ -79,10 +80,6 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         if (school.getState() != null) {
             queryWrapper.eq(School::getState, school.getState());
         }
-        if (school.getBelongId() != null) {
-            queryWrapper.eq(School::getBelongId, school.getBelongId());
-        }
-
         Page<School> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
     }
@@ -104,10 +101,6 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         }
         if (school.getSchoolId() != null) {
             queryWrapper.eq(School::getSchoolId, school.getSchoolId());
-        }
-
-        if (school.getBelongId() != null) {
-            queryWrapper.eq(School::getBelongId, school.getBelongId());
         }
 		return this.baseMapper.selectList(queryWrapper);
     }
@@ -203,8 +196,20 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     	
     	Page<School> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
-
 	}
 
-
+	@Override
+	public Integer getSchoolCount(Integer provinceId,Integer cityDeptId,Integer countryDeptId){
+        LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
+        if (provinceId != null) {
+            queryWrapper.eq(School::getProvinceDeptId, provinceId);
+        }
+        if (cityDeptId != null) {
+            queryWrapper.eq(School::getCityDeptId, cityDeptId);
+        }
+        if (countryDeptId != null) {
+            queryWrapper.eq(School::getCountryDeptId, countryDeptId);
+        }
+        return this.baseMapper.selectCount(queryWrapper);
+    }
 }

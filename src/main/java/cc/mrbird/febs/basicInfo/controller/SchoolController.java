@@ -86,7 +86,7 @@ public class SchoolController extends BaseController {
 				school.setPicture(path);
 			}
 
-			School s=this.schoolService.createSchool(school);
+			School s = this.schoolService.createSchool(school);
 
 			if(s.getBelongId()==null){
 			    s.setBelongId(s.getSchoolId());

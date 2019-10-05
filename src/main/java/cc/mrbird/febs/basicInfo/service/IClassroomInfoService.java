@@ -49,7 +49,7 @@ public interface IClassroomInfoService extends IService<ClassroomInfo> {
     /**
      * 删除
      *
-     * @param classroomInfo classroomInfo
+     * @param String classroomInfo
      */
     void deleteClassroomInfo(String classroomIds);
     
@@ -59,4 +59,8 @@ public interface IClassroomInfoService extends IService<ClassroomInfo> {
      * @param List<String> 学校id
      */
     void deleteClassroomInfosByschoolId(List<String> schoolIds);
+
+    List<ClassroomInfo> getClassroomInfoByCityCountry(Integer provinceId,Integer cityDeptId,Integer countryDeptId);
+
+    Integer getClassroomCount(Integer provinceId,Integer cityDeptId,Integer countryDeptId);
 }

@@ -6,12 +6,15 @@ import cc.mrbird.febs.basicInfo.mapper.ClassroomInfoMapper;
 import cc.mrbird.febs.basicInfo.service.IClassroomInfoService;
 import cc.mrbird.febs.common.entity.QueryRequest;
 
+import cc.mrbird.febs.common.utils.LiveRadioReqUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +82,8 @@ public class ClassroomInfoServiceImpl extends ServiceImpl<ClassroomInfoMapper, C
     @Override
     @Transactional
     public void createClassroomInfo(ClassroomInfo classroomInfo) {
+        String radioUrl = LiveRadioReqUtil.getNewLiveRadioUrl();
+        classroomInfo.setUrl(radioUrl);
         this.save(classroomInfo);
     }
 
@@ -92,6 +97,13 @@ public class ClassroomInfoServiceImpl extends ServiceImpl<ClassroomInfoMapper, C
     @Transactional
     public void deleteClassroomInfo(String classroomIds) {
     	List<String> list = Arrays.asList(classroomIds.split(StringPool.COMMA));
+        for (String id:list
+             ) {
+            ClassroomInfo info = this.getById(id);
+            if(StringUtils.isNotEmpty(info.getUrl())) {
+                LiveRadioReqUtil.deleteLiveRadioUrl(info.getUrl());
+            }
+        }
         baseMapper.deleteBatchIds(list);
 	}
     
@@ -100,4 +112,20 @@ public class ClassroomInfoServiceImpl extends ServiceImpl<ClassroomInfoMapper, C
 		if(schoolIds.size() > 0)
 			this.baseMapper.delete(new QueryWrapper<ClassroomInfo>().lambda().in(ClassroomInfo::getSchoolId, schoolIds));
 	}
+
+    public List<ClassroomInfo> getClassroomInfoByCityCountry(Integer provinceId,Integer cityDeptId,Integer countryDeptId){
+        Map<String,Integer> map = new HashMap<String,Integer>();
+        map.put("provinceDeptId",provinceId);
+        map.put("cityDeptId",cityDeptId);
+        map.put("countryDeptId",countryDeptId);
+        return this.baseMapper.getClassroomInfoByCityCountry(map);
+    }
+
+    public Integer getClassroomCount(Integer provinceId,Integer cityDeptId,Integer countryDeptId){
+        Map<String,Integer> map = new HashMap<String,Integer>();
+        map.put("provinceDeptId",provinceId);
+        map.put("cityDeptId",cityDeptId);
+        map.put("countryDeptId",countryDeptId);
+        return this.baseMapper.getClassroomCount(map);
+    }
 }

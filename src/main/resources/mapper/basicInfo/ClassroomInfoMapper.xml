@@ -12,6 +12,35 @@
         <result column="state" jdbcType="INTEGER" property="state"/>
         <result column="subject" jdbcType="VARCHAR" property="subject"/>
         <result column="garde" jdbcType="VARCHAR" property="garde"/>
-        <result column="order_num" jdbcType="BIGINT" property="orderNum"/>
     </resultMap>
+
+    <select id = "getClassroomInfoByCityCountry" resultType="cc.mrbird.febs.basicInfo.entity.ClassroomInfo" parameterType = "java.util.Map">
+        select * from jcc_classroom_info room
+          LEFT JOIN jcc_school_info school ON room.school_id = school.id
+          WHERE  1 = 1
+            <if test = "provinceDeptId != null">
+                and school.province_dept_id = #{provinceDeptId}
+            </if>
+            <if test = "cityDeptId != null">
+                and school.city_dept_id = #{cityDeptId}
+            </if>
+            <if test ="countryDeptId != null">
+                and school.country_dept_id = #{countryDeptId}
+            </if>
+    </select>
+
+    <select id="getClassroomCount" parameterType="java.util.Map" resultType="integer">
+        SELECT count(1) FROM jcc_classroom_info room
+        LEFT JOIN jcc_school_info school ON room.school_id = school.id
+        WHERE  1 = 1
+        <if test = "provinceDeptId != null">
+            and school.province_dept_id = #{provinceDeptId}
+        </if>
+        <if test = "cityDeptId != null">
+            and school.city_dept_id = #{cityDeptId}
+        </if>
+        <if test ="countryDeptId != null">
+            and school.country_dept_id = #{countryDeptId}
+        </if>
+    </select>
 </mapper>

@@ -88,8 +88,17 @@
             click: function (name, elem, event) {
                 var checkStatus = table.checkStatus('userTable');
                 if (name === 'add') {
+
                     febs.modal.open('新增教室', 'basicInfo/classroomInfo/classroomInfoAdd', {
+                        btn: ['提交', '重置'],
                         area: $(window).width() <= 750 ? '95%' : '50%',
+                        yes: function (index, layero) {
+                            $('#classroomInfo-add').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            $('#classroomInfo-add').find('#reset').trigger('click');
+                            return false;
+                        }
                     });
                 }
                 if (name === 'delete') {
@@ -167,7 +176,14 @@
             }
             if (layEvent === 'edit') {
                 febs.modal.open('修改教室', 'basicInfo/classroomInfo/update/' + data.id, {
-                    area: $(window).width() <= 750 ? '90%' : '50%'
+                    area: $(window).width() <= 750 ? '90%' : '50%',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#classroomInfo-update').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
                 });
             }
         });
@@ -202,6 +218,7 @@
                 url: ctx + 'classroomInfo/list',
                 cols: [[
                     {type: 'checkbox'},
+                    {field: 'schoolId', title: '学校', minWidth: 100},
                     {field: 'location', title: '位置', minWidth: 100},
                     {field: 'containNum', title: '数量'},
                     {field: 'introduce', title: '简介', minWidth: 180},

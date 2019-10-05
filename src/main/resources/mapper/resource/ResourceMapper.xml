@@ -15,7 +15,7 @@
         <result column="url" jdbcType="VARCHAR" property="url"/>
         <result column="star" jdbcType="INTEGER" property="star"/>
         <result column="description" jdbcType="VARCHAR" property="description"/>
-        <result column="read_count" jdbcType="DECIMAL" property="readCount"/>
+        <result column="read_count" jdbcType="INTEGER" property="readCount"/>
         <result column="comment_count" jdbcType="INTEGER" property="commentCount"/>
         <result column="order_num" jdbcType="DECIMAL" property="orderNum"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
@@ -94,6 +94,14 @@
         LEFT JOIN t_dict g ON r.grade_id = g.k AND g.field = 'grade'
         LEFT JOIN t_dict subj ON r.subject_id = subj.k AND subj.field = 'subject'
         WHERE r.resource_id = #{resourceId}
+    </select>
+
+    <select id="getResourceCount" parameterType="java.util.Map" resultType="integer">
+        SELECT count(1) FROM r_resource r
+        WHERE  1 = 1
+        <if test = "deptId != null">
+            and r.deptId = #{deptId}
+        </if>
     </select>
     
 </mapper>

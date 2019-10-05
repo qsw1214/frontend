@@ -72,4 +72,6 @@ public interface ISchoolService extends IService<School> {
      * @return IPage<School>
      */
     IPage<School> findSchoolsByDept(QueryRequest request, School school, Long deptId);
+
+    Integer getSchoolCount(Integer provinceId, Integer cityDeptId, Integer countryDeptId);
 }
