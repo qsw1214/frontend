@@ -14,33 +14,33 @@
         <result column="garde" jdbcType="VARCHAR" property="garde"/>
     </resultMap>
 
-    <select id = "getClassroomInfoByCityCountry" resultType="cc.mrbird.febs.basicInfo.entity.ClassroomInfo" parameterType = "java.util.Map">
+    <select id = "getClassroomInfoByCityCountry" resultType="cc.mrbird.febs.basicInfo.entity.ClassroomInfo" parameterType = "map">
         select * from jcc_classroom_info room
-          LEFT JOIN jcc_school_info school ON room.school_id = school.id
+          LEFT JOIN jcc_school_info school ON room.school_id = school.school_id
           WHERE  1 = 1
-            <if test = "provinceDeptId != null">
-                and school.province_dept_id = #{provinceDeptId}
+            <if test = "map.provinceDeptId != null">
+                and school.province_dept_id = #{map.provinceDeptId}
             </if>
-            <if test = "cityDeptId != null">
-                and school.city_dept_id = #{cityDeptId}
+            <if test = "map.cityDeptId != null">
+                and school.city_dept_id = #{map.cityDeptId}
             </if>
-            <if test ="countryDeptId != null">
-                and school.country_dept_id = #{countryDeptId}
+            <if test ="map.countryDeptId != null">
+                and school.country_dept_id = #{map.countryDeptId}
             </if>
     </select>
 
-    <select id="getClassroomCount" parameterType="java.util.Map" resultType="integer">
+    <select id="getClassroomCount" parameterType="map" resultType="java.lang.Integer">
         SELECT count(1) FROM jcc_classroom_info room
-        LEFT JOIN jcc_school_info school ON room.school_id = school.id
+        LEFT JOIN jcc_school_info school ON room.school_id = school.school_id
         WHERE  1 = 1
-        <if test = "provinceDeptId != null">
-            and school.province_dept_id = #{provinceDeptId}
+        <if test = "map.provinceDeptId != null">
+            and school.province_dept_id = #{map.provinceDeptId}
         </if>
-        <if test = "cityDeptId != null">
-            and school.city_dept_id = #{cityDeptId}
+        <if test = "map.cityDeptId != null">
+            and school.city_dept_id = #{map.cityDeptId}
         </if>
-        <if test ="countryDeptId != null">
-            and school.country_dept_id = #{countryDeptId}
+        <if test ="map.countryDeptId != null">
+            and school.country_dept_id = #{map.countryDeptId}
         </if>
     </select>
 </mapper>

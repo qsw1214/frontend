@@ -99,8 +99,8 @@
     <select id="getResourceCount" parameterType="java.util.Map" resultType="integer">
         SELECT count(1) FROM r_resource r
         WHERE  1 = 1
-        <if test = "deptId != null">
-            and r.deptId = #{deptId}
+        <if test = "map.deptId != null">
+            and r.dept_id = #{map.deptId}
         </if>
     </select>
     
