@@ -466,4 +466,24 @@ public class ApiController extends BaseController {
         Integer count = this.schoolService.getSchoolCount(provinceId,cityDeptId,countryDeptId);
         return new FebsResponse().num(count).success();
     }
+
+    /**
+     * 根据省市区条件进行教师数量统计
+     */
+    @GetMapping("teacherCount")
+//    @RequiresPermissions("count:teacherCount")
+    public FebsResponse getTeacherCount(QueryRequest request,Integer provinceId,Integer cityDeptId,Integer countryDeptId){
+        Integer count = 1000;
+        return new FebsResponse().num(count).success();
+    }
+
+    /**
+     * 根据省市区条件进行学生数量统计
+     */
+    @GetMapping("studentCount")
+//    @RequiresPermissions("count:studentCount")
+    public FebsResponse getStudentCount(QueryRequest request,Integer provinceId,Integer cityDeptId,Integer countryDeptId){
+        Integer count = 2000;
+        return new FebsResponse().num(count).success();
+    }
 }
