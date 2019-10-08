@@ -116,7 +116,6 @@
             febs.get(ctx+'school/list',null,function (res) {
                 var items=res.data;
                 if (items.total==0){
-                    alert(1);
                     school.append('<option value="'+""+'">'+""+'</option>');
                 }else{
                     //school.append('<option value="' + items.rows[0].schoolId + '">' + items.rows[0].schoolName+ '</option>');
