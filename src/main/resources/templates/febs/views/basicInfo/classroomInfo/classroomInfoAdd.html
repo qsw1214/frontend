@@ -71,6 +71,7 @@
             $view = $('#classroomInfo-add'),
             // classroomInfo = [[${classroomInfo}]],
             subjectInfo = $('#subjectInfo'),
+            grade = $('#grade'),
             school=$('#schoolId'),
             validate = layui.validate;
         // alert(classroomInfo.url);
@@ -115,9 +116,13 @@
             febs.get(ctx+'school/list',null,function (res) {
                 var items=res.data;
                 if (items.total==0){
+                    alert(1);
                     school.append('<option value="'+""+'">'+""+'</option>');
                 }else{
-                    school.append('<option value="' + items.rows[0].schoolId + '">' + items.rows[0].schoolName+ '</option>');
+                    //school.append('<option value="' + items.rows[0].schoolId + '">' + items.rows[0].schoolName+ '</option>');
+                    for (var i=0;i<items.rows.length;i++) {
+                            school.append('<option value='+ items.rows[i].schoolId + '>' + items.rows[i].schoolName + '</option>');
+                    }
                 }
                 form.render('select');
             });
