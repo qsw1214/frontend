@@ -128,8 +128,11 @@ public class LoginController extends BaseController {
                 // token信息, 即sessionId
                 Subject subject = SecurityUtils.getSubject();
                 Serializable tokenId = subject.getSession().getId();
+                Map authen = new HashMap(); 
+                authen.put("token", tokenId);
+                
 
-                return new FebsResponse().success().data(tokenId);
+                return new FebsResponse().success().data(authen);
             } catch (UnknownAccountException | IncorrectCredentialsException | LockedAccountException e) {
                 throw new FebsException(e.getMessage());
             } catch (AuthenticationException e) {
