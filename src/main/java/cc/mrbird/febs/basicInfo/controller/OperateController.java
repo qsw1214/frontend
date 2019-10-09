@@ -8,6 +8,7 @@ import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.interceptor.Token;
+import cc.mrbird.febs.common.utils.Tools;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.schema.Server;
@@ -53,8 +54,14 @@ public class OperateController extends BaseController {
     @Token(remove = true)
     @PostMapping
     @RequiresPermissions("operate:add")
-    public FebsResponse addArea(@Valid Operate operate) throws FebsException {
+    public FebsResponse addArea(@Valid Operate operate,@RequestParam(required=false,value="file") MultipartFile file) throws FebsException {
         try {
+
+            if (file != null) {
+                String path = Tools.saveFile(file, "operate");
+                operate.setAttachAddress(path);
+            }
+
             operate.setUploadTime(new Date());
             operate.setUpdateTime(operate.getUploadTime());
             this.opertaeService.createOperate(operate);

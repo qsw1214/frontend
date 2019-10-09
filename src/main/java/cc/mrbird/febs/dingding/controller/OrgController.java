@@ -5,7 +5,11 @@ import cc.mrbird.febs.basicInfo.service.ISchoolService;
 import cc.mrbird.febs.common.utils.DateUtil;
 import cc.mrbird.febs.common.utils.MD5Util;
 import cc.mrbird.febs.dingding.config.Constant;
+import cc.mrbird.febs.dingding.service.AppAbutmentService;
+import cc.mrbird.febs.dingding.service.IApprovalService;
 import cc.mrbird.febs.dingding.util.AddressListUtil;
+import cc.mrbird.febs.dingding.util.ApprovalInfUtil;
+import cc.mrbird.febs.dingding.util.MessageUtil;
 import cc.mrbird.febs.dingding.vo.*;
 import cc.mrbird.febs.system.entity.Dept;
 import cc.mrbird.febs.system.entity.Role;
@@ -113,11 +117,26 @@ public class OrgController {
 
     private static final String LABEL_CONF_MODIFY = "label_conf_modify";//修改角色或者角色组
 
+    /**
+     * 审批任务回调
+     */
+    private static final String BPMS_TASK_CHANGE = "bpms_task_change";
+
+    /**
+     * 审批实例回调
+     */
+    private static final String BPMS_INSTANCE_CHANGE = "bpms_instance_change";
 
     /**
      * 相应钉钉回调时的值
      */
     private static final String CALLBACK_RESPONSE_SUCCESS = "success";
+
+    @Autowired
+    private IApprovalService approvalService;
+
+    @Autowired
+    private AppAbutmentService appAbutmentService;
 
     public long checkSynchParentDeptInfo(long deptId){
         Dept dept = deptService.getById(deptId);
@@ -356,6 +375,42 @@ public class OrgController {
                 bizLogger.info("删除角色或者角色组: " + plainText);
             }else if(LABEL_CONF_MODIFY .equals(eventType)){
                 bizLogger.info("修改角色或者角色组: " + plainText);
+            }else if (BPMS_TASK_CHANGE.equals(eventType)) {
+                bizLogger.info("收到审批任务进度更新: " + plainText);
+                //todo: 实现审批的业务逻辑，如发消息
+                //通过这个map获取到的信息,同步数据库的数据
+                //CallBackService.insertOrUpdateApprovalInf(map);
+            } else if (BPMS_INSTANCE_CHANGE.equals(eventType)) {
+                bizLogger.info("收到审批实例状态更新: " + plainText);
+                //调用审批审批详情接口
+                //通过这个map获取到的信息,同步数据库的数据
+                //CallBackService.insertOrUpdateApprovalInf(map);
+                //todo: 实现审批的业务逻辑，如发消息
+                String processInstanceId = obj.getString("processInstanceId");
+                if (obj.containsKey("result") && obj.getString("result").equals("agree")) {
+                    MessageUtil.sendMessageToOriginator(processInstanceId);
+                    //审批实例开始，结束
+                    String processCode = obj.getString("processCode");
+                    switch(processCode){
+                        //学校入驻审批实例
+                        case Constant.SCHOOL_CALLBACK_URL_HOST:
+                            //调用审批详情接口，获取详情
+                            Map map = ApprovalInfUtil.getToken(obj.getString("processInstanceId"));
+                            //JSON字符串
+                            String processInstance = (String) map.get("process_instance");
+                            this.approvalService.dealSchoolApprovalData(processInstance);
+                            break;
+                        //第三方应用接入审批实例
+                        case Constant.APP_ABUTMENT_CALLBACK_URL_HOST:
+                            //调用审批详情接口，获取详情
+                            Map abutmentMap = ApprovalInfUtil.getToken(obj.getString("processInstanceId"));
+                            //JSON字符串
+                            String processInstance2 = (String) abutmentMap.get("process_instance");
+                            this.approvalService.insertAppAbutmentApply(processInstance2);
+                            break;
+
+                    }
+                }
             }
             // 返回success的加密信息表示回调处理成功
             return dingTalkEncryptor.getEncryptedMap(CALLBACK_RESPONSE_SUCCESS, System.currentTimeMillis(), Utils.getRandomStr(8));

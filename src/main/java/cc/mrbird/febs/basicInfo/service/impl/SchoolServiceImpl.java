@@ -69,7 +69,8 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     	LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();     
         // TODO 设置查询条件   
         if (StringUtils.isNotBlank(school.getSchoolName())) {
-            queryWrapper.eq(School::getSchoolName, school.getSchoolName());
+            //queryWrapper.eq(School::getSchoolName, school.getSchoolName());
+            queryWrapper.like(School::getSchoolName, school.getSchoolName());
         }
         if (StringUtils.isNotBlank(school.getSchoolType())) {
             queryWrapper.eq(School::getSchoolType, school.getSchoolType());
@@ -80,6 +81,9 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         if (school.getState() != null) {
             queryWrapper.eq(School::getState, school.getState());
         }
+        if (school.getBelongId() != null) {
+            queryWrapper.eq(School::getBelongId, school.getBelongId());
+        }
         Page<School> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
     }
@@ -88,7 +92,8 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     public List<School> findSchools(School school) {
 	    LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotBlank(school.getSchoolName())) {
-            queryWrapper.eq(School::getSchoolName, school.getSchoolName());
+            //queryWrapper.eq(School::getSchoolName, school.getSchoolName());
+            queryWrapper.like(School::getSchoolName, school.getSchoolName());
         }
         if (StringUtils.isNotBlank(school.getSchoolType())) {
             queryWrapper.eq(School::getSchoolType, school.getSchoolType());
@@ -101,6 +106,9 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         }
         if (school.getSchoolId() != null) {
             queryWrapper.eq(School::getSchoolId, school.getSchoolId());
+        }
+        if (school.getBelongId() != null) {
+            queryWrapper.eq(School::getBelongId, school.getBelongId());
         }
 		return this.baseMapper.selectList(queryWrapper);
     }
