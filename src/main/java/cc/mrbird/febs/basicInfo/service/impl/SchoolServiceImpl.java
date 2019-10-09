@@ -69,7 +69,8 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     	LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();     
         // TODO 设置查询条件   
         if (StringUtils.isNotBlank(school.getSchoolName())) {
-            queryWrapper.eq(School::getSchoolName, school.getSchoolName());
+            //queryWrapper.eq(School::getSchoolName, school.getSchoolName());
+            queryWrapper.like(School::getSchoolName, school.getSchoolName());
         }
         if (StringUtils.isNotBlank(school.getSchoolType())) {
             queryWrapper.eq(School::getSchoolType, school.getSchoolType());
@@ -116,8 +117,7 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     public List<School> findSchoolsByName(String schoolName) {
         LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotBlank(schoolName)) {
-            //queryWrapper.eq(School::getSchoolName, schoolName);
-            queryWrapper.like(School::getSchoolName, schoolName);
+            queryWrapper.eq(School::getSchoolName, schoolName);
         }
         return this.baseMapper.selectList(queryWrapper);
     }
