@@ -79,13 +79,12 @@ public class SchoolController extends BaseController {
     @PostMapping("school")
     @ResponseBody
     @RequiresPermissions("school:add")
-    public FebsResponse addSchool(@Valid School school, @RequestParam(required=false,value="file") MultipartFile[] files) throws FebsException {
+    public FebsResponse addSchool(@Valid School school, @RequestParam(required=false,value="file") MultipartFile file) throws FebsException {
         try {
-            List<String> paths = Tools.saveFiles(files,"school");
-			/*if (file != null) {
+			if (file != null) {
 				String path = Tools.saveFile(file, "school");
 				school.setPicture(path);
-			}*/
+			}
 
 			School s = this.schoolService.createSchool(school);
 
