@@ -39,7 +39,7 @@ public class test {
         registerRequest.setAesKey(Constant.ENCODING_AES_KEY);
         //加解密需要用到的token，企业可以随机填写。如 "12345"
         registerRequest.setToken(Constant.TOKEN);
-        registerRequest.setCallBackTag(Arrays.asList("user_add_org", "user_modify_org","user_leave_org","org_admin_add","org_admin_remove","org_dept_create", "org_dept_modify","org_dept_remove","org_remove","org_change","label_user_change","label_conf_add","label_conf_del","label_conf_modify"));
+        registerRequest.setCallBackTag(Arrays.asList("user_add_org", "user_modify_org","user_leave_org","org_admin_add","org_admin_remove","org_dept_create", "org_dept_modify","org_dept_remove","org_remove","org_change","label_user_change","label_conf_add","label_conf_del","label_conf_modify","bpms_instance_change", "bpms_task_change"));
         OapiCallBackRegisterCallBackResponse registerResponse = client.execute(registerRequest,AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET));
         if (registerResponse.isSuccess()) {
             System.out.println("回调注册成功了！！！");

@@ -68,13 +68,17 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label febs-form-item-require">附件地址：</label>
+                           <!-- <label class="layui-form-label febs-form-item-require">附件地址：</label>
                             <div class="layui-input-block">
                                 <input type="text" name="attachAddress" autocomplete="off" class="layui-input" minlength="2"
                                        maxlength="100" lay-verify="range">
-                            </div>
+                            </div>-->
                             <div class="layui-input-block">
-                                <button type="button" class="layui-btn" id="upload"><i class="layui-icon"></i>上传文件</button></i>
+                                <div id="file-box">
+                                    <i class="layui-icon"></i>上传文件
+                                    <input type="file" class="layui-btn" id="file" name="file" value="点我上传"/>
+                                </div>
+                                <p id="fileName">未上传任何文件</p>
                             </div>
                         </div>
                         <div class="layui-form-item febs-hide">
@@ -270,10 +274,30 @@
             })
         }
 
+        //监听input
+        $("#file").on("change",function (e) {
+            var e = e || window.event;
+            //获取 文件 个数 取消的时候使用
+            var files = e.target.files;
+            if(files.length>0){
+                // 获取文件名 并显示文件名
+                var fileName = files[0].name;
+                $("#fileName").html(fileName);
+            }else{
+                //清空文件名
+                $("#fileName").html("");
+            }
+        });
 
         form.on('submit(operate-form-submit)', function (data) {
             $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
-            addOrUpdateOperate(data.field);
+            var formData = new FormData();
+            formData.append('id',data.field.id);
+            formData.append('title',data.field.title);
+            formData.append('author',data.field.author);
+            formData.append('file', $("#file")[0].files[0]);
+            alert(formData);
+            addOrUpdateOperate(formData);
             return false;
         });
 
@@ -305,7 +329,7 @@
             }
         });*/
 
-        var uploadInst = upload.render({
+      /*  var uploadInst = upload.render({
             elem: '#upload' //绑定元素
             ,url: 'operate/upload' //上传接口
             ,method: 'POST'
@@ -326,6 +350,32 @@
                 layer.closeAll('loading');
                 layer.msg('网络异常，请稍后重试！');
             }
-        });
+        });*/
     });
 </script>
+<style>
+    #file{
+        opacity: 0;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100px;
+        height: 40px;
+    }
+    #file-box{
+        width: 100px;
+        height: 40px;
+        background-color: #32c787;
+        border-radius: 10px;
+        text-align: center;
+        line-height: 40px;
+        color: #FFFFFF;
+        position: relative;
+        float: left;
+    }
+    #fileName{
+        height: 40px;
+        line-height: 40px;
+        margin-left: 110px;
+    }
+</style>
