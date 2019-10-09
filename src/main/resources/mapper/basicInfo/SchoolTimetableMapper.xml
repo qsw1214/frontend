@@ -43,10 +43,20 @@
             AND s.subject like CONCAT('%','${schoolTimetable.subject}','%')
         </if>
         <if test="schoolTimetable.schoolName != null and schoolTimetable.schoolName != ''">
-            AND s.school_name like CONCAT('%','${schoolTimetable.schoolName}','%')
+            AND s.school_name like CONCAT('%','${schoolTimetable.schoo                                                                                                                                     lName}','%')
+        </if>
+        <if test="schoolTimetable.schoolId != null and schoolTimetable.schoolId != ''">
+            AND s.school_id = #{schoolTimetable.schoolId}
+        </if>
+        <if test="schoolTimetable.week != null and schoolTimetable.week != ''">
+            AND d.week = #{schoolTimetable.week}
         </if>
     </sql>
     <select id="findSchoolTimetables" parameterType="cc.mrbird.febs.basicInfo.entity.SchoolTimetable" resultMap="schoolTimetableMap">
         <include refid="findSchoolTimetableDetailSql"/>
+    </select>
+
+    <select id="selectMainSchoolId" parameterType="Integer" resultType="Integer">
+        select belongId from jcc_school_info where school_id = #{schoolId}
     </select>
 </mapper>

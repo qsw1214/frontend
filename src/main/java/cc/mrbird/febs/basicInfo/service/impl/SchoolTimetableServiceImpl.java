@@ -39,6 +39,13 @@ public class SchoolTimetableServiceImpl extends ServiceImpl<SchoolTimetableMappe
     public IPage<SchoolTimetable> findSchoolTimetables(QueryRequest request, SchoolTimetable schoolTimetable) {
         Page<SchoolTimetable> page = new Page<>(request.getPageNum(), request.getPageSize());
         SortUtil.handlePageSort(request, page, "course_id", FebsConstant.ORDER_ASC, false);
+        if(schoolTimetable.getSchoolId() != null){
+            //根据传递过来的学校id判断是否有主校,如果有主校,就将schoolId赋值为主校的
+            Integer mainSchoolId = this.baseMapper.selectMainSchoolId(schoolTimetable.getSchoolId());
+            if(mainSchoolId != null){
+                schoolTimetable.setSchoolId(mainSchoolId);
+            }
+        }
         return this.baseMapper.findSchoolTimetables(page, schoolTimetable);
     }
 

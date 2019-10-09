@@ -16,4 +16,6 @@ import org.apache.ibatis.annotations.Param;
 public interface SchoolTimetableMapper extends BaseMapper<SchoolTimetable> {
 
     IPage<SchoolTimetable> findSchoolTimetables(Page page, @Param("schoolTimetable") SchoolTimetable schoolTimetable);
+
+    Integer selectMainSchoolId(Integer schoolId);
 }
