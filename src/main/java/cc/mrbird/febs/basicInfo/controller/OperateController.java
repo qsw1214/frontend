@@ -90,8 +90,14 @@ public class OperateController extends BaseController {
     @Log("修改Operate")
     @PostMapping("update")
     @RequiresPermissions("operate:update")
-    public FebsResponse updateArea(Operate operate) throws FebsException {
+    public FebsResponse updateArea(Operate operate,@RequestParam(required=false,value="file") MultipartFile file) throws FebsException {
         try {
+
+            if (file != null) {
+                String path = Tools.saveFile(file, "operate");
+                operate.setAttachAddress(path);
+            }
+            
             operate.setUpdateTime(new Date());
             this.opertaeService.updateOperate(operate);
             return new FebsResponse().success();
@@ -114,7 +120,7 @@ public class OperateController extends BaseController {
             throw new FebsException(message);
         }
     }
-
+/*
     @RequestMapping("upload")
     @ResponseBody
     public Map<String,Object> fileUpload(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request, HttpSession session) throws IOException {
@@ -138,7 +144,7 @@ public class OperateController extends BaseController {
             map.put("mess","上传失败");
         }
         return map;
-    }
+    }*/
 
     @RequestMapping("download")
     public void downloadOne(HttpServletRequest req,HttpServletResponse response) throws IOException, FebsException {

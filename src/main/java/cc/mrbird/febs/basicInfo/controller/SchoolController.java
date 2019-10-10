@@ -82,7 +82,7 @@ public class SchoolController extends BaseController {
     public FebsResponse addSchool(@Valid School school, @RequestParam(required=false,value="file") MultipartFile file) throws FebsException {
         try {
 			if (file != null) {
-				String path = Tools.saveFile(file, "school");
+                String path = Tools.saveFile(file, "school");
 				school.setPicture(path);
 			}
 

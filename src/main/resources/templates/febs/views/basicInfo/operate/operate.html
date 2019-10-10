@@ -68,15 +68,16 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                           <!-- <label class="layui-form-label febs-form-item-require">附件地址：</label>
+                            <label class="layui-form-label febs-form-item-require">附件地址：</label>
                             <div class="layui-input-block">
                                 <input type="text" name="attachAddress" autocomplete="off" class="layui-input" minlength="2"
                                        maxlength="100" lay-verify="range">
-                            </div>-->
+                            </div>
+                            <!--<label class="layui-form-label febs-form-item-require">附件：</label>-->
                             <div class="layui-input-block">
                                 <div id="file-box">
-                                    <i class="layui-icon"></i>上传文件
-                                    <input type="file" class="layui-btn" id="file" name="file" value="点我上传"/>
+                                    <i class="layui-icon">&#xe67c;</i>上传文件
+                                    <input type="file" id="file" name="file" value="点我上传"/>
                                 </div>
                                 <p id="fileName">未上传任何文件</p>
                             </div>
@@ -203,7 +204,7 @@
                     "id": data.id,
                     "title": data.title,
                     "author": data.author,
-                    "attachAddress": data.attachAddress
+                    //"attachAddress": data.attachAddress
                 });
             }
             if (layEvent === 'del') {
@@ -291,29 +292,52 @@
 
         form.on('submit(operate-form-submit)', function (data) {
             $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
-            var formData = new FormData();
-            formData.append('id',data.field.id);
-            formData.append('title',data.field.title);
-            formData.append('author',data.field.author);
-            formData.append('file', $("#file")[0].files[0]);
-            alert(formData);
-            addOrUpdateOperate(formData);
+            addOrUpdateOperate(data.field);
             return false;
         });
 
 
         var addOrUpdateOperate = function (data) {
-            if (data.id && $header.text() === '修改操作指南') {
-                febs.post(ctx + 'operate/update', data, function () {
+            var formData = new FormData();
+            formData.append("id",data.id);
+            formData.append("title",data.title);
+            formData.append("author",data.author);
+            formData.append('file', $("#file")[0].files[0]);
+            if (formData.id && $header.text() === '修改操作指南') {
+                /*febs.post(ctx + 'operate/update', data, function () {
                     febs.alert.success('修改操作指南成功');
                     $query.trigger('click');
                     $("#submit").removeClass("layui-btn layui-btn-radius layui-btn-disabled").addClass("layui-btn layui-btn-normal").prop("disabled",false);
+                });*/
+                $.ajax({
+                    type:'POST',
+                    url:ctx + 'operate/update',
+                    data:formData,
+                    processData: false,
+                    contentType: false,
+                    success:function(data){
+                        febs.alert.success('修改操作指南成功');
+                        $query.trigger('click');
+                        $("#submit").removeClass("layui-btn layui-btn-radius layui-btn-disabled").addClass("layui-btn layui-btn-normal").prop("disabled",false);
+                    }
                 });
             } else {
-                febs.post(ctx + 'operate', data, function () {
+                /*febs.post(ctx + 'operate', formData, function () {
                     febs.alert.success('新增操作指南成功');
                     $query.trigger('click');
                     $("#submit").removeClass("layui-btn layui-btn-radius layui-btn-disabled").addClass("layui-btn layui-btn-normal").prop("disabled",false);
+                });*/
+                $.ajax({
+                    type:'POST',
+                    url:ctx + 'operate',
+                    data:formData,
+                    processData: false,
+                    contentType: false,
+                    success:function(data){
+                        febs.alert.success('新增操作指南成功');
+                        $query.trigger('click');
+                        $("#submit").removeClass("layui-btn layui-btn-radius layui-btn-disabled").addClass("layui-btn layui-btn-normal").prop("disabled",false);
+                    }
                 });
             }
         }

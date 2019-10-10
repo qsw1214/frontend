@@ -41,6 +41,7 @@
             <div class="layui-input-block">
                 <select name="belongId"
                         xm-select-direction="down"
+                        lay-verify="required"
                         xm-select="schoolTimetable-add-school"
                         xm-select-skin="default">
                 </select>
@@ -95,7 +96,7 @@
             <div class="layui-input-block">
                 <div id="file-box">
                     <i class="layui-icon">&#xe67c;</i>上传图片
-                    <input type="file" id="file" name="file" value="点我上传"/>
+                    <input type="file" id="file" name="file" value="点我上传" lay-verify="required"/>
                 </div>
                 <p id="fileName">未上传任何文件</p>
             </div>
