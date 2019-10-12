@@ -21,9 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -62,7 +60,9 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     
     @Autowired
 	private IUserDeptService userDeptService;
-    
+
+    @Autowired
+    private SchoolMapper schoolMapper;
  
     @Override
     public IPage<School> findSchools(QueryRequest request, School school) {
@@ -219,5 +219,21 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
             queryWrapper.eq(School::getCountryDeptId, countryDeptId);
         }
         return this.baseMapper.selectCount(queryWrapper);
+    }
+
+    public Map<String,Object> getLast12MonthSchoolCount(Integer provinceId, Integer cityDeptId, Integer countryDeptId){
+        School school = new School();
+        school.setProvinceDeptId(provinceId == null ? null:provinceId.longValue());
+        school.setCityDeptId(cityDeptId == null ? null:cityDeptId.longValue());
+        school.setCountryDeptId(countryDeptId == null ? null : countryDeptId.longValue());
+        List<HashMap<String,Object>> result = this.schoolMapper.getLast12MonthSchoolCount(school);
+        Map<String,Object> mapResult = new HashMap<String,Object>();
+        for (int i = 0 ; i < result.size(); i++){
+            HashMap<String,Object> map = result.get(i);
+            System.out.print(map.get("yearMonth") + " ");
+            System.out.print(map.get("totalNum") + " ");
+            mapResult.put(map.get("yearMonth") + "",map.get("totalNum"));
+        }
+        return mapResult;
     }
 }

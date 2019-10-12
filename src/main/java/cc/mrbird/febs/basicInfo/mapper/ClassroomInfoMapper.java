@@ -19,4 +19,6 @@ public interface ClassroomInfoMapper extends BaseMapper<ClassroomInfo> {
 
     public Integer getClassroomCount(@Param("map") Map<String,Integer> map);
 
+    public List<ClassroomInfo> findClassroomByMainSchoolId(@Param("schoolId") Integer schoolId);
+
 }

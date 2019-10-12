@@ -128,4 +128,8 @@ public class ClassroomInfoServiceImpl extends ServiceImpl<ClassroomInfoMapper, C
         map.put("countryDeptId",countryDeptId);
         return this.baseMapper.getClassroomCount(map);
     }
+
+    public List<ClassroomInfo> findClassroomByMainSchoolId(Integer mainSchoolId){
+        return this.classroomInfoMapper.findClassroomByMainSchoolId(mainSchoolId);
+    }
 }

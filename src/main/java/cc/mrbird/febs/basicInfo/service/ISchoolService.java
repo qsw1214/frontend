@@ -6,7 +6,9 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 学校表 Service接口
@@ -74,4 +76,6 @@ public interface ISchoolService extends IService<School> {
     IPage<School> findSchoolsByDept(QueryRequest request, School school, Long deptId);
 
     Integer getSchoolCount(Integer provinceId, Integer cityDeptId, Integer countryDeptId);
+
+    Map<String,Object>  getLast12MonthSchoolCount(Integer provinceId, Integer cityDeptId, Integer countryDeptId);
 }

@@ -27,4 +27,33 @@
         <result column="belongId" jdbcType="INTEGER" property="belongId"/>
     </resultMap>
 
+    <select id="getLast12MonthSchoolCount" parameterType="cc.mrbird.febs.basicInfo.entity.School" resultMap="java.util.HashMap">
+        SELECT
+            ymv.year_month yearMonth,
+            ifnull(pi.totalNum, 0) totalNum
+        FROM
+            year_month_view ymv LEFT JOIN (
+                  SELECT
+                      DATE_FORMAT(pi.create_time, '%Y-%m') yearMonth,
+                      SUM(1) totalNum
+                  FROM
+                      jcc_school_info pi
+                  WHERE
+                      DATE_FORMAT(pi.create_time, '%Y-%m') > DATE_FORMAT(date_sub(curdate(), INTERVAL 12 MONTH),'%Y-%m')
+                    <if test="school.provinceDeptId != null">
+                        AND pi.province_dept_id = #{school.provinceDeptId}
+                    </if>
+                    <if test="school.cityDeptId != null">
+                        AND pi.city_dept_id = #{school.cityDeptId}
+                    </if>
+                    <if test="school.countryDeptId != null">
+                        AND pi.country_dept_id = #{school.countryDeptId}
+                    </if>
+                  GROUP BY
+                      yearMonth
+              ) pi ON ymv.year_month = pi.yearMonth
+        GROUP BY
+            ymv.year_month
+    </select>
+
 </mapper>

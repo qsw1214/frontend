@@ -75,4 +75,44 @@ public class DateUtil {
         Calendar calendar = Calendar.getInstance();
         return calendar.get(Calendar.DATE);
     }
+
+    /**
+     * 获取最近12个月数据
+     */
+    public static String[] getLast12Months(){
+
+        String[] months = new String[12];
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MONTH, cal.get(Calendar.MONTH));
+        // 加一行代码,否则3月重复
+        cal.set(Calendar.DATE,1);
+        for (int i = 0; i < 12; i++) {
+            String localMonth = (cal.get(Calendar.MONTH) + 1) + "";
+            if(localMonth.length() <= 1){
+                localMonth = "0" + localMonth;
+            }
+            months[11 - i] = cal.get(Calendar.YEAR) + "-" + localMonth;
+            cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
+        }
+        return months;
+    }
+
+    public static void main(String[] args) {
+        String[] months = new String[12];
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MONTH, cal.get(Calendar.MONTH));
+        // 加一行代码,否则3月重复
+        cal.set(Calendar.DATE,1);
+        for (int i = 0; i < 12; i++) {
+            String localMonth = (cal.get(Calendar.MONTH) + 1) + "";
+            if(localMonth.length() <= 1){
+                localMonth = "0" + localMonth;
+            }
+            months[11 - i] = cal.get(Calendar.YEAR) + "-" + localMonth;
+            cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
+        }
+        for (int i = 0; i < months.length; i++) {
+            System.out.println(months[i]);
+        }
+    }
 }

@@ -6,9 +6,7 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
-import cc.mrbird.febs.common.utils.DateUtil;
-import cc.mrbird.febs.common.utils.LiveRadioReqUtil;
-import cc.mrbird.febs.common.utils.Tools;
+import cc.mrbird.febs.common.utils.*;
 import cc.mrbird.febs.resource.entity.Comment;
 import cc.mrbird.febs.resource.entity.Resource;
 import cc.mrbird.febs.resource.entity.Subject;
@@ -31,10 +29,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 前端对接API接口
@@ -82,6 +77,7 @@ public class ApiController extends BaseController {
 
     /**
      * 根据查询条件获取设备列表
+     *
      * @param deviceInfo
      * @param request
      * @return
@@ -89,12 +85,13 @@ public class ApiController extends BaseController {
     @GetMapping("device/list")
     @RequiresPermissions("device:list")
     public FebsResponse getDeviceInfoList(DeviceInfo deviceInfo, QueryRequest request) {
-        Map<String, Object> dataTable = getDataTable(this.deviceInfoService.findDeviceInfos(request,deviceInfo));
+        Map<String, Object> dataTable = getDataTable(this.deviceInfoService.findDeviceInfos(request, deviceInfo));
         return new FebsResponse().success().data(dataTable);
     }
 
     /**
      * 根据学校编号或学校名称获取巡课数据
+     *
      * @param onlineClass
      * @param request
      * @return
@@ -102,12 +99,13 @@ public class ApiController extends BaseController {
     @GetMapping("onlineclass/list")
     @RequiresPermissions("onlineclass:list")
     public FebsResponse getOnlineClassList(OnlineClass onlineClass, QueryRequest request) {
-        Map<String, Object> dataTable = getDataTable(this.onlineClassService.findOnlineClass(request,onlineClass));
+        Map<String, Object> dataTable = getDataTable(this.onlineClassService.findOnlineClass(request, onlineClass));
         return new FebsResponse().success().data(dataTable);
     }
 
     /**
      * 获取用户信息列表
+     *
      * @param user
      * @param request
      * @return
@@ -115,12 +113,13 @@ public class ApiController extends BaseController {
     @GetMapping("user/list")
     @RequiresPermissions("user:list")
     public FebsResponse getUserInfoList(User user, QueryRequest request) {
-        Map<String, Object> dataTable = getDataTable(this.userService.findUserDetail(user,request));
+        Map<String, Object> dataTable = getDataTable(this.userService.findUserDetail(user, request));
         return new FebsResponse().success().data(dataTable);
     }
 
     /**
      * 新增学校
+     *
      * @param school
      * @param file
      * @return
@@ -128,7 +127,7 @@ public class ApiController extends BaseController {
      */
     @PostMapping("school/add")
     @RequiresPermissions("school:add")
-    public FebsResponse addSchool(@Valid School school, @RequestParam(required=false,value="file") MultipartFile file) throws FebsException {
+    public FebsResponse addSchool(@Valid School school, @RequestParam(required = false, value = "file") MultipartFile file) throws FebsException {
         try {
             if (file != null) {
                 String path = Tools.saveFile(file, "school");
@@ -145,6 +144,7 @@ public class ApiController extends BaseController {
 
     /**
      * 获取班级信息列表
+     *
      * @param request
      * @param classInfo
      * @return
@@ -158,6 +158,7 @@ public class ApiController extends BaseController {
 
     /**
      * 获取字典数据列表
+     *
      * @param request
      * @param dict
      * @return
@@ -171,6 +172,7 @@ public class ApiController extends BaseController {
 
     /**
      * 查询课程表列表信息
+     *
      * @param schoolTimetable
      * @return
      */
@@ -183,6 +185,7 @@ public class ApiController extends BaseController {
 
     /**
      * 获取资源列表信息
+     *
      * @param request
      * @param resource
      * @return
@@ -196,6 +199,7 @@ public class ApiController extends BaseController {
 
     /**
      * 获取专题列表
+     *
      * @param request
      * @param subject
      * @return
@@ -210,6 +214,7 @@ public class ApiController extends BaseController {
 
     /**
      * 获取教室列表
+     *
      * @param request
      * @param classroomInfo
      * @return
@@ -223,6 +228,7 @@ public class ApiController extends BaseController {
 
     /**
      * 新增资源评论
+     *
      * @param comment
      * @return
      * @throws FebsException
@@ -245,6 +251,7 @@ public class ApiController extends BaseController {
 
     /**
      * 获取资源评论接口
+     *
      * @param request
      * @param comment
      * @return
@@ -259,6 +266,7 @@ public class ApiController extends BaseController {
 
     /**
      * 删除资源评论
+     *
      * @param commentIds
      * @return
      * @throws FebsException
@@ -266,11 +274,11 @@ public class ApiController extends BaseController {
     @GetMapping("comment/delete/{commentIds}")
     @RequiresPermissions("comment:delete")
     public FebsResponse deleteComment(@NotBlank(message = "{required}") @PathVariable String commentIds) throws FebsException {
-    	try {
-        	User user = super.getCurrentUser();
-        	List<String> list = Arrays.asList(commentIds.split(StringPool.COMMA));
-        	if(!this.commentService.checkCreator(list, user.getUsername()))
-        		return new FebsResponse().fail().data("无权限");
+        try {
+            User user = super.getCurrentUser();
+            List<String> list = Arrays.asList(commentIds.split(StringPool.COMMA));
+            if (!this.commentService.checkCreator(list, user.getUsername()))
+                return new FebsResponse().fail().data("无权限");
             this.commentService.deleteComments(list);
             return new FebsResponse().success();
         } catch (Exception e) {
@@ -282,6 +290,7 @@ public class ApiController extends BaseController {
 
     /**
      * 修改资源评论数据
+     *
      * @param comment
      * @return
      * @throws FebsException
@@ -301,6 +310,7 @@ public class ApiController extends BaseController {
 
     /**
      * 省级数量统计接口
+     *
      * @param request
      * @param field
      * @return
@@ -310,8 +320,8 @@ public class ApiController extends BaseController {
     public FebsResponse provinceStatistical(QueryRequest request, String field) {
         //school、user、device、classNum-开课次数
         long num = 0;
-        if(field != null){
-            switch(field){
+        if (field != null) {
+            switch (field) {
                 case "school":
                     num = this.schoolService.count();
                     break;
@@ -332,11 +342,11 @@ public class ApiController extends BaseController {
 
     @GetMapping("city/statistical")
     @RequiresPermissions("city:statistical")
-    public FebsResponse cityStatistical(QueryRequest request, String field,String city) {
+    public FebsResponse cityStatistical(QueryRequest request, String field, String city) {
         //school、user、device、classNum-开课次数
         Integer num = 0;
-        if(field != null){
-            switch(field){
+        if (field != null) {
+            switch (field) {
                 case "school":
                     num = this.schoolService.getCountOfCity(city);
                     break;
@@ -357,11 +367,11 @@ public class ApiController extends BaseController {
 
     @GetMapping("country/statistical")
     @RequiresPermissions("country:statistical")
-    public FebsResponse countryStatistical(QueryRequest request, String field,String country) {
+    public FebsResponse countryStatistical(QueryRequest request, String field, String country) {
         //school、user、device、classNum-开课次数
         Integer num = 0;
-        if(field != null){
-            switch(field){
+        if (field != null) {
+            switch (field) {
                 case "school":
                     num = this.schoolService.getCountOfCountry(country);
                     break;
@@ -383,11 +393,11 @@ public class ApiController extends BaseController {
 
     @GetMapping("school/statistical")
     @RequiresPermissions("school:statistical")
-    public FebsResponse schoolStatistical(QueryRequest request, String field,String school) {
+    public FebsResponse schoolStatistical(QueryRequest request, String field, String school) {
         //school、user、device、classNum-开课次数
         Integer num = 0;
-        if(field != null){
-            switch(field){
+        if (field != null) {
+            switch (field) {
                 case "user":
                     num = this.userService.countUserNumByDept(school);
                     break;
@@ -405,6 +415,7 @@ public class ApiController extends BaseController {
 
     /**
      * 根据省市区条件进行统计开课数量统计
+     *
      * @param request
      * @param cityDeptId
      * @param countryDeptId
@@ -412,20 +423,20 @@ public class ApiController extends BaseController {
      */
     @GetMapping("netCLassCount")
 //    @RequiresPermissions("count:netClassCount")
-    public FebsResponse getNetClassCount(QueryRequest request,Integer provinceId,Integer cityDeptId,Integer countryDeptId){
+    public FebsResponse getNetClassCount(QueryRequest request, Integer provinceId, Integer cityDeptId, Integer countryDeptId) {
         //1、根据省市区条件获取所有符合条件的学校列表
         //2、学校关联教室，获取其所有的教室列表对应的URL地址
         //3、以2019-10-01为起始时间，至当前时间，作为查询条件，统计其推流次数即开课数量统计
-        List<ClassroomInfo> classroomLists = this.classroomInfoService.getClassroomInfoByCityCountry(provinceId,cityDeptId,countryDeptId);
+        List<ClassroomInfo> classroomLists = this.classroomInfoService.getClassroomInfoByCityCountry(provinceId, cityDeptId, countryDeptId);
         Integer count = 0;
-        for (int i = 0 ; i < classroomLists.size() ; i++){
+        for (int i = 0; i < classroomLists.size(); i++) {
             ClassroomInfo info = classroomLists.get(i);
             String url = info.getUrl();
-            String byear = "2019",bmonth = "10",bday = "01";
+            String byear = "2019", bmonth = "10", bday = "01";
             String eyear = DateUtil.getLatestYear() + "";
             String emonth = DateUtil.getLatestMonth() + "";
             String eday = DateUtil.getLatestDay() + "";
-            Map<String,Integer> map = LiveRadioReqUtil.getRadioPlayCount(byear,bmonth,bday,eyear,emonth,eday,url);
+            Map<String, Integer> map = LiveRadioReqUtil.getRadioPlayCount(byear, bmonth, bday, eyear, emonth, eday, url);
             count += map.get(url);
         }
         return new FebsResponse().num(count).success();
@@ -433,6 +444,7 @@ public class ApiController extends BaseController {
 
     /**
      * 根据省市区条件获取教室数量
+     *
      * @param request
      * @param provinceId
      * @param cityDeptId
@@ -441,19 +453,20 @@ public class ApiController extends BaseController {
      */
     @GetMapping("classroomCount")
 //    @RequiresPermissions("count:classroomCount")
-    public FebsResponse getClassroomCount(QueryRequest request,Integer provinceId,Integer cityDeptId,Integer countryDeptId){
-        Integer count = this.classroomInfoService.getClassroomCount(provinceId,cityDeptId,countryDeptId);
+    public FebsResponse getClassroomCount(QueryRequest request, Integer provinceId, Integer cityDeptId, Integer countryDeptId) {
+        Integer count = this.classroomInfoService.getClassroomCount(provinceId, cityDeptId, countryDeptId);
         return new FebsResponse().num(count).success();
     }
 
     /**
      * 根据省市区进行资源统计
+     *
      * @return
      */
     @GetMapping("resourceCount")
 //    @RequiresPermissions("count:resourceCount")
-    public FebsResponse getResourceCount(QueryRequest request,Integer provinceId,Integer cityDeptId,Integer countryDeptId){
-        Integer count = this.resourceService.getResourceCount(provinceId,cityDeptId,countryDeptId);
+    public FebsResponse getResourceCount(QueryRequest request, Integer provinceId, Integer cityDeptId, Integer countryDeptId) {
+        Integer count = this.resourceService.getResourceCount(provinceId, cityDeptId, countryDeptId);
         return new FebsResponse().num(count).success();
     }
 
@@ -462,8 +475,8 @@ public class ApiController extends BaseController {
      */
     @GetMapping("schoolCount")
 //    @RequiresPermissions("count:schoolCount")
-    public FebsResponse getSchoolCount(QueryRequest request,Integer provinceId,Integer cityDeptId,Integer countryDeptId){
-        Integer count = this.schoolService.getSchoolCount(provinceId,cityDeptId,countryDeptId);
+    public FebsResponse getSchoolCount(QueryRequest request, Integer provinceId, Integer cityDeptId, Integer countryDeptId) {
+        Integer count = this.schoolService.getSchoolCount(provinceId, cityDeptId, countryDeptId);
         return new FebsResponse().num(count).success();
     }
 
@@ -472,7 +485,7 @@ public class ApiController extends BaseController {
      */
     @GetMapping("teacherCount")
 //    @RequiresPermissions("count:teacherCount")
-    public FebsResponse getTeacherCount(QueryRequest request,Integer provinceId,Integer cityDeptId,Integer countryDeptId){
+    public FebsResponse getTeacherCount(QueryRequest request, Integer provinceId, Integer cityDeptId, Integer countryDeptId) {
         Integer count = 1000;
         return new FebsResponse().num(count).success();
     }
@@ -482,8 +495,69 @@ public class ApiController extends BaseController {
      */
     @GetMapping("studentCount")
 //    @RequiresPermissions("count:studentCount")
-    public FebsResponse getStudentCount(QueryRequest request,Integer provinceId,Integer cityDeptId,Integer countryDeptId){
+    public FebsResponse getStudentCount(QueryRequest request, Integer provinceId, Integer cityDeptId, Integer countryDeptId) {
         Integer count = 2000;
         return new FebsResponse().num(count).success();
+    }
+
+    /**
+     * 最近十二个月的开课数量统计
+     */
+    @GetMapping("perMonthNetClassCount")
+//    @RequiresPermissions("count:perMonthNetClassCount")
+    public FebsResponse getPerMonthNetClassCount(QueryRequest request, Integer provinceId, Integer cityDeptId, Integer countryDeptId) {
+
+        List<ClassroomInfo> classroomLists = this.classroomInfoService.getClassroomInfoByCityCountry(provinceId, cityDeptId, countryDeptId);
+        String[] last12Month = DateUtil.getLast12Months();
+        Map<String, Integer> resultCount = new HashMap<String, Integer>();
+        for (int i = 0; i < last12Month.length; i++) {
+            String monthDate = last12Month[i];
+            String[] yearMonth = monthDate.split("-");
+            Integer count = 0;
+            for (int j = 0; j < classroomLists.size(); j++) {
+                ClassroomInfo info = classroomLists.get(j);
+                String url = info.getUrl();
+                Map<String, Integer> map = LiveRadioReqUtil.getRadioPlayCount(yearMonth[0], yearMonth[1], "01", yearMonth[0], yearMonth[1], "31", url);
+                count += map.get(url);
+            }
+            resultCount.put(monthDate, count);
+        }
+        return new FebsResponse().data(resultCount).success();
+    }
+
+    /**
+     * 最近十二个月的接入学校数量统计
+     */
+    @GetMapping("perMonthSchoolCount")
+//    @RequiresPermissions("count:perMonthNetClassCount")
+    public FebsResponse getPerMonthSchoolCount(QueryRequest request, Integer provinceId, Integer cityDeptId, Integer countryDeptId) {
+        Map<String, Object> resultCount = new HashMap<String, Object>();
+        resultCount = this.schoolService.getLast12MonthSchoolCount(provinceId,cityDeptId,countryDeptId);
+        return new FebsResponse().data(resultCount).success();
+    }
+
+    /**
+     * 根据主校ID带出包括分校在内所有正在上课的教室列表
+     */
+    @GetMapping("perMonthSchoolCount")
+//    @RequiresPermissions("count:perMonthNetClassCount")
+    public FebsResponse getPerMonthSchoolCount(QueryRequest request, Integer schoolId) {
+        //查询出属于所有学校的教室列表，然后再pass掉未上课的教室
+        List<ClassroomInfo> resultInfos = new ArrayList<ClassroomInfo>();
+        if(schoolId != null){
+            List<ClassroomInfo> roomInfos = this.classroomInfoService.findClassroomByMainSchoolId(schoolId);
+            for(int i = 0; i < roomInfos.size(); i++){
+                ClassroomInfo info = roomInfos.get(i);
+                List<RadioStatus> list = LiveRadioReqUtil.getRadioStatus(info.getUrl());
+                if(list.size() > 0){
+                    RadioStatus status = list.get(0);
+                    //若为在线状态，则放入结果集合
+                    if("1".equals(status.getStatus())){
+                        resultInfos.add(info);
+                    }
+                }
+            }
+        }
+        return new FebsResponse().data(resultInfos).success();
     }
 }
