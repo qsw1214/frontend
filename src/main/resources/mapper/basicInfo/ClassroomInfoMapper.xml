@@ -47,6 +47,6 @@
     <select id = "findClassroomByMainSchoolId" resultType="cc.mrbird.febs.basicInfo.entity.ClassroomInfo" parameterType = "java.lang.Integer">
         select * from jcc_classroom_info room
           LEFT JOIN jcc_school_info school ON room.school_id = school.school_id
-          WHERE  school.school_id = #{schoolId} or school.belongId = #{schoolId}
+          WHERE  school.school_id = #{schoolId}
     </select>
 </mapper>

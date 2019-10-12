@@ -506,7 +506,7 @@ public class ApiController extends BaseController {
     @GetMapping("perMonthNetClassCount")
 //    @RequiresPermissions("count:perMonthNetClassCount")
     public FebsResponse getPerMonthNetClassCount(QueryRequest request, Integer provinceId, Integer cityDeptId, Integer countryDeptId) {
-
+/*
         List<ClassroomInfo> classroomLists = this.classroomInfoService.getClassroomInfoByCityCountry(provinceId, cityDeptId, countryDeptId);
         String[] last12Month = DateUtil.getLast12Months();
         Map<String, Integer> resultCount = new HashMap<String, Integer>();
@@ -521,6 +521,12 @@ public class ApiController extends BaseController {
                 count += map.get(url);
             }
             resultCount.put(monthDate, count);
+        }*/
+        //构造测试数据
+        String[] last12Month = DateUtil.getLast12Months();
+        Map<String, Integer> resultCount = new HashMap<String, Integer>();
+        for (int i = 0; i < last12Month.length; i++) {
+            resultCount.put(last12Month[i], Integer.valueOf(new Random().nextInt(1000)));
         }
         return new FebsResponse().data(resultCount).success();
     }
@@ -531,8 +537,14 @@ public class ApiController extends BaseController {
     @GetMapping("perMonthSchoolCount")
 //    @RequiresPermissions("count:perMonthNetClassCount")
     public FebsResponse getPerMonthSchoolCount(QueryRequest request, Integer provinceId, Integer cityDeptId, Integer countryDeptId) {
-        Map<String, Object> resultCount = new HashMap<String, Object>();
-        resultCount = this.schoolService.getLast12MonthSchoolCount(provinceId,cityDeptId,countryDeptId);
+        /*Map<String, Object> resultCount = new HashMap<String, Object>();
+        resultCount = this.schoolService.getLast12MonthSchoolCount(provinceId,cityDeptId,countryDeptId);*/
+        //构造测试数据
+        String[] last12Month = DateUtil.getLast12Months();
+        Map<String, Integer> resultCount = new HashMap<String, Integer>();
+        for (int i = 0; i < last12Month.length; i++) {
+            resultCount.put(last12Month[i], Integer.valueOf(new Random().nextInt(1000)));
+        }
         return new FebsResponse().data(resultCount).success();
     }
 
@@ -546,7 +558,7 @@ public class ApiController extends BaseController {
         List<ClassroomInfo> resultInfos = new ArrayList<ClassroomInfo>();
         if(schoolId != null){
             List<ClassroomInfo> roomInfos = this.classroomInfoService.findClassroomByMainSchoolId(schoolId);
-            for(int i = 0; i < roomInfos.size(); i++){
+            /*for(int i = 0; i < roomInfos.size(); i++){
                 ClassroomInfo info = roomInfos.get(i);
                 List<RadioStatus> list = LiveRadioReqUtil.getRadioStatus(info.getUrl());
                 if(list.size() > 0){
@@ -556,7 +568,9 @@ public class ApiController extends BaseController {
                         resultInfos.add(info);
                     }
                 }
-            }
+            }*/
+            //构造测试数据
+            resultInfos = roomInfos;
         }
         return new FebsResponse().data(resultInfos).success();
     }
