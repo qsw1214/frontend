@@ -150,6 +150,17 @@ public class ViewController extends BaseController {
         return FebsUtil.view("system/dept/dept");
     }
 
+    /**
+     * 接口管理
+     * @return
+     */
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/interface")
+    @RequiresPermissions("interface:view")
+    public String systemInterface(Model model) {
+
+        return FebsUtil.view("basicInfo/interface/interface");
+    }
+
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/dict")
     @RequiresPermissions("dict:view")
     public String systemDict() {

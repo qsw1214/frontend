@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.search.mapper.JccInterfaceInfoMapper">
+
+    <resultMap id="jccInterfaceInfo" type="cc.mrbird.febs.basicInfo.entity.JccInterfaceInfo">
+        <id column="interface_id" jdbcType="INTEGER" property="interfaceId"/>
+        <result column="parent_id" jdbcType="INTEGER" property="parentId"/>
+        <result column="interface_name" jdbcType="VARCHAR" property="interfaceName"/>
+        <result column="request_ways" jdbcType="VARCHAR" property="requestWays"/>
+        <result column="request_address" jdbcType="VARCHAR" property="requestAddress"/>
+        <result column="request_head" jdbcType="VARCHAR" property="requestHead"/>
+        <result column="request_body" jdbcType="VARCHAR" property="requestBody"/>
+        <result column="request_parameter_explain" jdbcType="VARCHAR" property="requestParameterExplain"/>
+        <result column="request_result" jdbcType="VARCHAR" property="requestResult"/>
+        <result column="request_result_explain" jdbcType="VARCHAR" property="requestResultExplain"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="order_num" jdbcType="BIGINT" property="orderNum"/>
+        <result column="show_status" jdbcType="INTEGER" property="showStatus"/>
+    </resultMap>
+</mapper>
