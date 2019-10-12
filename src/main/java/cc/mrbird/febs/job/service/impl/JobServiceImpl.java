@@ -43,16 +43,17 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements IJobS
      */
     @PostConstruct
     public void init() {
-        List<Job> scheduleJobList = this.baseMapper.queryList();
+        /*LambdaQueryWrapper<Job> queryWrapper = new LambdaQueryWrapper<>();
+        List<Job> scheduleJobList = this.baseMapper.selectList(queryWrapper);
         // 如果不存在，则创建
-        scheduleJobList.forEach(scheduleJob -> {
+        /*scheduleJobList.forEach(scheduleJob -> {
             CronTrigger cronTrigger = ScheduleUtils.getCronTrigger(scheduler, scheduleJob.getJobId());
             if (cronTrigger == null) {
                 ScheduleUtils.createScheduleJob(scheduler, scheduleJob);
             } else {
                 ScheduleUtils.updateScheduleJob(scheduler, scheduleJob);
             }
-        });
+        });*/
     }
 
     @Override

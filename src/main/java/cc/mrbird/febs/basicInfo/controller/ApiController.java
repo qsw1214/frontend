@@ -551,9 +551,9 @@ public class ApiController extends BaseController {
     /**
      * 根据主校ID带出所有正在上课的教室列表
      */
-    @GetMapping("perMonthSchoolCount")
+    @GetMapping("onlineClassRooms")
 //    @RequiresPermissions("count:perMonthNetClassCount")
-    public FebsResponse getPerMonthSchoolCount(QueryRequest request, Integer schoolId) {
+    public FebsResponse getOnlineClassRooms(QueryRequest request, Integer schoolId) {
         //查询出属于所有学校的教室列表，然后再pass掉未上课的教室
         List<ClassroomInfo> resultInfos = new ArrayList<ClassroomInfo>();
         if(schoolId != null){
