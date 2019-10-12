@@ -11,4 +11,5 @@ import java.util.List;
  */
 public interface JobMapper extends BaseMapper<Job> {
 	
+	List<Job> queryList();
 }

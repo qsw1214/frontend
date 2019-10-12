@@ -27,7 +27,7 @@
         <result column="belongId" jdbcType="INTEGER" property="belongId"/>
     </resultMap>
 
-    <select id="getLast12MonthSchoolCount" parameterType="cc.mrbird.febs.basicInfo.entity.School" resultMap="java.util.HashMap">
+    <select id="getLast12MonthSchoolCount" parameterType="cc.mrbird.febs.basicInfo.entity.School" resultType="java.util.HashMap">
         SELECT
             ymv.year_month yearMonth,
             ifnull(pi.totalNum, 0) totalNum
