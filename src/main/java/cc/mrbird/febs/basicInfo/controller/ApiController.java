@@ -549,7 +549,7 @@ public class ApiController extends BaseController {
     }
 
     /**
-     * 根据主校ID带出包括分校在内所有正在上课的教室列表
+     * 根据主校ID带出所有正在上课的教室列表
      */
     @GetMapping("perMonthSchoolCount")
 //    @RequiresPermissions("count:perMonthNetClassCount")
