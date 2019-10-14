@@ -3,7 +3,7 @@
         <div class="layui-col-md6 layui-col-sm6 layui-col-xs12">
             <div class="layui-card">
                 <div class="layui-card-body febs-table-full">
-                    <form class="layui-form layui-table-form" lay-filter="category-table-form" id="category-table-form">
+                    <form class="layui-form layui-table-form" lay-filter="jccInterfaceInfo-table-form" id="jccInterfaceInfo-table-form">
                         <div class="layui-row">
                             <div class="layui-col-md8 layui-col-sm9 layui-col-xs9">
                                 <div class="layui-form-item">
@@ -23,13 +23,13 @@
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
-                                     shiro:hasAnyPermissions="jccInterfaceInfo:add,jccInterfaceInfo:delete,category:export">
+                                     shiro:hasAnyPermissions="jccInterfaceInfo:add,jccInterfaceInfo:delete,jccInterfaceInfo:export">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
                             </div>
                         </div>
                     </form>
-                    <div class="eleTree categoryTree" lay-filter="categoryTree" style="margin-left: 1rem"></div>
+                    <div class="eleTree jccInterfaceInfoTree" lay-filter="jccInterfaceInfoTree" style="margin-left: 1rem"></div>
                 </div>
             </div>
         </div>
@@ -37,7 +37,7 @@
             <div class="layui-card">
                 <div class="layui-card-header" id="form-header">新增接口</div>
                 <div class="layui-card-body febs-table-full">
-                    <form class="layui-form layui-table-form" action="" lay-filter="category-form">
+                    <form class="layui-form layui-table-form" action="" lay-filter="jccInterfaceInfo-form">
                         <div class="layui-form-item febs-hide">
                             <label class="layui-form-label febs-form-item-require">ID：</label>
                             <div class="layui-input-block">
@@ -128,7 +128,7 @@
                             </div>
                         </div>
                         <button type="reset" class="layui-btn febs-hide" id="reset-form"></button>
-                        <button class="layui-btn febs-hide" lay-submit="" lay-filter="category-form-submit"
+                        <button class="layui-btn febs-hide" lay-submit="" lay-filter="jccInterfaceInfo-form-submit"
                                 id="submit-form"></button>
                     </form>
                 </div>
@@ -152,7 +152,7 @@
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
             $submit = $view.find('#submit'),
-            $searchForm = $view.find('#category-table-form'),
+            $searchForm = $view.find('#jccInterfaceInfo-table-form'),
             $interfaceName = $searchForm.find('input[name="interfaceName"]'),
             $requestWays = $view.find('input[name="requestWays"]'),
             $requestAddress = $view.find('input[name="requestAddress"]'),
@@ -169,7 +169,7 @@
             $header = $view.find('#form-header'),
             _currentMenuData,
             _selectNode,
-            _categoryTree,
+            _jccInterfaceInfoTree,
             tableIns;
 
         form.verify(validate);
@@ -180,17 +180,17 @@
             click: function (name, elem, event) {
                 if (name === 'add') {
                     reset();
-                    var selected = _categoryTree.getChecked(false, true);
+                    var selected = _jccInterfaceInfoTree.getChecked(false, true);
                     if (selected.length > 1) {
                         febs.alert.warn('只能选择一个节点作为父级！');
                         return;
                     }
-                    form.val("category-form", {
+                    form.val("jccInterfaceInfo-form", {
                         "parentId": selected[0] ? selected[0].id : '0'
                     });
                 }
                 if (name === 'delete') {
-                    var checked = _categoryTree.getChecked(false, true);
+                    var checked = _jccInterfaceInfoTree.getChecked(false, true);
                     if (checked.length < 1) {
                         febs.alert.warn('请勾选需要删除的接口或按钮');
                         return;
@@ -208,7 +208,7 @@
                     });
                 }
                 if (name === 'export') {
-                    febs.download(ctx + 'category/excel', {
+                    febs.download(ctx + 'jccInterfaceInfo/excel', {
                         "interfaceName": $interfaceName.val().trim()
                     }, '接口信息表.xlsx');
                 }
@@ -224,17 +224,17 @@
             }, {
                 name: 'export',
                 title: '导出Excel',
-                perms: 'category:export'
+                perms: 'jccInterfaceInfo:export'
             }]
         });
 
-        _categoryTree = renderMenuTree();
+        _jccInterfaceInfoTree = renderMenuTree();
 
-        eleTree.on("nodeClick(categoryTree)", function (d) {
+        eleTree.on("nodeClick(jccInterfaceInfoTree)", function (d) {
             var data = d.data.currentData.data;
             _currentMenuData = data;
             $header.text('修改菜单');
-            form.val("category-form", {
+            form.val("jccInterfaceInfo-form", {
                 "icon": data.icon,
                 "showStatus": ""+data.showStatus,
                 "orderNum": data.orderNum,
@@ -268,7 +268,7 @@
 
         function reset() {
             $view.find('#reset-form').trigger('click');
-            form.val("category-form", {
+            form.val("jccInterfaceInfo-form", {
                 "icon": '',
                 "orderNum": '',
                 "showStatus": '1'
@@ -277,8 +277,8 @@
         }
 
         function renderMenuTree() {
-            _categoryTree = eleTree.render({
-                elem: '.categoryTree',
+            _jccInterfaceInfoTree = eleTree.render({
+                elem: '.jccInterfaceInfoTree',
                 url: ctx + 'jccInterfaceInfo/tree',
                 where: {
                     "interfaceName": $interfaceName.val().trim(),
@@ -302,14 +302,14 @@
                     dataName: "data"
                 }
             });
-            return _categoryTree;
+            return _jccInterfaceInfoTree;
         }
 
         function reloadMenuTree() {
-            _categoryTree = renderMenuTree();
+            _jccInterfaceInfoTree = renderMenuTree();
         }
 
-        form.on('submit(category-form-submit)', function (data) {
+        form.on('submit(jccInterfaceInfo-form-submit)', function (data) {
             if (data.field.interfaceId && $header.text().indexOf('修改') !== -1) {
                 if (febs.nativeEqual(data.field, _currentMenuData)) {
                     febs.alert.warn('数据未作任何修改！');
