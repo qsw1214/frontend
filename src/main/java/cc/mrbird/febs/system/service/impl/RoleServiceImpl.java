@@ -15,6 +15,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mchange.lang.IntegerUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(role.getRoleName()))
             queryWrapper.lambda().like(Role::getRoleName, role.getRoleName());
+        if(role.getRoleId()!=null){
+            queryWrapper.lambda().eq(Role::getRoleId, role.getRoleId());
+        }
+        if(role.getRoleGrade()!=null){
+            queryWrapper.lambda().gt(Role::getRoleGrade, role.getRoleGrade());
+        }
         return this.baseMapper.selectList(queryWrapper);
     }
 

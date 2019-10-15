@@ -84,6 +84,15 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         if (school.getBelongId() != null) {
             queryWrapper.eq(School::getBelongId, school.getBelongId());
         }
+        if(school.getProvinceDeptId()!=null){
+            queryWrapper.eq(School::getProvinceDeptId, school.getProvinceDeptId());
+        }
+        if(school.getCityDeptId()!=null){
+            queryWrapper.eq(School::getCityDeptId, school.getCityDeptId());
+        }
+        if(school.getCountryDeptId()!=null){
+            queryWrapper.eq(School::getCountryDeptId, school.getCountryDeptId());
+        }
         Page<School> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
     }
@@ -109,6 +118,15 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         }
         if (school.getBelongId() != null) {
             queryWrapper.eq(School::getBelongId, school.getBelongId());
+        }
+        if(school.getProvinceDeptId()!=null){
+            queryWrapper.eq(School::getProvinceDeptId, school.getProvinceDeptId());
+        }
+        if(school.getCityDeptId()!=null){
+            queryWrapper.eq(School::getCityDeptId, school.getCityDeptId());
+        }
+        if(school.getCountryDeptId()!=null){
+            queryWrapper.eq(School::getCountryDeptId, school.getCountryDeptId());
         }
 		return this.baseMapper.selectList(queryWrapper);
     }

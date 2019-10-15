@@ -15,6 +15,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 /**
  * @author MrBird
@@ -54,6 +56,7 @@ public class User implements Serializable {
      * 用户 ID
      */
     @TableId(value = "USER_ID")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
 
     /**

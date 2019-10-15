@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.wuwenze.poi.annotation.Excel;
 import com.wuwenze.poi.annotation.ExcelField;
 import lombok.Data;
@@ -27,6 +29,7 @@ public class Role implements Serializable {
      * 角色ID
      */
     @TableId(value = "ROLE_ID")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long roleId;
 
     /**
@@ -64,4 +67,10 @@ public class Role implements Serializable {
      * 角色对应的菜单（按钮） id
      */
     private transient String menuIds;
+
+
+    /**
+     * 角色等级
+     */
+    private Long roleGrade;
 }

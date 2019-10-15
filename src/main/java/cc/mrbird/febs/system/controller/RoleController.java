@@ -7,6 +7,7 @@ import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.system.entity.Role;
+import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IRoleService;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +35,26 @@ public class RoleController extends BaseController {
 
     @GetMapping
     public FebsResponse getAllRoles(Role role) {
+        User currentUser = getCurrentUser();
+        String id = currentUser.getRoleId();
+        String[] ids=id.split(",");
+        System.out.println(id);
+        Long grade = 0L;
+
+        for(int i=0;i<ids.length;i++){
+            role.setRoleId(Long.valueOf(ids[i]));
+            role.setRoleGrade(null);
+            List<Role> lr=roleService.findRoles(role);
+
+            if(grade == 0L){
+                grade = lr.get(0).getRoleGrade();
+                role.setRoleGrade(grade);
+            }else if (lr.get(0).getRoleGrade().longValue() <= grade.longValue()){
+                grade = lr.get(0).getRoleGrade();
+                role.setRoleGrade(grade);
+            }
+        }
+        role.setRoleId(null);
         return new FebsResponse().success().data(roleService.findRoles(role));
     }
 

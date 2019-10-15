@@ -7,6 +7,7 @@
         <result column="REMARK" jdbcType="VARCHAR" property="remark" />
         <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
         <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+        <result column="role_grade" jdbcType="DECIMAL" property="roleGrade" />
     </resultMap>
 
     <select id="findUserRole" resultMap="roleMap">
@@ -27,6 +28,7 @@
             r.remark,
             r.create_time createTime,
             r.modify_time modifyTime,
+            r.role_grade roleGrade,
             GROUP_CONCAT( rm.menu_id ) menuIds
         FROM
             t_role r

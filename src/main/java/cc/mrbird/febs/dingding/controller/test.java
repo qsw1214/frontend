@@ -18,10 +18,10 @@ import java.util.Date;
 public class test {
     public static void main(String[] args) throws ApiException {
 
-        /*DingTalkClient  client = new DefaultDingTalkClient("https://oapi.dingtalk.com/call_back/get_call_back");
+      /*  DingTalkClient  client = new DefaultDingTalkClient("https://oapi.dingtalk.com/call_back/get_call_back");
         OapiCallBackGetCallBackRequest request = new OapiCallBackGetCallBackRequest();
         request.setHttpMethod("GET");
-        OapiCallBackGetCallBackResponse response = client.execute(request,AccessTokenUtil.getToken());
+        OapiCallBackGetCallBackResponse response = client.execute(request,AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET));
         String userIdBody = response.getBody();
         System.out.println(userIdBody);*/
         //先删除企业已有的回调
