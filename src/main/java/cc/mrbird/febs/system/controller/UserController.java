@@ -8,6 +8,7 @@ import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.utils.MD5Util;
 import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IUserService;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -159,6 +161,7 @@ public class UserController extends BaseController {
     public FebsResponse updateProfile(User user) throws FebsException {
         try {
             User currentUser = getCurrentUser();
+            System.out.println(currentUser);
             user.setUserId(currentUser.getUserId());
             this.userService.updateProfile(user);
             return new FebsResponse().success();
@@ -181,4 +184,26 @@ public class UserController extends BaseController {
             throw new FebsException(message);
         }
     }
+
+
+    @GetMapping("get")
+    public FebsResponse getUserInfo() throws FebsException {
+        try {
+            User currentUser = getCurrentUser();
+            Map map=new HashMap();
+            map.put("userId",currentUser.getUserId());
+            map.put("userName",currentUser.getUsername());
+            map.put("roleId",currentUser.getRoleId());
+            map.put("roleName",currentUser.getRoleName());
+            map.put("schoolId",currentUser.getSchoolId());
+            map.put("deptId",currentUser.getDeptIds());
+            map.put("deptName",currentUser.getDeptName());
+            return new FebsResponse().data(map);
+        } catch (Exception e) {
+            String message = "获取个人信息失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+
 }
