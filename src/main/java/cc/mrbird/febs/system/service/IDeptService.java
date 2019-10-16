@@ -20,6 +20,12 @@ public interface IDeptService extends IService<Dept> {
     List<DeptTree<Dept>> findDepts();
 
     /**
+     * 获取部门
+     * @return
+     */
+    List<Dept> selectDepts();
+
+    /**
      * 获取部门列表（树形列表）
      */
     List<DeptTree<Dept>> getLimitDeptTree(Long userId);

@@ -58,10 +58,21 @@ public class DeptController extends BaseController {
 		}
 	}
 
-	@GetMapping("select/tree")
+	/*@GetMapping("select/tree")
 	public List<DeptTree<Dept>> getDeptTree() throws FebsException {
 		try {
 			return this.deptService.findDepts();
+		} catch (Exception e) {
+			String message = "获取部门树失败";
+			log.error(message, e);
+			throw new FebsException(message);
+		}
+	}*/
+
+	@GetMapping("select/tree")
+	public FebsResponse getDeptTree() throws FebsException {
+		try {
+			return new FebsResponse().success().data(deptService.selectDepts());
 		} catch (Exception e) {
 			String message = "获取部门树失败";
 			log.error(message, e);

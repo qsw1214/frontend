@@ -49,8 +49,12 @@
         <div class="layui-form-item">
             <label class="layui-form-label">部门：</label>
             <div class="layui-input-block">
-                <input type="text" name="deptId" id="user-update-dept" lay-filter="user-update-dept"
-                       class="layui-input">
+                <select name="deptIds"
+                        lay-verify="required"
+                        xm-select-direction="down"
+                        xm-select="user-update-dept"
+                        xm-select-skin="default" disabled="disabled">
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
@@ -99,17 +103,32 @@
         initUserValue();
 
         formSelects.render();
-
-        treeSelect.render({
-            elem: $view.find('#user-update-dept'),
-            type: 'get',
-            data: ctx + 'dept/select/tree',
-            placeholder: '请选择',
-            search: false,
+        formSelects.config('user-update-dept', {
+            searchUrl: ctx + 'dept/select/tree',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].deptName,
+                        value: data[i].deptId
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
             success: function () {
-                treeSelect.checkNode('user-update-dept', user.deptId);
+                formSelects.value('user-update-dept', user.deptIds.split(','));
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取角色列表失败');
             }
         });
+
 
         formSelects.config('user-update-role', {
             searchUrl: ctx + 'role',

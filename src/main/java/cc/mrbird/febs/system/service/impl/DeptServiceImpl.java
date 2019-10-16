@@ -43,6 +43,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     
     private int maxDeptGrade = 4;
 
+    /**
+     * 树形结构dept显示
+     * @return
+     */
     @Override
     public List<DeptTree<Dept>> findDepts() {
     	LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
@@ -50,6 +54,17 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
         List<Dept> depts = this.baseMapper.selectList(queryWrapper);
         List<DeptTree<Dept>> trees = this.convertDepts(depts);
         return TreeUtil.buildDeptTree(trees, "1");
+    }
+    /**
+     * 获取部门
+     * @return
+     */
+    @Override
+    public List<Dept> selectDepts() {
+        LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.lt(Dept::getDeptGrade, maxDeptGrade);
+        List<Dept> depts = this.baseMapper.selectList(queryWrapper);
+        return depts;
     }
 
     @Override
