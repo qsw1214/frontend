@@ -574,4 +574,14 @@ public class ApiController extends BaseController {
         }
         return new FebsResponse().data(resultInfos).success();
     }
+
+    /**
+     * 根据学校编号列出教师列表
+     */
+    @GetMapping("teacherListBySchoolId")
+//    @RequiresPermissions("list:teacherListBySchoolId")
+    public FebsResponse getTeacherListBySchoolId(QueryRequest request, Integer schoolDeptId) {
+        List<User> list = this.userService.list();
+        return new FebsResponse().data(list).success();
+    }
 }
