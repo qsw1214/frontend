@@ -202,4 +202,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // TODO 设置查询条件
         return this.baseMapper.countUserNumByDept(deptName);
     }
+
+    public IPage<User> getTeacherListBySchoolId(Integer schoolId,QueryRequest request){
+        Page<User> page = new Page<>(request.getPageNum(), request.getPageSize());
+        SortUtil.handlePageSort(request, page, "userId", FebsConstant.ORDER_ASC, false);
+        return this.baseMapper.getTeacherListBySchoolId(page, schoolId);
+    }
 }

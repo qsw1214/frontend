@@ -44,4 +44,6 @@ public interface UserMapper extends BaseMapper<User> {
 
 
     Integer countUserNumByDept(String deptName);
+
+    IPage<User>  getTeacherListBySchoolId(Page page, @Param("schoolId") Integer schoolId);
 }

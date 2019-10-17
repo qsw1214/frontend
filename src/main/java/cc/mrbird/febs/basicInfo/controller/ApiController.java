@@ -18,6 +18,7 @@ import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IDeptService;
 import cc.mrbird.febs.system.service.IDictService;
 import cc.mrbird.febs.system.service.IUserService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -580,8 +581,8 @@ public class ApiController extends BaseController {
      */
     @GetMapping("teacherListBySchoolId")
 //    @RequiresPermissions("list:teacherListBySchoolId")
-    public FebsResponse getTeacherListBySchoolId(QueryRequest request, Integer schoolDeptId) {
-        List<User> list = this.userService.list();
+    public FebsResponse getTeacherListBySchoolId(QueryRequest request, Integer schoolId) {
+        IPage<User> list = this.userService.getTeacherListBySchoolId(schoolId,request);
         return new FebsResponse().data(list).success();
     }
 }

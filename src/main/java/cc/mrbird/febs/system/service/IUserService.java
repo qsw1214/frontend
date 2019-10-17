@@ -5,6 +5,8 @@ import cc.mrbird.febs.system.entity.User;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * @author psy
  */
@@ -114,5 +116,12 @@ public interface IUserService extends IService<User> {
     /*删除离职用户*/
     void deleteUser(Long userId);
 
+    /**
+     * 通过部门统计用户数量
+     * @param deptName
+     * @return
+     */
     Integer countUserNumByDept(String deptName);
+
+    IPage<User> getTeacherListBySchoolId(Integer schoolId, QueryRequest request);
 }

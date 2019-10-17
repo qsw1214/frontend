@@ -116,4 +116,45 @@
         delete from t_user where user_id=#{userid}
     </delete>
 
+    <select id="getTeacherListBySchoolId" parameterType="java.lang.Integer" resultType="cc.mrbird.febs.system.entity.User">
+        SELECT
+        u.user_id userId,
+        u.username,
+        u.email,
+        u.mobile,
+        u.password,
+        u.status,
+        u.create_time createTime,
+        u.ssex sex,
+        u.last_login_time lastLoginTime,
+        u.modify_time modifyTime,
+        u.description,
+        u.avatar,
+        u.theme,
+        u.is_tab isTab,
+        u.school_id schoolId,
+        u.unionid,
+        u.active,
+        u.order_in_depts,
+        u.is_admin,
+        u.is_boss,
+        u.department,
+        u.hired_date,
+        u.is_senior,
+        u.is_leader_in_depts,
+        u.is_hide,
+        u.position,
+        u.jobnumber,
+        GROUP_CONCAT(r.role_id) roleId,
+        GROUP_CONCAT(r.ROLE_NAME) roleName,
+        GROUP_CONCAT(ud.dept_id) deptIds
+        FROM
+        t_user u
+        LEFT JOIN t_user_role ur ON (u.user_id = ur.user_id)
+        LEFT JOIN t_role r ON r.role_id = ur.role_id
+        LEFT JOIN t_user_dept ud ON (u.user_id = ud.user_id)
+        WHERE  u.school_id = #{schoolId} and r.role_name = '老师'
+        GROUP BY u.user_id
+    </select>
+
 </mapper>
