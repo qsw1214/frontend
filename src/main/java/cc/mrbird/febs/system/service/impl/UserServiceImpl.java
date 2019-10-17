@@ -25,10 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author MrBird
@@ -203,8 +200,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return this.baseMapper.countUserNumByDept(deptName);
     }
 
-    public User findById(Long userId){
-        return this.baseMapper.selectById(userId);
+    public User getUserInfo(Long userId){
+        return this.baseMapper.getUserInfo(userId);
     }
 
     public IPage<User> getTeacherListBySchoolId(Integer schoolId,QueryRequest request){

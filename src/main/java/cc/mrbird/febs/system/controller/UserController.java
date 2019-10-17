@@ -207,8 +207,9 @@ public class UserController extends BaseController {
     }
 
     @GetMapping("get/userInfo")
-    public FebsResponse findUserById(Long userId) {
-        User user=this.userService.findById(userId);
-        return new FebsResponse().success().data(user);
+    public FebsResponse getUserInfo(Long userId) {
+        User map=this.userService.getUserInfo(userId);
+        System.out.println(map);
+        return new FebsResponse().success().data(map);
     }
 }

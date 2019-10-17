@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author psy
@@ -124,7 +125,7 @@ public interface IUserService extends IService<User> {
     Integer countUserNumByDept(String deptName);
 
     /*根据id显示用户详情*/
-    User findById(Long userId);
+    User getUserInfo(Long userId);
 
     IPage<User> getTeacherListBySchoolId(Integer schoolId, QueryRequest request);
 }
