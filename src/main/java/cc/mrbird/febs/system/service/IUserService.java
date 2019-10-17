@@ -123,5 +123,8 @@ public interface IUserService extends IService<User> {
      */
     Integer countUserNumByDept(String deptName);
 
+    /*根据id显示用户详情*/
+    User findById(Long userId);
+
     IPage<User> getTeacherListBySchoolId(Integer schoolId, QueryRequest request);
 }

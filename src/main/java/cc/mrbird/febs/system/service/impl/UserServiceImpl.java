@@ -203,6 +203,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return this.baseMapper.countUserNumByDept(deptName);
     }
 
+    public User findById(Long userId){
+        return this.baseMapper.selectById(userId);
+    }
+
     public IPage<User> getTeacherListBySchoolId(Integer schoolId,QueryRequest request){
         Page<User> page = new Page<>(request.getPageNum(), request.getPageSize());
         SortUtil.handlePageSort(request, page, "userId", FebsConstant.ORDER_ASC, false);
