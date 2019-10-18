@@ -56,14 +56,14 @@ public class LoginController extends BaseController {
             boolean rememberMe, HttpServletRequest request) throws FebsException {
         Map params = $params(request);
         String ways = String.valueOf(params.get("ways"));
-        Integer freeLogin = Integer.valueOf(String.valueOf(params.get("freeLogin")));
+        String freeLogin = String.valueOf(params.get("freeLogin"));
         //两个登录方式，钉钉扫码登录和企业内部登录
         if ("dingTalk".equals(ways)) {
             try {
                 String tmpCode = String.valueOf(params.get("code"));
                 //获取用户信息(根据isAbuemtn判断是否是扫码登录)
                 Map userInfMap = new HashMap();
-                if(freeLogin == 1){
+                if("1".equals(freeLogin)){
                     userInfMap = UserInfLix.getUserInfAbutment(tmpCode);
                 }else {
                     userInfMap = UserInfLix.getUserInf(tmpCode);
