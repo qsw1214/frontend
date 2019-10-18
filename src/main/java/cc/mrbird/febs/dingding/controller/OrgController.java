@@ -59,7 +59,7 @@ public class OrgController {
     @Autowired
     private UserDeptMapper userDeptMapper;
 
-    @Autowired
+     @Autowired
     private IDeptService deptService;
 
     @Autowired

@@ -13,11 +13,14 @@ import cc.mrbird.febs.resource.entity.Subject;
 import cc.mrbird.febs.resource.service.ICommentService;
 import cc.mrbird.febs.resource.service.IResourceService;
 import cc.mrbird.febs.resource.service.ISubjectService;
+import cc.mrbird.febs.system.entity.Dept;
 import cc.mrbird.febs.system.entity.Dict;
 import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IDeptService;
 import cc.mrbird.febs.system.service.IDictService;
 import cc.mrbird.febs.system.service.IUserService;
+import cc.mrbird.febs.system.vo.AreaDataCountVO;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -584,5 +587,54 @@ public class ApiController extends BaseController {
     public FebsResponse getTeacherListBySchoolId(QueryRequest request, Integer schoolId) {
         IPage<User> list = this.userService.getTeacherListBySchoolId(schoolId,request);
         return new FebsResponse().data(list).success();
+    }
+
+    /**
+     * 区域开课、资源、学生数量统计
+     * @return
+     */
+    @GetMapping("getAllCityData")
+//    @RequiresPermissions("list:allCityData")
+    public FebsResponse getAllCityData(){
+        List<Dept> cityDatas = this.deptService.getAllCityData();
+        List<String> cityNameLists = new ArrayList<String>();
+        List<Integer> netCountLists = new ArrayList<Integer>();
+        List<Integer> resourceCountLists = new ArrayList<Integer>();
+        List<Integer> studentCountLists = new ArrayList<Integer>();
+
+        LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(Dept::getDeptName,"湖南省");
+        Dept provinceDept = this.deptService.getOne(queryWrapper);
+        for(int i = 0 ; i < cityDatas.size() ; i++){
+            //统计每个市区的开课数量总数
+            Integer count = 0;
+           /* List<ClassroomInfo> classroomLists = this.classroomInfoService
+                    .getClassroomInfoByCityCountry(provinceDept.getDeptId().intValue(), cityDatas.get(i).getDeptId().intValue(), null);
+            for (int j = 0; j < classroomLists.size(); j++) {
+                ClassroomInfo info = classroomLists.get(j);
+                String url = info.getUrl();
+                int nowYear = DateUtil.getLatestYear();
+                Map<String, Integer> map = LiveRadioReqUtil
+                        .getRadioPlayCount("2019", "11", "01",
+                                DateUtil.getLatestYear().toString(),
+                                DateUtil.getLatestMonth().toString(),
+                                DateUtil.getLatestDay().toString(), url);
+                count += map.get(url);
+            }*/
+            count = Integer.valueOf(new Random().nextInt(10000));
+            netCountLists.add(count);
+            //统计每个市区的资源数统计 -- 暂时没有统计包括市级下面的区县的资源数据
+            Integer resourceCount = this.resourceService.getResourceCount(provinceDept.getDeptId().intValue(), cityDatas.get(i).getDeptId().intValue(), null);
+            resourceCountLists.add(resourceCount);
+            //统计每个市区的学生数  —— 暂时以随机数代替
+            Integer studentCount = Integer.valueOf(new Random().nextInt(10000));
+            studentCountLists.add(studentCount);
+        }
+        AreaDataCountVO countVo = new AreaDataCountVO();
+        countVo.setCityNameList(cityNameLists);
+        countVo.setNetClassCountList(netCountLists);
+        countVo.setResourceCountList(resourceCountLists);
+        countVo.setStudentCountList(studentCountLists);
+        return new FebsResponse().data(countVo).success();
     }
 }

@@ -73,4 +73,6 @@ public interface IDeptService extends IService<Dept> {
      * @return
      */
     List<List<Dept>> getAllParentDept(Long userId);
+
+    List<Dept> getAllCityData();
 }
