@@ -12,12 +12,12 @@ public class Constant {
     /**
      * 应用的AppKey，登录开发者后台，点击应用管理，进入应用详情可见
      */
-    public static final String APPKEY = "dingrw665wtcg7e4brqi";
+    public static final String APPKEY = "dingybvw35hoca76rriu";
     //public static final String APPKEY = "dingpefn0cpgo4bdoqqm";
     /**
      * 应用的AppSecret，登录开发者后台，点击应用管理，进入应用详情可见
      */
-    public static final String APPSECRET = "kitLl5P_cxpgt04Ztm-6QpdraF9Tkie1GJ2ivwELkWjxRJVie4XVVWWyy1TNuC15";
+    public static final String APPSECRET = "6yheI6eGy9bz-kfTqMG3Q2N8e9E9qzUbg2FebpU3uGek6QCiRh3ckAltek0oMDqI";
     //public static final String APPSECRET = "LPZOM7ttqsP6mIpGgL1j3JZ9iJ_SmKiyRZ_tRhgFXNZ-KJ_FRtw4Kb16zJFKT6CD";
     /**
      * 登录的ACCESSKEY
