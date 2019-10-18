@@ -3,6 +3,7 @@ package cc.mrbird.febs.basicInfo.service;
 import cc.mrbird.febs.basicInfo.entity.SchoolTimetable;
 
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.resource.entity.Resource;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -38,6 +39,11 @@ public interface ISchoolTimetableService extends IService<SchoolTimetable> {
      * @param schoolTimetable schoolTimetable
      */
     void createSchoolTimetable(SchoolTimetable schoolTimetable);
+
+    /**
+     * 批量新增数据(Excel)
+     */
+    void insertSchoolTimetable(List<SchoolTimetable> schoolTimetable);
 
     /**
      * 修改
