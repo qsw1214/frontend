@@ -23,17 +23,17 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">学校类型：</label>
-            <div class="layui-input-block">
-                <input type="radio" name="schoolType" value="主校" title="主校">
-                <input type="radio" name="schoolType" value="分校" title="分校">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">学校类别:</label>
+            <label class="layui-form-label febs-form-item-require">学校类别：</label>
             <div class="layui-input-block"  style="width: 180px;">
                 <select name="schoolCategory" id="schoolCate">
                 </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">学校类型：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="schoolType" value="主校" title="主校" disabled>
+                <input type="radio" name="schoolType" value="分校" title="分校" disabled>
             </div>
         </div>
         <div class="layui-form-item">
@@ -60,10 +60,16 @@
                 <input type="tel" name="linkPhone" lay-verify="phone" autocomplete="off" class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">邮编：</label>
-            <div class="layui-input-block">
-                <input type="text" name="postCode"  autocomplete="off" class="layui-input">
+        <div class="layui-form-item" id="area-picker">
+            <label class="layui-form-label">所属地区：</label>
+            <div class="layui-input-block" style="width:180px;float:left;margin:0px;">
+                <input name="provinceDeptId" class="layui-input" lay-filter="city-1" placeholder="请选择省" id="provinceDeptId" readonly/>
+            </div>
+            <div class="layui-input-block" style="width:180px;float:left;margin-left:5px;">
+                <input name="cityDeptId" class="layui-input" lay-filter="city-1" placeholder="请选择市" id="cityDeptId" readonly/>
+            </div>
+            <div class="layui-input-block" style="width:180px;float:left;margin-left:5px;">
+                <input name="countryDeptId" class="layui-input" lay-filter="city-1" placeholder="请选择区/县" id="countryDeptId" readonly/>
             </div>
         </div>
         <div class="layui-form-item">
@@ -72,22 +78,10 @@
                 <input type="text" name="address"  autocomplete="off" class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item" id="area-picker">
-            <label class="layui-form-label">选择地区:</label>
-            <div class="layui-input-inline" style="width: 180px;">
-                <select name="province" class="province-selector" lay-filter="province-1" readonly>
-                    <option value="">请选择省</option>
-                </select>
-            </div>
-            <div class="layui-input-inline" style="width: 180px;">
-                <select name="city" class="city-selector" lay-filter="city-1" readonly>
-                    <option value="">请选择市</option>
-                </select>
-            </div>
-            <div class="layui-input-inline" style="width: 180px;">
-                <select name="country" class="county-selector" lay-filter="county-1" readonly>
-                    <option value="">请选择区</option>
-                </select>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮编：</label>
+            <div class="layui-input-block">
+                <input type="text" name="postCode"  autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -119,6 +113,9 @@
             $form = $('form'),
             school = [[${school}]],
             schoolCategory=$('#schoolCate'),
+            provinceDeptId=$('#provinceDeptId'),
+            cityDeptId=$('#cityDeptId'),
+            countryDeptId=$('#countryDeptId'),
             $view = $('#school-update'),
             $remove=$view.find('#remove'),
             validate = layui.validate;
@@ -132,6 +129,60 @@
         form.verify(validate);
         form.render();
         initUserValue();
+        getSchoolprovince(provinceDeptId.val());
+        getSchoolcityDeptId(cityDeptId.val());
+        getSchoolcountryDeptId(countryDeptId.val());
+        //学校所属地区省
+        function getSchoolprovince(provinceDeptId){
+            $.ajax({
+                type:'get',
+                url: ctx+"dept/get?deptId="+provinceDeptId,
+                success:function (res) {
+                    var items=res.data;
+                    $('#provinceDeptId').val(items.deptName);
+                }
+            });
+        }
+        //学校所属地区市
+        function getSchoolcityDeptId(cityDeptId){
+            $.ajax({
+                type:'get',
+                url: ctx+"dept/get?deptId="+cityDeptId,
+                success:function (res) {
+                    var items=res.data;
+                    $('#cityDeptId').val(items.deptName);
+                }
+            });
+        }
+        //学校所属地区县
+        function getSchoolcountryDeptId(countryDeptId){
+            $.ajax({
+                type:'get',
+                url: ctx+"dept/get?deptId="+countryDeptId,
+                success:function (res) {
+                    var items=res.data;
+                    $('#countryDeptId').val(items.deptName);
+                }
+            });
+        }
+      /* //学校所属地区
+       var provinceDeptId=provinceDeptId.val();
+       var cityDeptId=cityDeptId.val();
+       var countryDeptId=countryDeptId.val();
+       getSchoolPlace(provinceDeptId,cityDeptId,countryDeptId);
+       function getSchoolPlace(provinceDeptId,cityDeptId,countryDeptId){
+           $.ajax({
+               type:'get',
+               url: ctx+"dept/get?provinceDeptId="+provinceDeptId+"&cityDeptId="+cityDeptId+"&countryDeptId="+countryDeptId,
+               success:function (res) {
+                   var items=res.data;
+                   alert(items);
+               }
+           });
+       }*/
+
+
+        //学校类型
         function getschoolCategory() {
             $.ajax({
                 type:'get',
@@ -189,15 +240,18 @@
                 "postCode": school.postCode,
                 "areaCode":school.areaCode,
                 "address":school.address,
-                "createTime":date
+                "createTime":date,
+                "provinceDeptId":school.provinceDeptId,
+                "cityDeptId":school.cityDeptId,
+                "countryDeptId":school.countryDeptId
             });
         }
         layarea.render({
             elem: '#area-picker',
              data: {
-                 province: school.province,
-                 city: school.city,
-                 county: school.country,
+                 provinceDeptId: school.provinceDeptId,
+                 cityDeptId: school.cityDeptId,
+                 countryDeptId: school.countryDeptId,
             },
         });
 

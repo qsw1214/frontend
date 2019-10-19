@@ -23,10 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author lb
@@ -274,5 +271,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
         queryWrapper.in(Dept::getDeptGrade, 2);
         List<Dept> depts = baseMapper.selectList(queryWrapper);
         return depts;
+    }
+
+    @Override
+    public Dept getNameByDeptId(Long deptId){
+        return this.baseMapper.selectById(deptId);
     }
 }

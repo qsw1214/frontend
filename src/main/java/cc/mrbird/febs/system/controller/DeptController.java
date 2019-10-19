@@ -161,4 +161,9 @@ public class DeptController extends BaseController {
 			throw new FebsException(message);
 		}
 	}
+
+	@GetMapping("get")
+	public FebsResponse get(Long deptId) throws FebsException {
+		return new FebsResponse().success().data(deptService.getNameByDeptId(deptId));
+	}
 }
