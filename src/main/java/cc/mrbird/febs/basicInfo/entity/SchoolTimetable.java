@@ -2,6 +2,7 @@ package cc.mrbird.febs.basicInfo.entity;
 
 import java.util.Date;
 
+import com.wuwenze.poi.annotation.Excel;
 import com.wuwenze.poi.annotation.ExcelField;
 import lombok.Data;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -17,6 +18,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
  */
 @Data
 @TableName("jcc_school_timetable")
+@Excel("课程管理")
 public class SchoolTimetable {
 
     /**
@@ -36,7 +38,7 @@ public class SchoolTimetable {
     @TableField("class_id")
     private String classId;
 
-    @ExcelField(value = "班级名称")
+    @ExcelField(value = "班级名称",maxLength = 255)
     @TableField(exist = false)
     private String className;
 
@@ -46,15 +48,15 @@ public class SchoolTimetable {
     @TableField("classroom_id")
     private Integer classroomId;
 
-    @ExcelField(value = "教室位置")
+    @ExcelField(value = "教室位置",maxLength = 255)
     @TableField(exist = false)
     private String location;
 
-    @ExcelField(value = "巡课路径")
+    @ExcelField(value = "巡课路径",maxLength = 255)
     @TableField(exist = false)
     private String url;
 
-    @ExcelField(value = "巡课状态")
+    @ExcelField(value = "巡课状态",maxLength = 255)
     @TableField(exist = false)
     private String state;
     /**
@@ -72,7 +74,7 @@ public class SchoolTimetable {
     /**
      * 
      */
-    @ExcelField(value = "年级名称")
+    @ExcelField(value = "年级名称",maxLength = 255)
     @TableField("grade")
     private String grade;
     /**
@@ -81,7 +83,7 @@ public class SchoolTimetable {
     @TableField("school_id")
     private Integer schoolId;
 
-    @ExcelField(value = "学校名称")
+    @ExcelField(value = "学校名称",maxLength = 255)
     @TableField(exist = false)
     private String schoolName;
 
@@ -110,7 +112,7 @@ public class SchoolTimetable {
     private Long userId;
 
 
-    @ExcelField(value = "授课教师")
+    @ExcelField(value = "授课教师",maxLength = 255)
     @TableField("user_name")
     private String username;
     /**

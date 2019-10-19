@@ -267,4 +267,12 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 		}
 		return result;
 	}
+
+    @Override
+    public List<Dept> getAllCityData(){
+        LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(Dept::getDeptGrade, 2);
+        List<Dept> depts = baseMapper.selectList(queryWrapper);
+        return depts;
+    }
 }

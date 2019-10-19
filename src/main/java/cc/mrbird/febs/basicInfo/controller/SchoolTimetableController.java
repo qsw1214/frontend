@@ -9,18 +9,25 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.basicInfo.entity.SchoolTimetable;
 import cc.mrbird.febs.basicInfo.service.ISchoolTimetableService;
+import cc.mrbird.febs.system.entity.User;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.google.common.collect.Lists;
 import com.wuwenze.poi.ExcelKit;
+import com.wuwenze.poi.handler.ExcelReadHandler;
+import com.wuwenze.poi.pojo.ExcelErrorField;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -94,8 +101,9 @@ public class SchoolTimetableController extends BaseController {
         }
     }
 
-    @PostMapping("schoolTimetable/excel")
-    @RequiresPermissions("schoolTimetable:export")
+    @GetMapping("excel")
+    @ResponseBody
+    //@RequiresPermissions("schoolTimetable:export")
     public void export(QueryRequest queryRequest, SchoolTimetable schoolTimetable, HttpServletResponse response) throws FebsException {
         try {
             List<SchoolTimetable> schoolTimetables = this.schoolTimetableService.findSchoolTimetables(queryRequest, schoolTimetable).getRecords();
@@ -104,6 +112,55 @@ public class SchoolTimetableController extends BaseController {
             String message = "导出Excel失败";
             log.error(message, e);
             throw new FebsException(message);
+        }
+    }
+
+
+    @PostMapping("excel")
+    //@RequiresPermissions("resource:import")
+    public FebsResponse addVideo(@RequestParam("file") MultipartFile file) throws FebsException {
+        try {
+            User user = super.getCurrentUser();
+            String username = user.getUsername();
+            String avatar = user.getAvatar();
+            Integer schoolId = user.getSchoolId();
+            Date now = new Date();
+            if(schoolId == null)
+                return new FebsResponse().fail().data("请完善用户学校信息");
+
+            long beginMillis = System.currentTimeMillis();
+            List<SchoolTimetable> successList = Lists.newArrayList();
+            List<Map<String, Object>> errorList = Lists.newArrayList();
+            ExcelKit.$Import(SchoolTimetable.class).readXlsx(file.getInputStream(), new ExcelReadHandler<SchoolTimetable>() {
+                @Override
+                public void onSuccess(int sheetIndex, int rowIndex, SchoolTimetable entity) {
+                    /*entity.setCreator(username);
+                    entity.setAvatar(avatar);
+                    entity.setCreateTime(now);*/
+                    successList.add(entity); // 单行读取成功，加入入库队列。
+                }
+
+                @Override
+                public void onError(int sheetIndex, int rowIndex, List<ExcelErrorField> errorFields) {
+                    // 读取数据失败，记录了当前行所有失败的数据
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("sheetIndex", sheetIndex);
+                    map.put("rowIndex", rowIndex);
+                    map.put("errorFields", errorFields);
+                    errorList.add(map);
+                }
+            });
+            log.info("解析耗时：", (System.currentTimeMillis() - beginMillis) / 1000L);
+            //  执行successList的入库操作。
+            if(errorList.isEmpty()){
+                this.schoolTimetableService.insertSchoolTimetable(successList);
+                return new FebsResponse().success().data(successList);
+            }else{
+                return new FebsResponse().fail().data(errorList);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FebsException("解析失败");
         }
     }
 }

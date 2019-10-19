@@ -7,6 +7,7 @@ import cc.mrbird.febs.basicInfo.service.ISchoolTimetableService;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.SortUtil;
+import cc.mrbird.febs.resource.entity.Resource;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,14 @@ public class SchoolTimetableServiceImpl extends ServiceImpl<SchoolTimetableMappe
 	    LambdaQueryWrapper<SchoolTimetable> queryWrapper = new LambdaQueryWrapper<>();
 		// TODO 设置查询条件
 		return this.baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public void insertSchoolTimetable(List<SchoolTimetable> schoolTimetable) {
+        this.saveBatch(schoolTimetable);
+       /* for(int i=0; i<schoolTimetable.size(); i++){
+            schoolTimeTableService.save(schoolTimetable.get(i).get());
+        }*/
     }
 
     @Override
