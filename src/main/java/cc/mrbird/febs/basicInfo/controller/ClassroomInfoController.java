@@ -5,8 +5,13 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
+import cc.mrbird.febs.system.entity.User;
+import cc.mrbird.febs.system.service.IUserDeptService;
 import cc.mrbird.febs.basicInfo.entity.ClassroomInfo;
+import cc.mrbird.febs.basicInfo.entity.School;
 import cc.mrbird.febs.basicInfo.service.IClassroomInfoService;
+import cc.mrbird.febs.basicInfo.service.ISchoolService;
+
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -17,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +45,10 @@ public class ClassroomInfoController extends BaseController {
 
     @Autowired
     private IClassroomInfoService classroomInfoService;
+    @Autowired
+    private IUserDeptService userDeptService;
+    @Autowired
+    private ISchoolService schoolService;
 
     @GetMapping("classroomInfo")
     @ResponseBody
@@ -91,6 +101,15 @@ public class ClassroomInfoController extends BaseController {
     @RequiresPermissions("classroomInfo:update")
     public FebsResponse updateClassroomInfo(ClassroomInfo classroomInfo) throws FebsException {
         try {
+        	ClassroomInfo old = classroomInfoService.getById(classroomInfo.getId());
+			if(old == null)
+				return new FebsResponse().fail().data("未找到");
+			// 判断有无权限
+			User user = getCurrentUser();			
+			School school = schoolService.getById(old.getSchoolId());
+			if(school != null && !userDeptService.isPermission(user.getUserId(), school.getDeptId())){
+				return new FebsResponse().fail().data("无权限");
+			}
             this.classroomInfoService.updateClassroomInfo(classroomInfo);
             return new FebsResponse().success();
         } catch (Exception e) {
@@ -118,4 +137,26 @@ public class ClassroomInfoController extends BaseController {
         model.addAttribute("classroomInfo", classroomInfo);
 
     }
+    
+    /**
+     * 按部门查询教室
+     * @param request
+     * @param classroomInfo
+     * @param deptId
+     * @return
+     */
+    @GetMapping("classroomInfo/bydept/list")
+	@ResponseBody
+	@RequiresPermissions("classroomInfo:view")
+	public FebsResponse getDeptClassroomInfoList(QueryRequest request, ClassroomInfo classroomInfo,
+			@RequestParam(required = true) Long deptId) {
+    	// 判断有无权限
+		User user = getCurrentUser();		
+		if(!userDeptService.isPermission(user.getUserId(), deptId)){
+			return new FebsResponse().fail().data("无权限");
+		}
+		Map<String, Object> dataTable = getDataTable(
+				this.classroomInfoService.findClassroomInfosByDept(request, classroomInfo, deptId));
+		return new FebsResponse().success().data(dataTable);
+	}
 }

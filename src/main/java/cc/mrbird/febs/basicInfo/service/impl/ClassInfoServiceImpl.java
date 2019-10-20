@@ -1,12 +1,10 @@
 package cc.mrbird.febs.basicInfo.service.impl;
 
 import cc.mrbird.febs.basicInfo.entity.ClassInfo;
+import cc.mrbird.febs.basicInfo.entity.ClassroomInfo;
 import cc.mrbird.febs.basicInfo.mapper.ClassInfoMapper;
 import cc.mrbird.febs.basicInfo.service.IClassInfoService;
 import cc.mrbird.febs.common.entity.QueryRequest;
-import cc.mrbird.febs.resource.entity.Resource;
-import cc.mrbird.febs.resource.entity.SubjectResource;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
@@ -15,8 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -33,9 +29,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class ClassInfoServiceImpl extends ServiceImpl<ClassInfoMapper, ClassInfo> implements IClassInfoService {
-
-    @Autowired
-    private ClassInfoMapper classInfoMapper;
 
     @Override
     public IPage<ClassInfo> findClassInfos(QueryRequest request, ClassInfo classInfo) {
@@ -94,5 +87,11 @@ public class ClassInfoServiceImpl extends ServiceImpl<ClassInfoMapper, ClassInfo
 	public void deleteClassInfosByschoolId(List<String> schoolIds) {
 		if(schoolIds.size()>0)
 			this.baseMapper.delete(new QueryWrapper<ClassInfo>().lambda().in(ClassInfo::getSchoolId, schoolIds));
+	}
+
+	@Override
+	public IPage<ClassInfo> findClassInfosByDept(QueryRequest request, ClassInfo classInfo, Long deptId) {
+		Page<ClassroomInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
+        return this.baseMapper.findClassInfosByDept(page, classInfo, deptId);
 	}
 }

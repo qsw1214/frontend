@@ -4,7 +4,10 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.system.entity.Dept;
 import cc.mrbird.febs.system.entity.UserDept;
 import cc.mrbird.febs.system.mapper.UserDeptMapper;
+import cc.mrbird.febs.system.service.IDeptService;
 import cc.mrbird.febs.system.service.IUserDeptService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
@@ -25,6 +28,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class UserDeptServiceImpl extends ServiceImpl<UserDeptMapper, UserDept> implements IUserDeptService {
+	@Autowired
+	private IDeptService deptService;
 
     @Override
     public IPage<UserDept> findUserDepts(QueryRequest request, UserDept userDept) {
@@ -69,6 +74,20 @@ public class UserDeptServiceImpl extends ServiceImpl<UserDeptMapper, UserDept> i
 	@Override
 	public Dept getDeptByUserIdAndDeptId(Long userId, Long deptId) {
 		return this.baseMapper.getDeptByUserIdAndDeptId(userId, deptId);
+	}
+
+	@Override
+	public boolean isPermission(Long userId, Long deptId) {
+		List<Long> parentDeptIds = deptService.getParentDeptIds(deptId);
+		if(parentDeptIds.isEmpty())
+			return false;
+		List<Dept> depts = getDeptByUserId(userId);
+		for(Dept dept: depts){
+			if(parentDeptIds.contains(dept.getDeptId())){
+				return true;
+			}
+		}	
+		return false;
 	}
 
 }

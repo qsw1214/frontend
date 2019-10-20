@@ -19,6 +19,12 @@
         <result column="term" jdbcType="CHAR" property="term"/>
 
         <result column="week" jdbcType="VARCHAR" property="week"/>
+        
+        <result column="school_name" jdbcType="CHAR" property="schoolName"/>
+        <result column="class_name" jdbcType="CHAR" property="className"/>
+        <result column="location" jdbcType="CHAR" property="location"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="url" jdbcType="CHAR" property="url"/>
     </resultMap>
 
     <sql id="findSchoolTimetableDetailSql">
@@ -58,5 +64,50 @@
 
     <select id="selectMainSchoolId" parameterType="Integer" resultType="Integer">
         select belongId from jcc_school_info where school_id = #{schoolId}
+    </select>
+    
+    <select id="findSchoolTimetableByDept" resultType="cc.mrbird.febs.basicInfo.entity.SchoolTimetable">
+        SELECT
+        d.course_id,
+        d.course_name,
+        d.begin_date,
+        d.duration,
+        d.grade,
+        d.section,
+        d.subject,
+        d.term,
+        d.week,
+        d.user_name,
+        u.user_id,
+        s.school_id,
+        s.school_name,
+        c.class_id,
+        c.class_name,
+        cr.id classroom_id,
+        cr.location,
+        cr.state,
+        cr.url
+        FROM
+        jcc_school_timetable d
+        LEFT JOIN jcc_school_info s ON (s.school_id = d.school_id)
+        LEFT JOIN jcc_class_info c ON (c.class_id = d.class_id)
+        LEFT JOIN jcc_classroom_info cr ON (cr.id = d.classroom_id)
+        LEFT JOIN t_user u ON (u.user_id = d.user_id)
+        WHERE s.dept_id = #{deptId}
+        <if test="schoolTimetable.courseName != null and schoolTimetable.courseName != ''">
+            AND d.course_name like CONCAT('%','${schoolTimetable.courseName}','%')
+        </if>
+        <if test="schoolTimetable.subject != null and schoolTimetable.subject != ''">
+            AND s.subject like CONCAT('%','${schoolTimetable.subject}','%')
+        </if>
+        <if test="schoolTimetable.schoolName != null and schoolTimetable.schoolName != ''">
+            AND s.school_name like CONCAT('%','${schoolTimetable.schoo                                                                                                                                     lName}','%')
+        </if>
+        <if test="schoolTimetable.schoolId != null and schoolTimetable.schoolId != ''">
+            AND s.school_id = #{schoolTimetable.schoolId}
+        </if>
+        <if test="schoolTimetable.week != null and schoolTimetable.week != ''">
+            AND d.week = #{schoolTimetable.week}
+        </if>
     </select>
 </mapper>

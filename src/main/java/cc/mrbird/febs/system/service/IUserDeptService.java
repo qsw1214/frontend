@@ -68,4 +68,11 @@ public interface IUserDeptService extends IService<UserDept> {
 	 */
     Dept getDeptByUserIdAndDeptId(Long userId, Long deptId);
     
+    /**
+     * 判断用户对部门有无权限
+     * @param deptId
+     * @return
+     */
+    boolean isPermission(Long userId, Long deptId);
+    
 }

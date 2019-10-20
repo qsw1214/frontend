@@ -177,7 +177,7 @@ public interface RedisService {
     Long incrBy(String key, long integer);
 
     // hash操作
-	Long hset(String key, String field, String value) throws RedisConnectException;
+	Long hset(String key, String field, String value);
 
 	String hget(String key, String field);
 	

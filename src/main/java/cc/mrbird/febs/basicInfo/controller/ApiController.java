@@ -20,6 +20,7 @@ import cc.mrbird.febs.system.service.IDeptService;
 import cc.mrbird.febs.system.service.IDictService;
 import cc.mrbird.febs.system.service.IUserService;
 import cc.mrbird.febs.system.vo.AreaDataCountVO;
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.extern.slf4j.Slf4j;
@@ -469,8 +470,8 @@ public class ApiController extends BaseController {
      */
     @GetMapping("resourceCount")
 //    @RequiresPermissions("count:resourceCount")
-    public FebsResponse getResourceCount(QueryRequest request, Integer provinceId, Integer cityDeptId, Integer countryDeptId) {
-        Integer count = this.resourceService.getResourceCount(provinceId, cityDeptId, countryDeptId);
+    public FebsResponse getResourceCount(QueryRequest request, Integer deptId) {
+        Integer count = this.resourceService.getResourceCount(deptId);
         return new FebsResponse().num(count).success();
     }
 
@@ -624,7 +625,7 @@ public class ApiController extends BaseController {
             count = Integer.valueOf(new Random().nextInt(10000));
             netCountLists.add(count);
             //统计每个市区的资源数统计 -- 暂时没有统计包括市级下面的区县的资源数据
-            Integer resourceCount = this.resourceService.getResourceCount(provinceDept.getDeptId().intValue(), cityDatas.get(i).getDeptId().intValue(), null);
+            Integer resourceCount = this.resourceService.getResourceCount(cityDatas.get(i).getDeptId().intValue());
             resourceCountLists.add(resourceCount);
             //统计每个市区的学生数  —— 暂时以随机数代替
             Integer studentCount = Integer.valueOf(new Random().nextInt(10000));

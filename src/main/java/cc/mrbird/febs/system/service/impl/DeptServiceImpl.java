@@ -277,4 +277,19 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     public Dept getNameByDeptId(Long deptId){
         return this.baseMapper.selectById(deptId);
     }
+    
+    /**
+     * 获取一个部门的所有父部门id,包括当前部门id
+     */
+	@Override
+	public List<Long> getParentDeptIds(Long deptId) {
+		List<Long> parentIds = new ArrayList<>();
+		long parentId = deptId;
+		while(parentId != 1 && parentIds.size() < 5){
+			Dept parentDept = this.baseMapper.selectById(parentId);
+			parentIds.add(parentDept.getDeptId());
+			parentId = parentDept.getParentId();
+		}
+		return parentIds;
+	}
 }

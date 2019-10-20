@@ -17,12 +17,6 @@ public interface IEsResourceService {
     int importAll();
     
     /**
-     * 获取资源数量(deptId为null时，返回所有资源总数)
-     * @param deptId
-     */
-    Long getCount(Long deptId);
-    
-    /**
      * 根据id获取资源
      */
     EsResource get(Long id);

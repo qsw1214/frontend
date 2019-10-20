@@ -151,7 +151,6 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     @Override
     @Transactional
     public void updateSchool(School school) {
-
         this.saveOrUpdate(school);
     }
 
@@ -199,14 +198,11 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
 
 	@Override
 	public IPage<School> findSchoolsByDept(QueryRequest request, School school, Long deptId) {
-		User user = (User) SecurityUtils.getSubject().getPrincipal();
-			
-    	// 获取用户所属部门
-		Dept dept = userDeptService.getDeptByUserIdAndDeptId(user.getUserId(), deptId);
-		if(dept == null){
+		User user = (User) SecurityUtils.getSubject().getPrincipal();		
+		if(!userDeptService.isPermission(user.getUserId(), deptId)){
 			return new Page<School>();
 		}
-		
+		Dept dept = deptService.getById(deptId);	
     	LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
     	if (StringUtils.isNotBlank(school.getSchoolName())) {
             queryWrapper.eq(School::getSchoolName, school.getSchoolName());

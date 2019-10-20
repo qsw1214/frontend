@@ -1,7 +1,6 @@
 package cc.mrbird.febs.basicInfo.service;
 
 import cc.mrbird.febs.basicInfo.entity.ClassInfo;
-
 import cc.mrbird.febs.common.entity.QueryRequest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -59,5 +58,13 @@ public interface IClassInfoService extends IService<ClassInfo> {
      * @param List<String> 学校id
      */
     void deleteClassInfosByschoolId(List<String> schoolIds);
+    
+    /**
+     * 按部门查询（分页）
+     * @param request QueryRequest
+     * @param school school
+     * @return IPage<School>
+     */
+    IPage<ClassInfo> findClassInfosByDept(QueryRequest request, ClassInfo classInfo, Long deptId);
     
 }

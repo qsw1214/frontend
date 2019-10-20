@@ -7,8 +7,8 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.utils.MD5Util;
 import cc.mrbird.febs.system.entity.User;
+import cc.mrbird.febs.system.service.IUserDeptService;
 import cc.mrbird.febs.system.service.IUserService;
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +36,8 @@ public class UserController extends BaseController {
 
     @Autowired
     private IUserService userService;
+    @Autowired
+    private IUserDeptService userDeptService;
 
     @GetMapping("{username}")
     public User getUser(@NotBlank(message = "{required}") @PathVariable String username) {
@@ -212,4 +214,22 @@ public class UserController extends BaseController {
         System.out.println(map);
         return new FebsResponse().success().data(map);
     }
+    
+    /**
+	 * 按部门查询用户
+	 */
+	@GetMapping("bydept/list")
+	@ResponseBody
+	@RequiresPermissions("user:view")
+	public FebsResponse getDeptUserList(QueryRequest request, User user,
+			@RequestParam(required = true) Long deptId) {
+		// 判断有无权限
+		User currentuser = getCurrentUser();		
+		if(!userDeptService.isPermission(currentuser.getUserId(), deptId)){
+			return new FebsResponse().fail().data("无权限");
+		}
+		user.setDeptId(deptId);
+		Map<String, Object> dataTable = getDataTable(this.userService.findUserDetail(user, request));
+		return new FebsResponse().success().data(dataTable);
+	}
 }

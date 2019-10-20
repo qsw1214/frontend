@@ -96,11 +96,14 @@
         WHERE r.resource_id = #{resourceId}
     </select>
 
-    <select id="getResourceCount" parameterType="java.util.Map" resultType="integer">
+    <select id="getResourceCount" resultType="integer">
         SELECT count(1) FROM r_resource r
         WHERE  1 = 1
-        <if test = "map.deptId != null">
-            and r.dept_id = #{map.deptId}
+        <if test = "deptId != null">
+            and r.dept_id = #{deptId}
+        </if>
+        <if test="timeTo != null and timeTo !=''">
+            and r.create_time &lt; #{timeTo}
         </if>
     </select>
     

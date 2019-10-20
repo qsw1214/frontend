@@ -9,4 +9,15 @@
         <result column="grade" jdbcType="VARCHAR" property="grade"/>
         <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
     </resultMap>
+    <select id = "findClassInfosByDept" resultType="cc.mrbird.febs.basicInfo.entity.ClassInfo">
+        select * from jcc_class_info c
+          LEFT JOIN jcc_school_info school ON c.school_id = school.school_id
+          WHERE  school.dept_id = #{deptId}
+          <if test ="classInfo.schoolId != null">
+                and school.school_id = #{classInfo.schoolId}
+          </if>
+          <if test ="classInfo.grade != null">
+                and grade = #{classInfo.grade}
+          </if>
+    </select>
 </mapper>
