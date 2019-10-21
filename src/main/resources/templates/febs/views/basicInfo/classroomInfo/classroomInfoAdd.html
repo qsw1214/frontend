@@ -161,7 +161,6 @@
             });
         }
         form.on('submit(classroomInfo-add-form-submit)', function (data) {
-            console.log(data.field);
             febs.post(ctx + 'classroomInfo', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('新增教室成功');

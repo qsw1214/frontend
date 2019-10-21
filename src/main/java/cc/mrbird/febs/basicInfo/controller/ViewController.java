@@ -94,21 +94,20 @@ public class ViewController extends BaseController {
     @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classInfo/classInfoAdd")
     @RequiresPermissions("classInfo:add")
     private String gradeAdd(){
-
         return FebsUtil.view("basicInfo/classInfo/classInfoAdd");
     }
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classInfo/detail/{classInfoId}")
     @RequiresPermissions("classInfo:view")
     public String gradeDetail(@PathVariable Integer classInfoId, Model model) {
-        resolveClassrModel(classInfoId,model, true);
+        resolveClassModel(classInfoId,model, true);
         return FebsUtil.view("basicInfo/classInfo/classInfoDetail");
     }
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/classInfo/update/{classInfoId}")
     @RequiresPermissions("classInfo:update")
     public String gradeUpdate(@PathVariable Integer classInfoId, Model model) {
-        resolveClassrModel(classInfoId,model, true);
+        resolveClassModel(classInfoId,model, true);
         return FebsUtil.view("basicInfo/classInfo/classInfoUpdate");
     }
     //==============================================END==================================================
@@ -286,5 +285,10 @@ public class ViewController extends BaseController {
     private void resolveClassrModel(Integer classroomInfoId, Model model, Boolean transform) {
         ClassroomInfo classroomInfo = this.classroomInfoService.getById(classroomInfoId);
         model.addAttribute("classroomInfo", classroomInfo);
+    }
+    
+    private void resolveClassModel(Integer classInfoId, Model model, Boolean transform) {
+        ClassInfo classInfo = this.classInfoService.getById(classInfoId);
+        model.addAttribute("classInfo", classInfo);
     }
 }

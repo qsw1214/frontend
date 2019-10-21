@@ -110,7 +110,8 @@ public class Tools {
 					File outFile = new File(uploadPath  + id + Tools.getFileType(fileName));
 					// 拷贝文件到输出文件对象
 					FileUtils.copyInputStreamToFile(file.getInputStream(), outFile);
-					return "/files/" + folder + "/" + outFile.getName();
+					//return "/files/" + folder + "/" + outFile.getName();
+					return "/" + folder + "/" + outFile.getName();
 				}
 
 			}

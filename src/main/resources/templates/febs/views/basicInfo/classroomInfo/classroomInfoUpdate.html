@@ -56,10 +56,9 @@
                 <input type="text" name="url" id="url" class="layui-input" readonly="readonly">
             </div>
         </div>
-
-
-        <div class="layui-form-item febs-hide">
-            <button class="layui-btn" lay-submit="" lay-filter="classroomInfo-update-form-submit" id="submit"></button>
+        <div class="layui-form-item" style="text-align: right">
+            <button class="layui-btn" lay-submit="" lay-filter="classroomInfo-update-form-submit" id="submit">提交</button>
+            <button class="layui-btn layui-btn-primary" id="remove">取消</button>
         </div>
     </form>
 </div>
@@ -76,6 +75,7 @@
             subjectInfo=$('#subjectInfo'),
             school=$('#schoolId'),
             $view = $('#classroomInfo-update'),
+            $remove=$view.find('#remove'),
             classroomInfo = [[${classroomInfo}]],
             validate = layui.validate;
         getSchool();
@@ -113,7 +113,10 @@
                 if (items.total==0){
                     school.append('<option value="'+""+'">'+""+'</option>');
                 }else{
-                    school.append('<option value="' + items.rows[0].schoolId + '">' + items.rows[0].schoolName+ '</option>');
+                    //school.append('<option value="' + items.rows[0].schoolId + '">' + items.rows[0].schoolName+ '</option>');
+                    for (var i=0;i<items.rows.length;i++) {
+                            school.append('<option value='+ items.rows[i].schoolId + '>' + items.rows[i].schoolName + '</option>');
+                    }
                 }
                 form.render('select');
             });
@@ -143,11 +146,16 @@
                 "introduce": classroomInfo.introduce,
                 "url": classroomInfo.url,
                 "subject": classroomInfo.subject,
-                "garde": classroomInfo.garde
+                "grade": classroomInfo.grade
             });
         }
+        
+        $remove.on("click",function(){
+            layer.closeAll();
+        })
 
-        form.on('submit(classroomInfo-update-form-submit)', function (data) {
+         form.on('submit(classroomInfo-update-form-submit)', function (data) {
+        	febs.alert.warn('123123！');
         	data.field.schoolId=classroomInfo.schoolId;
         	data.field.id = classroomInfo.id;
             data.field.grade=$("#classInfo option:selected").val();
@@ -161,6 +169,6 @@
                 $('#febs-classroomInfo').find('#query').click();
             });
             return false;
-        });
+        }); 
     });
 </script>

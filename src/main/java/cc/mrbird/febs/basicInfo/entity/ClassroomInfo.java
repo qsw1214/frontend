@@ -73,8 +73,8 @@ public class ClassroomInfo {
     /**
      * 
      */
-    @TableField("garde")
-    private String garde;
+    @TableField("grade")
+    private String grade;
 
 
 }

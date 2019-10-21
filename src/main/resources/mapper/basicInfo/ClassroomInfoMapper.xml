@@ -11,7 +11,7 @@
         <result column="url" jdbcType="CHAR" property="url"/>
         <result column="state" jdbcType="INTEGER" property="state"/>
         <result column="subject" jdbcType="VARCHAR" property="subject"/>
-        <result column="garde" jdbcType="VARCHAR" property="garde"/>
+        <result column="grade" jdbcType="VARCHAR" property="grade"/>
     </resultMap>
 
     <select id = "getClassroomInfoByCityCountry" resultType="cc.mrbird.febs.basicInfo.entity.ClassroomInfo" parameterType = "map">

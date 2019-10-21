@@ -48,8 +48,8 @@ public class ClassroomInfoServiceImpl extends ServiceImpl<ClassroomInfoMapper, C
         if (StringUtils.isNotBlank(classroomInfo.getSubject())) {
             queryWrapper.eq(ClassroomInfo::getSubject, classroomInfo.getSubject());
         }
-        if (StringUtils.isNotBlank(classroomInfo.getGarde())) {
-            queryWrapper.eq(ClassroomInfo::getGarde, classroomInfo.getGarde());
+        if (StringUtils.isNotBlank(classroomInfo.getGrade())) {
+            queryWrapper.eq(ClassroomInfo::getGrade, classroomInfo.getGrade());
         }
         if (classroomInfo.getState() != null) {
             queryWrapper.eq(ClassroomInfo::getState, classroomInfo.getState());
@@ -67,8 +67,8 @@ public class ClassroomInfoServiceImpl extends ServiceImpl<ClassroomInfoMapper, C
         if (StringUtils.isNotBlank(classroomInfo.getSubject())) {
             queryWrapper.eq(ClassroomInfo::getSubject, classroomInfo.getSubject());
         }
-        if (StringUtils.isNotBlank(classroomInfo.getGarde())) {
-            queryWrapper.eq(ClassroomInfo::getGarde, classroomInfo.getGarde());
+        if (StringUtils.isNotBlank(classroomInfo.getGrade())) {
+            queryWrapper.eq(ClassroomInfo::getGrade, classroomInfo.getGrade());
         }
         if (classroomInfo.getState() != null) {
             queryWrapper.eq(ClassroomInfo::getState, classroomInfo.getState());

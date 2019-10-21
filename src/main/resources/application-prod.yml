@@ -55,4 +55,4 @@ spring:
 # 参数设置 
 myConfig:
   # 上传文件路径设置
-  uploadBasePath: D:/school/upload/
+  uploadBasePath: classpath:/static/febs/images/

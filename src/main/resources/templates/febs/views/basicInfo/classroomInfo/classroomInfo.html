@@ -176,14 +176,7 @@
             }
             if (layEvent === 'edit') {
                 febs.modal.open('修改教室', 'basicInfo/classroomInfo/update/' + data.id, {
-                    area: $(window).width() <= 750 ? '90%' : '50%',
-                    btn: ['提交', '取消'],
-                    yes: function (index, layero) {
-                        $('#classroomInfo-update').find('#submit').trigger('click');
-                    },
-                    btn2: function () {
-                        layer.closeAll();
-                    }
+                    area: $(window).width() <= 750 ? '90%' : '50%'
                 });
             }
         });
@@ -225,7 +218,7 @@
                     {field: 'url', title: '链接', minWidth: 180},
                     {field:'state',title: '状态'},
                     {field: 'subject', title: '课程', minWidth: 180},
-                    {field: 'garde', title: '年级'},
+                    {field: 'grade', title: '年级'},
                     {title: '操作', toolbar: '#classroomInfo-option', minWidth: 140}
                 ]]
             });

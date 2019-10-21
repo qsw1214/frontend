@@ -83,11 +83,10 @@ public class SchoolController extends BaseController {
         try {
 			if (file != null) {
                 String path = Tools.saveFile(file, "school");
+                System.out.println(path);
 				school.setPicture(path);
 			}
-
 			School s = this.schoolService.createSchool(school);
-
 			if(s.getBelongId()==null){
 			    s.setBelongId(s.getSchoolId());
                 this.schoolService.updateSchool(s);
