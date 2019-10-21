@@ -81,8 +81,11 @@ public class ClassroomInfoServiceImpl extends ServiceImpl<ClassroomInfoMapper, C
     @Override
     @Transactional
     public void createClassroomInfo(ClassroomInfo classroomInfo) {
-        String radioUrl = LiveRadioReqUtil.getNewLiveRadioUrl();
-        classroomInfo.setUrl(radioUrl);
+        String[] radioUrls = LiveRadioReqUtil.getNewLiveRadioUrl();
+        if(radioUrls != null && radioUrls.length >= 2){
+            classroomInfo.setUrl(radioUrls[0]);
+            classroomInfo.setPlayUrl(radioUrls[1]);
+        }
         this.save(classroomInfo);
     }
 

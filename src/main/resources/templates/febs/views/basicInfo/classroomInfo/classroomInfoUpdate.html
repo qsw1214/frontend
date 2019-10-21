@@ -36,9 +36,15 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">播放地址：</label>
+            <label class="layui-form-label">推流地址：</label>
             <div class="layui-input-block">
                 <input type="text" name="url" id="url" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">播放地址：</label>
+            <div class="layui-input-block">
+                <input type="text" name="playUrl" id="playUrl" class="layui-input" readonly="readonly">
             </div>
         </div>
         <div class="layui-form-item" style="text-align: right">
@@ -87,6 +93,7 @@
                 "containNum": classroomInfo.containNum,
                 "introduce": classroomInfo.introduce,
                 "url": classroomInfo.url,
+                "playUrl": classroomInfo.playUrl,
                 "subject": classroomInfo.subject,
                 "grade": classroomInfo.grade
             });

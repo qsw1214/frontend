@@ -568,6 +568,7 @@ public class ApiController extends BaseController {
                     RadioStatus status = list.get(0);
                     //若为在线状态，则放入结果集合
                     if("1".equals(status.getStatus())){
+                        info.setPlayUrl(PropertiesUtil.getProperty("radio_install_address") + info.getPlayUrl());
                         resultInfos.add(info);
                     }
                 }
