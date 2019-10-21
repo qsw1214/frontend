@@ -223,6 +223,7 @@ public class OrgController {
                             school.setCountryDeptId(countryDeptId);
                             school.setCityDeptId(cityDeptId);
                             school.setProvinceDeptId(provinceDeptId);
+                            school.setDeptId(dept.getDeptId());
                             this.schoolService.updateSchool(school);
                         }
                     }
