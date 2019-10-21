@@ -60,6 +60,22 @@ public class JccInterfaceInfoServiceImpl extends ServiceImpl<JccInterfaceInfoMap
     }
 
     /**
+     * 根据id等条件查询接口
+     * @param jccInterfaceInfo
+     * @return
+     */
+    @Override
+    public JccInterfaceInfo selectJccInterfaceInfosTreeById(JccInterfaceInfo jccInterfaceInfo){
+        JccInterfaceInfo jccInterfaceInfoRequire = null;
+        //接口id查询
+        if(jccInterfaceInfo.getInterfaceId() != null){
+             jccInterfaceInfoRequire = this.baseMapper.selectById(jccInterfaceInfo.getInterfaceId());
+        }
+
+        return jccInterfaceInfoRequire;
+    }
+
+    /**
      * 获取部门树（下拉选使用）
      * @return
      */
