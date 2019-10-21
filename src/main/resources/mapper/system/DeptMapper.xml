@@ -20,4 +20,12 @@
     <select id="findGradeByParentId" parameterType="Long" resultType="Long">
         select DEPT_GRADE from t_dept where DEPT_ID=#{parentId}
     </select>
+
+    <!--<select id="getNameByDeptId"  resultType="Long">
+            select dept_name from (select * from t_dept where dept_id=#{provinceDeptId}
+            union
+            select * from t_dept where dept_id=#{cityDeptId}
+            union
+            select * from t_dept where dept_id=#{countryDeptId})t
+    </select>-->
 </mapper>

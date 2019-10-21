@@ -162,8 +162,24 @@ public class DeptController extends BaseController {
 		}
 	}
 
-	@GetMapping("get")
+	/*@GetMapping("get")
 	public FebsResponse get(Long deptId) throws FebsException {
-		return new FebsResponse().success().data(deptService.getNameByDeptId(deptId));
+		try {
+			return new FebsResponse().success().data(deptService.getNameByDeptId(deptId));
+		}catch(Exception e){
+			String message = "所属地区获取失败";
+			log.error(message, e);
+			throw new FebsException(message);
+		}
+	}*/
+	@GetMapping("get")
+	public FebsResponse get( Long deptId) throws FebsException {
+		try {
+			return new FebsResponse().success().data(deptService.getNameByDeptId(deptId));
+		}catch(Exception e){
+			String message = "所属地区获取失败";
+			log.error(message, e);
+			throw new FebsException(message);
+		}
 	}
 }

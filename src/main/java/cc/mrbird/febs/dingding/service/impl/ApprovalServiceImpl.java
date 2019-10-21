@@ -35,7 +35,7 @@ public class ApprovalServiceImpl implements IApprovalService{
 
 
     public void dealSchoolApprovalData(String processInstance){
-        Gson gson = new Gson();
+         Gson gson = new Gson();
         DingFormVO dingFormVO = gson.fromJson(processInstance,DingFormVO.class);
         List<Tasks> taskLists = dingFormVO.getTasks();
         List<Form_component_values> formValuesList = dingFormVO.getForm_component_values();
@@ -81,7 +81,11 @@ public class ApprovalServiceImpl implements IApprovalService{
                     }
                 }
             }
-            this.schoolService.createSchool(school);
+            School s=this.schoolService.createSchool(school);
+            if(s.getBelongId()==null&&s.getSchoolType().equals("主校")){
+                s.setBelongId(s.getSchoolId());
+                this.schoolService.updateSchool(s);
+            }
         }
     }
 
