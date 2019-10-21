@@ -24,6 +24,8 @@ public interface IJccInterfaceInfoService extends IService<JccInterfaceInfo> {
      */
     MenuTree<JccInterfaceInfo> findJccInterfaceInfosTree(JccInterfaceInfo jccInterfaceInfo);
 
+    JccInterfaceInfo selectJccInterfaceInfosTreeById(JccInterfaceInfo jccInterfaceInfo);
+
     /**
      * 获取部门树（下拉选使用）
      *
