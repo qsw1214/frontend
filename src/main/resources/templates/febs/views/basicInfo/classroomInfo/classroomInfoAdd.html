@@ -1,6 +1,6 @@
 <style>
     #classroomInfo-add {
-        padding: 20px 25px 25px 0;
+        padding: 20px 25px 25px 0;a
     }
     #classroomInfo-add .layui-treeSelect .ztree li a, .ztree li span {
         margin: 0 0 2px 3px !important;
@@ -40,9 +40,9 @@
                 <input type="text" name="url" id="url" class="layui-input">
             </div>
         </div>-->
-        <div class="layui-form-item febs-hide">
-            <button class="layui-btn" lay-submit="" lay-filter="classroomInfo-add-form-submit" id="submit"></button>
-            <button type="reset" class="layui-btn" id="reset"></button>
+        <div class="layui-form-item" style="text-align:right">
+            <button class="layui-btn" lay-submit="" lay-filter="classroomInfo-add-form-submit" id="submit">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary" id="reset">重置</button>
         </div>
     </form>
 </div>
@@ -111,6 +111,8 @@
         }
 
         form.on('submit(classroomInfo-add-form-submit)', function (data) {
+            alert();
+            $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
             febs.post(ctx + 'classroomInfo', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('新增教室成功');

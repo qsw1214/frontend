@@ -37,6 +37,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     
     @Autowired
 	private IUserDeptService userDeptService;
+
     
     private int maxDeptGrade = 4;
 
@@ -268,14 +269,17 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     @Override
     public List<Dept> getAllCityData(){
         LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.in(Dept::getDeptGrade, 2);
+         queryWrapper.in(Dept::getDeptGrade, 2);
         List<Dept> depts = baseMapper.selectList(queryWrapper);
         return depts;
     }
 
+
     @Override
     public Dept getNameByDeptId(Long deptId){
-        return this.baseMapper.selectById(deptId);
+       /* List<Dept> d=this.deptMapper.getNameByDeptId(provinceDeptId,cityDeptId,countryDeptId);
+        return d;*/
+       return this.baseMapper.selectById(deptId);
     }
     
     /**

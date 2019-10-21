@@ -2,7 +2,9 @@ package cc.mrbird.febs.system.mapper;
 
 import cc.mrbird.febs.system.entity.Dept;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,4 +22,6 @@ public interface DeptMapper extends BaseMapper<Dept> {
 
     //根据父级部门id查询所在等级
     Long findGradeByParentId (Long parentId);
+
+   /* List<Dept> getNameByDeptId( Long provinceDeptId, Long cityDeptId, Long countryDeptId);*/
 }

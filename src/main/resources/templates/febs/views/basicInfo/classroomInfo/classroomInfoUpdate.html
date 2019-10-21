@@ -105,6 +105,7 @@
                 febs.alert.warn('数据未作任何修改！');
                 return false;
             }
+             $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
             febs.post(ctx + 'classroomInfo/update', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('教室信息修改成功');

@@ -84,15 +84,7 @@
                 if (name === 'add') {
 
                     febs.modal.open('新增教室', 'basicInfo/classroomInfo/classroomInfoAdd', {
-                        btn: ['提交', '重置'],
-                        area: $(window).width() <= 750 ? '95%' : '50%',
-                        yes: function (index, layero) {
-                            $('#classroomInfo-add').find('#submit').trigger('click');
-                        },
-                        btn2: function () {
-                            $('#classroomInfo-add').find('#reset').trigger('click');
-                            return false;
-                        }
+                        area: $(window).width() <= 750 ? '95%' : '50%'
                     });
                 }
                 if (name === 'delete') {

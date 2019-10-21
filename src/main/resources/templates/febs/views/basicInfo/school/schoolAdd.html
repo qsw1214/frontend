@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">学校类别:</label>
+            <label class="layui-form-label">学校类别：</label>
             <div class="layui-input-block"  style="width: 180px;">
                 <select name="schoolCategory" id="schoolCate">
                 </select>
@@ -42,8 +42,7 @@
                 <select name="belongId"
                         xm-select-direction="down"
                         xm-select="schoolTimetable-add-school"
-                        xm-select-skin="default"
-                        lay-verify="required">
+                        xm-select-skin="default">
                 </select>
             </div>
         </div>
@@ -73,8 +72,8 @@
                 <input type="text" name="address"  autocomplete="off" class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item" id="area-picker">
-            <label class="layui-form-label febs-form-item-require">选择地区:</label>
+       <div class="layui-form-item" id="area-picker">
+            <label class="layui-form-label febs-form-item-require">选择地区：</label>
             <div class="layui-input-inline" style="width: 180px;">
                 <select name="province" class="province-selector"  lay-filter="province-1">
                     <option value="">请选择省</option>
@@ -132,16 +131,16 @@
         formSelects.render();
 
 
-      /*  document.getElementById("img1").style.display="none";
+        document.getElementById("img1").style.display="none";
         form.on('radio(schoolType)', function (data) {
             if(data.value=='分校'){
                 document.getElementById("img1").style.display="block";
             }else{
                 document.getElementById("img1").style.display="none";
-               /!* var name=document.createElement("select");
-                name.setAttribute("lay-verify","required");*!/
+                /*var name=document.createElement("select");
+                name.setAttribute("lay-verify","required");*/
             }
-        });*/
+        });
 
         function getschoolCategory() {
             $.ajax({
@@ -166,6 +165,18 @@
 /*             range: true,
             trigger: 'click' */
         });
+        function getschoolCategory() {
+            $.ajax({
+                type:'get',
+                url: ctx+"dict?field=category",
+                success:function (res) {
+                    var items=res.data;
+                    schoolCategory.append('<option value="">'+'请选择'+'</option>');
+                    form.render('select');
+                }
+            });
+        }
+        //
       /*  layarea.render({
             elem: '#area-picker',
             data:{
