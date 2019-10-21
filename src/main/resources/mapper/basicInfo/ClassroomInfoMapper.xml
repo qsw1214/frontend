@@ -11,7 +11,7 @@
         <result column="url" jdbcType="CHAR" property="url"/>
         <result column="state" jdbcType="INTEGER" property="state"/>
         <result column="subject" jdbcType="VARCHAR" property="subject"/>
-        <result column="garde" jdbcType="VARCHAR" property="garde"/>
+        <result column="grade" jdbcType="VARCHAR" property="grade"/>
     </resultMap>
 
     <select id = "getClassroomInfoByCityCountry" resultType="cc.mrbird.febs.basicInfo.entity.ClassroomInfo" parameterType = "map">
@@ -48,5 +48,17 @@
         select * from jcc_classroom_info room
           LEFT JOIN jcc_school_info school ON room.school_id = school.school_id
           WHERE  school.school_id = #{schoolId}
+    </select>
+    
+    <select id = "findClassroomInfosByDept" resultType="cc.mrbird.febs.basicInfo.entity.ClassroomInfo">
+        select * from jcc_classroom_info room
+          LEFT JOIN jcc_school_info school ON room.school_id = school.school_id
+          WHERE  school.dept_id = #{deptId}
+          <if test ="classroomInfo.schoolId != null">
+                and school.school_id = #{classroomInfo.schoolId}
+          </if>
+          <if test ="classroomInfo.grade != null">
+                and grade = #{classroomInfo.grade}
+          </if>
     </select>
 </mapper>

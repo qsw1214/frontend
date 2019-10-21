@@ -200,4 +200,11 @@ public class ResourceController extends BaseController {
             throw new FebsException("解析失败");
         }
     }
+    
+    @GetMapping("resource/countByMonth")
+    @ResponseBody
+    @RequiresPermissions("resource:view")
+    public FebsResponse getResourceCountEveryMonth(){
+    	 return new FebsResponse().success().data(resourceService.getResourceCountEveryMonth());
+    }
 }

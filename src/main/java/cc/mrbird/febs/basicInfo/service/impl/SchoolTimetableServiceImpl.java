@@ -1,20 +1,16 @@
 package cc.mrbird.febs.basicInfo.service.impl;
 
-import cc.mrbird.febs.basicInfo.entity.DeviceInfo;
 import cc.mrbird.febs.basicInfo.entity.SchoolTimetable;
 import cc.mrbird.febs.basicInfo.mapper.SchoolTimetableMapper;
 import cc.mrbird.febs.basicInfo.service.ISchoolTimetableService;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.SortUtil;
-import cc.mrbird.febs.resource.entity.Resource;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -32,9 +28,6 @@ import java.util.List;
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class SchoolTimetableServiceImpl extends ServiceImpl<SchoolTimetableMapper, SchoolTimetable> implements ISchoolTimetableService {
-
-    @Autowired
-    private SchoolTimetableMapper schoolTimetableMapper;
 
     @Override
     public IPage<SchoolTimetable> findSchoolTimetables(QueryRequest request, SchoolTimetable schoolTimetable) {
@@ -89,4 +82,11 @@ public class SchoolTimetableServiceImpl extends ServiceImpl<SchoolTimetableMappe
     public SchoolTimetable findCourseById(Integer courseId){
         return this.getById(courseId);
     }
+
+	@Override
+	public IPage<SchoolTimetable> findSchoolTimetableByDept(QueryRequest request, SchoolTimetable schoolTimetable,
+			Long deptId) {
+		Page<SchoolTimetable> page = new Page<>(request.getPageNum(), request.getPageSize());
+        return this.baseMapper.findSchoolTimetableByDept(page, schoolTimetable, deptId);
+	}
 }

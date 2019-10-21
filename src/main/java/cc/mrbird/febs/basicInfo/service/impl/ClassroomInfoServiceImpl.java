@@ -1,6 +1,5 @@
 package cc.mrbird.febs.basicInfo.service.impl;
 
-import cc.mrbird.febs.basicInfo.entity.ClassInfo;
 import cc.mrbird.febs.basicInfo.entity.ClassroomInfo;
 import cc.mrbird.febs.basicInfo.mapper.ClassroomInfoMapper;
 import cc.mrbird.febs.basicInfo.service.IClassroomInfoService;
@@ -48,8 +47,8 @@ public class ClassroomInfoServiceImpl extends ServiceImpl<ClassroomInfoMapper, C
         if (StringUtils.isNotBlank(classroomInfo.getSubject())) {
             queryWrapper.eq(ClassroomInfo::getSubject, classroomInfo.getSubject());
         }
-        if (StringUtils.isNotBlank(classroomInfo.getGarde())) {
-            queryWrapper.eq(ClassroomInfo::getGarde, classroomInfo.getGarde());
+        if (StringUtils.isNotBlank(classroomInfo.getGrade())) {
+            queryWrapper.eq(ClassroomInfo::getGrade, classroomInfo.getGrade());
         }
         if (classroomInfo.getState() != null) {
             queryWrapper.eq(ClassroomInfo::getState, classroomInfo.getState());
@@ -67,8 +66,8 @@ public class ClassroomInfoServiceImpl extends ServiceImpl<ClassroomInfoMapper, C
         if (StringUtils.isNotBlank(classroomInfo.getSubject())) {
             queryWrapper.eq(ClassroomInfo::getSubject, classroomInfo.getSubject());
         }
-        if (StringUtils.isNotBlank(classroomInfo.getGarde())) {
-            queryWrapper.eq(ClassroomInfo::getGarde, classroomInfo.getGarde());
+        if (StringUtils.isNotBlank(classroomInfo.getGrade())) {
+            queryWrapper.eq(ClassroomInfo::getGrade, classroomInfo.getGrade());
         }
         if (classroomInfo.getState() != null) {
             queryWrapper.eq(ClassroomInfo::getState, classroomInfo.getState());
@@ -132,4 +131,10 @@ public class ClassroomInfoServiceImpl extends ServiceImpl<ClassroomInfoMapper, C
     public List<ClassroomInfo> findClassroomByMainSchoolId(Integer mainSchoolId){
         return this.classroomInfoMapper.findClassroomByMainSchoolId(mainSchoolId);
     }
+
+	@Override
+	public IPage<ClassroomInfo> findClassroomInfosByDept(QueryRequest request, ClassroomInfo classroomInfo, Long deptId) {
+		Page<ClassroomInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
+        return this.baseMapper.findClassroomInfosByDept(page, classroomInfo, deptId);
+	}
 }

@@ -1,5 +1,6 @@
 package cc.mrbird.febs.basicInfo.mapper;
 
+import cc.mrbird.febs.basicInfo.entity.ClassInfo;
 import cc.mrbird.febs.basicInfo.entity.DeviceInfo;
 import cc.mrbird.febs.system.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -27,4 +28,14 @@ public interface DeviceInfoMapper extends BaseMapper<DeviceInfo> {
     public Integer countDeviceByDept(String deptName);
 
     public Integer countDeviceBySchool(String schoolName);
+    
+    /**
+	 * 按部门查询
+	 * @param page
+	 * @param deviceInfo
+	 * @param deptId
+	 * @return
+	 */
+	IPage<DeviceInfo> findDeviceInfosByDept(Page<?> page, @Param("deviceInfo") DeviceInfo deviceInfo, 
+			@Param("deptId") Long deptId);
 }

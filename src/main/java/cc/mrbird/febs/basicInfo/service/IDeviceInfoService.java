@@ -65,4 +65,13 @@ public interface IDeviceInfoService extends IService<DeviceInfo> {
     Integer countDeviceByDept(String deptName);
 
     Integer countDeviceBySchool(String schoolName);
+    
+    /**
+	 * 按部门查询
+	 * @param page
+	 * @param deviceInfo
+	 * @param deptId
+	 * @return
+	 */
+	IPage<DeviceInfo> findDeviceInfosByDept(QueryRequest request, DeviceInfo deviceInfo, Long deptId);
 }

@@ -33,6 +33,12 @@ public class School {
     @TableField("school_name")
     @NotBlank(message = "{required}")
     private String schoolName;
+    
+    /**
+     * 部门id
+     */
+    @TableField("dept_id")
+    private Long deptId;
 
     /**
      * 介绍

@@ -5,7 +5,9 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.system.entity.Dept;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author MrBird
@@ -75,4 +77,14 @@ public interface IDeptService extends IService<Dept> {
     List<List<Dept>> getAllParentDept(Long userId);
 
     List<Dept> getAllCityData();
+
+    Dept getNameByDeptId(Long deptId);
+    
+    /**
+     * 获取一个部门的所有父部门id,包括当前部门id
+     * @param deptId
+     * @return
+     */
+    List<Long> getParentDeptIds(Long deptId);
+
 }

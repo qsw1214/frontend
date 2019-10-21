@@ -166,6 +166,8 @@ public class User implements Serializable {
     private String createTimeFrom;
     @TableField(exist = false)
     private String createTimeTo;
+    @TableField(exist = false)
+    private Long deptId;
     /**
      * 角色 ID
      */

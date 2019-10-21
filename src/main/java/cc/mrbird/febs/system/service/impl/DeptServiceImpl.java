@@ -23,10 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author lb
@@ -275,4 +272,24 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
         List<Dept> depts = baseMapper.selectList(queryWrapper);
         return depts;
     }
+
+    @Override
+    public Dept getNameByDeptId(Long deptId){
+        return this.baseMapper.selectById(deptId);
+    }
+    
+    /**
+     * 获取一个部门的所有父部门id,包括当前部门id
+     */
+	@Override
+	public List<Long> getParentDeptIds(Long deptId) {
+		List<Long> parentIds = new ArrayList<>();
+		long parentId = deptId;
+		while(parentId != 1 && parentIds.size() < 5){
+			Dept parentDept = this.baseMapper.selectById(parentId);
+			parentIds.add(parentDept.getDeptId());
+			parentId = parentDept.getParentId();
+		}
+		return parentIds;
+	}
 }

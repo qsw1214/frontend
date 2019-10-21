@@ -11,6 +11,7 @@ import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.entity.UserRole;
 import cc.mrbird.febs.system.mapper.UserMapper;
 import cc.mrbird.febs.system.service.IDeptService;
+import cc.mrbird.febs.system.service.IUserDeptService;
 import cc.mrbird.febs.system.service.IUserRoleService;
 import cc.mrbird.febs.system.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -25,10 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author MrBird
@@ -41,6 +39,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private IUserRoleService userRoleService;
     @Autowired
     private ShiroRealm shiroRealm;
+    @Autowired
+    private IUserDeptService userDeptService;
 
     @Override
     public User findByName(String username) {
@@ -203,8 +203,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return this.baseMapper.countUserNumByDept(deptName);
     }
 
-    public User findById(Long userId){
-        return this.baseMapper.selectById(userId);
+    public User getUserInfo(Long userId){
+        return this.baseMapper.getUserInfo(userId);
     }
 
     public IPage<User> getTeacherListBySchoolId(Integer schoolId,QueryRequest request){
@@ -212,4 +212,5 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         SortUtil.handlePageSort(request, page, "userId", FebsConstant.ORDER_ASC, false);
         return this.baseMapper.getTeacherListBySchoolId(page, schoolId);
     }
+
 }

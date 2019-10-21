@@ -5,8 +5,13 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
+import cc.mrbird.febs.system.entity.User;
+import cc.mrbird.febs.system.service.IUserDeptService;
 import cc.mrbird.febs.basicInfo.entity.DeviceInfo;
+import cc.mrbird.febs.basicInfo.entity.School;
 import cc.mrbird.febs.basicInfo.service.IDeviceInfoService;
+import cc.mrbird.febs.basicInfo.service.ISchoolService;
+
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -32,6 +37,10 @@ public class DeviceInfoController extends BaseController {
 
     @Autowired
     private IDeviceInfoService deviceInfoService;
+    @Autowired
+    private IUserDeptService userDeptService;
+    @Autowired
+    private ISchoolService schoolService;
 
     @GetMapping("list")
     @RequiresPermissions("deviceInfo:view")
@@ -80,6 +89,15 @@ public class DeviceInfoController extends BaseController {
     @RequiresPermissions("deviceInfo:update")
     public FebsResponse updateDeviceInfo(DeviceInfo deviceInfo) throws FebsException {
         try {
+        	DeviceInfo old = deviceInfoService.getById(deviceInfo.getDeviceId());
+			if(old == null)
+				return new FebsResponse().fail().data("未找到");
+			// 判断有无权限
+			User user = getCurrentUser();			
+			School school = schoolService.getById(old.getSchoolId());
+			if(school != null && !userDeptService.isPermission(user.getUserId(), school.getDeptId())){
+				return new FebsResponse().fail().data("无权限");
+			}
             this.deviceInfoService.updateDeviceInfo(deviceInfo);
             return new FebsResponse().success();
         } catch (Exception e) {
@@ -89,7 +107,7 @@ public class DeviceInfoController extends BaseController {
         }
     }
 
-    @PostMapping("deviceInfo/excel")
+    @PostMapping("excel")
     @RequiresPermissions("deviceInfo:export")
     public void export(QueryRequest queryRequest, DeviceInfo deviceInfo, HttpServletResponse response) throws FebsException {
         try {
@@ -101,4 +119,26 @@ public class DeviceInfoController extends BaseController {
             throw new FebsException(message);
         }
     }
+    
+    /**
+     * 按部门查询设备
+     * @param request
+     * @param deviceInfo
+     * @param deptId
+     * @return
+     */
+    @GetMapping("bydept/list")
+	@ResponseBody
+	@RequiresPermissions("deviceInfo:view")
+	public FebsResponse getDeptClassroomInfoList(QueryRequest request, DeviceInfo deviceInfo,
+			@RequestParam(required = true) Long deptId) {
+    	// 判断有无权限
+		User user = getCurrentUser();		
+		if(!userDeptService.isPermission(user.getUserId(), deptId)){
+			return new FebsResponse().fail().data("无权限");
+		}
+		Map<String, Object> dataTable = getDataTable(
+				this.deviceInfoService.findDeviceInfosByDept(request, deviceInfo, deptId));
+		return new FebsResponse().success().data(dataTable);
+	}
 }

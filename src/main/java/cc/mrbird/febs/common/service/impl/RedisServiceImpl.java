@@ -224,8 +224,13 @@ public class RedisServiceImpl implements RedisService {
     }
     
     @Override
-    public Long hset(String key, String field, String value) throws RedisConnectException {
-        return this.excuteByJedis(j -> j.hset(key, field, value));
+    public Long hset(String key, String field, String value) {
+    	try {
+    		return this.excuteByJedis(j -> j.hset(key, field, value));
+    	} catch (RedisConnectException e) {
+			log.error("redis connect error");
+		}
+		return null;
     }
     
     @Override

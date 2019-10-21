@@ -30,4 +30,6 @@ public class FebsConstant {
     public static final String RES_DETAIL_API_VISIT = "res.detail.api.visit";
     
     public static final String RES_VISIT = "res.visit";
+    
+    public static final String RES_MONTH_COUNT = "res.month.count";
 }

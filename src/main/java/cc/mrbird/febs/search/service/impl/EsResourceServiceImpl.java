@@ -55,6 +55,7 @@ public class EsResourceServiceImpl implements IEsResourceService {
 	@Resource
 	private ElasticsearchTemplate elasticsearchTemplate;
 
+
 	@Override
 	public int importAll() {
 		resourceRepository.deleteAll();
@@ -72,16 +73,6 @@ public class EsResourceServiceImpl implements IEsResourceService {
 	@Override
 	public EsResource get(Long id) {
 		return resourceRepository.findById(id).get();
-	}
-	
-	@Override
-	public Long getCount(Long deptId) {
-		if(deptId == null)
-			return resourceRepository.count();
-		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-		boolQueryBuilder.must(QueryBuilders.termQuery("deptId", deptId));	
-		SearchQuery searchQuery = new NativeSearchQueryBuilder().withFilter(boolQueryBuilder).build();
-		return elasticsearchTemplate.count(searchQuery);
 	}
 
 	@Override

@@ -4,6 +4,7 @@
 
     <resultMap id="school" type="cc.mrbird.febs.basicInfo.entity.School">
         <id column="school_id" jdbcType="INTEGER" property="schoolId"/>
+        <id column="dept_id" jdbcType="DECIMAL" property="deptId"/>
         <result column="school_name" jdbcType="VARCHAR" property="schoolName"/>
         <result column="introduce" jdbcType="VARCHAR" property="introduce"/>
         <result column="school_type" jdbcType="VARCHAR" property="schoolType"/>

@@ -41,9 +41,9 @@
             <div class="layui-input-block">
                 <select name="belongId"
                         xm-select-direction="down"
-                        lay-verify="required"
                         xm-select="schoolTimetable-add-school"
-                        xm-select-skin="default">
+                        xm-select-skin="default"
+                        lay-verify="required">
                 </select>
             </div>
         </div>
@@ -132,14 +132,16 @@
         formSelects.render();
 
 
-        document.getElementById("img1").style.display="none";
+      /*  document.getElementById("img1").style.display="none";
         form.on('radio(schoolType)', function (data) {
             if(data.value=='分校'){
                 document.getElementById("img1").style.display="block";
             }else{
                 document.getElementById("img1").style.display="none";
+               /!* var name=document.createElement("select");
+                name.setAttribute("lay-verify","required");*!/
             }
-        });
+        });*/
 
         function getschoolCategory() {
             $.ajax({
@@ -164,14 +166,14 @@
 /*             range: true,
             trigger: 'click' */
         });
-        layarea.render({
+      /*  layarea.render({
             elem: '#area-picker',
             data:{
                 "province":"湖南省",
                 "city":"长沙市",
                 "county":"开福区"
             }
-        });
+        });*/
 
 
         //所属主校

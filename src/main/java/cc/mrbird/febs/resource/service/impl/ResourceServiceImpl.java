@@ -2,6 +2,7 @@ package cc.mrbird.febs.resource.service.impl;
 
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.service.RedisService;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.resource.entity.Resource;
 import cc.mrbird.febs.resource.mapper.ResourceMapper;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +48,8 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     private ICommentService commentService;
     @Autowired
     private IEsResourceService esResourceService;
+    @Autowired
+    private RedisService redisService;
     
     @Override
 	public Resource findDetailById(Long resourceId) {
@@ -183,23 +188,36 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 
     /**
      * 根据省市区统计资源总量
-     * @param provinceId
-     * @param cityDeptId
-     * @param countryDeptId
-     * @return
      */
     @Override
-    public int getResourceCount(Integer provinceId,Integer cityDeptId,Integer countryDeptId){
-        Map<String,Integer> map = new HashMap<String,Integer>();
-        // 以最小单位为部门查询条件统计即可；
-        if(countryDeptId != null){
-            map.put("deptId",countryDeptId);
-        }else if(countryDeptId != null){
-            map.put("deptId",cityDeptId);
-        }else{
-            map.put("deptId",provinceId);
-        }
-        return this.baseMapper.getResourceCount(map);
+    public int getResourceCount(Integer deptId){
+        return this.baseMapper.getResourceCount(deptId, null);
     }
+
+	@Override
+	public Map<String, Integer> getResourceCountEveryMonth() {
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		Calendar cale = Calendar.getInstance();  	
+        int year = cale.get(Calendar.YEAR);  
+        int month = cale.get(Calendar.MONTH);
+        cale.set(Calendar.HOUR_OF_DAY, 0);//控制时
+        cale.set(Calendar.MINUTE, 0);//控制分
+        cale.set(Calendar.SECOND, 0);//控制秒
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String hkey = FebsConstant.RES_MONTH_COUNT;
+        for(int i = month; i >= 0; i-- ){
+        	cale.set(year, i, 1);
+        	String date = sdf.format(cale.getTime());      
+        	Integer count = 0;
+        	if(redisService.hget(hkey, date) != null){
+				count = Integer.valueOf(redisService.hget(hkey, date));
+        	} else {
+        		count = this.baseMapper.getResourceCount(null, date);
+        		redisService.hset(hkey, date, count.toString());
+        	}
+        	map.put(date, count);
+        }       
+		return map;
+	}
 
 }

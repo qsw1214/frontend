@@ -66,4 +66,16 @@
         LEFT JOIN jcc_school_info school ON (school.school_id = device.school_id)
         WHERE  school.school_name = #{schoolName}
     </select>
+    
+    <select id = "findDeviceInfosByDept" resultType="cc.mrbird.febs.basicInfo.entity.DeviceInfo">
+        select * from jcc_device_info dev
+          LEFT JOIN jcc_school_info school ON dev.school_id = school.school_id
+          WHERE  school.dept_id = #{deptId}
+          <if test ="deviceInfo.schoolId != null">
+                and school.school_id = #{deviceInfo.schoolId}
+          </if>
+          <if test ="deviceInfo.classroomId != null">
+                and classroom_id = #{deviceInfo.classroomId}
+          </if>
+    </select>
 </mapper>

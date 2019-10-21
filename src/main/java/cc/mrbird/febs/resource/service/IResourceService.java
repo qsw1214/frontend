@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  *  Service接口
@@ -100,5 +101,11 @@ public interface IResourceService extends IService<Resource> {
 	
 	int updateStatus(List<String> resourceIds, Integer status);
 
-	int getResourceCount(Integer provinceId, Integer cityDeptId, Integer countryDeptId);
+	int getResourceCount(Integer deptId);
+	
+	/**
+	 * 获取每个月1号的资源总数
+	 * @return
+	 */
+	Map<String, Integer> getResourceCountEveryMonth();
 }

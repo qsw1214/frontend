@@ -1,6 +1,5 @@
 package cc.mrbird.febs.basicInfo.service.impl;
 
-import cc.mrbird.febs.basicInfo.entity.ClassInfo;
 import cc.mrbird.febs.basicInfo.entity.DeviceInfo;
 import cc.mrbird.febs.basicInfo.mapper.DeviceInfoMapper;
 import cc.mrbird.febs.basicInfo.service.IDeviceInfoService;
@@ -9,12 +8,9 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.SortUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -33,6 +29,7 @@ import java.util.List;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class DeviceInfoServiceImpl extends ServiceImpl<DeviceInfoMapper, DeviceInfo> implements IDeviceInfoService {
 
+	
     @Override
     public IPage<DeviceInfo> findDeviceInfos(QueryRequest request, DeviceInfo deviceInfo) {
         Page<DeviceInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
@@ -89,4 +86,10 @@ public class DeviceInfoServiceImpl extends ServiceImpl<DeviceInfoMapper, DeviceI
     public Integer countDeviceBySchool(String schoolName){
         return this.baseMapper.countDeviceBySchool(schoolName);
     }
+
+	@Override
+	public IPage<DeviceInfo> findDeviceInfosByDept(QueryRequest request, DeviceInfo deviceInfo, Long deptId) {
+		Page<DeviceInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
+        return this.baseMapper.findDeviceInfosByDept(page, deviceInfo, deptId);
+	}
 }
