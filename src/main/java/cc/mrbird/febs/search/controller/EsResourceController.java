@@ -49,16 +49,6 @@ public class EsResourceController extends BaseController{
     }
 	
 	/**
-     * 获取资源数量(deptId为null时，返回所有资源总数)
-     * @param deptId 指定部门
-     */
-	@RequestMapping(value = "/count", method = RequestMethod.GET)
-    @ResponseBody
-    public FebsResponse getCount(@RequestParam(required = false) Long deptId) {
-        return new FebsResponse().success().data(esResourceService.getCount(deptId));
-    }
-	
-	/**
      * 获取资源详情接口访问量
      */
 	@RequestMapping(value = "/detail/visit", method = RequestMethod.GET)

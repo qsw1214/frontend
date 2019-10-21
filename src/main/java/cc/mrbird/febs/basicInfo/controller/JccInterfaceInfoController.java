@@ -51,7 +51,25 @@ public class JccInterfaceInfoController extends BaseController {
             MenuTree<JccInterfaceInfo> jccInterfaceInfos = this.jccInterfaceInfoService.findJccInterfaceInfosTree(jccInterfaceInfo);
             return new FebsResponse().success().data(jccInterfaceInfos.getChildren());
         } catch (Exception e) {
-            String message = "获取菜单树失败";
+            String message = "获取接口树失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+
+    /**
+     * 根据id查询接口管理
+     * @param jccInterfaceInfo
+     * @return
+     * @throws FebsException
+     */
+    @GetMapping("interfaceById")
+    public FebsResponse getMenuTreeById(JccInterfaceInfo jccInterfaceInfo) throws FebsException {
+        try {
+            JccInterfaceInfo jccInterfaceInfos = this.jccInterfaceInfoService.selectJccInterfaceInfosTreeById(jccInterfaceInfo);
+            return new FebsResponse().success().data(jccInterfaceInfos);
+        } catch (Exception e) {
+            String message = "获取接口失败";
             log.error(message, e);
             throw new FebsException(message);
         }

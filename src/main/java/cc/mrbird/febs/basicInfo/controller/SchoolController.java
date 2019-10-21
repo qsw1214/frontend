@@ -4,26 +4,27 @@ import cc.mrbird.febs.basicInfo.service.IClassInfoService;
 import cc.mrbird.febs.basicInfo.service.IClassroomInfoService;
 import cc.mrbird.febs.basicInfo.service.IDeviceInfoService;
 import cc.mrbird.febs.common.annotation.Log;
-import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.common.utils.Tools;
-import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.basicInfo.entity.School;
+import cc.mrbird.febs.basicInfo.entity.SchoolTimetable;
 import cc.mrbird.febs.basicInfo.service.ISchoolService;
-import cc.mrbird.febs.system.service.IRoleService;
+import cc.mrbird.febs.system.entity.Dept;
+import cc.mrbird.febs.system.entity.User;
+import cc.mrbird.febs.system.service.IDeptService;
+import cc.mrbird.febs.system.service.IUserDeptService;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,8 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import java.util.*;
 
 /**
@@ -57,6 +56,12 @@ public class SchoolController extends BaseController {
 
     @Autowired
     private IClassInfoService classInfoService;
+    
+    @Autowired
+    private IDeptService deptService;
+    
+    @Autowired
+    private IUserDeptService userDeptService;
 
     @GetMapping("school")
     @ResponseBody
@@ -129,6 +134,30 @@ public class SchoolController extends BaseController {
     @RequiresPermissions("school:update")
     public FebsResponse updateSchool(School school, @RequestParam(required=false,value="file") MultipartFile file) throws FebsException {
         try {
+        	School old = schoolService.getById(school.getSchoolId());
+			if (old == null)
+				return new FebsResponse().fail().data("未找到");
+			// 判断有无权限
+			User user = getCurrentUser();
+			if (school != null && !userDeptService.isPermission(user.getUserId(), old.getDeptId())) {
+				return new FebsResponse().fail().data("无权限");
+			}
+        	School oldSchool = schoolService.getById(school.getSchoolId());
+        	if(oldSchool == null)
+        		return new FebsResponse().fail().data("没有该学校");
+        	if(oldSchool.getDeptId() != null){ // 如果设置了部门id，则判断用户有无修改权限
+        		List<Long> parendDeptIds = deptService.getParentDeptIds(school.getDeptId());
+        		List<Dept> depts = userDeptService.getDeptByUserId(user.getUserId());
+        		boolean flag = false;
+            	for(Dept dept: depts){
+            		if(parendDeptIds.contains(dept.getDeptId())){
+            			flag = true;
+            			break;
+            		}
+            	}
+            	if(!flag)
+            		return new FebsResponse().fail().data("无权限");
+        	}    	
 			if (file != null) {
 				String path = Tools.saveFile(file, "school");
 				school.setPicture(path);
@@ -160,6 +189,11 @@ public class SchoolController extends BaseController {
     @ResponseBody
     @RequiresPermissions("school:view")
     public FebsResponse schoolListByDept(QueryRequest request, School school, Long deptId) {
+    	// 判断有无部门权限
+		User user = getCurrentUser();		
+		if(!userDeptService.isPermission(user.getUserId(), deptId)){
+			return new FebsResponse().fail().data("无权限");
+		}
     	IPage<School> p = this.schoolService.findSchoolsByDept(request, school, deptId);
         Map<String, Object> dataTable = getDataTable(p);
         return new FebsResponse().success().data(dataTable);

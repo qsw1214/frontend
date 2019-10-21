@@ -5,9 +5,6 @@ import cc.mrbird.febs.system.entity.User;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * @author psy
  */
@@ -128,4 +125,5 @@ public interface IUserService extends IService<User> {
     User getUserInfo(Long userId);
 
     IPage<User> getTeacherListBySchoolId(Integer schoolId, QueryRequest request);
+
 }

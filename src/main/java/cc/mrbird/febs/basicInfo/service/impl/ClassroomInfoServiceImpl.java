@@ -1,6 +1,5 @@
 package cc.mrbird.febs.basicInfo.service.impl;
 
-import cc.mrbird.febs.basicInfo.entity.ClassInfo;
 import cc.mrbird.febs.basicInfo.entity.ClassroomInfo;
 import cc.mrbird.febs.basicInfo.mapper.ClassroomInfoMapper;
 import cc.mrbird.febs.basicInfo.service.IClassroomInfoService;
@@ -132,4 +131,10 @@ public class ClassroomInfoServiceImpl extends ServiceImpl<ClassroomInfoMapper, C
     public List<ClassroomInfo> findClassroomByMainSchoolId(Integer mainSchoolId){
         return this.classroomInfoMapper.findClassroomByMainSchoolId(mainSchoolId);
     }
+
+	@Override
+	public IPage<ClassroomInfo> findClassroomInfosByDept(QueryRequest request, ClassroomInfo classroomInfo, Long deptId) {
+		Page<ClassroomInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
+        return this.baseMapper.findClassroomInfosByDept(page, classroomInfo, deptId);
+	}
 }

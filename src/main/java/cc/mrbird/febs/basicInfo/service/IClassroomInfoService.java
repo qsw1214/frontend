@@ -1,12 +1,11 @@
 package cc.mrbird.febs.basicInfo.service;
 
-import cc.mrbird.febs.basicInfo.entity.ClassroomInfo;
+import java.util.List;
 
-import cc.mrbird.febs.common.entity.QueryRequest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
+import cc.mrbird.febs.basicInfo.entity.ClassroomInfo;
+import cc.mrbird.febs.common.entity.QueryRequest;
 
 /**
  *  Service接口
@@ -63,4 +62,12 @@ public interface IClassroomInfoService extends IService<ClassroomInfo> {
     Integer getClassroomCount(Integer provinceId,Integer cityDeptId,Integer countryDeptId);
 
     public List<ClassroomInfo> findClassroomByMainSchoolId(Integer mainSchoolId);
+    
+    /**
+     * 按部门查询（分页）
+     * @param request QueryRequest
+     * @param school school
+     * @return IPage<School>
+     */
+    IPage<ClassroomInfo> findClassroomInfosByDept(QueryRequest request, ClassroomInfo classroomInfo, Long deptId);
 }

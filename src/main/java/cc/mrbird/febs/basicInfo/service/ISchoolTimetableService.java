@@ -3,7 +3,6 @@ package cc.mrbird.febs.basicInfo.service;
 import cc.mrbird.febs.basicInfo.entity.SchoolTimetable;
 
 import cc.mrbird.febs.common.entity.QueryRequest;
-import cc.mrbird.febs.resource.entity.Resource;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -58,5 +57,11 @@ public interface ISchoolTimetableService extends IService<SchoolTimetable> {
     void deleteSchoolTimetable(String courseIds);
 
     public SchoolTimetable findCourseById(Integer courseId);
+    
+    /**
+     * 按部门查询课程表
+     */
+    IPage<SchoolTimetable> findSchoolTimetableByDept(QueryRequest request, 
+    		SchoolTimetable schoolTimetable, Long deptId);
 
 }

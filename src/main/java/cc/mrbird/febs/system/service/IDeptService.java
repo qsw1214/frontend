@@ -79,4 +79,12 @@ public interface IDeptService extends IService<Dept> {
     List<Dept> getAllCityData();
 
     Dept getNameByDeptId(Long deptId);
+    
+    /**
+     * 获取一个部门的所有父部门id,包括当前部门id
+     * @param deptId
+     * @return
+     */
+    List<Long> getParentDeptIds(Long deptId);
+
 }
