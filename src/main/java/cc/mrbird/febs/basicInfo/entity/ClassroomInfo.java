@@ -1,6 +1,7 @@
 package cc.mrbird.febs.basicInfo.entity;
 
 
+import com.wuwenze.poi.annotation.ExcelField;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -75,5 +76,7 @@ public class ClassroomInfo {
     @TableField("grade")
     private String grade;
 
-
+    @ExcelField(value = "学校名称")
+    @TableField(exist = false)
+    private String schoolName;
 }

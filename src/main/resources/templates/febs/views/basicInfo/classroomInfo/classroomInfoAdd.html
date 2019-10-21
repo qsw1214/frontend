@@ -16,19 +16,6 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">科目：</label>
-            <div class="layui-input-block"  style="width: 180px;">
-                <select name="subject" id="subjectInfo">
-                </select>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">年级:</label>
-            <div class="layui-input-block"  style="width: 180px;">
-                <select name="grade" id="grade">
-                </select>
-            </div>
-        </div>
-        <div class="layui-form-item">
             <label class="layui-form-label">位置：</label>
             <div class="layui-input-block">
                 <input type="text" name="location" class="layui-input">
@@ -70,14 +57,10 @@
             form = layui.form,
             $view = $('#classroomInfo-add'),
             // classroomInfo = [[${classroomInfo}]],
-            subjectInfo = $('#subjectInfo'),
-            grade = $('#grade'),
             school=$('#schoolId'),
             validate = layui.validate;
         // alert(classroomInfo.url);
         getSchool();
-        getGrade();
-        getSubject();
         initClassroomInfoValue();
         form.verify(validate);
         form.render();
@@ -126,40 +109,7 @@
                 form.render('select');
             });
         }
-        function getGrade() {
-            $.ajax({
-                type:'get',
-                url: ctx+"dict?field=grade",
-                success:function (res) {
-                    var items=res.data;
-                    if (items.length==0){
-                        grade.append('<option>'+""+'</option>');
-                    }else{
-                        for (var i=0;i<items.length;i++) {
-                            grade.append('<option>' + items[i].v + '</option>');
-                        }
-                    }
-                    form.render('select');
-                }
-            });
-        }
-        function getSubject() {
-            $.ajax({
-                type:'get',
-                url: ctx+"dict?field=subject",
-                success:function (res) {
-                    var items=res.data;
-                    if (items.length==0){
-                        subjectInfo.append('<option>'+""+'</option>');
-                    }else{
-                        for (var i=0;i<items.length;i++) {
-                        	subjectInfo.append('<option>' + items[i].v + '</option>');
-                        }
-                    }
-                    form.render('select');
-                }
-            });
-        }
+
         form.on('submit(classroomInfo-add-form-submit)', function (data) {
             febs.post(ctx + 'classroomInfo', data.field, function () {
                 layer.closeAll();

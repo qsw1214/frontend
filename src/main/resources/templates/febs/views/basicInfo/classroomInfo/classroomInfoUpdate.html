@@ -17,21 +17,6 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">课程：</label>
-            <div class="layui-input-block">
-            	<select name="subject" id="subjectInfo">
-                </select>
-                
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">年级:</label>
-            <div class="layui-input-block"  style="width: 180px;">
-                <select name="grade" id="classInfo">
-                </select>
-            </div>
-        </div>
-        <div class="layui-form-item">
             <label class="layui-form-label">位置：</label>
             <div class="layui-input-block">
                 <input type="text" name="location" id = "location" class="layui-input">
@@ -71,41 +56,15 @@
             formSelects = layui.formSelects,
             form = layui.form,
             $form = $('form'),
-            grade=$('#classInfo'),
-            subjectInfo=$('#subjectInfo'),
             school=$('#schoolId'),
             $view = $('#classroomInfo-update'),
             $remove=$view.find('#remove'),
             classroomInfo = [[${classroomInfo}]],
             validate = layui.validate;
         getSchool();
-        getGrade();
-        getSubject();
         initUserValue();
         form.verify(validate);
         form.render();
-
-
-        function getGrade() {
-            $.ajax({
-                type:'get',
-                url: ctx+"dict?field=grade",
-                success:function (res) {
-                    var items=res.data;
-                    if (res.data.length==0){
-                        grade.append('<option value="'+""+'">'+""+'</option>');
-                    }else{
-                        for (var i=0;i<items.length;i++) {
-                            if (items[i].v===classroomInfo.grade){
-                                grade.append('<option selected="selected">' + items[i].v + '</option>');
-                            }
-                            else{grade.append('<option>' + items[i].v + '</option>');}
-                        }
-                    }
-                    form.render('select');
-                }
-            });
-        }
 
         function getSchool() {
             febs.get(ctx+'school/list',null,function (res) {
@@ -122,23 +81,6 @@
             });
         }
         
-        function getSubject() {
-            $.ajax({
-                type:'get',
-                url: ctx+"dict?field=subject",
-                success:function (res) {
-                    var items=res.data;
-                    if (items.length==0){
-                        subjectInfo.append('<option>'+""+'</option>');
-                    }else{
-                        for (var i=0;i<items.length;i++) {
-                        	subjectInfo.append('<option>' + items[i].v + '</option>');
-                        }
-                    }
-                    form.render('select');
-                }
-            });
-        }
         function initUserValue() {
             form.val("classroomInfo-update-form", {
                 "location": classroomInfo.location,

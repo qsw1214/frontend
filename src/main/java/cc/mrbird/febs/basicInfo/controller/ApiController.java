@@ -313,13 +313,13 @@ public class ApiController extends BaseController {
         }
     }
 
-    /**
+/*    *//**
      * 省级数量统计接口
      *
      * @param request
      * @param field
      * @return
-     */
+     *//*
     @GetMapping("province/statistical")
     @RequiresPermissions("province:statistical")
     public FebsResponse provinceStatistical(QueryRequest request, String field) {
@@ -416,11 +416,10 @@ public class ApiController extends BaseController {
         }
         FebsResponse febsResponse = new FebsResponse();
         return new FebsResponse().num(num).success();
-    }
+    }*/
 
     /**
      * 根据省市区条件进行统计开课数量统计
-     *
      * @param request
      * @param cityDeptId
      * @param countryDeptId
@@ -449,7 +448,6 @@ public class ApiController extends BaseController {
 
     /**
      * 根据省市区条件获取教室数量
-     *
      * @param request
      * @param provinceId
      * @param cityDeptId
