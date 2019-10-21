@@ -628,6 +628,8 @@ public class ApiController extends BaseController {
             //统计每个市区的学生数  —— 暂时以随机数代替
             Integer studentCount = Integer.valueOf(new Random().nextInt(10000));
             studentCountLists.add(studentCount);
+            //获取所有的市级的名称
+            cityNameLists.add(cityDatas.get(i).getDeptName());
         }
         AreaDataCountVO countVo = new AreaDataCountVO();
         countVo.setCityNameList(cityNameLists);
