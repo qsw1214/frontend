@@ -84,12 +84,15 @@ public class SchoolController extends BaseController {
     @PostMapping("school")
     @ResponseBody
     @RequiresPermissions("school:add")
-    public FebsResponse addSchool(@Valid School school, @RequestParam(required=false,value="file") MultipartFile file) throws FebsException {
+    public FebsResponse addSchool(@Valid School school, @RequestParam(required=false,value="file") MultipartFile[] files) throws FebsException {
         try {
-			if (file != null) {
-                String path = Tools.saveFile(file, "school");
-                System.out.println(path);
-				school.setPicture(path);
+			if (files != null && files.length >= 1) {
+				List<String> pathList = Tools.saveFiles(files, "school");
+				String ss = String.join(",", pathList);
+				school.setPicture(ss);
+			}
+			if (files.length >5) {
+				return new FebsResponse().data("图片最多5张");
 			}
 			School s = this.schoolService.createSchool(school);
 			if(s.getBelongId()==null){
