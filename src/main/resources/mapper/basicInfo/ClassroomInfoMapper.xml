@@ -9,6 +9,7 @@
         <result column="contain_num" jdbcType="INTEGER" property="containNum"/>
         <result column="introduce" jdbcType="CHAR" property="introduce"/>
         <result column="url" jdbcType="CHAR" property="url"/>
+        <result column="play_url" jdbcType="CHAR" property="playUrl"/>
         <result column="state" jdbcType="INTEGER" property="state"/>
         <result column="subject" jdbcType="VARCHAR" property="subject"/>
         <result column="grade" jdbcType="VARCHAR" property="grade"/>

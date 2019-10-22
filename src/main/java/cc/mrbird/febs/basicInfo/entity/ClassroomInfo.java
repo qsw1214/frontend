@@ -58,6 +58,9 @@ public class ClassroomInfo {
     @TableField("url")
     private String url;
 
+    @TableField("play_url")
+    private String playUrl;
+
     /**
      * 
      */

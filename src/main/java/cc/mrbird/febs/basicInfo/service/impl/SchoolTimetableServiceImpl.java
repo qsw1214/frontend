@@ -5,6 +5,9 @@ import cc.mrbird.febs.basicInfo.mapper.SchoolTimetableMapper;
 import cc.mrbird.febs.basicInfo.service.ISchoolTimetableService;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
+import cc.mrbird.febs.common.utils.DateUtil;
+import cc.mrbird.febs.common.utils.LiveRadioReqUtil;
+import cc.mrbird.febs.common.utils.RadioStatus;
 import cc.mrbird.febs.common.utils.SortUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
@@ -16,7 +19,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,6 +43,21 @@ public class SchoolTimetableServiceImpl extends ServiceImpl<SchoolTimetableMappe
             Integer mainSchoolId = this.baseMapper.selectMainSchoolId(schoolTimetable.getSchoolId());
             if(mainSchoolId != null){
                 schoolTimetable.setSchoolId(mainSchoolId);
+            }
+        }
+        IPage<SchoolTimetable> pageList = this.baseMapper.findSchoolTimetables(page, schoolTimetable);
+        List<SchoolTimetable> list = pageList.getRecords();
+        for (int i = 0 ; i < list.size(); i++){
+            SchoolTimetable timetable = list.get(i);
+            String url = timetable.getUrl();
+            List<RadioStatus> radioList = LiveRadioReqUtil.getRadioStatus(url);
+            for (int j = 0 ; j < radioList.size();j++){
+//                System.out.println("指定地址：" + radioList.get(j).getUrl() + " " + radioList.get(j).getStatus() + " " + radioList.get(j).getStartDate());
+                if((DateUtil.getNowDateTime().after(timetable.getBeginDate()) && radioList.get(j).getStatus().equals("0"))){
+                    timetable.setState("-1");
+                }else{
+                    timetable.setState(radioList.get(j).getStatus());
+                }
             }
         }
         return this.baseMapper.findSchoolTimetables(page, schoolTimetable);

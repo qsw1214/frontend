@@ -104,9 +104,7 @@ public class HttpUtils {
             }
             conn.disconnect();
         }
-
         return null;
-
     }
 
     /**
