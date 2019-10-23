@@ -265,7 +265,7 @@ public class ViewController extends BaseController {
     }
 
     private void resolveSchoolTimetableModel(Integer courseId, Model model, Boolean transform) {
-        SchoolTimetable schoolTimetable = schoolTimetableService.findCourseById(courseId);
+        SchoolTimetable schoolTimetable = schoolTimetableService.selectSchooltimetableInfo(courseId);
         model.addAttribute("schoolTimetable", schoolTimetable);
 
         if (schoolTimetable.getBeginDate() != null)
@@ -286,7 +286,9 @@ public class ViewController extends BaseController {
         ClassroomInfo classroomInfo = this.classroomInfoService.getById(classroomInfoId);
         model.addAttribute("classroomInfo", classroomInfo);
     }
-    
+
+
+
     private void resolveClassModel(Integer classInfoId, Model model, Boolean transform) {
         ClassInfo classInfo = this.classInfoService.getById(classInfoId);
         model.addAttribute("classInfo", classInfo);

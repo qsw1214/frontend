@@ -32,8 +32,8 @@
         d.course_id,d.course_name,d.begin_date,
         d.duration,d.grade,d.section,d.subject,d.term,d.week,d.user_name,
         u.user_id,u.username,
-        s.school_id,s.school_name schoolName,
-        c.class_id,c.class_name className,
+        s.school_id,s.school_name,
+        c.class_id,c.class_name,
         cr.id classroom_id,cr.location,cr.state,cr.url
         FROM
         jcc_school_timetable d
@@ -110,4 +110,48 @@
             AND d.week = #{schoolTimetable.week}
         </if>
     </select>
+
+    <select id="selectSchooltimetableInfo" parameterType="Integer" resultType="cc.mrbird.febs.basicInfo.entity.SchoolTimetable">
+        select
+        jst.course_id,
+        jst.user_id,
+        jst.user_name,
+        jst.course_name,
+        jst.begin_date,
+        jst.duration,
+        jsi.school_id,
+        jsi.school_name,
+        jst.grade,
+        jst.class_id,
+        jst.subject,
+        jst.term,
+        jst.week,
+        jst.classroom_id,
+        jst.section,
+        GROUP_CONCAT(jtrs.school_id) schoolIds
+        from
+        jcc_school_timetable jst
+        LEFT JOIN jcc_timetable_relate_school jtrs on jst.course_id = jtrs.course_id
+        LEFT JOIN jcc_school_info jsi on jsi.school_id = jtrs.school_id
+        WHERE  jst.course_id = #{courseId}
+        GROUP BY jst.course_id
+    </select>
+
+    <delete id="deleteRelateSchooltimetableInfo" parameterType="Integer">
+        delete from jcc_timetable_relate_school where course_id = #{courseId}
+    </delete>
+
+    <delete id="deleteRelateClassInfo" parameterType="Integer">
+        delete from jcc_timetable_relate_class where course_id = #{courseId}
+    </delete>
+
+    <insert id="insertRelateSchooltimetableInfo" parameterType="java.util.Map">
+        insert into jcc_timetable_relate_school(course_id,school_id)
+                values(#{courseId},#{schoolId})
+    </insert>
+
+    <insert id="insertRelateClassInfo" parameterType="java.util.Map">
+        insert into jcc_timetable_relate_class(course_id,class_id)
+                values(#{courseId},#{classId})
+    </insert>
 </mapper>

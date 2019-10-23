@@ -40,6 +40,9 @@
                                      shiro:hasAnyPermissions="schoolTimetable:add,schoolTimetable:update,schoolTimetable:export">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
+                                <button type="button" class="layui-btn layui-btn-sm" style="margin-top:10px;" id="schoolTimeTableUpload">
+                                    <i class="layui-icon">&#xe67c;</i>上传excel
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -59,8 +62,9 @@
     <a lay-event="del" shiro:hasPermission="schoolTimetable:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
-    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect'], function () {
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect', 'upload'], function () {
         var $ = layui.jquery,
+            upload = layui.upload,
             laydate = layui.laydate,
             febs = layui.febs,
             form = layui.form,
@@ -82,6 +86,24 @@
             elem: '#beginDate',
             range: true,
             trigger: 'click'
+        });
+
+        var uploadInst = upload.render({
+          elem: '#schoolTimeTableUpload' //绑定元素
+          ,url: '/schoolTimetable/excel' //上传接口
+          ,accept: 'file' //允许上传的文件类型
+          ,done: function(res){
+        	  console.log(res);
+        	  if(res.code == 200){
+        		  febs.alert.success('上传成功');
+        		  $query.click();
+        	  }
+        	  else
+        		  febs.alert.error('上传失败');
+          }
+          ,error: function(){
+        	  febs.alert.warn('上传失败');
+          }
         });
 
         dropdown.render({

@@ -54,9 +54,8 @@ public class SchoolTimetableController extends BaseController {
 	@GetMapping("list")
 	@RequiresPermissions("schoolTimetable:view")
 	public FebsResponse schoolTimetableList(SchoolTimetable schoolTimetable, QueryRequest request) {
-		IPage test = this.schoolTimetableService.findSchoolTimetables(request, schoolTimetable);
-		Map<String, Object> dataTable = getDataTable(
-				this.schoolTimetableService.findSchoolTimetables(request, schoolTimetable));
+		IPage schoolTimetables = this.schoolTimetableService.findSchoolTimetables(request, schoolTimetable);
+		Map<String, Object> dataTable = getDataTable(schoolTimetables);
 		return new FebsResponse().success().data(dataTable);
 	}
 
@@ -100,7 +99,7 @@ public class SchoolTimetableController extends BaseController {
 	@RequiresPermissions("schoolTimetable:update")
 	public FebsResponse updateSchoolTimetable(SchoolTimetable schoolTimetable) throws FebsException {
 		try {
-			SchoolTimetable old = schoolTimetableService.getById(schoolTimetable.getClassId());
+			SchoolTimetable old = schoolTimetableService.getById(schoolTimetable.getCourseId());
 			if (old == null)
 				return new FebsResponse().fail().data("未找到");
 			// 判断有无权限
@@ -112,6 +111,7 @@ public class SchoolTimetableController extends BaseController {
 			this.schoolTimetableService.updateSchoolTimetable(schoolTimetable);
 			return new FebsResponse().success();
 		} catch (Exception e) {
+			e.printStackTrace();
 			String message = "修改SchoolTimetable失败";
 			log.error(message, e);
 			throw new FebsException(message);
@@ -135,7 +135,7 @@ public class SchoolTimetableController extends BaseController {
 	}
 
 	@PostMapping("excel")
-	// @RequiresPermissions("resource:import")
+	@RequiresPermissions("schoolTimetable:import")
 	public FebsResponse addVideo(@RequestParam("file") MultipartFile file) throws FebsException {
 		try {
 			User user = super.getCurrentUser();

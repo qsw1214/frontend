@@ -20,9 +20,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  *  Service实现
@@ -78,16 +76,52 @@ public class SchoolTimetableServiceImpl extends ServiceImpl<SchoolTimetableMappe
         }*/
     }
 
+    /**
+     * 新增课程表
+     * @param schoolTimetable schoolTimetable
+     */
     @Override
     @Transactional
     public void createSchoolTimetable(SchoolTimetable schoolTimetable) {
         this.save(schoolTimetable);
+        String[] schoolArray = schoolTimetable.getSchoolIds().split(StringPool.COMMA);
+        String[] classIdArray = schoolTimetable.getClassIds().split(StringPool.COMMA);
+        Map param = new HashMap();
+        param.put("courseId",schoolTimetable.getCourseId());
+        //循环添加学校和课程的关联表数据
+        for(int i = 0;i < schoolArray.length; i++){
+            Integer schoolId = Integer.parseInt(schoolArray[i]);
+            param.put("schoolId",schoolId);
+            this.baseMapper.insertRelateSchooltimetableInfo(param);
+        }
+        //循环添加班级和课程的关联表数据
+        for(int j = 0;j < classIdArray.length; j++){
+            Integer classId = Integer.parseInt(classIdArray[j]);
+            param.put("classId",classId);
+            this.baseMapper.insertRelateClassInfo(param);
+        }
     }
 
+    /**
+     * 修改课程表数据
+     * @param schoolTimetable schoolTimetable
+     */
     @Override
     @Transactional
     public void updateSchoolTimetable(SchoolTimetable schoolTimetable) {
+        //1.修改schoolTimeTable
         this.saveOrUpdate(schoolTimetable);
+        //2.根据schoolIds删除掉原先添加到第三方表的数据,再重新添加
+        this.baseMapper.deleteRelateSchooltimetableInfo(schoolTimetable.getCourseId());
+        String[] schoolArray = schoolTimetable.getSchoolIds().split(StringPool.COMMA);
+        Map param = new HashMap();
+        param.put("courseId",schoolTimetable.getCourseId());
+        for(int i = 0;i < schoolArray.length;i++){
+            Integer schoolId = Integer.parseInt(schoolArray[i]);
+            param.put("schoolId",schoolId);
+            this.baseMapper.insertRelateSchooltimetableInfo(param);
+        }
+
     }
 
     @Override
@@ -96,6 +130,15 @@ public class SchoolTimetableServiceImpl extends ServiceImpl<SchoolTimetableMappe
         List<String> list = Arrays.asList(courseIds.split(StringPool.COMMA));
         this.baseMapper.delete(
                 new QueryWrapper<SchoolTimetable>().lambda().in(SchoolTimetable::getCourseId, list));
+        //循环删除关联信息
+        for(int i = 0;i < list.size();i++){
+            if (list.get(i) != null){
+                Integer courseId = Integer.parseInt(list.get(i));
+                this.baseMapper.deleteRelateSchooltimetableInfo(courseId);
+                this.baseMapper.deleteRelateClassInfo(courseId);
+            }
+        }
+
 	}
 
     @Override
@@ -109,4 +152,14 @@ public class SchoolTimetableServiceImpl extends ServiceImpl<SchoolTimetableMappe
 		Page<SchoolTimetable> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.baseMapper.findSchoolTimetableByDept(page, schoolTimetable, deptId);
 	}
+
+    /**
+     * 查询所有的课程信息
+     * @param courseId
+     * @return
+     */
+    @Override
+    public SchoolTimetable selectSchooltimetableInfo(Integer courseId) {
+        return this.baseMapper.selectSchooltimetableInfo(courseId);
+    }
 }

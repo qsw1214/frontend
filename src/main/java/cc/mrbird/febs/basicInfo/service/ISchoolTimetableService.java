@@ -64,4 +64,10 @@ public interface ISchoolTimetableService extends IService<SchoolTimetable> {
     IPage<SchoolTimetable> findSchoolTimetableByDept(QueryRequest request, 
     		SchoolTimetable schoolTimetable, Long deptId);
 
+    /**
+     * 查询所有的课程信息
+     * @param courseId
+     * @return
+     */
+    SchoolTimetable selectSchooltimetableInfo(Integer courseId);
 }

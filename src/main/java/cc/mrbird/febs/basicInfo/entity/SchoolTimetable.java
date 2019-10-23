@@ -121,4 +121,18 @@ public class SchoolTimetable {
     @TableField("week")
     private String week;
 
+    /**
+     * 学校ids
+     */
+    @TableField(exist = false)
+    private String schoolIds;
+
+    /**
+     * 班级ids
+     */
+    /**
+     * 学校ids
+     */
+    @TableField(exist = false)
+    private String classIds ;
 }

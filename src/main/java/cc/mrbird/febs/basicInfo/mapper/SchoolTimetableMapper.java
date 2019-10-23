@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Map;
+
 /**
  * Mapper
  *
@@ -23,4 +25,34 @@ public interface SchoolTimetableMapper extends BaseMapper<SchoolTimetable> {
 	 */
 	IPage<SchoolTimetable> findSchoolTimetableByDept(Page<?> page,
 			@Param("schoolTimetable") SchoolTimetable schoolTimetable, @Param("deptId") Long deptId);
+
+	/**
+	 * 查询所有的课程信息
+	 * @param courseId
+	 * @return
+	 */
+    SchoolTimetable selectSchooltimetableInfo(Integer courseId);
+
+	/**
+	 * 根据课程id删除掉关联表里面的数据
+	 * @param courseId
+	 */
+    void deleteRelateSchooltimetableInfo(Integer courseId);
+	/**
+	 * 循环添加数据
+	 * @param param
+	 */
+	void insertRelateSchooltimetableInfo(Map param);
+
+	/**
+	 * 循环添加数据
+	 * @param param
+	 */
+    void insertRelateClassInfo(Map param);
+
+	/**
+	 * 删除
+	 * @param courseId
+	 */
+    void deleteRelateClassInfo(Integer courseId);
 }

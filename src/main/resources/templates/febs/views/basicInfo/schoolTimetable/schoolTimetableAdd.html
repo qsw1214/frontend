@@ -30,16 +30,18 @@
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">科目：</label>
-            <div class="layui-input-block">
-                <input type="text" name="subject" lay-verify="subject" maxlength="50" autocomplete="off"
-                       class="layui-input">
+            <div class="layui-input-block" style="width: 180px;">
+                <select name="subject" id="subjectInfo">
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">学期：</label>
-            <div class="layui-input-block">
-                <input type="text" name="term" lay-verify="term" maxlength="50" autocomplete="off"
-                       class="layui-input">
+            <div class="layui-input-block" style="width: 180px;">
+                <select name="term">
+                    <option value="上学期" selected="selected">上学期</option>
+                    <option value="下学期">下学期</option>
+                </select>
             </div>
         </div>
         <!--<div class="layui-form-item">
@@ -50,7 +52,7 @@
             </div>
         </div>-->
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">星期：</label>
+            <label class="layui-form-label febs-form-item-require">星期:</label>
             <div class="layui-input-block"  style="width: 180px;">
                 <select name="week" id="weekInfo">
                 </select>
@@ -61,7 +63,7 @@
             <label class="layui-form-label febs-form-item-require">节次：</label>
             <div class="layui-input-block">
                 <input type="text" name="section" lay-verify="section" maxlength="1" autocomplete="off"
-                       class="layui-input">
+                       class="layui-input" placeholder="请输入1-9的数字">
             </div>
         </div>
         <div class="layui-form-item">
@@ -71,10 +73,10 @@
                        class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item">
+        <div class="layui-form-item febs-form-item-require">
             <label class="layui-form-label febs-form-item-require">所属学校：</label>
             <div class="layui-input-block">
-                <select name="schoolId"
+                <select name="schoolIds"
                         lay-verify="required"
                         xm-select-direction="down"
                         xm-select="schoolTimetable-add-school"
@@ -95,17 +97,17 @@
             </div>
         </div>
 
-        <div class="layui-form-item">
+        <div class="layui-form-item febs-form-item-require">
             <label class="layui-form-label febs-form-item-require">所属班级：</label>
             <div class="layui-input-block">
-                <select name="classId"
+                <select name="classIds"
                         xm-select-direction="down"
                         xm-select="schoolTimetable-add-class"
                         xm-select-skin="default">
                 </select>
             </div>
         </div>
-        <div class="layui-form-iteme">
+        <div class="layui-form-item febs-form-item-require">
             <label class="layui-form-label febs-form-item-require">上课地点：</label>
             <div class="layui-input-block">
                 <select name="classroomId"
@@ -131,14 +133,34 @@
             treeSelect = layui.treeSelect,
             form = layui.form,
             weekInfo = $('#weekInfo'),
+            subject = $('#subjectInfo'),
             $view = $('#schoolTimetable-add'),
             validate = layui.validate;
 
         getWeek();
+        getSubject();
         form.verify(validate);
         form.render();
 
         formSelects.render();
+
+        function getSubject() {
+            $.ajax({
+                type:'get',
+                url: ctx+"dict?field=subject",
+                success:function (res) {
+                    var items=res.data;
+                    if (res.data.length==0){
+                        subject.append('<option value="'+""+'">'+""+'</option>');
+                    }else{
+                        for (var i=0;i<items.length;i++) {
+                            subject.append('<option>' + items[i].v + '</option>');
+                        }
+                    }
+                    form.render('select');
+                }
+            });
+        }
 
         function getWeek() {
             $.ajax({
