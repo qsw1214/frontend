@@ -9,6 +9,13 @@
 </style>
 <div class="layui-fluid" id="school-update">
     <form class="layui-form" action="" lay-filter="school-update-form">
+        <div class="layui-form-item" hidden = 'true'>
+            <label class="layui-form-label febs-form-item-require">学校部门编号：</label>
+            <div class="layui-input-block">
+                <input type="text" name="deptId" minlength="4" maxlength="10"
+                       autocomplete="off" class="layui-input" readonly>
+            </div>
+        </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">学校名称：</label>
             <div class="layui-input-block">
@@ -91,13 +98,23 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">附件：</label>
+            <label class="layui-form-label">图片资源：</label>
             <div class="layui-input-block">
-                <button type="file" class="layui-btn" id="picture" name="picture" >
-                    <i class="layui-icon">&#xe67c;</i>上传图片
-                </button>
+                <input type="text" id = "picture" name="picture"  autocomplete="off" class="layui-input">
             </div>
         </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">上传照片</label>
+            <div class="layui-input-inline uploadHeadImage">
+                <div class="layui-upload-drag" id="headImg">
+                    <i class="layui-icon">&#xe67c;</i>
+                    <p>点击上传图片，或将图片拖拽到此处</p>
+                </div>
+            </div>
+            预览图：
+            <div class="layui-upload-list" id="demo2"></div>
+
+            <input type="text" id="imgUrls" name="imgUrls" style="display: none;" class="layui-input">
         <div class="layui-form-item" style="text-align: right">
             <button class="layui-btn" lay-submit="" lay-filter="school-update-form-submit" id="submit">提交</button>
             <button class="layui-btn layui-btn-primary" id="remove">取消</button>
@@ -107,13 +124,14 @@
 <script src="./mods/layarea.js"></script>
 <script data-th-inline="javascript">
 
-    layui.use(['febs', 'form', 'formSelects', 'laydate','validate', 'treeSelect'], function () {
+    layui.use(['febs', "jquery",'form', 'formSelects', 'laydate','validate','upload', 'treeSelect',"element"], function () {
         var $ = layui.$,
             febs = layui.febs,
             layer = layui.layer,
             formSelects = layui.formSelects,
             laydate = layui.laydate,
             form = layui.form,
+            upload = layui.upload,
             layarea = layui.layarea,
             $form = $('form'),
             school = [[${school}]],
@@ -188,6 +206,36 @@
             });
         }
 
+        var imgurls = "";
+        //拖拽上传
+        var uploadInst = upload.render({
+            elem: '#headImg'
+            , url: '/upload'
+            , size: 1000
+            , multiple: true
+            , number: 7
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    // $('#demo1').attr('src', result); //图片链接（base64）
+                    $('#demo2').append('<img src="' + result + '" alt="' + file.name
+                        + '"height="100px" width="100px" class="layui-upload-img uploadImgPreView">')
+                });
+            }
+            , done: function (res) {
+                imgurls = imgurls + "" + res.data.src + ",";
+                $('#imgUrls').val(imgurls);
+                if(imgurls != ""){
+                    $('#picture').val(imgurls);
+                }
+            }
+            , error: function () {
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+
         //所属主校
         formSelects.config('schoolTimetable-update-school', {
             searchUrl: ctx + 'school?schoolType=主校',
@@ -229,9 +277,11 @@
                 "areaCode":school.areaCode,
                 "address":school.address,
                 "createTime":date,
+                "picture":school.picture,
                 "provinceDeptId":school.provinceDeptId,
                 "cityDeptId":school.cityDeptId,
-                "countryDeptId":school.countryDeptId
+                "countryDeptId":school.countryDeptId,
+                "deptId":school.deptId
             });
         }
         layarea.render({

@@ -1,5 +1,6 @@
 package cc.mrbird.febs.basicInfo.controller;
 
+import cc.mrbird.febs.basicInfo.entity.ImgResult;
 import cc.mrbird.febs.basicInfo.service.IClassInfoService;
 import cc.mrbird.febs.basicInfo.service.IClassroomInfoService;
 import cc.mrbird.febs.basicInfo.service.IDeviceInfoService;
@@ -29,9 +30,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -56,10 +60,10 @@ public class SchoolController extends BaseController {
 
     @Autowired
     private IClassInfoService classInfoService;
-    
+
     @Autowired
     private IDeptService deptService;
-    
+
     @Autowired
     private IUserDeptService userDeptService;
 
@@ -80,23 +84,38 @@ public class SchoolController extends BaseController {
         return new FebsResponse().success().data(dataTable);
     }
 
+    /*    @Log("新增School")
+        @PostMapping("school")
+        @ResponseBody
+        @RequiresPermissions("school:add")
+        public FebsResponse addSchool(@Valid School school, @RequestParam(required=false,value="file") MultipartFile file) throws FebsException {
+            try {
+                if (file != null) {
+                    String path = Tools.saveFile(file, "school");
+                    System.out.println(path);
+                    school.setPicture(path);
+                }
+                School s = this.schoolService.createSchool(school);
+                if(s.getBelongId()==null){
+                    s.setBelongId(s.getSchoolId());
+                    this.schoolService.updateSchool(s);
+                }
+                return new FebsResponse().success();
+            } catch (Exception e) {
+                String message = "新增School失败";
+                log.error(message, e);
+                throw new FebsException(message);
+            }
+        }*/
     @Log("新增School")
     @PostMapping("school")
     @ResponseBody
     @RequiresPermissions("school:add")
-    public FebsResponse addSchool(@Valid School school, @RequestParam(required=false,value="file") MultipartFile[] files) throws FebsException {
+    public FebsResponse addSchool(@Valid School school) throws FebsException {
         try {
-			if (files != null && files.length >= 1) {
-				List<String> pathList = Tools.saveFiles(files, "school");
-				String ss = String.join(",", pathList);
-				school.setPicture(ss);
-			}
-			if (files.length >5) {
-				return new FebsResponse().data("图片最多5张");
-			}
-			School s = this.schoolService.createSchool(school);
-			if(s.getBelongId()==null){
-			    s.setBelongId(s.getSchoolId());
+            School s = this.schoolService.createSchool(school);
+            if(s.getBelongId()==null){
+                s.setBelongId(s.getSchoolId());
                 this.schoolService.updateSchool(s);
             }
             return new FebsResponse().success();
@@ -108,7 +127,7 @@ public class SchoolController extends BaseController {
     }
 
     @Log("删除School")
-    @GetMapping("school/delete/{schoolIds}")    
+    @GetMapping("school/delete/{schoolIds}")
     @ResponseBody
     @RequiresPermissions("school:delete")
     public FebsResponse deleteSchool(@NotBlank(message = "{required}") @PathVariable String schoolIds) throws FebsException {
@@ -135,36 +154,32 @@ public class SchoolController extends BaseController {
     @PostMapping("school/update")
     @ResponseBody
     @RequiresPermissions("school:update")
-    public FebsResponse updateSchool(School school, @RequestParam(required=false,value="file") MultipartFile file) throws FebsException {
+    public FebsResponse updateSchool(School school) throws FebsException {
         try {
-        	School old = schoolService.getById(school.getSchoolId());
-			if (old == null)
-				return new FebsResponse().fail().data("未找到");
-			// 判断有无权限
-			User user = getCurrentUser();
-			if (school != null && !userDeptService.isPermission(user.getUserId(), old.getDeptId())) {
-				return new FebsResponse().fail().data("无权限");
-			}
-        	School oldSchool = schoolService.getById(school.getSchoolId());
-        	if(oldSchool == null)
-        		return new FebsResponse().fail().data("没有该学校");
-        	if(oldSchool.getDeptId() != null){ // 如果设置了部门id，则判断用户有无修改权限
-        		List<Long> parendDeptIds = deptService.getParentDeptIds(school.getDeptId());
-        		List<Dept> depts = userDeptService.getDeptByUserId(user.getUserId());
-        		boolean flag = false;
-            	for(Dept dept: depts){
-            		if(parendDeptIds.contains(dept.getDeptId())){
-            			flag = true;
-            			break;
-            		}
-            	}
-            	if(!flag)
-            		return new FebsResponse().fail().data("无权限");
-        	}    	
-			if (file != null) {
-				String path = Tools.saveFile(file, "school");
-				school.setPicture(path);
-			}
+            School old = schoolService.getById(school.getSchoolId());
+            if (old == null)
+                return new FebsResponse().fail().data("未找到");
+            // 判断有无权限
+            User user = getCurrentUser();
+            if (school != null && !userDeptService.isPermission(user.getUserId(), old.getDeptId())) {
+                return new FebsResponse().fail().data("无权限");
+            }
+            School oldSchool = schoolService.getById(school.getSchoolId());
+            if(oldSchool == null)
+                return new FebsResponse().fail().data("没有该学校");
+            if(oldSchool.getDeptId() != null){ // 如果设置了部门id，则判断用户有无修改权限
+                List<Long> parendDeptIds = deptService.getParentDeptIds(school.getDeptId());
+                List<Dept> depts = userDeptService.getDeptByUserId(user.getUserId());
+                boolean flag = false;
+                for(Dept dept: depts){
+                    if(parendDeptIds.contains(dept.getDeptId())){
+                        flag = true;
+                        break;
+                    }
+                }
+                if(!flag)
+                    return new FebsResponse().fail().data("无权限");
+            }
             this.schoolService.updateSchool(school);
             return new FebsResponse().success();
         } catch (Exception e) {
@@ -173,7 +188,7 @@ public class SchoolController extends BaseController {
             throw new FebsException(message);
         }
     }
-    
+
     @PostMapping("school/excel")
     @ResponseBody
     @RequiresPermissions("school:export")
@@ -192,15 +207,43 @@ public class SchoolController extends BaseController {
     @ResponseBody
     @RequiresPermissions("school:view")
     public FebsResponse schoolListByDept(QueryRequest request, School school, Long deptId) {
-    	// 判断有无部门权限
-		User user = getCurrentUser();		
-		if(!userDeptService.isPermission(user.getUserId(), deptId)){
-			return new FebsResponse().fail().data("无权限");
-		}
-    	IPage<School> p = this.schoolService.findSchoolsByDept(request, school, deptId);
+        // 判断有无部门权限
+        User user = getCurrentUser();
+        if(!userDeptService.isPermission(user.getUserId(), deptId)){
+            return new FebsResponse().fail().data("无权限");
+        }
+        IPage<School> p = this.schoolService.findSchoolsByDept(request, school, deptId);
         Map<String, Object> dataTable = getDataTable(p);
         return new FebsResponse().success().data(dataTable);
     }
 
+    @RequestMapping("/upload")
+    @ResponseBody
+    public ImgResult uplpad(MultipartFile file, HttpServletRequest request){
+        String desFilePath = "";
+        String oriName = "";
+        ImgResult result = new ImgResult();
+        Map<String, String> dataMap = new HashMap<>();
+        ImgResult imgResult = new ImgResult();
+        try {
+            // 1.保存图片
+            desFilePath = Tools.saveFile(file, "school");
+            // 2.返回保存结果信息
+            result.setCode(0);
+            dataMap = new HashMap<>();
+            dataMap.put("src", desFilePath);
+            result.setData(dataMap);
+            result.setMsg(oriName + "上传成功！");
+            return result;
+        } catch (IllegalStateException e) {
+            imgResult.setCode(1);
+            System.out.println(desFilePath + "图片保存失败");
+            return imgResult;
+        } catch (Exception e) {
+            imgResult.setCode(1);
+            System.out.println(desFilePath + "图片保存失败--IO异常");
+            return imgResult;
+        }
+    }
 
 }

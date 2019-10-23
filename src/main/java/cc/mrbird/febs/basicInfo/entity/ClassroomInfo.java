@@ -62,7 +62,7 @@ public class ClassroomInfo {
     private String playUrl;
 
     /**
-     * 
+     * 上课状态 -1 0 1 已结束  未开始  进行中
      */
     @TableField("state")
     private Integer state;

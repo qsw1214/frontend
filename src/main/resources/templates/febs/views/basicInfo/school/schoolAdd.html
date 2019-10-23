@@ -24,8 +24,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">学校类型：</label>
             <div class="layui-input-block">
-                <input type="radio" name="schoolType"  value="主校" title="主校" checked lay-filter="schoolType">
-                <input type="radio" name="schoolType"  value="分校" title="分校" lay-filter="schoolType">
+                <input type="radio" name="schoolType"  value="主校" title="主校" lay-filter="schoolType">
+                <input type="radio" name="schoolType"  value="分校" title="分校" checked lay-filter="schoolType">
             </div>
         </div>
         <div class="layui-form-item">
@@ -91,15 +91,20 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">附件：</label>
-            <div class="layui-input-block">
-                <div id="file-box">
-                    <i class="layui-icon">&#xe67c;</i>上传图片
-                    <input type="file" id="file" name="file" value="点我上传" lay-verify="required"/>
+            <label class="layui-form-label">上传照片</label>
+            <div class="layui-input-inline uploadHeadImage">
+                <div class="layui-upload-drag" id="headImg">
+                    <i class="layui-icon">&#xe67c;</i>
+                    <p>点击上传图片，或将图片拖拽到此处</p>
                 </div>
-                <p id="fileName">未上传任何文件</p>
+                <button type="button" class="layui-btn" id="cleanImgs"> <i class="fa fa-trash-o fa-lg"></i>清空图片预览</button>
             </div>
+            预览图：
+            <div class="layui-upload-list" id="demo2"></div>
+
+            <input type="text" id="imgUrls" name="imgUrls" style="display: none;" class="layui-input">
         </div>
+
         <div class="layui-form-item " style="text-align:right">
             <button class="layui-btn" lay-submit="" lay-filter="school-add-form-submit" id="submit">提交</button>
             <button type="reset" class="layui-btn" id="reset">重置</button>
@@ -108,12 +113,12 @@
 </div>
 <script src="./mods/layarea.js"></script>
 <script>
-    layui.use(['febs', 'form', 'formSelects', 'laydate','validate','upload', 'treeSelect'], function () {
+
+    layui.use(['febs',"jquery",'form', 'formSelects', 'laydate','validate','upload', 'treeSelect',"element"], function () {
         var $ = layui.$,
             febs = layui.febs,
             layer = layui.layer,
             formSelects = layui.formSelects,
-//            treeSelect = layui.treeSelect,
             form = layui.form,
             $form = $('form'),
             $view = $('#school-add'),
@@ -121,7 +126,7 @@
             laydate = layui.laydate,
             layarea = layui.layarea,
             validate = layui.validate,
-            upload=layui.upload,
+            upload = layui.upload,
             sortObject = {field: 'createTime', type: null};
 
         getschoolCategory();
@@ -130,6 +135,38 @@
 
         formSelects.render();
 
+        $("#cleanImgs").click(function(){
+            alert("222");
+            $('#demo2').html("");
+            $('#imgUrls').val("");
+        });
+
+        var imgurls = "";
+        //拖拽上传
+        var uploadInst = upload.render({
+            elem: '#headImg'
+            , url: '/upload'
+            , size: 1000
+            , multiple: true
+            , number: 7
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    // $('#demo1').attr('src', result); //图片链接（base64）
+                    $('#demo2').append('<img src="' + result + '" alt="' + file.name
+                        + '"height="100px" width="100px" class="layui-upload-img uploadImgPreView">')
+                });
+            }
+            , done: function (res) {
+                imgurls = imgurls + "" + res.data.src + ",";
+                $('#imgUrls').val(imgurls);
+            }
+            , error: function () {
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
 
         document.getElementById("img1").style.display="none";
         form.on('radio(schoolType)', function (data) {
@@ -137,29 +174,9 @@
                 document.getElementById("img1").style.display="block";
             }else{
                 document.getElementById("img1").style.display="none";
-                /*var name=document.createElement("select");
-                name.setAttribute("lay-verify","required");*/
             }
         });
 
-        function getschoolCategory() {
-            $.ajax({
-                type:'get',
-                url: ctx+"dict?field=category",
-                success:function (res) {
-                    var items=res.data;
-                    if (res.data.length==0){
-                    	schoolCategory.append('<option value="">'+'请选择'+'</option>');
-                    }else{
-                    	schoolCategory.append('<option value="">'+'请选择'+'</option>');
-                        for (var i=0;i<items.length;i++) {
-                            $('#schoolCate').append('<option value='+ items[i].v + '>' + items[i].v + '</option>');
-                        }
-                    }
-                    form.render('select');
-                }
-            });
-        }
         laydate.render({
             elem: '#time'
 /*             range: true,
@@ -168,10 +185,16 @@
         function getschoolCategory() {
             $.ajax({
                 type:'get',
-                url: ctx+"dict?field=category",
+                url: ctx + "dict?field=category",
                 success:function (res) {
-                    var items=res.data;
-                    schoolCategory.append('<option value="">'+'请选择'+'</option>');
+                    var items = res.data;
+                    if (items.length == 0){
+                        schoolCategory.append('<option value="">'+'请选择'+'</option>');
+                    }else{
+                        for (var i = 0;i < items.length;i++) {
+                            schoolCategory.append('<option>' + items[i].v + '</option>');
+                        }
+                    }
                     form.render('select');
                 }
             });
@@ -211,7 +234,6 @@
             }
         });
 
-     
         formSelects.config('school-add-role', {
             searchUrl: ctx + 'role',
             response: {
@@ -235,20 +257,6 @@
             }
         });
 
-        //监听input
-        $("#file").on("change",function (e) {
-            var e = e || window.event;
-            //获取 文件 个数 取消的时候使用
-            var files = e.target.files;
-            if(files.length>0){
-                // 获取文件名 并显示文件名
-                var fileName = files[0].name;
-                $("#fileName").html(fileName);
-            }else{
-                //清空文件名
-                $("#fileName").html("");
-            }
-        });
         form.on('submit(school-add-form-submit)', function (data) {
             $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
             var formData = new FormData();
@@ -263,7 +271,7 @@
             formData.append('province',data.field.province);
             formData.append('city',data.field.city);
             formData.append('country',data.field.country);
-            formData.append('file', $("#file")[0].files[0]);
+            formData.append('picture',$("#imgUrls").val());
             formData.append('belongId',data.field.belongId);
             var url=ctx+'school';
             $.ajax({

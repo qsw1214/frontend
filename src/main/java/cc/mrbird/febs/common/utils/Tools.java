@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
@@ -13,7 +14,7 @@ import cc.mrbird.febs.common.configure.GlobalConfig;
 import cc.mrbird.febs.common.exception.FebsException;
 
 public class Tools {
-	
+
 	public static Boolean isImageFile(String fileName) {
 		String[] img_type = new String[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
 		if (fileName == null) {
@@ -40,23 +41,23 @@ public class Tools {
 		}
 		return "";
 	}
-	
+
 	public static boolean deleteFile(String path) {
 		if(path.length() <= 6)
 			return false;
 		String filePath = GlobalConfig.uploadBasePath + path.substring(6);
-        File file = new File(filePath);
-        // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
-        if (file.exists() && file.isFile()) {
-            if (file.delete()) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
+		File file = new File(filePath);
+		// 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
+		if (file.exists() && file.isFile()) {
+			if (file.delete()) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
 
 	public static List<String> saveFiles(MultipartFile[] files, String folder) throws FebsException {
 		try {
@@ -93,15 +94,25 @@ public class Tools {
 
 	public static String saveFile(MultipartFile file, String folder) throws FebsException {
 		try {
-			String uploadPath = GlobalConfig.uploadBasePath + folder + "/";
-			File uploadDirectory = new File(uploadPath);
+			String projectDirPath =  PropertiesUtils.getProperty("school_image_save_url");
+			//获取跟目录
+			File path = new File(ResourceUtils.getURL("classpath:").getPath());
+			if(!path.exists())
+				path = new File("");
+
+			File upload = new File(path.getAbsolutePath(),projectDirPath + "/" + folder);
+			if(!upload.exists())
+				upload.mkdirs();
+			String uploadPath = upload.getAbsolutePath();
+
+			/*File uploadDirectory = new File(uploadPath);
 			if (uploadDirectory.exists()) {
 				if (!uploadDirectory.isDirectory()) {
 					uploadDirectory.delete();
 				}
 			} else {
 				uploadDirectory.mkdir();
-			}
+			}*/
 			if (file != null) {
 				String fileName = file.getOriginalFilename();
 				if (fileName != null && !"".equalsIgnoreCase(fileName.trim())) {
@@ -109,11 +120,12 @@ public class Tools {
 					long id = IdWorker.getId();
 					File outFile = new File(uploadPath  + id + Tools.getFileType(fileName));
 					// 拷贝文件到输出文件对象
-					FileUtils.copyInputStreamToFile(file.getInputStream(), outFile);
+//					FileUtils.copyInputStreamToFile(file.getInputStream(), outFile);
 					//return "/files/" + folder + "/" + outFile.getName();
-					return "/files" + folder + "/" + outFile.getName();
+					File desFile = new File(uploadPath  + "/" + id + Tools.getFileType(fileName));
+					file.transferTo(desFile);
+					return "/" + folder + "/" + id + Tools.getFileType(fileName);
 				}
-
 			}
 			return null;
 		} catch (Exception e) {
