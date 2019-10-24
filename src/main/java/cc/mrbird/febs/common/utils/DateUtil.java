@@ -114,5 +114,7 @@ public class DateUtil {
         for (int i = 0; i < months.length; i++) {
             System.out.println(months[i]);
         }
+
+        System.out.println("2019-10-11".substring(0,7));
     }
 }

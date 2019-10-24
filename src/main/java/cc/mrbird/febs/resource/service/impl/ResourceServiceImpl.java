@@ -215,7 +215,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         		count = this.baseMapper.getResourceCount(deptId, date);
         		redisService.hset(hkey, date, count.toString());
         	}
-        	map.put(date, count);
+        	map.put(date.substring(0,7), count);
         }       
 		return map;
 	}
