@@ -87,10 +87,10 @@ public class HttpUtils {
                 baos.flush();
                 return baos.toString();
             } else {
-                throw new RuntimeException(" responseCode is not 200 ... ");
+                throw new RuntimeException("radio server responseCode is not 200 ... ");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         } finally {
             try {
                 if (is != null)

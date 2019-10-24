@@ -590,7 +590,7 @@ public class ApiController extends BaseController {
     }
 
     /**
-     * 区域开课、资源、学生数量统计
+     * 区域开课、资源、学生数量折线图统计
      * @return
      */
     @GetMapping("getAllCityData")

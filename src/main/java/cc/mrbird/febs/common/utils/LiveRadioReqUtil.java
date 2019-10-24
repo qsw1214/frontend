@@ -29,16 +29,18 @@ public class LiveRadioReqUtil {
         buff.append("cmdid=1&year=" + year + "&month=" + month + "&day=" + day);
         String url = LIVE_RADIO_URL + buff.toString();
         String response = HttpUtils.doGet(url);
-        String[] logArrs = response.split("\r\n");
         List<RadioLog> list = new ArrayList<RadioLog>();
-        for (int i = 0 ; i < logArrs.length; i++){
-            String log = logArrs[i];
-            String[] details = log.split("`");
-            RadioLog radioLog = new RadioLog();
-            radioLog.setLogId(details[0]);
-            radioLog.setLogTime(details[1]);
-            radioLog.setContent(details[2]);
-            list.add(radioLog);
+        if(StringUtils.isNotEmpty(response)) {
+            String[] logArrs = response.split("\r\n");
+            for (int i = 0; i < logArrs.length; i++) {
+                String log = logArrs[i];
+                String[] details = log.split("`");
+                RadioLog radioLog = new RadioLog();
+                radioLog.setLogId(details[0]);
+                radioLog.setLogTime(details[1]);
+                radioLog.setContent(details[2]);
+                list.add(radioLog);
+            }
         }
         return list;
     }
@@ -51,8 +53,13 @@ public class LiveRadioReqUtil {
         buff.append("cmdid=2");
         String url = LIVE_RADIO_URL + buff.toString();
         String response = HttpUtils.doGet(url);
-        String[] urlStrs = response.split("\r\n");
-        System.out.println("推流地址：" + urlStrs[0] + "  播放地址：" + urlStrs[1]);  //推流地址：live/65  播放地址：65/65.m3u8
+        String[] urlStrs = new  String[0];
+        if(StringUtils.isNotEmpty(response)) {
+            if (StringUtils.isNotEmpty(response)) {
+                urlStrs = response.split("\r\n");
+//                System.out.println("推流地址：" + urlStrs[0] + "  播放地址：" + urlStrs[1]);  //推流地址：live/65  播放地址：65/65.m3u8
+            }
+        }
         return urlStrs;
     }
 
@@ -82,19 +89,21 @@ public class LiveRadioReqUtil {
         }
         String url = LIVE_RADIO_URL + buff.toString();
         String response = HttpUtils.doGet(url);
-        String[] statusArr = response.split("\r\n");
         List<RadioStatus> statusList = new ArrayList<RadioStatus>();
-        for (int i = 0 ; i < statusArr.length; i++){
-            String statusInfo = statusArr[i];
-            String[] detail = statusInfo.split("`");
-            if(detail.length > 0 && !"".equals(detail[0])) {
-                RadioStatus status = new RadioStatus();
-                status.setUrl(detail[0]);
-                status.setStatus(detail[1]);
-                if (detail.length > 2) {
-                    status.setStartDate(detail[2]);
+        if(StringUtils.isNotEmpty(response)) {
+            String[] statusArr = response.split("\r\n");
+            for (int i = 0; i < statusArr.length; i++) {
+                String statusInfo = statusArr[i];
+                String[] detail = statusInfo.split("`");
+                if (detail.length > 0 && !"".equals(detail[0])) {
+                    RadioStatus status = new RadioStatus();
+                    status.setUrl(detail[0]);
+                    status.setStatus(detail[1]);
+                    if (detail.length > 2) {
+                        status.setStartDate(detail[2]);
+                    }
+                    statusList.add(status);
                 }
-                statusList.add(status);
             }
         }
         return statusList;
@@ -123,11 +132,13 @@ public class LiveRadioReqUtil {
         }
         String url = LIVE_RADIO_URL + buff.toString();
         String response = HttpUtils.doGet(url);
-        String[] countArr = response.split("\r\n");
-        for (int i = 0 ; i < countArr.length ; i++){
-            String countStr = countArr[i];
-            String[] addCount = countStr.split("`");
-            map.put(addCount[0],Integer.valueOf(addCount[1]));
+        if(StringUtils.isNotEmpty(response)){
+            String[] countArr = response.split("\r\n");
+            for (int i = 0 ; i < countArr.length ; i++){
+                String countStr = countArr[i];
+                String[] addCount = countStr.split("`");
+                map.put(addCount[0],Integer.valueOf(addCount[1]));
+            }
         }
         return map;
     }
@@ -156,20 +167,25 @@ public class LiveRadioReqUtil {
         String url = LIVE_RADIO_URL + buff.toString();
         String response = HttpUtils.doGet(url);
         List<RadioHistoryRecord> historyList = new ArrayList<RadioHistoryRecord>();
-        String[] historyArr = response.split("\r\n");
-        for (int i = 0 ; i < historyArr.length ; i++){
-            String historyStr = historyArr[i];
-            String[] history = historyStr.split("`");
-            RadioHistoryRecord record = new RadioHistoryRecord();
-            record.setUrl(history[0]);
-            record.setBeginDate(history[1]);
-            record.setEndDate(history[2]);
-            historyList.add(record);
+        if(StringUtils.isNotEmpty(response)) {
+            String[] historyArr = response.split("\r\n");
+            for (int i = 0; i < historyArr.length; i++) {
+                String historyStr = historyArr[i];
+                String[] history = historyStr.split("`");
+                RadioHistoryRecord record = new RadioHistoryRecord();
+                record.setUrl(history[0]);
+                record.setBeginDate(history[1]);
+                record.setEndDate(history[2]);
+                historyList.add(record);
+            }
         }
         return historyList;
     }
 
     public static void main(String[] args){
+
+        String[] test = "".split("\r\n");
+        System.out.println("22:"  + test.length);
         String[] urlStrs = getNewLiveRadioUrl();
         System.out.println("推流地址：" + urlStrs[0] + "  播放地址：" + urlStrs[1]);  //推流地址：live/65  播放地址：65/65.m3u8
         //统计推流次数
