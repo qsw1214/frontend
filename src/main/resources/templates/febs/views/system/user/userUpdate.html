@@ -18,7 +18,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">用户名：</label>
             <div class="layui-input-block">
-                <input type="text" name="username" minlength="4" maxlength="10" data-th-id="${user.userId}"
+                <input type="text" name="username" minlength="0" maxlength="50" data-th-id="${user.userId}"
                        lay-verify="range|username" autocomplete="off" class="layui-input" readonly>
             </div>
         </div>
@@ -168,7 +168,6 @@
         }
 
         form.on('submit(user-update-form-submit)', function (data) {
-        	console.log("2222222222");
             if (febs.nativeEqual(data.field, user)) {
                 febs.alert.warn('数据未作任何修改！');
                 return false;

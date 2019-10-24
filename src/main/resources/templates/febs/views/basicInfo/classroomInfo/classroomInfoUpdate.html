@@ -80,8 +80,14 @@
                 }else{
                     //school.append('<option value="' + items.rows[0].schoolId + '">' + items.rows[0].schoolName+ '</option>');
                     for (var i=0;i<items.rows.length;i++) {
+                        if (items.rows[i].schoolId===classroomInfo.schoolId){
+                            school.append('<option selected="selected" value=' + items.rows[i].schoolId + '>' + items.rows[i].schoolName+ '</option>');
+                        }
+                        else{
                             school.append('<option value='+ items.rows[i].schoolId + '>' + items.rows[i].schoolName + '</option>');
+                        }
                     }
+
                 }
                 form.render('select');
             });
@@ -89,6 +95,7 @@
         
         function initUserValue() {
             form.val("classroomInfo-update-form", {
+                "schoolId":classroomInfo.schoolId,
                 "location": classroomInfo.location,
                 "containNum": classroomInfo.containNum,
                 "introduce": classroomInfo.introduce,
@@ -104,8 +111,7 @@
         })
 
          form.on('submit(classroomInfo-update-form-submit)', function (data) {
-        	febs.alert.warn('123123！');
-        	data.field.schoolId=classroomInfo.schoolId;
+        	data.field.schoolId=$("#schoolId option:selected").val();
         	data.field.id = classroomInfo.id;
             data.field.grade=$("#classInfo option:selected").val();
             if (febs.nativeEqual(data.field, classroomInfo)) {

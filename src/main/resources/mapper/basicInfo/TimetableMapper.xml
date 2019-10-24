@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.basicInfo.mapper.TimetableMapper">
+
+    <resultMap id="timetable" type="cc.mrbird.febs.basicInfo.entity.Timetable">
+        <id column="TID" jdbcType="INTEGER" property="tid"/>
+        <result column="TIMETABLE_NAME" jdbcType="VARCHAR" property="timetableName"/>
+        <result column="TIMETABLE_TIMES" jdbcType="VARCHAR" property="timetableTimes"/>
+        <result column="TIMETABLE_SPEAKER" jdbcType="VARCHAR" property="timetableSpeaker"/>
+        <result column="TIMETABLE_DATE" jdbcType="DATE" property="timetableDate"/>
+        <result column="TIMETABLE_WEEK" jdbcType="VARCHAR" property="timetableWeek"/>
+    </resultMap>
+</mapper>

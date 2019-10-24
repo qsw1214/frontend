@@ -1,5 +1,6 @@
 package cc.mrbird.febs.basicInfo.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -20,10 +21,9 @@ public class Operate {
     /**
      *指南id
      */
-    @TableId(value = "ID")
+    @TableId(value = "id", type = IdType.AUTO)
     @ExcelField(value = "指南id")
-    private int id;
-
+    private Integer id;
     /**
      *标题
      */

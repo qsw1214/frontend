@@ -3,7 +3,7 @@
 <mapper namespace="cc.mrbird.febs.basicInfo.mapper.OperateMapper">
 
     <resultMap id="operate" type="cc.mrbird.febs.basicInfo.entity.Operate">
-        <id column="ID" jdbcType="BIGINT" property="id"/>
+        <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="TITLE" jdbcType="CHAR" property="title"/>
         <result column="AUTHOR" jdbcType="CHAR" property="author"/>
         <result column="UPLOAD_TIME" jdbcType="DATE" property="uploadTime"/>

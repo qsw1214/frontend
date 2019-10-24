@@ -1,6 +1,6 @@
 <style>
     #classroomInfo-add {
-        padding: 20px 25px 25px 0;a
+        padding: 20px 25px 25px 0;
     }
     #classroomInfo-add .layui-treeSelect .ztree li a, .ztree li span {
         margin: 0 0 2px 3px !important;
@@ -16,9 +16,9 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">位置：</label>
+            <label class="layui-form-label febs-form-item-require">位置：</label>
             <div class="layui-input-block">
-                <input type="text" name="location" class="layui-input">
+                <input type="text" name="location" class="layui-input" lay-verify="required">
             </div>
         </div>
 
@@ -116,7 +116,6 @@
         }
 
         form.on('submit(classroomInfo-add-form-submit)', function (data) {
-            alert();
             $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
             febs.post(ctx + 'classroomInfo', data.field, function () {
                 layer.closeAll();
