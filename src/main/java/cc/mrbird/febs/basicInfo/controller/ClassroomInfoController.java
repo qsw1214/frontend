@@ -5,6 +5,8 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
+import cc.mrbird.febs.common.utils.LiveRadioReqUtil;
+import cc.mrbird.febs.common.utils.RadioStatus;
 import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IUserDeptService;
 import cc.mrbird.febs.basicInfo.entity.ClassroomInfo;
@@ -12,6 +14,7 @@ import cc.mrbird.febs.basicInfo.entity.School;
 import cc.mrbird.febs.basicInfo.service.IClassroomInfoService;
 import cc.mrbird.febs.basicInfo.service.ISchoolService;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -61,7 +64,18 @@ public class ClassroomInfoController extends BaseController {
     @ResponseBody
     @RequiresPermissions("classroomInfo:view")
     public FebsResponse classroomInfoList(QueryRequest request, ClassroomInfo classroomInfo) {
-        Map<String, Object> dataTable = getDataTable(this.classroomInfoService.findClassroomInfos(request, classroomInfo));
+        IPage<ClassroomInfo> classroomLists = this.classroomInfoService.findClassroomInfos(request, classroomInfo);
+        List<ClassroomInfo> list = classroomLists.getRecords();
+        for (int i = 0 ; i < list.size(); i++){
+            ClassroomInfo info = list.get(i);
+            String url = info.getUrl();
+            List<RadioStatus> statusLists = LiveRadioReqUtil.getRadioStatus(url);
+            if(statusLists.size() > 0){
+                RadioStatus status = statusLists.get(0);
+                info.setState(Integer.valueOf(status.getStatus()));
+            }
+        }
+        Map<String, Object> dataTable = getDataTable(classroomLists);
         return new FebsResponse().success().data(dataTable);
     }
 
