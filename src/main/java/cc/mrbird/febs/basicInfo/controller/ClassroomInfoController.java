@@ -72,7 +72,7 @@ public class ClassroomInfoController extends BaseController {
             List<RadioStatus> statusLists = LiveRadioReqUtil.getRadioStatus(url);
             if(statusLists.size() > 0){
                 RadioStatus status = statusLists.get(0);
-                info.setState(Integer.valueOf(status.getStatus()));
+                info.setState(status.getStatus() == null ? 0 :Integer.valueOf(status.getStatus()));
             }
         }
         Map<String, Object> dataTable = getDataTable(classroomLists);
