@@ -204,7 +204,15 @@ public class ResourceController extends BaseController {
     @GetMapping("resource/countByMonth")
     @ResponseBody
     @RequiresPermissions("resource:view")
-    public FebsResponse getResourceCountEveryMonth(){
-    	 return new FebsResponse().success().data(resourceService.getResourceCountEveryMonth());
+    public FebsResponse getResourceCountEveryMonth(Integer provinceId, Integer cityDeptId, Integer countryDeptId){
+    	 Integer deptId = 0;
+    	 if(countryDeptId != null){
+			 deptId = countryDeptId;
+		 }else if(cityDeptId != null){
+    	 	deptId = cityDeptId;
+		 }else if(provinceId != null){
+    	 	deptId = provinceId;
+		 }
+    	 return new FebsResponse().success().data(resourceService.getResourceCountEveryMonth(deptId));
     }
 }

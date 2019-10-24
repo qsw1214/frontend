@@ -195,7 +195,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     }
 
 	@Override
-	public Map<String, Integer> getResourceCountEveryMonth() {
+	public Map<String, Integer> getResourceCountEveryMonth(Integer deptId) {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		Calendar cale = Calendar.getInstance();  	
         int year = cale.get(Calendar.YEAR);  
@@ -212,7 +212,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         	if(redisService.hget(hkey, date) != null){
 				count = Integer.valueOf(redisService.hget(hkey, date));
         	} else {
-        		count = this.baseMapper.getResourceCount(null, date);
+        		count = this.baseMapper.getResourceCount(deptId, date);
         		redisService.hset(hkey, date, count.toString());
         	}
         	map.put(date, count);
