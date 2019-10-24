@@ -512,7 +512,7 @@ public class ApiController extends BaseController {
 /*
         List<ClassroomInfo> classroomLists = this.classroomInfoService.getClassroomInfoByCityCountry(provinceId, cityDeptId, countryDeptId);
         String[] last12Month = DateUtil.getLast12Months();
-        Map<String, Integer> resultCount = new HashMap<String, Integer>();
+        Map<String, Integer> resultCount = new TreeMap<String, Integer>();
         for (int i = 0; i < last12Month.length; i++) {
             String monthDate = last12Month[i];
             String[] yearMonth = monthDate.split("-");
@@ -527,7 +527,7 @@ public class ApiController extends BaseController {
         }*/
         //构造测试数据
         String[] last12Month = DateUtil.getLast12Months();
-        Map<String, Integer> resultCount = new HashMap<String, Integer>();
+        Map<String, Integer> resultCount = new TreeMap<String, Integer>();
         for (int i = 0; i < last12Month.length; i++) {
             resultCount.put(last12Month[i], Integer.valueOf(new Random().nextInt(1000)));
         }
@@ -540,11 +540,11 @@ public class ApiController extends BaseController {
     @GetMapping("perMonthSchoolCount")
 //    @RequiresPermissions("count:perMonthNetClassCount")
     public FebsResponse getPerMonthSchoolCount(QueryRequest request, Integer provinceId, Integer cityDeptId, Integer countryDeptId) {
-        /*Map<String, Object> resultCount = new HashMap<String, Object>();
+        /*Map<String, Object> resultCount = new TreeMap<String, Object>();
         resultCount = this.schoolService.getLast12MonthSchoolCount(provinceId,cityDeptId,countryDeptId);*/
         //构造测试数据
         String[] last12Month = DateUtil.getLast12Months();
-        Map<String, Integer> resultCount = new HashMap<String, Integer>();
+        Map<String, Integer> resultCount = new TreeMap<String, Integer>();
         for (int i = 0; i < last12Month.length; i++) {
             resultCount.put(last12Month[i], Integer.valueOf(new Random().nextInt(1000)));
         }
@@ -590,7 +590,7 @@ public class ApiController extends BaseController {
     }
 
     /**
-     * 区域开课、资源、学生数量折线图统计
+     * 区域开课、资源、学生数量柱状图统计
      * @return
      */
     @GetMapping("getAllCityData")

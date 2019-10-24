@@ -55,6 +55,8 @@
               ) pi ON ymv.year_month = pi.yearMonth
         GROUP BY
             ymv.year_month
+        order by
+            ymv.year_month asc
     </select>
 
 </mapper>

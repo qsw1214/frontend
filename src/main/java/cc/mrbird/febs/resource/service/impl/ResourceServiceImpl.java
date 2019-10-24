@@ -15,11 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -196,7 +192,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 
 	@Override
 	public Map<String, Integer> getResourceCountEveryMonth(Integer deptId) {
-		Map<String, Integer> map = new HashMap<String, Integer>();
+		Map<String, Integer> map = new TreeMap<String, Integer>();
 		Calendar cale = Calendar.getInstance();  	
         int year = cale.get(Calendar.YEAR);  
         int month = cale.get(Calendar.MONTH);

@@ -6,9 +6,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * 时间工具类
@@ -116,5 +114,16 @@ public class DateUtil {
         }
 
         System.out.println("2019-10-11".substring(0,7));
+
+        Map<String,Integer> map = new TreeMap<String,Integer>();
+        map.put("2019-10",20);
+        map.put("2018-02",22);
+        map.put("2019-11",22);
+        Set<String> keySet = map.keySet();
+        Iterator<String> iter = keySet.iterator();
+        while (iter.hasNext()) {
+            String key = iter.next();
+            System.out.println(key + ":" + map.get(key));
+        }
     }
 }
