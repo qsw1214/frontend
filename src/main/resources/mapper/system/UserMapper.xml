@@ -73,6 +73,12 @@
         WHERE  d.dept_name = #{deptName}
     </select>
 
+    <select id="getUserCountOfSchool" resultType="integer">
+        SELECT count(1) FROM t_user u
+            LEFT JOIN t_dept d ON (u.dept_id = d.dept_id)
+        WHERE  u.school_id = #{schoolId} and d.role_name = #{roleName}
+    </select>
+
     <select id="findByName" parameterType="string" resultType="user">
         SELECT
         u.user_id userId,

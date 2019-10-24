@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.validation.constraints.NotBlank;
 
+import com.wuwenze.poi.annotation.ExcelField;
 import lombok.Data;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -170,4 +171,15 @@ public class School {
     @TableField( "belongId")
     private Integer belongId;
 
+    @ExcelField(value = "教师总数")
+    @TableField(exist = false)
+    private Integer teacherCount;
+
+    @ExcelField(value = "学生总数")
+    @TableField(exist = false)
+    private Integer studentCount;
+
+    @ExcelField(value = "教室总数")
+    @TableField(exist = false)
+    private Integer classroomCount;
 }

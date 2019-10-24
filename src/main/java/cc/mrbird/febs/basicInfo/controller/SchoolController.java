@@ -5,6 +5,7 @@ import cc.mrbird.febs.basicInfo.service.IClassInfoService;
 import cc.mrbird.febs.basicInfo.service.IClassroomInfoService;
 import cc.mrbird.febs.basicInfo.service.IDeviceInfoService;
 import cc.mrbird.febs.common.annotation.Log;
+import cc.mrbird.febs.common.utils.CommonConstant;
 import cc.mrbird.febs.common.utils.Tools;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
@@ -18,6 +19,7 @@ import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IDeptService;
 import cc.mrbird.febs.system.service.IUserDeptService;
 
+import cc.mrbird.febs.system.service.IUserService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
@@ -67,6 +69,9 @@ public class SchoolController extends BaseController {
     @Autowired
     private IUserDeptService userDeptService;
 
+    @Autowired
+    private IUserService userService;
+
     @GetMapping("school")
     @ResponseBody
     @RequiresPermissions("school:view")
@@ -80,6 +85,17 @@ public class SchoolController extends BaseController {
     public FebsResponse schoolList(QueryRequest request, School school) {
 //    	User currentUser = getCurrentUser();
 //    	school.setSchoolId(currentUser.getSchoolId());
+        IPage<School>  schoolPages = this.schoolService.findSchools(request, school);
+        List<School> schoolList = schoolPages.getRecords();
+        for (int i = 0 ; i < schoolList.size() ; i++){
+            School schoolTemp = schoolList.get(i);
+            Integer teacherCount = this.userService.getUserCountOfSchool(schoolTemp.getSchoolId(), CommonConstant.ROLE_NAME_TEACHER);
+            Integer studentCount = this.userService.getUserCountOfSchool(schoolTemp.getSchoolId(), CommonConstant.ROLE_NAME_STUDENT);
+            Integer classroomCount = this.classroomInfoService.findClassroomByMainSchoolId(schoolTemp.getSchoolId()).size();
+            schoolTemp.setTeacherCount(teacherCount);
+            schoolTemp.setStudentCount(studentCount);
+            schoolTemp.setClassroomCount(classroomCount);
+        }
         Map<String, Object> dataTable = getDataTable(this.schoolService.findSchools(request, school));
         return new FebsResponse().success().data(dataTable);
     }

@@ -213,4 +213,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return this.baseMapper.getTeacherListBySchoolId(page, schoolId);
     }
 
+    public Integer getUserCountOfSchool(Integer schoolId,String roleName){
+        return this.baseMapper.getUserCountOfSchool(schoolId,roleName);
+    }
+
 }

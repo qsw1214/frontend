@@ -49,4 +49,6 @@ public interface UserMapper extends BaseMapper<User> {
 
     /*根据id显示用户详情*/
     User getUserInfo(Long userId);
+
+    Integer getUserCountOfSchool(@Param("schoolId") Integer schoolId,@Param("roleName") String roleName);
 }

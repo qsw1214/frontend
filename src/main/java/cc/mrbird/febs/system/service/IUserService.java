@@ -126,4 +126,11 @@ public interface IUserService extends IService<User> {
 
     IPage<User> getTeacherListBySchoolId(Integer schoolId, QueryRequest request);
 
+    /**
+     * 根据学校主键和角色名统计用户
+     * @param schoolId
+     * @param roleName
+     * @return
+     */
+    Integer getUserCountOfSchool(Integer schoolId,String roleName);
 }
