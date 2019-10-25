@@ -60,7 +60,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     @Override
     public List<Dept> selectDepts() {
         LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.lt(Dept::getDeptGrade, maxDeptGrade);
+        queryWrapper.le(Dept::getDeptGrade, maxDeptGrade);
         List<Dept> depts = this.baseMapper.selectList(queryWrapper);
         return depts;
     }

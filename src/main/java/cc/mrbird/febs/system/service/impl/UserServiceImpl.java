@@ -199,7 +199,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     public User getUserInfo(Long userId){
-        return this.baseMapper.getUserInfo(userId);
+        User users=this.baseMapper.getUserInfo(userId);
+        String[] roleNames=users.getRoleName().split(",");
+        String[] deptIds= users.getDeptIds().split(",");
+        String[] roleId=users.getRoleId().split(",");
+        Map map=new HashMap();
+        Map map1=new HashMap();
+        Map map2=new HashMap();
+        for(int i=0;i<deptIds.length;i++){
+            map.put(roleNames[i],roleNames[i]);
+            map1.put(deptIds[i],deptIds[i]);
+            map2.put(roleId[i],roleId[i]);
+        }
+        users.setRoleName(map.keySet().toString());
+        users.setDeptIds(map1.keySet().toString());
+        users.setRoleId(map2.keySet().toString());
+        return users;
     }
 
     public IPage<User> getTeacherListBySchoolId(Integer schoolId,QueryRequest request){

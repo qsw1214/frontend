@@ -177,7 +177,7 @@ public class User implements Serializable {
     private String roleId;
 
     /**
-     * 学校 ID
+     * 学校 ID   无用20191025
      */
     @TableField("SCHOOL_ID")
     private Integer schoolId;

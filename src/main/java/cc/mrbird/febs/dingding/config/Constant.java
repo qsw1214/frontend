@@ -76,7 +76,7 @@ public class Constant {
     /**
      * 通讯录回调host
      */
-    public static final String CALLBACK_URL_ORG = "http://1311c4d0.cpolar.io/org";
+    public static final String CALLBACK_URL_ORG = "https://71c11100.cpolar.io/org";
 
 
 }

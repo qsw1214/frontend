@@ -68,11 +68,13 @@
     </select>
 
     <select id="getUserCountOfSchool" resultType="integer">
-        SELECT count(1) FROM
+        SELECT count(*) FROM
         t_user u
         LEFT JOIN t_user_role ur ON (u.user_id = ur.user_id)
         LEFT JOIN t_role r ON r.role_id = ur.role_id
-        WHERE  u.school_id = #{schoolId} and r.role_name = #{roleName}
+        LEFT JOIN t_user_dept ud ON (u.user_id = ud.user_id)
+		LEFT JOIN jcc_school_info school ON (school.dept_id = ud.dept_id)
+        WHERE  school.school_id = #{schoolId} and r.role_name = #{roleName}
     </select>
 
     <select id="findByName" parameterType="string" resultType="user">

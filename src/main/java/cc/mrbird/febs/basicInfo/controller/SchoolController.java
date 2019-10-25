@@ -76,7 +76,17 @@ public class SchoolController extends BaseController {
     @ResponseBody
     @RequiresPermissions("school:view")
     public FebsResponse getAllSchools(School school) {
-        return new FebsResponse().success().data(schoolService.findSchools(school));
+        List<School>  schoolList = this.schoolService.findSchools(school);
+        for (int i = 0 ; i < schoolList.size() ; i++){
+            School schoolTemp = schoolList.get(i);
+            Integer teacherCount = this.userService.getUserCountOfSchool(schoolTemp.getSchoolId(), CommonConstant.ROLE_NAME_TEACHER);
+            Integer studentCount = this.userService.getUserCountOfSchool(schoolTemp.getSchoolId(), CommonConstant.ROLE_NAME_STUDENT);
+            Integer classroomCount = this.classroomInfoService.findClassroomByMainSchoolId(schoolTemp.getSchoolId()).size();
+            schoolTemp.setTeacherCount(teacherCount);
+            schoolTemp.setStudentCount(studentCount);
+            schoolTemp.setClassroomCount(classroomCount);
+        }
+        return new FebsResponse().success().data(schoolList);
     }
 
     @GetMapping("school/list")
@@ -96,7 +106,7 @@ public class SchoolController extends BaseController {
             schoolTemp.setStudentCount(studentCount);
             schoolTemp.setClassroomCount(classroomCount);
         }
-        Map<String, Object> dataTable = getDataTable(this.schoolService.findSchools(request, school));
+        Map<String, Object> dataTable = getDataTable(schoolPages);
         return new FebsResponse().success().data(dataTable);
     }
 

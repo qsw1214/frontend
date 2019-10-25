@@ -252,6 +252,7 @@ public class OrgController {
                         user.setUsername(map.getName());
                         user.setPassword(MD5Util.encrypt("", "123456"));
                         user.setAvatar(map.getAvatar());
+                        user.setMobile(map.getMobile());
                         user.setBoss(map.isBoss());
                         user.setStatus("1");
                         user.setCreateTime(new Date());
@@ -304,6 +305,7 @@ public class OrgController {
                     user.setUsername(map.getName());
                     user.setPassword(MD5Util.encrypt("", "123456"));
                     user.setAvatar(map.getAvatar());
+                    user.setMobile(map.getMobile());
                     user.setBoss(map.isBoss());
                     user.setStatus("1");
                     user.setModifyTime(new Date());
