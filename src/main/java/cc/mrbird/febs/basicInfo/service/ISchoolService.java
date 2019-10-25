@@ -3,6 +3,7 @@ package cc.mrbird.febs.basicInfo.service;
 import cc.mrbird.febs.basicInfo.entity.School;
 
 import cc.mrbird.febs.common.entity.QueryRequest;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -78,4 +79,5 @@ public interface ISchoolService extends IService<School> {
     Integer getSchoolCount(Integer provinceId, Integer cityDeptId, Integer countryDeptId);
 
     Map<String,Object>  getLast12MonthSchoolCount(Integer provinceId, Integer cityDeptId, Integer countryDeptId);
+
 }

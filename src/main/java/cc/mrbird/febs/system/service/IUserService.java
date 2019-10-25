@@ -114,13 +114,6 @@ public interface IUserService extends IService<User> {
     /*删除离职用户*/
     void deleteUser(Long userId);
 
-    /**
-     * 通过部门统计用户数量
-     * @param deptName
-     * @return
-     */
-    Integer countUserNumByDept(String deptName);
-
     /*根据id显示用户详情*/
     User getUserInfo(Long userId);
 
@@ -133,4 +126,5 @@ public interface IUserService extends IService<User> {
      * @return
      */
     Integer getUserCountOfSchool(Integer schoolId,String roleName);
+
 }

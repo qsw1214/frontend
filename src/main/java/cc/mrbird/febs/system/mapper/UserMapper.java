@@ -42,13 +42,11 @@ public interface UserMapper extends BaseMapper<User> {
     /*删除离职用户*/
     void deleteUser(Long userId);
 
-
-    Integer countUserNumByDept(String deptName);
-
     IPage<User>  getTeacherListBySchoolId(Page page, @Param("schoolId") Integer schoolId);
 
     /*根据id显示用户详情*/
     User getUserInfo(Long userId);
 
     Integer getUserCountOfSchool(@Param("schoolId") Integer schoolId,@Param("roleName") String roleName);
+
 }

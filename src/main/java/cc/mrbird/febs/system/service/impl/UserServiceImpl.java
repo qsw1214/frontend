@@ -198,11 +198,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         userRoleService.saveBatch(userRoles);
     }
 
-    public Integer countUserNumByDept(String deptName){
-        // TODO 设置查询条件
-        return this.baseMapper.countUserNumByDept(deptName);
-    }
-
     public User getUserInfo(Long userId){
         return this.baseMapper.getUserInfo(userId);
     }
@@ -216,5 +211,4 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public Integer getUserCountOfSchool(Integer schoolId,String roleName){
         return this.baseMapper.getUserCountOfSchool(schoolId,roleName);
     }
-
 }

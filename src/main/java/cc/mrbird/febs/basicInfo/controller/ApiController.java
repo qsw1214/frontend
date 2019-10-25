@@ -24,6 +24,7 @@ import cc.mrbird.febs.system.vo.AreaDataCountVO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -483,13 +484,24 @@ public class ApiController extends BaseController {
         return new FebsResponse().num(count).success();
     }
 
-    /**
-     * 根据省市区学校条件进行教师数量统计
-     */
     @GetMapping("teacherCount")
 //    @RequiresPermissions("count:teacherCount")
-    public FebsResponse getTeacherCount(QueryRequest request, Integer provinceId, Integer cityDeptId, Integer countryDeptId,Integer schoolDeptId) {
-        Integer count = 1000;
+    public FebsResponse getTeacherCount(QueryRequest request, Long provinceId, Long cityDeptId, Long countryDeptId,Integer schoolDeptId) {
+//        Integer count = 1000;
+        //根据省市区条件判断其下有多少所学校，再统计学校的对应教师的人数；
+        Integer count = 0;
+        if(schoolDeptId != null && schoolDeptId != 0){
+           count = this.userService.getUserCountOfSchool(schoolDeptId,CommonConstant.ROLE_NAME_TEACHER);
+        }else{
+            School school = new School();
+            school.setProvinceDeptId(provinceId);
+            school.setCityDeptId(cityDeptId);
+            school.setCountryDeptId(countryDeptId);
+            List<School> schoolLists = this.schoolService.findSchools(school);
+            for (int i = 0 ; i < schoolLists.size() ; i++){
+                count += this.userService.getUserCountOfSchool(schoolLists.get(i).getSchoolId(),CommonConstant.ROLE_NAME_TEACHER);
+            }
+        }
         return new FebsResponse().num(count).success();
     }
 
@@ -498,8 +510,20 @@ public class ApiController extends BaseController {
      */
     @GetMapping("studentCount")
 //    @RequiresPermissions("count:studentCount")
-    public FebsResponse getStudentCount(QueryRequest request, Integer provinceId, Integer cityDeptId, Integer countryDeptId,Integer schoolDeptId) {
-        Integer count = 2000;
+    public FebsResponse getStudentCount(QueryRequest request, Long provinceId, Long cityDeptId, Long countryDeptId,Integer schoolDeptId) {
+        Integer count = 0;
+        if(schoolDeptId != null && schoolDeptId != 0){
+            count = this.userService.getUserCountOfSchool(schoolDeptId,CommonConstant.ROLE_NAME_STUDENT);
+        }else{
+            School school = new School();
+            school.setProvinceDeptId(provinceId);
+            school.setCityDeptId(cityDeptId);
+            school.setCountryDeptId(countryDeptId);
+            List<School> schoolLists = this.schoolService.findSchools(school);
+            for (int i = 0 ; i < schoolLists.size() ; i++){
+                count += this.userService.getUserCountOfSchool(schoolLists.get(i).getSchoolId(),CommonConstant.ROLE_NAME_STUDENT);
+            }
+        }
         return new FebsResponse().num(count).success();
     }
 
