@@ -35,4 +35,11 @@ public interface ClassroomInfoMapper extends BaseMapper<ClassroomInfo> {
 	IPage<ClassroomInfo> findClassroomInfosByDept(Page<?> page, @Param("classroomInfo") ClassroomInfo classroomInfo,
 			@Param("deptId") Long deptId);
 
+	/**
+	 * 查询班级所有方法
+	 * @param page
+	 * @param classroomInfo
+	 * @return
+	 */
+    IPage<ClassroomInfo> selectClassroomInfos(Page<ClassroomInfo> page,@Param("classroomInfo") ClassroomInfo classroomInfo);
 }

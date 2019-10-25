@@ -1,11 +1,14 @@
 package cc.mrbird.febs.basicInfo.service.impl;
 
 import cc.mrbird.febs.basicInfo.entity.ClassroomInfo;
+import cc.mrbird.febs.basicInfo.entity.SchoolTimetable;
 import cc.mrbird.febs.basicInfo.mapper.ClassroomInfoMapper;
 import cc.mrbird.febs.basicInfo.service.IClassroomInfoService;
+import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
 
 import cc.mrbird.febs.common.utils.LiveRadioReqUtil;
+import cc.mrbird.febs.common.utils.SortUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
@@ -40,21 +43,9 @@ public class ClassroomInfoServiceImpl extends ServiceImpl<ClassroomInfoMapper, C
 
     @Override
     public IPage<ClassroomInfo> findClassroomInfos(QueryRequest request, ClassroomInfo classroomInfo) {
-        LambdaQueryWrapper<ClassroomInfo> queryWrapper = new LambdaQueryWrapper<>();
-        if (classroomInfo.getSchoolId() != null) {
-            queryWrapper.eq(ClassroomInfo::getSchoolId, classroomInfo.getSchoolId());
-        }
-        if (StringUtils.isNotBlank(classroomInfo.getSubject())) {
-            queryWrapper.eq(ClassroomInfo::getSubject, classroomInfo.getSubject());
-        }
-        if (StringUtils.isNotBlank(classroomInfo.getGrade())) {
-            queryWrapper.eq(ClassroomInfo::getGrade, classroomInfo.getGrade());
-        }
-        if (classroomInfo.getState() != null) {
-            queryWrapper.eq(ClassroomInfo::getState, classroomInfo.getState());
-        }
         Page<ClassroomInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
-        return this.page(page, queryWrapper);
+        SortUtil.handlePageSort(request, page, "id", FebsConstant.ORDER_ASC, false);
+        return this.baseMapper.selectClassroomInfos(page, classroomInfo);
     }
 
     @Override

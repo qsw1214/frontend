@@ -13,6 +13,7 @@
         <result column="state" jdbcType="INTEGER" property="state"/>
         <result column="subject" jdbcType="VARCHAR" property="subject"/>
         <result column="grade" jdbcType="VARCHAR" property="grade"/>
+        <result column="schoolName" jdbcType="VARCHAR" property="schoolName"/>
     </resultMap>
 
     <select id = "getClassroomInfoByCityCountry" resultType="cc.mrbird.febs.basicInfo.entity.ClassroomInfo" parameterType = "map">
@@ -61,5 +62,24 @@
           <if test ="classroomInfo.grade != null">
                 and grade = #{classroomInfo.grade}
           </if>
+    </select>
+
+    <select id="selectClassroomInfos" parameterType="cc.mrbird.febs.basicInfo.entity.ClassroomInfo" resultType="cc.mrbird.febs.basicInfo.entity.ClassroomInfo">
+        select
+        jci.id,
+        jci.school_id,
+        jci.location,
+        jci.contain_num,
+        jci.introduce,
+        jci.url,jci.state,
+        jci.subject,
+        jci.grade,
+        jsi.school_name
+        from jcc_classroom_info jci
+        LEFT JOIN jcc_school_info jsi on (jci.school_id = jsi.school_id)
+        WHERE 1=1
+        <if test="classroomInfo.state != null and classroomInfo.state != ''">
+            AND jci.state = #{classroomInfo.state}
+        </if>
     </select>
 </mapper>

@@ -25,6 +25,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @author Psy
@@ -52,6 +55,7 @@ public class ViewController extends BaseController {
 
     @Autowired
     private ThirdAppAbutmentService thirdAppAbutmentService;
+
 
     //==============================================START==================================================
 
@@ -195,9 +199,19 @@ public class ViewController extends BaseController {
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/schoolTimetable/update/{courseId}")
     @RequiresPermissions("schoolTimetable:update")
-    public String basicInfoSchoolTimetableUpdate(@PathVariable Integer courseId, Model model) {
+    public String basicInfoSchoolTimetableUpdate(@PathVariable Integer courseId, Model model) throws ParseException {
         resolveSchoolTimetableModel(courseId, model, false);
         return FebsUtil.view("basicInfo/schoolTimetable/schoolTimetableUpdate");
+    }
+
+    /**
+     * 跳转到预导出接口，让用户选择学校和班级
+     * @return
+     */
+    @GetMapping(FebsConstant.VIEW_PREFIX + "basicInfo/schoolTimetable/toExcel")
+    public String toSchoolTimetableExcel() {
+
+        return FebsUtil.view("basicInfo/schoolTimetable/schoolTimetableExportExcel");
     }
 
     //==============================================END==================================================
@@ -264,10 +278,9 @@ public class ViewController extends BaseController {
             model.addAttribute("buytTime", DateUtil.getDateFormat(deviceInfo.getBuytTime(), DateUtil.FULL_TIME_PATTERN_NO_DETAIL));
     }
 
-    private void resolveSchoolTimetableModel(Integer courseId, Model model, Boolean transform) {
+    private void resolveSchoolTimetableModel(Integer courseId, Model model, Boolean transform) throws ParseException {
         SchoolTimetable schoolTimetable = schoolTimetableService.selectSchooltimetableInfo(courseId);
         model.addAttribute("schoolTimetable", schoolTimetable);
-
         if (schoolTimetable.getBeginDate() != null)
             model.addAttribute("beginDate", DateUtil.getDateFormat(schoolTimetable.getBeginDate(), DateUtil.FULL_TIME_PATTERN_NO_DETAIL));
     }
