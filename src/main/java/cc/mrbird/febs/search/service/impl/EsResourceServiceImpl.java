@@ -3,6 +3,7 @@ package cc.mrbird.febs.search.service.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 
@@ -55,7 +56,6 @@ public class EsResourceServiceImpl implements IEsResourceService {
 	@Resource
 	private ElasticsearchTemplate elasticsearchTemplate;
 
-
 	@Override
 	public int importAll() {
 		resourceRepository.deleteAll();
@@ -69,10 +69,13 @@ public class EsResourceServiceImpl implements IEsResourceService {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public EsResource get(Long id) {
-		return resourceRepository.findById(id).get();
+		Optional<EsResource> op = resourceRepository.findById(id);
+		if (op.isPresent())
+			return op.get();
+		return null;
 	}
 
 	@Override
@@ -95,7 +98,7 @@ public class EsResourceServiceImpl implements IEsResourceService {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public EsResource save(EsResource esResource) {
 		return resourceRepository.save(esResource);
@@ -113,7 +116,7 @@ public class EsResourceServiceImpl implements IEsResourceService {
 			resourceRepository.deleteAll(esResourceList);
 		}
 	}
-	
+
 	@Override
 	public Page<EsResource> search(String keyword, Integer pageNum, Integer pageSize) {
 		Pageable pageable = PageRequest.of(pageNum, pageSize);
@@ -125,7 +128,7 @@ public class EsResourceServiceImpl implements IEsResourceService {
 			Integer sort) {
 		Pageable pageable = PageRequest.of(pageNum, pageSize);
 		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
-		
+
 		// 分页
 		nativeSearchQueryBuilder.withPageable(pageable);
 		// 过滤
@@ -181,11 +184,11 @@ public class EsResourceServiceImpl implements IEsResourceService {
 			// 按相关度
 			nativeSearchQueryBuilder.withSort(SortBuilders.scoreSort().order(SortOrder.DESC));
 		}
-		
-		//String[] fields = {"resourceId","resourceName","creator",};
-		//SourceFilter sf = new FetchSourceFilter(fields, null);
-		//nativeSearchQueryBuilder.withSourceFilter(sf);
-		NativeSearchQuery searchQuery = nativeSearchQueryBuilder.build();		
+
+		// String[] fields = {"resourceId","resourceName","creator",};
+		// SourceFilter sf = new FetchSourceFilter(fields, null);
+		// nativeSearchQueryBuilder.withSourceFilter(sf);
+		NativeSearchQuery searchQuery = nativeSearchQueryBuilder.build();
 		// LOGGER.info("DSL:{}", searchQuery.getQuery().toString());
 		return resourceRepository.search(searchQuery);
 	}
@@ -193,9 +196,9 @@ public class EsResourceServiceImpl implements IEsResourceService {
 	@Override
 	public Page<EsResource> recommend(Long id, Integer pageNum, Integer pageSize) {
 		Pageable pageable = PageRequest.of(pageNum, pageSize);
-		List<EsResource> esResourceList = esResourceDao.getAllEsResourceList(id);
-		if (esResourceList.size() > 0) {
-			EsResource esResource = esResourceList.get(0);
+		Optional<EsResource> op = resourceRepository.findById(id);
+		if (op.isPresent()) {
+			EsResource esResource = op.get();
 			String keyword = esResource.getResourceName();
 			Integer gradeId = esResource.getGradeId();
 			Integer subjectId = esResource.getSubjectId();
@@ -205,13 +208,18 @@ public class EsResourceServiceImpl implements IEsResourceService {
 			filterFunctionBuilders.add(new FunctionScoreQueryBuilder.FilterFunctionBuilder(
 					QueryBuilders.matchQuery("resourceName", keyword), ScoreFunctionBuilders.weightFactorFunction(8)));
 			filterFunctionBuilders.add(new FunctionScoreQueryBuilder.FilterFunctionBuilder(
-					QueryBuilders.matchQuery("keywords", keyword), ScoreFunctionBuilders.weightFactorFunction(2)));
-			filterFunctionBuilders.add(new FunctionScoreQueryBuilder.FilterFunctionBuilder(
-					QueryBuilders.matchQuery("gradeId", gradeId), ScoreFunctionBuilders.weightFactorFunction(10)));
-			filterFunctionBuilders.add(new FunctionScoreQueryBuilder.FilterFunctionBuilder(
-					QueryBuilders.matchQuery("subjectId", subjectId), ScoreFunctionBuilders.weightFactorFunction(10)));
-			filterFunctionBuilders.add(new FunctionScoreQueryBuilder.FilterFunctionBuilder(
-					QueryBuilders.matchQuery("categoryId", categoryId), ScoreFunctionBuilders.weightFactorFunction(6)));
+					QueryBuilders.matchQuery("keywords", keyword), ScoreFunctionBuilders.weightFactorFunction(6)));
+			if (subjectId != null)
+				filterFunctionBuilders.add(new FunctionScoreQueryBuilder.FilterFunctionBuilder(
+						QueryBuilders.matchQuery("gradeId", gradeId), ScoreFunctionBuilders.weightFactorFunction(4)));
+			if (subjectId != null)
+				filterFunctionBuilders.add(new FunctionScoreQueryBuilder.FilterFunctionBuilder(
+						QueryBuilders.matchQuery("subjectId", subjectId),
+						ScoreFunctionBuilders.weightFactorFunction(4)));
+			if (categoryId != null)
+				filterFunctionBuilders.add(new FunctionScoreQueryBuilder.FilterFunctionBuilder(
+						QueryBuilders.matchQuery("categoryId", categoryId),
+						ScoreFunctionBuilders.weightFactorFunction(4)));
 			FunctionScoreQueryBuilder.FilterFunctionBuilder[] builders = new FunctionScoreQueryBuilder.FilterFunctionBuilder[filterFunctionBuilders
 					.size()];
 			filterFunctionBuilders.toArray(builders);
@@ -221,16 +229,19 @@ public class EsResourceServiceImpl implements IEsResourceService {
 			builder.withQuery(functionScoreQueryBuilder);
 			builder.withPageable(pageable);
 			NativeSearchQuery searchQuery = builder.build();
-			LOGGER.info("DSL:{}", searchQuery.getQuery().toString());
+			// LOGGER.info("DSL:{}", searchQuery.getQuery().toString());
 			return resourceRepository.search(searchQuery);
 		}
-		return new PageImpl<>(null);
+		return new PageImpl<EsResource>(new ArrayList<EsResource>());
 	}
 
 	/**
 	 * 默认使用中文ik_smart分词
-	 * @param index 索引index
-	 * @param text 需要被分析的词语
+	 * 
+	 * @param index
+	 *            索引index
+	 * @param text
+	 *            需要被分析的词语
 	 * @return
 	 */
 	@Override
@@ -251,8 +262,11 @@ public class EsResourceServiceImpl implements IEsResourceService {
 
 	/**
 	 * 搜索建议
-	 * @param clazz 指定的索引index实体类类型
-	 * @param text 搜索建议关键词
+	 * 
+	 * @param clazz
+	 *            指定的索引index实体类类型
+	 * @param text
+	 *            搜索建议关键词
 	 * @return
 	 */
 	@Override
