@@ -7,7 +7,9 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.resource.entity.Resource;
 import cc.mrbird.febs.resource.service.IResourceService;
+import cc.mrbird.febs.system.entity.Dict;
 import cc.mrbird.febs.system.entity.User;
+import cc.mrbird.febs.system.service.IDictService;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.google.common.collect.Lists;
@@ -50,6 +52,8 @@ public class ResourceController extends BaseController {
 
     @Autowired
     private IResourceService resourceService;
+    @Autowired
+    private IDictService dictService;
 
     @GetMapping("resource")
     @ResponseBody
@@ -145,6 +149,7 @@ public class ResourceController extends BaseController {
     @RequiresPermissions("resource:export")
     public void export(QueryRequest queryRequest, Resource resource, HttpServletResponse response) throws FebsException {
         try {
+        	queryRequest.setPageSize(1);
             List<Resource> resources = this.resourceService.findResources(queryRequest, resource).getRecords();
             ExcelKit.$Export(Resource.class, response).downXlsx(resources, false);
         } catch (Exception e) {
@@ -156,15 +161,12 @@ public class ResourceController extends BaseController {
     
     @PostMapping("resource/excel")
     @RequiresPermissions("resource:import")
-    public FebsResponse addVideo(@RequestParam("file") MultipartFile file) throws FebsException {
+    public FebsResponse addResource(@RequestParam("file") MultipartFile file) throws FebsException {
         try {
         	User user = super.getCurrentUser();
         	String username = user.getUsername();
         	String avatar = user.getAvatar();
-        	Integer schoolId = user.getSchoolId();
         	Date now = new Date();
-        	if(schoolId == null)
-        		return new FebsResponse().fail().data("请完善用户学校信息");
      	
     	    long beginMillis = System.currentTimeMillis();
     	    List<Resource> successList = Lists.newArrayList();
@@ -197,6 +199,8 @@ public class ResourceController extends BaseController {
         		return new FebsResponse().fail().data(errorList);
         	}      	
         } catch (Exception e) {
+        	System.out.println(e);
+        	log.error("解析失败:", e);
             throw new FebsException("解析失败");
         }
     }
@@ -215,4 +219,5 @@ public class ResourceController extends BaseController {
 		 }
     	 return new FebsResponse().success().data(resourceService.getResourceCountEveryMonth(deptId));
     }
+    
 }

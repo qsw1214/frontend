@@ -13,8 +13,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.wuwenze.poi.annotation.Excel;
 import com.wuwenze.poi.annotation.ExcelField;
 
-import cc.mrbird.febs.common.options.TypeOption;
-
 /**
  *  Entity
  *
@@ -96,7 +94,7 @@ public class Resource {
      */
     @TableField("file_type")
     @Size(max = 30, message = "{noMoreThan}")
-    @ExcelField(value="资源类型", options = TypeOption.class, maxLength = 30)
+    @ExcelField(value="资源类型", maxLength = 30)
     private String fileType;
 
     /**
