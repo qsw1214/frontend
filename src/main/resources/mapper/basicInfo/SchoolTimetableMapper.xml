@@ -25,6 +25,8 @@
         <result column="location" jdbcType="CHAR" property="location"/>
         <result column="state" jdbcType="INTEGER" property="state"/>
         <result column="url" jdbcType="CHAR" property="url"/>
+        <result column="schoolIds" jdbcType="VARCHAR" property="schoolIds"/>
+        <result column="schoolNames" jdbcType="VARCHAR" property="schoolNames"/>
     </resultMap>
 
     <sql id="findSchoolTimetableDetailSql">
@@ -33,11 +35,14 @@
         d.duration,d.grade,d.section,d.subject,d.term,d.week,d.user_name,
         u.user_id,u.username,
         s.school_id,s.school_name,
+        GROUP_CONCAT(s.school_id) schoolIds,
+        GROUP_CONCAT(s.school_name) schoolNames,
         c.class_id,c.class_name,
         cr.id classroom_id,cr.location,cr.state,cr.url
         FROM
         jcc_school_timetable d
-        LEFT JOIN jcc_school_info s ON (s.school_id = d.school_id)
+        LEFT JOIN jcc_timetable_relate_school jtrs ON (d.course_id = jtrs.course_id)
+        LEFT JOIN jcc_school_info s ON (s.school_id = jtrs.school_id)
         LEFT JOIN jcc_class_info c ON (c.class_id = d.class_id)
         LEFT JOIN jcc_classroom_info cr ON (cr.id = d.classroom_id)
         LEFT JOIN t_user u ON (u.user_id = d.user_id)
@@ -57,6 +62,7 @@
         <if test="schoolTimetable.week != null and schoolTimetable.week != ''">
             AND d.week = #{schoolTimetable.week}
         </if>
+        GROUP BY d.course_id
     </sql>
     <select id="findSchoolTimetables" parameterType="cc.mrbird.febs.basicInfo.entity.SchoolTimetable" resultMap="schoolTimetableMap">
         <include refid="findSchoolTimetableDetailSql"/>

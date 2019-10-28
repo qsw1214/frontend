@@ -27,8 +27,9 @@ public class SchoolTimetable {
     @TableId(value = "course_id", type = IdType.AUTO)
     private Integer courseId;
     /**
-     * 
+     * 开课时间
      */
+    @ExcelField(value = "开课时间",maxLength = 255,dateFormat = "yyyy-MM-dd HH:mm:SS")
     @TableField("begin_date")
     private Date beginDate;
 
@@ -52,22 +53,22 @@ public class SchoolTimetable {
     @TableField(exist = false)
     private String location;
 
-    @ExcelField(value = "巡课路径",maxLength = 255)
     @TableField(exist = false)
     private String url;
 
-    @ExcelField(value = "巡课状态",maxLength = 255)
     @TableField(exist = false)
     private String state;
     /**
      * 
      */
+    @ExcelField(value = "课程名称",maxLength = 255)
     @TableField("course_name")
     private String courseName;
 
     /**
      * 
      */
+    @ExcelField(value = "上课时长",maxLength = 255)
     @TableField("duration")
     private Integer duration;
 
@@ -83,25 +84,27 @@ public class SchoolTimetable {
     @TableField("school_id")
     private Integer schoolId;
 
-    @ExcelField(value = "学校名称",maxLength = 255)
     @TableField(exist = false)
     private String schoolName;
 
     /**
      * 节次
      */
+    @ExcelField(value = "节次",maxLength = 255)
     @TableField("section")
     private String section;
 
     /**
      * 学科
      */
+    @ExcelField(value = "教学科目",maxLength = 255)
     @TableField("subject")
     private String subject;
 
     /**
      * 学期
      */
+    @ExcelField(value = "学期",maxLength = 255)
     @TableField("term")
     private String term;
 
@@ -116,8 +119,9 @@ public class SchoolTimetable {
     @TableField("user_name")
     private String username;
     /**
-     * 
+     * 星期
      */
+    @ExcelField(value = "授课教师",maxLength = 255)
     @TableField("week")
     private String week;
 
@@ -125,7 +129,14 @@ public class SchoolTimetable {
      * 学校ids
      */
     @TableField(exist = false)
+    @ExcelField(value = "学校id",maxLength = 255)
     private String schoolIds;
+
+    /**
+     * 学校名称
+     */
+    @TableField(exist = false)
+    private String schoolNames;
 
     /**
      * 班级ids
@@ -134,5 +145,6 @@ public class SchoolTimetable {
      * 学校ids
      */
     @TableField(exist = false)
+    @ExcelField(value = "班级id",maxLength = 255)
     private String classIds ;
 }

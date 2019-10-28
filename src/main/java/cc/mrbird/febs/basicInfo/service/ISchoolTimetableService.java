@@ -6,6 +6,7 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public interface ISchoolTimetableService extends IService<SchoolTimetable> {
      * @param schoolTimetable schoolTimetable
      * @return IPage<SchoolTimetable>
      */
-    IPage<SchoolTimetable> findSchoolTimetables(QueryRequest request, SchoolTimetable schoolTimetable);
+    IPage<SchoolTimetable> findSchoolTimetables(QueryRequest request, SchoolTimetable schoolTimetable) throws ParseException;
 
     /**
      * 查询（所有）

@@ -19,6 +19,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -33,7 +34,7 @@ import java.util.*;
 public class SchoolTimetableServiceImpl extends ServiceImpl<SchoolTimetableMapper, SchoolTimetable> implements ISchoolTimetableService {
 
     @Override
-    public IPage<SchoolTimetable> findSchoolTimetables(QueryRequest request, SchoolTimetable schoolTimetable) {
+    public IPage<SchoolTimetable> findSchoolTimetables(QueryRequest request, SchoolTimetable schoolTimetable) throws ParseException {
         Page<SchoolTimetable> page = new Page<>(request.getPageNum(), request.getPageSize());
         SortUtil.handlePageSort(request, page, "course_id", FebsConstant.ORDER_ASC, false);
         if(schoolTimetable.getSchoolId() != null){
@@ -71,6 +72,25 @@ public class SchoolTimetableServiceImpl extends ServiceImpl<SchoolTimetableMappe
     @Override
     public void insertSchoolTimetable(List<SchoolTimetable> schoolTimetable) {
         this.saveBatch(schoolTimetable);
+        for(SchoolTimetable schoolTimetable2:schoolTimetable){
+            String[] schoolArray = schoolTimetable2.getSchoolIds().split(StringPool.COMMA);
+            String[] classIdArray = schoolTimetable2.getClassIds().split(StringPool.COMMA);
+            Map param = new HashMap();
+            param.put("courseId",schoolTimetable2.getCourseId());
+            //循环添加学校和课程的关联表数据
+            for(int i = 0;i < schoolArray.length; i++){
+                Integer schoolId = Integer.parseInt(schoolArray[i]);
+                param.put("schoolId",schoolId);
+                this.baseMapper.insertRelateSchooltimetableInfo(param);
+            }
+            //循环添加班级和课程的关联表数据
+            for(int j = 0;j < classIdArray.length; j++){
+                Integer classId = Integer.parseInt(classIdArray[j]);
+                param.put("classId",classId);
+                this.baseMapper.insertRelateClassInfo(param);
+            }
+        }
+
        /* for(int i=0; i<schoolTimetable.size(); i++){
             schoolTimeTableService.save(schoolTimetable.get(i).get());
         }*/

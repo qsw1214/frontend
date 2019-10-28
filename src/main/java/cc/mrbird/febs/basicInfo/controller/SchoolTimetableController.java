@@ -2,6 +2,7 @@ package cc.mrbird.febs.basicInfo.controller;
 
 import cc.mrbird.febs.common.annotation.Log;
 import cc.mrbird.febs.common.controller.BaseController;
+import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
@@ -9,6 +10,7 @@ import cc.mrbird.febs.basicInfo.entity.School;
 import cc.mrbird.febs.basicInfo.entity.SchoolTimetable;
 import cc.mrbird.febs.basicInfo.service.ISchoolService;
 import cc.mrbird.febs.basicInfo.service.ISchoolTimetableService;
+import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IUserDeptService;
 
@@ -24,13 +26,17 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static cc.mrbird.febs.dingding.util.requestUtil.$params;
 
 /**
  * Controller
@@ -53,7 +59,7 @@ public class SchoolTimetableController extends BaseController {
 
 	@GetMapping("list")
 	@RequiresPermissions("schoolTimetable:view")
-	public FebsResponse schoolTimetableList(SchoolTimetable schoolTimetable, QueryRequest request) {
+	public FebsResponse schoolTimetableList(SchoolTimetable schoolTimetable, QueryRequest request) throws ParseException {
 		IPage schoolTimetables = this.schoolTimetableService.findSchoolTimetables(request, schoolTimetable);
 		Map<String, Object> dataTable = getDataTable(schoolTimetables);
 		return new FebsResponse().success().data(dataTable);
@@ -120,12 +126,22 @@ public class SchoolTimetableController extends BaseController {
 
 	@GetMapping("excel")
 	@ResponseBody
+	@RequiresPermissions("schoolTimetable:export")
 	// @RequiresPermissions("schoolTimetable:export")
-	public void export(QueryRequest queryRequest, SchoolTimetable schoolTimetable, HttpServletResponse response)
+	public void export(QueryRequest queryRequest, HttpServletRequest request, SchoolTimetable schoolTimetable, HttpServletResponse response)
 			throws FebsException {
 		try {
-			List<SchoolTimetable> schoolTimetables = this.schoolTimetableService
-					.findSchoolTimetables(queryRequest, schoolTimetable).getRecords();
+			response.setHeader("Access-Control-Allow-Origin","*");
+			Map params = $params(request);
+			List schoolTimetables = this.schoolTimetableService.findSchoolTimetables(queryRequest, schoolTimetable).getRecords();
+			for(int i = 0;i < schoolTimetables.size();i++){
+				SchoolTimetable schoolTimetable2 = (SchoolTimetable) schoolTimetables.get(i);
+				schoolTimetable2.setClassIds(String.valueOf(params.get("classIds")));
+				schoolTimetable2.setSchoolIds(String.valueOf(params.get("schoolIds")));
+				//删除原有课程表
+				schoolTimetables.remove(i);
+				schoolTimetables.add(i,schoolTimetable2);
+			}
 			ExcelKit.$Export(SchoolTimetable.class, response).downXlsx(schoolTimetables, false);
 		} catch (Exception e) {
 			String message = "导出Excel失败";
@@ -153,11 +169,6 @@ public class SchoolTimetableController extends BaseController {
 					new ExcelReadHandler<SchoolTimetable>() {
 						@Override
 						public void onSuccess(int sheetIndex, int rowIndex, SchoolTimetable entity) {
-							/*
-							 * entity.setCreator(username);
-							 * entity.setAvatar(avatar);
-							 * entity.setCreateTime(now);
-							 */
 							successList.add(entity); // 单行读取成功，加入入库队列。
 						}
 

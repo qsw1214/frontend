@@ -129,10 +129,9 @@
                     }
                 }
                 if (name === 'export') {
-                    var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
-                    params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
-                    params.pageNum = $view.find(".layui-laypage-em").next().html();
-                    febs.download(ctx + 'schoolTimetable/excel', params, '课表信息信息表.xlsx');
+                    febs.modal.open('导出课表模板', 'basicInfo/schoolTimetable/toExcel', {
+                        area: $(window).width() <= 750 ? '95%' : '50%',
+                    });
                 }
             },
             options: [{
@@ -195,7 +194,7 @@
                 url: ctx + 'schoolTimetable/list',
                 cols: [[
                     {type: 'checkbox'},
-                    {field: 'schoolName', title: '所属学校'},
+                    {field: 'schoolNames', title: '所属学校'},
                     {field: 'term', title: '学期'},
                     {field: 'subject', title: '学科'},
                     {field: 'grade', title: '所属年级'},
