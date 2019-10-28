@@ -63,6 +63,9 @@
                                      shiro:hasAnyPermissions="deviceInfo:add,deviceInfo:update,deviceInfo:export">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
+                                <button type="button" class="layui-btn layui-btn-sm" style="margin-top:10px;" id="deviceInfoUpload">
+                                    <i class="layui-icon">&#xe67c;</i>上传excel
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -90,9 +93,10 @@
     <a lay-event="del" shiro:hasPermission="deviceInfo:delete"><i class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
-    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect'], function () {
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect', 'upload'], function () {
         var $ = layui.jquery,
             laydate = layui.laydate,
+            upload = layui.upload,
             febs = layui.febs,
             form = layui.form,
             table = layui.table,
@@ -113,6 +117,24 @@
             elem: '#buytTime',
             range: true,
             trigger: 'click'
+        });
+
+        var uploadInst = upload.render({
+          elem: '#deviceInfoUpload' //绑定元素
+          ,url: '/deviceInfo/excelImport' //上传接口
+          ,accept: 'file' //允许上传的文件类型
+          ,done: function(res){
+        	  console.log(res);
+        	  if(res.code == 200){
+        		  febs.alert.success('上传成功');
+        		  $query.click();
+        	  }
+        	  else
+        		  febs.alert.error('上传失败');
+          }
+          ,error: function(){
+        	  febs.alert.warn('上传失败');
+          }
         });
 
         dropdown.render({

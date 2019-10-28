@@ -92,4 +92,16 @@ public class DeviceInfoServiceImpl extends ServiceImpl<DeviceInfoMapper, DeviceI
 		Page<DeviceInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.baseMapper.findDeviceInfosByDept(page, deviceInfo, deptId);
 	}
+
+    /**
+     * excel批量导入设备信息
+     * @param deviceInfoList
+     */
+    @Override
+    public void insertDeviceInfo(List<DeviceInfo> deviceInfoList) {
+        this.saveBatch(deviceInfoList);
+       /* for(int i=0; i<schoolTimetable.size(); i++){
+            schoolTimeTableService.save(schoolTimetable.get(i).get());
+        }*/
+    }
 }

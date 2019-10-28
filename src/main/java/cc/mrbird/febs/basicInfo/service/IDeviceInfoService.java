@@ -68,10 +68,15 @@ public interface IDeviceInfoService extends IService<DeviceInfo> {
     
     /**
 	 * 按部门查询
-	 * @param page
 	 * @param deviceInfo
 	 * @param deptId
 	 * @return
 	 */
 	IPage<DeviceInfo> findDeviceInfosByDept(QueryRequest request, DeviceInfo deviceInfo, Long deptId);
+
+    /**
+     * 导入Excel信息
+     * @param successList
+     */
+    void insertDeviceInfo(List<DeviceInfo> successList);
 }

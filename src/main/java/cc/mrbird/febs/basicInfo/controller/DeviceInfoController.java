@@ -1,5 +1,6 @@
 package cc.mrbird.febs.basicInfo.controller;
 
+import cc.mrbird.febs.basicInfo.entity.SchoolTimetable;
 import cc.mrbird.febs.common.annotation.Log;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
@@ -12,15 +13,21 @@ import cc.mrbird.febs.basicInfo.entity.School;
 import cc.mrbird.febs.basicInfo.service.IDeviceInfoService;
 import cc.mrbird.febs.basicInfo.service.ISchoolService;
 
+import com.google.common.collect.Lists;
 import com.wuwenze.poi.ExcelKit;
+import com.wuwenze.poi.handler.ExcelReadHandler;
+import com.wuwenze.poi.pojo.ExcelErrorField;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -107,7 +114,7 @@ public class DeviceInfoController extends BaseController {
         }
     }
 
-    @PostMapping("excel")
+    @GetMapping("excel")
     @RequiresPermissions("deviceInfo:export")
     public void export(QueryRequest queryRequest, DeviceInfo deviceInfo, HttpServletResponse response) throws FebsException {
         try {
@@ -119,7 +126,60 @@ public class DeviceInfoController extends BaseController {
             throw new FebsException(message);
         }
     }
-    
+
+    /**
+     * 设备管理Excel导入
+     * @param file
+     * @return
+     * @throws FebsException
+     */
+    @PostMapping("excelImport")
+    @RequiresPermissions("deviceInfo:import")
+    public FebsResponse insertDeviceInfo(@RequestParam("file") MultipartFile file) throws FebsException {
+        try {
+            User user = super.getCurrentUser();
+            String username = user.getUsername();
+            String avatar = user.getAvatar();
+            Integer schoolId = user.getSchoolId();
+            Date now = new Date();
+            if (schoolId == null)
+                return new FebsResponse().fail().data("请完善用户学校信息");
+
+            long beginMillis = System.currentTimeMillis();
+            List<DeviceInfo> successList = Lists.newArrayList();
+            List<Map<String, Object>> errorList = Lists.newArrayList();
+            ExcelKit.$Import(DeviceInfo.class).readXlsx(file.getInputStream(),
+                    new ExcelReadHandler<DeviceInfo>() {
+                        @Override
+                        public void onSuccess(int sheetIndex, int rowIndex, DeviceInfo entity) {
+                            entity.setSchoolId(user.getSchoolId());
+                            successList.add(entity); // 单行读取成功，加入入库队列。
+                        }
+
+                        @Override
+                        public void onError(int sheetIndex, int rowIndex, List<ExcelErrorField> errorFields) {
+                            // 读取数据失败，记录了当前行所有失败的数据
+                            Map<String, Object> map = new HashMap<>();
+                            map.put("sheetIndex", sheetIndex);
+                            map.put("rowIndex", rowIndex);
+                            map.put("errorFields", errorFields);
+                            errorList.add(map);
+                        }
+                    });
+            log.info("解析耗时：", (System.currentTimeMillis() - beginMillis) / 1000L);
+            // 执行successList的入库操作。
+            if (errorList.isEmpty()) {
+                this.deviceInfoService.insertDeviceInfo(successList);
+                return new FebsResponse().success().data(successList);
+            } else {
+                return new FebsResponse().fail().data(errorList);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FebsException("解析失败");
+        }
+    }
+
     /**
      * 按部门查询设备
      * @param request
