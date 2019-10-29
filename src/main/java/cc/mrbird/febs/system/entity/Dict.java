@@ -50,4 +50,9 @@ public class Dict {
     @Size(max = 100, message = "{noMoreThan}")
     private String field;
 
+    @TableField("remark")
+    @NotBlank(message = "{required}")
+    @Size(max = 100, message = "{noMoreThan}")
+    private String remark;
+
 }
