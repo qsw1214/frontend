@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotBlank;
 
 /**
  * @author MrBird
@@ -110,6 +111,12 @@ public class ViewController extends BaseController {
     @RequiresPermissions("user:add")
     public String systemUserAdd() {
         return FebsUtil.view("system/user/userAdd");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "system/user/toUpdateRoles/{userIds}")
+    public String systemUserToUpdateRoles(@NotBlank(message = "{required}") @PathVariable String userIds,Model model) {
+        model.addAttribute("userIds",userIds);
+        return FebsUtil.view("system/user/userBulkUpdate");
     }
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/user/detail/{username}")

@@ -95,6 +95,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         this.userRoleService.deleteUserRolesByUserId(list);
     }
 
+    /**
+     * 批量修改用户角色
+     * @param user user
+     */
+    @Override
+    @Transactional
+    public void bulkUpdateUser(User user) {
+        //1.先删除掉用户的角色信息
+        String[] userIds = user.getUserIds().split(StringPool.COMMA);
+        List<String> list = Arrays.asList(userIds);
+        // 删除关联角色
+        this.userRoleService.deleteUserRolesByUserId(list);
+        // 更新关联角色
+        String[] roles = user.getRoleId().split(StringPool.COMMA);
+        setbulkUserRoles(user, roles);
+    }
+
     @Override
     @Transactional
     public void updateUser(User user) {
@@ -197,6 +214,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         });
         userRoleService.saveBatch(userRoles);
     }
+
+    private void setbulkUserRoles(User user, String[] roles) {
+        String[] userIds = user.getUserIds().split(StringPool.COMMA);
+        //循环选中的用户id,一一保存
+        for(int i = 0;i < userIds.length;i++){
+            String userIdDemo = userIds[i];
+            Long userId = Long.parseLong(userIdDemo);
+            List<UserRole> userRoles = new ArrayList<>();
+            Arrays.stream(roles).forEach(roleId -> {
+                UserRole ur = new UserRole();
+                ur.setUserId(userId);
+                ur.setRoleId(Long.valueOf(roleId));
+                userRoles.add(ur);
+            });
+            userRoleService.saveBatch(userRoles);
+        }
+
+
+    }
+
 
     public User getUserInfo(Long userId){
         User users=this.baseMapper.getUserInfo(userId);

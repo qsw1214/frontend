@@ -160,6 +160,19 @@
                         });
                     }
                 }
+                if (name === 'bulkUpdateRole') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择需要修改角色的用户');
+                    } else {
+                        febs.modal.confirm('修改角色', '确定修改该用户？', function () {
+                            var userIds = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                userIds.push(item.userId)
+                            });
+                            updateRoles(userIds.join(','));
+                        });
+                    }
+                }
                 if (name === 'reset') {
                     if (!checkStatus.data.length) {
                         febs.alert.warn('请选择需要重置密码的用户');
@@ -188,7 +201,11 @@
                 name: 'delete',
                 title: '删除用户',
                 perms: 'user:delete'
-            }, {
+            },{
+                name: 'bulkUpdateRole',
+                title: '批量修改权限',
+                perms: 'user:bulkUpdateRole'
+            },{
                 name: 'reset',
                 title: '密码重置',
                 perms: 'user:password:reset'
@@ -318,5 +335,17 @@
                 $query.click();
             });
         }
+
+        function updateRoles(userIds) {
+            var currentUserId = currentUser.userId + '';
+            if (('' + userIds).split(',').indexOf(currentUserId) !== -1) {
+                febs.alert.warn('所选用户包含当前登录用户，无法修改');
+                return;
+            }
+            febs.modal.view('修改用户角色信息',ctx + 'system/user/toUpdateRoles/' + userIds, {
+                  area: $(window).width() <= 750 ? '95%' : '50%'
+            });
+        }
+
     })
 </script>

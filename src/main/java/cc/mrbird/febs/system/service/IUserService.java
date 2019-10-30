@@ -127,4 +127,5 @@ public interface IUserService extends IService<User> {
      */
     Integer getUserCountOfSchool(Integer schoolId,String roleName);
 
+    void bulkUpdateUser(User user);
 }
