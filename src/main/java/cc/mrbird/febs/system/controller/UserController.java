@@ -2,9 +2,11 @@ package cc.mrbird.febs.system.controller;
 
 import cc.mrbird.febs.common.annotation.Log;
 import cc.mrbird.febs.common.controller.BaseController;
+import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
+import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.common.utils.MD5Util;
 import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IUserDeptService;
@@ -18,12 +20,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static cc.mrbird.febs.dingding.util.requestUtil.$params;
 
 /**
  * @author MrBird
@@ -83,6 +88,27 @@ public class UserController extends BaseController {
             log.error(message, e);
             throw new FebsException(message);
         }
+    }
+
+    /**
+     * 批量修改用户角色信息
+     * @param user
+     * @param request
+     * @return
+     * @throws FebsException
+     */
+    @PostMapping("bulkUpdateUser")
+    public FebsResponse bulkUpdateUser(User user, HttpServletRequest request) throws FebsException {
+        try {
+            Map params = $params(request);
+            this.userService.bulkUpdateUser(user);
+            return new FebsResponse().success();
+        } catch (Exception e) {
+            String message = "修改权限失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+
     }
 
     @Log("修改用户")
@@ -232,4 +258,9 @@ public class UserController extends BaseController {
 		Map<String, Object> dataTable = getDataTable(this.userService.findUserDetail(user, request));
 		return new FebsResponse().success().data(dataTable);
 	}
+
+    @GetMapping("toUpdateRoles")
+    public String systemUser() {
+        return FebsUtil.view("system/user/userAdd");
+    }
 }

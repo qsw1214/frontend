@@ -222,6 +222,10 @@ public class User implements Serializable {
 
     @TableField("IS_SENIOR")
     private boolean isSenior;  //是否是高管
+
+    @TableField(exist = false)
+    @JsonSerialize(using = ToStringSerializer.class)
+    private String userIds;
     
     @TableField(exist = false)
     private String deptIds;
