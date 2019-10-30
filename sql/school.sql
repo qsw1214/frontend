@@ -794,43 +794,44 @@ CREATE TABLE `t_dict` (
   `k` varchar(30) NOT NULL COMMENT '键',
   `v` varchar(100) NOT NULL COMMENT '值',
   `field` varchar(100) NOT NULL COMMENT '字段名称',
+  `remark` varchar(25) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`dict_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of t_dict
 -- ----------------------------
-INSERT INTO `t_dict` VALUES (null, '1', '中班', 'grade');
-INSERT INTO `t_dict` VALUES (null, '2', '大班', 'grade');
-INSERT INTO `t_dict` VALUES (null, '3', '一年级', 'grade');
-INSERT INTO `t_dict` VALUES (null, '4', '二年级', 'grade');
-INSERT INTO `t_dict` VALUES (null, '5', '三年级', 'grade');
-INSERT INTO `t_dict` VALUES (null, '6', '四年级', 'grade');
-INSERT INTO `t_dict` VALUES (null, '7', '五年级', 'grade');
-INSERT INTO `t_dict` VALUES (null, '8', '六年级', 'grade');
-INSERT INTO `t_dict` VALUES (null, '9', '初一', 'grade');
-INSERT INTO `t_dict` VALUES (null, '10', '初二', 'grade');
-INSERT INTO `t_dict` VALUES (null, '11', '初三', 'grade');
-INSERT INTO `t_dict` VALUES (null, '12', '高一', 'grade');
-INSERT INTO `t_dict` VALUES (null, '13', '高二', 'grade');
-INSERT INTO `t_dict` VALUES (null, '14', '高三', 'grade');
-INSERT INTO `t_dict` VALUES (null, '1', '语文', 'subject');
-INSERT INTO `t_dict` VALUES (null, '2', '数学', 'subject');
-INSERT INTO `t_dict` VALUES (null, '3', '英语', 'subject');
-INSERT INTO `t_dict` VALUES (null, '4', '物理', 'subject');
-INSERT INTO `t_dict` VALUES (null, '5', '化学', 'subject');
-INSERT INTO `t_dict` VALUES (null, '6', '生物', 'subject');
-INSERT INTO `t_dict` VALUES (null, '7', '地理', 'subject');
-INSERT INTO `t_dict` VALUES (null, '8', '政治', 'subject');
-INSERT INTO `t_dict` VALUES (null, '9', '历史', 'subject');
-INSERT INTO `t_dict` VALUES (null, 'unknown', '未知', 'file_type');
-INSERT INTO `t_dict` VALUES (null, 'avi', '视频文件', 'file_type');
-INSERT INTO `t_dict` VALUES (null, 'doc', 'word文档', 'file_type');
-INSERT INTO `t_dict` VALUES (null, 'pdf', 'pdf文档', 'file_type');
-INSERT INTO `t_dict` VALUES (null, 'xls', 'excel表', 'file_type');
-INSERT INTO `t_dict` VALUES (null, 'txt', '文本文档', 'file_type');
-INSERT INTO `t_dict` VALUES (null, 'zip', '压缩包', 'file_type');
-INSERT INTO `t_dict` VALUES (null, 'image', '图片', 'file_type');
+INSERT INTO `t_dict` VALUES (null, '1', '中班', 'grade', '中班');
+INSERT INTO `t_dict` VALUES (null, '2', '大班', 'grade', '大班');
+INSERT INTO `t_dict` VALUES (null, '3', '一年级', 'grade', '一');
+INSERT INTO `t_dict` VALUES (null, '4', '二年级', 'grade', '二');
+INSERT INTO `t_dict` VALUES (null, '5', '三年级', 'grade', '三');
+INSERT INTO `t_dict` VALUES (null, '6', '四年级', 'grade', '四');
+INSERT INTO `t_dict` VALUES (null, '7', '五年级', 'grade', '五');
+INSERT INTO `t_dict` VALUES (null, '8', '六年级', 'grade', '六');
+INSERT INTO `t_dict` VALUES (null, '9', '初一', 'grade', '初一');
+INSERT INTO `t_dict` VALUES (null, '10', '初二', 'grade', '初二');
+INSERT INTO `t_dict` VALUES (null, '11', '初三', 'grade', '初三');
+INSERT INTO `t_dict` VALUES (null, '12', '高一', 'grade', '高一');
+INSERT INTO `t_dict` VALUES (null, '13', '高二', 'grade', '高二');
+INSERT INTO `t_dict` VALUES (null, '14', '高三', 'grade', '高三');
+INSERT INTO `t_dict` VALUES (null, '1', '语文', 'subject', '语文');
+INSERT INTO `t_dict` VALUES (null, '2', '数学', 'subject', '数学');
+INSERT INTO `t_dict` VALUES (null, '3', '英语', 'subject', '英语');
+INSERT INTO `t_dict` VALUES (null, '4', '物理', 'subject', '物理');
+INSERT INTO `t_dict` VALUES (null, '5', '化学', 'subject', '化学');
+INSERT INTO `t_dict` VALUES (null, '6', '生物', 'subject', '生物');
+INSERT INTO `t_dict` VALUES (null, '7', '地理', 'subject', '地理');
+INSERT INTO `t_dict` VALUES (null, '8', '政治', 'subject', '政治');
+INSERT INTO `t_dict` VALUES (null, '9', '历史', 'subject', '历史');
+INSERT INTO `t_dict` VALUES (null, 'unknown', '未知', 'file_type', 'unknown');
+INSERT INTO `t_dict` VALUES (null, 'avi', '视频文件', 'file_type', 'avi');
+INSERT INTO `t_dict` VALUES (null, 'doc', 'word文档', 'file_type', 'doc');
+INSERT INTO `t_dict` VALUES (null, 'pdf', 'pdf文档', 'file_type', 'pdf');
+INSERT INTO `t_dict` VALUES (null, 'xls', 'excel表', 'file_type', 'xls');
+INSERT INTO `t_dict` VALUES (null, 'txt', '文本文档', 'file_type', 'txt');
+INSERT INTO `t_dict` VALUES (null, 'zip', '压缩包', 'file_type', 'zip');
+INSERT INTO `t_dict` VALUES (null, 'image', '图片', 'file_type', 'image');
 
 -- ----------------------------
 -- Table structure for r_category

@@ -127,20 +127,6 @@
   </div>
 </div>
 </script>
-<script type="text/html" id="file-type">
-    {{#
-    var fileType = {
-    avi: {title: '视频文件'},
-    doc: {title: 'word文档'},
-    pdf: {title: 'pdf文档'},
-    xls: {title: 'excel表'},
-	txt: {title: '文本文档'},
-	zip: {title: '压缩包'},
-	image: {title: '图片'}
-    }[d.fileType];
-    }}
-    <span>{{ fileType.title }}</span>
-</script>
 <script type="text/html" id="subjectResource-option">
     <span shiro:lacksPermission="subject:view,subject:update,subject:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
@@ -269,9 +255,9 @@
                 cols: [[
                     {type: 'checkbox'},
                     {field: 'resourceName', title: '资源名', minWidth: 100},
-                    {title: '文件类型', templet: '#file-type'},
+                    {field: 'fileType',title: '文件类型'},
                     {field: 'creator', title: '作者'},
-                    {field: 'deptName', title: '学校'},
+                    {field: 'deptName', title: '部门'},
                     {field: 'commentCount', title: '评论数'},
                     {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
                     {title: '审核状态', templet: '#subjectResource-status'},

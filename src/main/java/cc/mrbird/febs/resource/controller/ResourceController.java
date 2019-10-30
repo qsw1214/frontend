@@ -151,6 +151,13 @@ public class ResourceController extends BaseController {
         try {
         	queryRequest.setPageSize(1);
             List<Resource> resources = this.resourceService.findResources(queryRequest, resource).getRecords();
+            if(resources.size() > 0){
+            	List<Dict> gradeList = dictService.findDictsByField("grade");
+            	List<Dict> subjectList = dictService.findDictsByField("subject");
+            	List<Dict> fileTypeList = dictService.findDictsByField("file_type");
+            	String s = genStr(gradeList) + "\n" + genStr(subjectList) + "\n" + genStr(fileTypeList);
+            	resources.get(0).setRemark(s);
+            }
             ExcelKit.$Export(Resource.class, response).downXlsx(resources, false);
         } catch (Exception e) {
             String message = "导出Excel失败";
@@ -218,6 +225,17 @@ public class ResourceController extends BaseController {
     	 	deptId = provinceId;
 		 }
     	 return new FebsResponse().success().data(resourceService.getResourceCountEveryMonth(deptId));
+    }
+    
+    public String genStr(List<Dict> dictList){
+    	StringBuffer sb = new StringBuffer();
+    	for(Dict d: dictList){
+    		sb.append(d.getV());   		
+    		sb.append(":");
+    		sb.append(d.getK());
+    		sb.append(" ");
+    	}
+    	return sb.toString();
     }
     
 }

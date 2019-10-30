@@ -41,6 +41,10 @@ public class Dict {
     @NotBlank(message = "{required}")
     @Size(max = 100, message = "{noMoreThan}")
     private String v;
+    
+    @TableField("remark")
+    @Size(max = 25, message = "{noMoreThan}")
+    private String remark;
 
     /**
      * 字段名称

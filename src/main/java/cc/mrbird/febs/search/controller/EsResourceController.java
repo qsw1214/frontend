@@ -134,6 +134,7 @@ public class EsResourceController extends BaseController{
     public FebsResponse search(@RequestParam(required = false) String keyword,
                                                       @RequestParam(required = false, defaultValue = "0") Integer pageNum,
                                                       @RequestParam(required = false, defaultValue = "5") Integer pageSize) {
+    	pageNum = pageNum - 1;
     	// 将搜索词记录到日志,便于统计热词
     	if(keyword != null && !keyword.equals("")){  		
     		searchLog.info("keyword|" + keyword);
@@ -151,6 +152,9 @@ public class EsResourceController extends BaseController{
                                                       @RequestParam(required = false, defaultValue = "0") Integer pageNum,
                                                       @RequestParam(required = false, defaultValue = "5") Integer pageSize,
                                                       @RequestParam(required = false, defaultValue = "0") Integer sort) {
+    	pageNum = pageNum - 1;
+    	if(pageNum < 0)
+    		pageNum = 0;
     	// 将搜索词记录到日志,便于统计热词
     	if(keyword != null && !keyword.equals("")){  		
     		searchLog.info("keyword|" + keyword);
@@ -163,11 +167,23 @@ public class EsResourceController extends BaseController{
     @RequestMapping(value = "/recommend/{id}", method = RequestMethod.GET)
     @ResponseBody
     public FebsResponse recommend(@PathVariable Long id,
-                                                         @RequestParam(required = false, defaultValue = "0") Integer pageNum,
+                                                         @RequestParam(required = false, defaultValue = "1") Integer pageNum,
                                                          @RequestParam(required = false, defaultValue = "5") Integer pageSize) {
-        Page<EsResource> esResourcePage = esResourceService.recommend(id, pageNum, pageSize);
+    	pageNum = pageNum - 1;
+    	if(pageNum < 0)
+    		pageNum = 0;
+    	Page<EsResource> esResourcePage = esResourceService.recommend(id, pageNum, pageSize);
         Map<String, Object> dataTable = getDataTable(esResourcePage);
         return new FebsResponse().success().data(dataTable);
+    }
+    
+    /**
+     * 获取每月新增资源数量
+     */
+	@RequestMapping(value = "/coutByMonth", method = RequestMethod.GET)
+    @ResponseBody
+    public FebsResponse coutByMonth() {
+		return new FebsResponse().success().data(esResourceService.countByMonth());
     }
     
 }
