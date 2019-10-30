@@ -469,7 +469,15 @@ public class ApiController extends BaseController {
      */
     @GetMapping("resourceCount")
 //    @RequiresPermissions("count:resourceCount")
-    public FebsResponse getResourceCount(QueryRequest request, Integer deptId) {
+    public FebsResponse getResourceCount(QueryRequest request, Integer provinceId,Integer cityDeptId,Integer countryDeptId) {
+        Integer deptId = 0;
+        if(countryDeptId != null){
+            deptId = countryDeptId;
+        }else if(cityDeptId != null){
+            deptId = cityDeptId;
+        }else if(provinceId != null){
+            deptId = provinceId;
+        }
         Integer count = this.resourceService.getResourceCount(deptId);
         return new FebsResponse().num(count).success();
     }
