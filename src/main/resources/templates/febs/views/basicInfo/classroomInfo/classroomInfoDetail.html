@@ -41,12 +41,6 @@
            <div><span class="layui-icon layui-icon-location"></span> 位置：
                  [[${classroomInfo.location}]]
             </div>
-            <div><span class="layui-icon layui-icon-home"></span> 数量：
-                [[${classroomInfo.containNum}]]
-            </div>
-            <div><span class="layui-icon layui-icon-home"></span> 简介：
-                [[${#strings.defaultString(classroomInfo.introduce,'暂无简介')}]]
-            </div>
             <div><span class="layui-icon layui-icon-home"></span> 推流地址：
                 [[${classroomInfo.url}]]
             </div>
@@ -54,7 +48,7 @@
                 [[${classroomInfo.playUrl}]]
             </div>
             <div><span class="layui-icon layui-icon-home"></span> 状态：
-                [[${classroomInfo.state}]]
+                [[${classroomInfo.state==1?'开课':'未开课'}]]
             </div>
         </div>
     </div>

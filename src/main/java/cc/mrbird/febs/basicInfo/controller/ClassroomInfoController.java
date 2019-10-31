@@ -65,7 +65,7 @@ public class ClassroomInfoController extends BaseController {
     @RequiresPermissions("classroomInfo:view")
     public FebsResponse classroomInfoList(QueryRequest request, ClassroomInfo classroomInfo) {
         IPage<ClassroomInfo> classroomLists = this.classroomInfoService.findClassroomInfos(request, classroomInfo);
-        List<ClassroomInfo> list = classroomLists.getRecords();
+        /*List<ClassroomInfo> list = classroomLists.getRecords();
         for (int i = 0 ; i < list.size(); i++){
             ClassroomInfo info = list.get(i);
             String url = info.getUrl();
@@ -74,7 +74,7 @@ public class ClassroomInfoController extends BaseController {
                 RadioStatus status = statusLists.get(0);
                 info.setState(status.getStatus() == null ? 0 :Integer.valueOf(status.getStatus()));
             }
-        }
+        }*/
         Map<String, Object> dataTable = getDataTable(classroomLists);
         return new FebsResponse().success().data(dataTable);
     }

@@ -24,18 +24,6 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">数量：</label>
-            <div class="layui-input-block">
-                <input type="text" name="containNum" id="containNum" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">简介：</label>
-            <div class="layui-input-block">
-                <textarea name="introduce" id="introduce" maxlength="100" class="layui-textarea"></textarea>
-            </div>
-        </div>
-        <div class="layui-form-item">
             <label class="layui-form-label">推流地址：</label>
             <div class="layui-input-block">
                 <input type="text" name="url" id="url" class="layui-input" readonly="readonly">
@@ -97,8 +85,6 @@
             form.val("classroomInfo-update-form", {
                 "schoolId":classroomInfo.schoolId,
                 "location": classroomInfo.location,
-                "containNum": classroomInfo.containNum,
-                "introduce": classroomInfo.introduce,
                 "url": classroomInfo.url,
                 "playUrl": classroomInfo.playUrl,
                 "subject": classroomInfo.subject,
