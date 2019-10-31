@@ -40,7 +40,15 @@
         </div>
     </div>
 </div>
-
+<script type="text/html" id="classroom-state">
+    {{#
+    var state = {
+    1:{title: '开课',color: 'green'},
+    0:{title: '未开课',color: 'volcano'}
+    }[d.state];
+    }}
+    <span class="layui-badge febs-tag-{{state.color}}">{{ state.title }}</span>
+</script>
 <script type="text/html" id="classroomInfo-option">
     <span shiro:lacksPermission="classroomInfo:view,classroomInfo:update,classroomInfo:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
@@ -199,11 +207,9 @@
                     {type: 'checkbox'},
                     {field: 'schoolName', title: '学校', minWidth: 100},
                     {field: 'location', title: '位置', minWidth: 100},
-                    {field: 'containNum', title: '数量'},
-                    {field: 'introduce', title: '简介', minWidth: 180},
                     {field: 'url', title: '推流地址', minWidth: 180},
                     {field: 'playUrl', title: '播放地址', minWidth: 180},
-                    {field:'state',title: '状态'},
+                    {title: '状态',templet:'#classroom-state'},
                     {title: '操作', toolbar: '#classroomInfo-option', minWidth: 140}
                 ]]
             });
@@ -211,7 +217,6 @@
 
         function getQueryParams() {
             return {
-                subject: $searchForm.find('input[name="subject"]').val(),
                 state:$searchForm.find('select[name="state"]').val()
             };
         }
