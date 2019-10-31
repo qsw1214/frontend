@@ -394,7 +394,7 @@ public class OrgController {
                     MessageUtil.sendMessageToOriginator(processInstanceId);
                     //审批实例开始，结束
                     String processCode = obj.getString("processCode");
-                    switch(processCode){
+                    switch (processCode) {
                         //学校入驻审批实例
                         case Constant.SCHOOL_CALLBACK_URL_HOST:
                             //调用审批详情接口，获取详情

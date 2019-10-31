@@ -1,6 +1,6 @@
 //钉钉扫码登录
 var url = encodeURIComponent('http://localhost:8080/login');
-var demo = encodeURIComponent('https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=dingoakvxpd9icyeewvolr&response_type=code&scope=snsapi_login&state=STATE&redirect_uri='+url);
+var demo = encodeURIComponent('https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=dingoaqdflcmvtnqribq4w&response_type=code&scope=snsapi_login&state=STATE&redirect_uri='+url);
 var obj = DDLogin({
 	id:"login_container",
 	goto: demo,
@@ -14,7 +14,7 @@ var hanndleMessage = function (event) {
 	if( origin == "https://login.dingtalk.com" ) { //判断是否来自ddLogin扫码事件。
 		var loginTmpCode = event.data; //拿到loginTmpCode后就可以在这里构造跳转链接进行跳转了
 		console.log("loginTmpCode", loginTmpCode);
-		var url="https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=dingoakvxpd9icyeewvolr&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=REDIRECT_URI&loginTmpCode="+loginTmpCode;
+		var url="https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=dingoaqdflcmvtnqribq4w&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=REDIRECT_URI&loginTmpCode="+loginTmpCode;
 		location.href=url;   //跳转到指定的页面
 	} };
 if (typeof window.addEventListener != 'undefined') {
