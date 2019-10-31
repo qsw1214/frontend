@@ -1,6 +1,7 @@
 package cc.mrbird.febs.basicInfo.service.impl;
 
 import cc.mrbird.febs.basicInfo.entity.School;
+import cc.mrbird.febs.basicInfo.entity.SchoolTimetable;
 import cc.mrbird.febs.basicInfo.mapper.SchoolMapper;
 import cc.mrbird.febs.basicInfo.service.IClassInfoService;
 import cc.mrbird.febs.basicInfo.service.IClassroomInfoService;
@@ -60,13 +61,20 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     
     @Autowired
 	private IUserDeptService userDeptService;
-
-    @Autowired
-    private SchoolMapper schoolMapper;
  
     @Override
     public IPage<School> findSchools(QueryRequest request, School school) {
-    	LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();     
+        Page<SchoolTimetable> page = new Page<>(request.getPageNum(), request.getPageSize());
+        IPage<School> pageList = this.baseMapper.findSchool(page, school);
+        List<School> list = pageList.getRecords();
+        for (int i = 0 ; i < list.size(); i++){
+            School temp = list.get(i);
+            if(temp.getSchoolName().equals(temp.getBelongSchool())){
+                temp.setBelongSchool("");
+            }
+        }
+        return pageList;
+    	/*LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
         // TODO 设置查询条件   
         if (StringUtils.isNotBlank(school.getSchoolName())) {
             //queryWrapper.eq(School::getSchoolName, school.getSchoolName());
@@ -94,7 +102,7 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
             queryWrapper.eq(School::getCountryDeptId, school.getCountryDeptId());
         }
         Page<School> page = new Page<>(request.getPageNum(), request.getPageSize());
-        return this.page(page, queryWrapper);
+        return this.page(page, queryWrapper);*/
     }
 
     @Override
@@ -240,7 +248,7 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         school.setProvinceDeptId(provinceId == null ? null:provinceId.longValue());
         school.setCityDeptId(cityDeptId == null ? null:cityDeptId.longValue());
         school.setCountryDeptId(countryDeptId == null ? null : countryDeptId.longValue());
-        List<HashMap<String,Object>> result = this.schoolMapper.getLast12MonthSchoolCount(school);
+        List<HashMap<String,Object>> result = this.baseMapper.getLast12MonthSchoolCount(school);
         Map<String,Object> mapResult = new HashMap<String,Object>();
         for (int i = 0 ; i < result.size(); i++){
             HashMap<String,Object> map = result.get(i);

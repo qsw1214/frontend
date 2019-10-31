@@ -59,4 +59,31 @@
             ymv.year_month asc
     </select>
 
+    <select id="findSchool" parameterType="cc.mrbird.febs.basicInfo.entity.School" resultMap="school">
+        SELECT info.school_name,info.school_type,info.school_category,info.link_man,
+            info.link_phone,info.post_code,info.address,
+            mainSchool.school_name as belongSchool,
+            pronDept.DEPT_NAME as provinceName,
+            cityDept.DEPT_NAME as cityName,
+            counttyDept.DEPT_NAME as countryName
+            from jcc_school_info info
+            LEFT JOIN t_dept pronDept ON info.province_dept_id = pronDept.DEPT_ID
+            LEFT JOIN t_dept cityDept ON info.city_dept_id = cityDept.DEPT_ID
+            LEFT JOIN t_dept counttyDept ON info.country_dept_id = counttyDept.DEPT_ID
+            LEFT JOIN jcc_school_info mainSchool ON info.belongId = mainSchool.school_id
+            where 1 = 1
+            <if test="school.schoolName != null and school.schoolName != ''">
+                AND info.school_name like CONCAT('%','${school.schoolName}','%')
+            </if>
+            <if test="school.schoolType != null and school.schoolType != ''">
+                AND info.school_type = #{school.schoolType}
+            </if>
+            <if test="school.schoolCategory != null and school.schoolCategory != ''">
+                AND info.school_category = #{school.schoolCategory}
+            </if>
+            <if test="school.provinceDeptId != null and school.provinceDeptId != ''">
+                AND info.province_dept_id = #{school.provinceDeptId}
+            </if>
+    </select>
+
 </mapper>

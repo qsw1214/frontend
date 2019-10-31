@@ -24,8 +24,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">学校类型：</label>
             <div class="layui-input-block">
-                <input type="radio" name="schoolType"  value="主校" title="主校" lay-filter="schoolType">
-                <input type="radio" name="schoolType"  value="分校" title="分校" checked lay-filter="schoolType">
+                <!--<input type="radio" name="schoolType"  value="主校" title="主校" lay-filter="schoolType" disabled>-->
+                <input type="radio" name="schoolType"  value="分校" title="分校" checked lay-filter="schoolType" disabled>
             </div>
         </div>
         <div class="layui-form-item">
@@ -40,8 +40,9 @@
             <label class="layui-form-label febs-form-item-require">所属主校：</label>
             <div class="layui-input-block">
                 <select name="belongId"
+                        xm-select-radio
                         xm-select-direction="down"
-                        xm-select="schoolTimetable-add-school"
+                        xm-select="schoolType-add-school"
                         xm-select-skin="default">
                 </select>
             </div>
@@ -136,7 +137,7 @@
         formSelects.render();
 
         $("#cleanImgs").click(function(){
-            alert("222");
+            //alert("222");
             $('#demo2').html("");
             $('#imgUrls').val("");
         });
@@ -168,14 +169,14 @@
             }
         });
 
-        document.getElementById("img1").style.display="none";
+        /*document.getElementById("img1").style.display="none";
         form.on('radio(schoolType)', function (data) {
             if(data.value=='分校'){
                 document.getElementById("img1").style.display="block";
             }else{
                 document.getElementById("img1").style.display="none";
             }
-        });
+        });*/
 
         laydate.render({
             elem: '#time'
@@ -211,7 +212,7 @@
 
 
         //所属主校
-        formSelects.config('schoolTimetable-add-school', {
+        formSelects.config('schoolType-add-school', {
             searchUrl: ctx + 'school?schoolType=主校',
             response: {
                 statusCode: 200

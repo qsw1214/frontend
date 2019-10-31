@@ -182,4 +182,20 @@ public class School {
     @ExcelField(value = "教室总数")
     @TableField(exist = false)
     private Integer classroomCount;
+
+    @ExcelField(value = "所属主校名称")
+    @TableField(exist = false)
+    private String belongSchool;
+
+    @ExcelField(value = "省级")
+    @TableField(exist = false)
+    private String provinceName;
+
+    @ExcelField(value = "市级")
+    @TableField(exist = false)
+    private String cityName;
+
+    @ExcelField(value = "区县级")
+    @TableField(exist = false)
+    private String countryName;
 }

@@ -45,7 +45,7 @@ public class SchoolTimetableServiceImpl extends ServiceImpl<SchoolTimetableMappe
             }
         }
         IPage<SchoolTimetable> pageList = this.baseMapper.findSchoolTimetables(page, schoolTimetable);
-        List<SchoolTimetable> list = pageList.getRecords();
+        /*List<SchoolTimetable> list = pageList.getRecords();
         for (int i = 0 ; i < list.size(); i++){
             SchoolTimetable timetable = list.get(i);
             String url = timetable.getUrl();
@@ -58,7 +58,7 @@ public class SchoolTimetableServiceImpl extends ServiceImpl<SchoolTimetableMappe
                     timetable.setState(radioList.get(j).getStatus());
                 }
             }
-        }
+        }*/
         return this.baseMapper.findSchoolTimetables(page, schoolTimetable);
     }
 
