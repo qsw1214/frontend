@@ -212,7 +212,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         		redisService.hset(hkey, date, count.toString());
         	}
         	map.put(date.substring(0,7), count);
-        }       
+        }
 		return map;
 	}
 

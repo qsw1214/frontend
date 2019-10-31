@@ -143,7 +143,8 @@
                         febs.modal.confirm('删除学校', '确定删除该学校？', function () {
                             var schoolIds = [];
                             layui.each(checkStatus.data, function (key, item) {
-                            	schoolIds.push(item.schoolId)
+                                alert(item.schoolId);
+                            	schoolIds.push(item.schoolId);
                             });
                             deleteUsers(schoolIds.join(','));
                         });
@@ -201,9 +202,7 @@
                 })
             });
         });
- 
-        
-        
+
         $query.on('click', function () {
         	tableIns.reload({where: getQueryParams(), page: {curr: 1}});
         });
@@ -224,9 +223,9 @@
                     {field: 'schoolType', title: '学校类型',minWidth: 80},
                     {field: 'schoolCategory', title: '学校类别',minWidth: 80},
                     {field: 'belongSchool', title: '所属主校',minWidth: 120},
-                    {field: 'provinceName', title: '省',minWidth: 100},
-                    {field: 'cityName', title: '市',minWidth: 100},
-                    {field: 'countryName', title: '区/县',minWidth: 100},
+                    {field: 'province', title: '省',minWidth: 100},
+                    {field: 'city', title: '市',minWidth: 100},
+                    {field: 'country', title: '区/县',minWidth: 100},
                     {field: 'linkMan', title: '主负责人'},
                     {field: 'linkPhone', title: '联系电话', minWidth: 125},
                     /*{field: 'postCode', title: '邮编'},*/
@@ -241,7 +240,7 @@
             	schoolName: $searchForm.find('input[name="school"]').val().trim(),
             	schoolType: $searchForm.find("select[name='status']").val(),
                 province:$searchForm.find("select[name='province']").val(),
-//                city:$searchForm.find("select[name='city']").val(),
+               // city:$searchForm.find("select[name='city']").val(),
 //                country:$searchForm.find("select[name='country']").val(),
                 schoolCategory:$searchForm.find("select[name='schoolCategory']").val(),
             	invalidate_ie_cache: new Date()

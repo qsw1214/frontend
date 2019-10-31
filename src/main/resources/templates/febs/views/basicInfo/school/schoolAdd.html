@@ -76,7 +76,7 @@
        <div class="layui-form-item" id="area-picker">
             <label class="layui-form-label febs-form-item-require">选择地区：</label>
             <div class="layui-input-inline" style="width: 180px;">
-                <select name="province" class="province-selector"  lay-filter="province-1">
+                <select name="province" class="province-selector"  lay-filter="province-1" disabled>
                     <option value="">请选择省</option>
                 </select>
             </div>
@@ -201,14 +201,14 @@
             });
         }
         //
-      /*  layarea.render({
+      layarea.render({
             elem: '#area-picker',
             data:{
                 "province":"湖南省",
                 "city":"长沙市",
                 "county":"开福区"
             }
-        });*/
+        });
 
 
         //所属主校

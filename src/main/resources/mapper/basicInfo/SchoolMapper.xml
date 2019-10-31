@@ -60,12 +60,12 @@
     </select>
 
     <select id="findSchool" parameterType="cc.mrbird.febs.basicInfo.entity.School" resultMap="school">
-        SELECT info.school_name,info.school_type,info.school_category,info.link_man,
+        SELECT info.school_id,info.school_name,info.school_type,info.school_category,info.link_man,
             info.link_phone,info.post_code,info.address,
             mainSchool.school_name as belongSchool,
-            pronDept.DEPT_NAME as provinceName,
-            cityDept.DEPT_NAME as cityName,
-            counttyDept.DEPT_NAME as countryName
+            pronDept.DEPT_NAME as province,
+            cityDept.DEPT_NAME as city,
+            counttyDept.DEPT_NAME as country
             from jcc_school_info info
             LEFT JOIN t_dept pronDept ON info.province_dept_id = pronDept.DEPT_ID
             LEFT JOIN t_dept cityDept ON info.city_dept_id = cityDept.DEPT_ID

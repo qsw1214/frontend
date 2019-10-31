@@ -20,10 +20,12 @@ import cc.mrbird.febs.system.service.IDeptService;
 import cc.mrbird.febs.system.service.IUserDeptService;
 
 import cc.mrbird.febs.system.service.IUserService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,8 +141,28 @@ public class SchoolController extends BaseController {
     @RequiresPermissions("school:add")
     public FebsResponse addSchool(@Valid School school) throws FebsException {
         try {
+            String provinceName = school.getProvince();
+            String cityName = school.getCity();
+            String countryName = school.getCountry();
+            LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
+            if(StringUtils.isNotEmpty(provinceName)){
+                queryWrapper.eq(Dept::getDeptName, provinceName);
+            }
+            school.setProvinceDeptId(this.deptService.getOne(queryWrapper).getDeptId());
+
+            queryWrapper = new LambdaQueryWrapper<>();
+            if(StringUtils.isNotEmpty(cityName)){
+                queryWrapper.eq(Dept::getDeptName, cityName);
+            }
+            school.setCityDeptId(this.deptService.getOne(queryWrapper).getDeptId());
+
+            queryWrapper = new LambdaQueryWrapper<>();
+            if(StringUtils.isNotEmpty(countryName)){
+                queryWrapper.eq(Dept::getDeptName, countryName);
+            }
+            school.setCountryDeptId(this.deptService.getOne(queryWrapper).getDeptId());
             School s = this.schoolService.createSchool(school);
-            if(s.getBelongId()==null){
+            if(s.getBelongId() == null){
                 s.setBelongId(s.getSchoolId());
                 this.schoolService.updateSchool(s);
             }
@@ -152,6 +174,12 @@ public class SchoolController extends BaseController {
         }
     }
 
+    /**
+     * 删除学校，应该还添加一个逻辑，若删除的是主校，则其所有的分校应该同步删除；
+     * @param schoolIds
+     * @return
+     * @throws FebsException
+     */
     @Log("删除School")
     @GetMapping("school/delete/{schoolIds}")
     @ResponseBody

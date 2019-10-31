@@ -189,13 +189,13 @@ public class School {
 
     @ExcelField(value = "省级")
     @TableField(exist = false)
-    private String provinceName;
+    private String province;
 
     @ExcelField(value = "市级")
     @TableField(exist = false)
-    private String cityName;
+    private String city;
 
     @ExcelField(value = "区县级")
     @TableField(exist = false)
-    private String countryName;
+    private String country;
 }
