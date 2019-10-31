@@ -60,10 +60,13 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label febs-form-item-require">请求方式：</label>
                             <div class="layui-input-block">
-                                <input type="text" name="requestWays" autocomplete="off" class="layui-input"
-                                       minlength="2" maxlength="50" lay-verify="range">
+                                <select name="requestWays">
+                                    <option value="GET" selected="selected">GET</option>
+                                    <option value="POST">POST</option>
+                                </select>
                             </div>
                         </div>
+
                         <div class="layui-form-item">
                             <label class="layui-form-label febs-form-item-require">请求地址：</label>
                             <div class="layui-input-block">
@@ -81,29 +84,30 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label febs-form-item-require">请求体：</label>
                             <div class="layui-input-block">
-                                <input type="text" name="requestBody" autocomplete="off" class="layui-input"
-                                       minlength="2" maxlength="50" lay-verify="range">
+                                <textarea name="requestBody" maxlength="100" class="layui-textarea"></textarea>
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label febs-form-item-require">请求体参数说明：</label>
                             <div class="layui-input-block">
-                                <input type="text" name="requestParameterExplain" autocomplete="off" class="layui-input"
-                                       minlength="2" maxlength="50" lay-verify="range">
+                                <textarea name="requestParameterExplain" maxlength="100" class="layui-textarea"></textarea>
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label febs-form-item-require">返回状态：</label>
                             <div class="layui-input-block">
-                                <input type="text" name="requestResult" autocomplete="off" class="layui-input"
-                                       minlength="2" maxlength="50" lay-verify="range">
+                                <select name="requestResult">
+                                    <option value="200" selected="selected">200</option>
+                                    <option value="500">500</option>
+                                    <option value="404">404</option>
+                                    <option value="200">200</option>
+                                </select>
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label febs-form-item-require">返回状态说明：</label>
                             <div class="layui-input-block">
-                                <input type="text" name="requestResultExplain" autocomplete="off" class="layui-input"
-                                       minlength="2" maxlength="50" lay-verify="range">
+                                <textarea name="requestResultExplain" maxlength="100" class="layui-textarea"></textarea>
                             </div>
                         </div>
                         <div class="layui-form-item">

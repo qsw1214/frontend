@@ -84,6 +84,9 @@
             <if test="school.provinceDeptId != null and school.provinceDeptId != ''">
                 AND info.province_dept_id = #{school.provinceDeptId}
             </if>
+            <if test="school.province != null and school.province != ''">
+                AND pronDept.dept_name = #{school.province}
+            </if>
     </select>
 
 </mapper>
