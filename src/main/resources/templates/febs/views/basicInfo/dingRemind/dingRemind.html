@@ -18,15 +18,15 @@
                                         <div class="layui-input-inline">
                                             <select name="status">
                                                 <option value=""></option>
-                                                <option value="0">主校</option>
-                                                <option value="1">分校</option>
+                                                <option value="主校">主校</option>
+                                                <option value="分校">分校</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="layui-inline" id="area">
                                         <label class="layui-form-label">选择地区</label>
                                         <div class="layui-input-inline" style="width: 180px;">
-                                            <select name="province" class="province-selector" lay-filter="province-1">
+                                            <select name="provinceName" class="province-selector" lay-filter="province-1">
                                                 <option value="">请选择省</option>
                                             </select>
                                         </div>
@@ -57,10 +57,7 @@
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="reset">
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
-                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
-                                     shiro:hasAnyPermissions="user:add,user:update,user:password:reset,user:export">
-                                    <i class="layui-icon">&#xe875;</i>
-                                </div>
+
                             </div>
                         </div>
                     </form>
@@ -124,15 +121,15 @@
         function getschoolCategory() {
             $.ajax({
                 type:'get',
-                url: ctx + 'menu/tree',
+                url: ctx + "dict?field=category",
                 success:function (res) {
-                    var items=res.data;
-                    if (res.data.length==0){
-                    	 schoolCategory.append('<option value="">'+'请选择'+'</option>');
+                    var items = res.data;
+                    if (items.length == 0){
+                        schoolCategory.append('<option value="">'+'请选择'+'</option>');
                     }else{
-                    	 schoolCategory.append('<option value="">'+'请选择'+'</option>');
-                        for (var i=0;i<items.length;i++) {
-                            $('#schoolCategory').append('<option value="' + items[i].v + '">' + items[i].v + '</option>');
+                        schoolCategory.append('<option value="">'+'请选择'+'</option>');
+                        for (var i = 0;i < items.length;i++) {
+                            schoolCategory.append('<option>' + items[i].v + '</option>');
                         }
                     }
                     form.render('select');
@@ -282,7 +279,7 @@
         //监听指定开关
         form.on('switch(switchTest)', function(data){
             var judge = this.checked ? 'true' : 'false';
-            layer.msg(judge);
+            //layer.msg(judge);
             $.ajax({
                 type:'post',
                 url: ctx + 'dingRemind/dingRemind',
