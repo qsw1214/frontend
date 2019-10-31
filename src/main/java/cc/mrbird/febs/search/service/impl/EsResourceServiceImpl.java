@@ -1,15 +1,22 @@
 package cc.mrbird.febs.search.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeAction;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeRequestBuilder;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.lucene.search.function.FunctionScoreQuery;
 import org.elasticsearch.common.unit.Fuzziness;
@@ -17,6 +24,14 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
 import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
+import org.elasticsearch.search.aggregations.AggregationBuilder;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramAggregationBuilder;
+import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
+import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
@@ -31,6 +46,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
@@ -290,6 +306,45 @@ public class EsResourceServiceImpl implements IEsResourceService {
 		});
 
 		return suggestList.toArray(new String[suggestList.size()]);
+	}
+
+	@Override
+	public Map<String, Long> countByMonth() {
+		/**
+         * 条件查询（时间范围）,只查今年的
+         */
+		Calendar cale = Calendar.getInstance();  	
+        int year = cale.get(Calendar.YEAR);  
+        cale.set(Calendar.HOUR_OF_DAY, 0);//控制时
+        cale.set(Calendar.MINUTE, 0);//控制分
+        cale.set(Calendar.SECOND, 0);//控制秒
+        cale.set(year, 0, 1);
+        long s = cale.getTime().getTime();
+        long e = (new Date()).getTime();
+        // 时间过滤
+        BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+        boolQuery.must(QueryBuilders.rangeQuery("createTime").gte(s).lte(e));
+        // 按月份分组聚合
+        DateHistogramAggregationBuilder aggregation = AggregationBuilders.dateHistogram("agg").field("createTime")
+        		.dateHistogramInterval(DateHistogramInterval.MONTH).format("yyyy-MM");
+       // 构建查询语句
+        SearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(boolQuery)
+                .addAggregation(aggregation)
+                .withPageable(PageRequest.of(0, 1))
+                .build();      
+        // 执行查询
+        AggregatedPage<EsResource> testEntities = elasticsearchTemplate.queryForPage(searchQuery, EsResource.class);
+        // 取出聚合结果
+        Histogram agg = testEntities.getAggregations().get("agg");
+        // 遍历取出聚合字段列的值，与对应的数量
+        Map<String, Long> map = new TreeMap<>();
+        for (Histogram.Bucket bucket : agg.getBuckets()) {
+            String keyAsString = bucket.getKeyAsString(); // 聚合字段列的值
+            long docCount = bucket.getDocCount();// 聚合字段对应的数量
+            map.put(keyAsString, docCount);
+        } 
+        return map;
 	}
 
 }

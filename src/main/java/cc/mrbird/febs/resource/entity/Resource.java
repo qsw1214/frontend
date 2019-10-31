@@ -195,4 +195,11 @@ public class Resource {
 
     @TableField(exist = false)
     private Long subjectResourceId;
+    
+    /**
+     * 备注
+     */
+    @TableField(exist = false)
+    @ExcelField(value="编号对照")
+    private String remark;
 }

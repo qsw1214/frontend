@@ -52,6 +52,9 @@ public class SubjectServiceImpl extends ServiceImpl<SubjectMapper, Subject> impl
         if (StringUtils.isNotBlank(subject.getCreator())) {
             queryWrapper.eq(Subject::getCreator, subject.getCreator());
         }
+        if (subject.getShowStatus() != null) {
+            queryWrapper.eq(Subject::getShowStatus, subject.getShowStatus());
+        }
         if (subject.getCategoryId() != null) {
             queryWrapper.eq(Subject::getCategoryId, subject.getCategoryId());
         }

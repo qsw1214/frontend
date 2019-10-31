@@ -29,7 +29,7 @@
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">显示状态</label>
                                         <div class="layui-input-inline">
-                                            <select name="status">
+                                            <select name="showStatus">
                                                 <option value=""></option>
                                                 <option value="0">不显示</option>
                                                 <option value="1">显示</option>
@@ -288,6 +288,7 @@
                 createTimeTo: createTimeTo,
             	subjectName: $searchForm.find('input[name="subjectName"]').val().trim(),
                 category: $searchForm.find("select[name='category']").val(),
+                showStatus: $searchForm.find("select[name='showStatus']").val(),
                 invalidate_ie_cache: new Date()
             };
         }

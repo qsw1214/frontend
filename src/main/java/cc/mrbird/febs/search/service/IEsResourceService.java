@@ -1,6 +1,7 @@
 package cc.mrbird.febs.search.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 
@@ -75,4 +76,10 @@ public interface IEsResourceService {
 	 * @return
 	 */
 	String[] getSuggestion(Class clazz, String text);
+	
+	/**
+	 * 统计每月新增资源数量
+	 * @return
+	 */
+	Map<String, Long> countByMonth();
 }

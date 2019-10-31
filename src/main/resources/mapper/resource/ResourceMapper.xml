@@ -52,7 +52,7 @@
         LEFT JOIN t_dict subj ON r.subject_id = subj.k AND subj.field = 'subject'
         WHERE 1 = 1
         <if test="resource.resourceName != null and resource.resourceName != ''">
-            AND r.resource_name = #{resource.resourceName}
+            AND r.resource_name like CONCAT('%',#{resource.resourceName},'%')
         </if>
         <if test="resource.creator != null and resource.creator != ''">
             AND r.creator = #{resource.creator}
