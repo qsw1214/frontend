@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,6 @@ import javax.annotation.Resource;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeAction;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeRequestBuilder;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
-import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.lucene.search.function.FunctionScoreQuery;
 import org.elasticsearch.common.unit.Fuzziness;
@@ -24,14 +22,10 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
 import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
-import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
 import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
@@ -240,8 +234,12 @@ public class EsResourceServiceImpl implements IEsResourceService {
 					.size()];
 			filterFunctionBuilders.toArray(builders);
 			FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery(builders)
-					.scoreMode(FunctionScoreQuery.ScoreMode.SUM).setMinScore(2);
+					.scoreMode(FunctionScoreQuery.ScoreMode.SUM).setMinScore(2);			
+			// 过滤自身
+			BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+			boolQueryBuilder.mustNot(QueryBuilders.termQuery("resourceId", id));
 			NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
+			builder.withFilter(boolQueryBuilder);
 			builder.withQuery(functionScoreQueryBuilder);
 			builder.withPageable(pageable);
 			NativeSearchQuery searchQuery = builder.build();
@@ -311,14 +309,14 @@ public class EsResourceServiceImpl implements IEsResourceService {
 	@Override
 	public Map<String, Long> countByMonth() {
 		/**
-         * 条件查询（时间范围）,只查今年的
+         * 条件查询（时间范围）,查询最近十二个月
          */
-		Calendar cale = Calendar.getInstance();  	
-        int year = cale.get(Calendar.YEAR);  
+		Calendar cale = Calendar.getInstance();
+		cale.add(Calendar.MONTH, -11); 
         cale.set(Calendar.HOUR_OF_DAY, 0);//控制时
         cale.set(Calendar.MINUTE, 0);//控制分
         cale.set(Calendar.SECOND, 0);//控制秒
-        cale.set(year, 0, 1);
+        cale.set(Calendar.DATE, 1);
         long s = cale.getTime().getTime();
         long e = (new Date()).getTime();
         // 时间过滤
@@ -344,6 +342,14 @@ public class EsResourceServiceImpl implements IEsResourceService {
             long docCount = bucket.getDocCount();// 聚合字段对应的数量
             map.put(keyAsString, docCount);
         } 
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");	
+        for(int i=0; i<12; i++){
+        	String date = df.format(cale.getTime());
+        	if(!map.containsKey(date)){
+        		map.put(date, 0l);
+        	}
+        	cale.add(Calendar.MONTH, 1);
+        }
         return map;
 	}
 

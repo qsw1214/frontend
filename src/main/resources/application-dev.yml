@@ -52,7 +52,7 @@ spring:
     elasticsearch:
       repositories:
         enabled: true
-      cluster-nodes: 127.0.0.1:9300
+      cluster-nodes: 47.97.74.226:9300
  
 # 参数设置
 myConfig:
