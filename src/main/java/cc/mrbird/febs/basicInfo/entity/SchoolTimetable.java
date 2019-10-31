@@ -129,7 +129,7 @@ public class SchoolTimetable {
      * 学校ids
      */
     @TableField(exist = false)
-    @ExcelField(value = "学校id",maxLength = 255)
+    @ExcelField(value = "学校id(请复制)",maxLength = 255)
     private String schoolIds;
 
     /**
@@ -145,6 +145,6 @@ public class SchoolTimetable {
      * 学校ids
      */
     @TableField(exist = false)
-    @ExcelField(value = "班级id",maxLength = 255)
+    @ExcelField(value = "班级id(请复制)",maxLength = 255)
     private String classIds ;
 }

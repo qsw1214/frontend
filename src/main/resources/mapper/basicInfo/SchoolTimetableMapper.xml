@@ -7,7 +7,7 @@
         <result column="course_name" jdbcType="CHAR" property="courseName"/>
         <result column="user_id" jdbcType="BIGINT" property="userId"/>
         <result column="user_name" jdbcType="VARCHAR" property="username"/>
-        <result column="begin_date" jdbcType="DATE" property="beginDate"/>
+        <result column="begin_date" jdbcType="TIMESTAMP" property="beginDate"/>
         <result column="class_id" jdbcType="CHAR" property="classId"/>
         <result column="classroom_id" jdbcType="INTEGER" property="classroomId"/>
 
@@ -129,16 +129,20 @@
         jsi.school_name,
         jst.grade,
         jst.class_id,
+        jci.class_name,
         jst.subject,
         jst.term,
         jst.week,
         jst.classroom_id,
         jst.section,
-        GROUP_CONCAT(jtrs.school_id) schoolIds
+        GROUP_CONCAT(distinct jtrs.school_id) schoolIds,
+        GROUP_CONCAT(distinct jtrc.class_id) classIds
         from
         jcc_school_timetable jst
         LEFT JOIN jcc_timetable_relate_school jtrs on jst.course_id = jtrs.course_id
         LEFT JOIN jcc_school_info jsi on jsi.school_id = jtrs.school_id
+        LEFT JOIN jcc_timetable_relate_class jtrc on jtrc.course_id = jst.course_id
+        LEFT JOIN jcc_class_info jci on jci.class_id = jtrc.class_id
         WHERE  jst.course_id = #{courseId}
         GROUP BY jst.course_id
     </select>

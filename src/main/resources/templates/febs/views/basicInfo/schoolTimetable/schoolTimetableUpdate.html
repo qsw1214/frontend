@@ -26,13 +26,13 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">上课时间：</label>
             <div class="layui-input-block">
-                <input type="date" name="beginDate" lay-verify="beginDate" autocomplete="off" class="layui-input">
+                <input type="datetime-local" id="beginDate" name="beginDate" lay-verify="beginDate" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">授课时长：</label>
             <div class="layui-input-block">
-                <input type="text" name="duration" lay-verify="duration" maxlength="50" autocomplete="off"
+                <input type="number" name="duration" lay-verify="duration" maxlength="50" autocomplete="off"
                        class="layui-input">
 
             </div>
@@ -92,6 +92,40 @@
                 </select>
             </div>
         </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">适用年级：</label>
+            <div class="layui-input-block">
+                <select name="grade"
+                        xm-select-radio
+                        xm-select-direction="down"
+                        xm-select="schoolTimetable-update-grade"
+                        xm-select-skin="default">
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item febs-form-item-require">
+            <label class="layui-form-label febs-form-item-require">所属班级：</label>
+            <div class="layui-input-block">
+                <select name="classIds"
+                        xm-select-direction="down"
+                        xm-select="schoolTimetable-update-class"
+                        xm-select-skin="default">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item febs-form-item-require">
+            <label class="layui-form-label febs-form-item-require">上课地点：</label>
+            <div class="layui-input-block">
+                <select name="classroomId"
+                        xm-select-radio
+                        xm-select-direction="down"
+                        xm-select="schoolTimetable-update-classroom"
+                        xm-select-skin="default">
+                </select>
+            </div>
+        </div>
+
         <div class="layui-form-item" style="text-align: right">
             <button class="layui-btn" lay-submit="" lay-filter="schoolTimetable-update-form-submit" id="submit">提交</button>
             <button class="layui-btn layui-btn-primary" id="remove">取消</button>
@@ -118,13 +152,12 @@
             validate = layui.validate;
 
         getWeek();
+        beginDate = beginDate.replace(' ','T');
         getSubject();
         form.verify(validate);
         form.render();
-
         initSchoolTimetableValue();
         formSelects.render();
-
         function getSubject() {
             $.ajax({
                 type:'get',
@@ -193,8 +226,35 @@
             }
         });
 
-        /*formSelects.config('schoolTimetable-update-class', {
-            searchUrl: ctx + 'class/getAllClass',
+        formSelects.config('schoolTimetable-update-grade', {
+            searchUrl: ctx + 'dict?field=grade',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].v,
+                        value: data[i].v
+                    })
+                    //alert("年级name"+data[i].v+"年级value"+data[i].k);
+                }
+                result.data = tranData;
+                return result;
+            },
+            success: function () {
+                formSelects.value('schoolTimetable-update-grade', [schoolTimetable.grade]);
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取年级列表失败');
+            }
+        });
+
+        formSelects.config('schoolTimetable-update-class', {
+            searchUrl: ctx + 'classInfo',
             response: {
                 statusCode: 200
             },
@@ -211,7 +271,7 @@
                 return result;
             },
             success: function () {
-                formSelects.value('schoolTimetable-update-class', [schoolTimetable.classId]);
+                formSelects.value('schoolTimetable-update-class', schoolTimetable.classIds.split(','));
             },
             error: function (id, url, searchVal, err) {
                 console.error(err);
@@ -220,7 +280,7 @@
         });
 
         formSelects.config('schoolTimetable-update-classroom', {
-            searchUrl: ctx + 'class/getAllClassroom',
+            searchUrl: ctx + 'classroomInfo',
             response: {
                 statusCode: 200
             },
@@ -230,20 +290,20 @@
                 for (var i = 0; i < data.length; i++) {
                     tranData.push({
                         name: data[i].location,
-                        value: data[i].classroomId
+                        value: data[i].id
                     })
                 }
                 result.data = tranData;
                 return result;
             },
             success: function () {
-                formSelects.value('schoolTimetable-update-classroom', [schoolTimetable.classId]);
+                formSelects.value('schoolTimetable-update-classroom', [schoolTimetable.classroomId]);
             },
             error: function (id, url, searchVal, err) {
                 console.error(err);
                 febs.alert.error('获取教室列表失败');
             }
-        });*/
+        });
 
         function initSchoolTimetableValue() {
             form.val("schoolTimetable-update-form", {
@@ -255,6 +315,7 @@
                 'week': schoolTimetable.week,
                 'section':schoolTimetable.section,
                 'schoolIds':schoolTimetable.schoolIds,
+                'grade':schoolTimetable.grade,
                 'classId':schoolTimetable.classId,
                 'classroomId':schoolTimetable.classroomId,
                 "beginDate": beginDate

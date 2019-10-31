@@ -133,13 +133,21 @@ public class SchoolTimetableServiceImpl extends ServiceImpl<SchoolTimetableMappe
         this.saveOrUpdate(schoolTimetable);
         //2.根据schoolIds删除掉原先添加到第三方表的数据,再重新添加
         this.baseMapper.deleteRelateSchooltimetableInfo(schoolTimetable.getCourseId());
+        this.baseMapper.deleteRelateClassInfo(schoolTimetable.getCourseId());
         String[] schoolArray = schoolTimetable.getSchoolIds().split(StringPool.COMMA);
+        String[] classIdArray = schoolTimetable.getClassIds().split(StringPool.COMMA);
         Map param = new HashMap();
         param.put("courseId",schoolTimetable.getCourseId());
         for(int i = 0;i < schoolArray.length;i++){
             Integer schoolId = Integer.parseInt(schoolArray[i]);
             param.put("schoolId",schoolId);
             this.baseMapper.insertRelateSchooltimetableInfo(param);
+        }
+        //循环添加班级和课程的关联表数据
+        for(int j = 0;j < classIdArray.length; j++){
+            Integer classId = Integer.parseInt(classIdArray[j]);
+            param.put("classId",classId);
+            this.baseMapper.insertRelateClassInfo(param);
         }
 
     }

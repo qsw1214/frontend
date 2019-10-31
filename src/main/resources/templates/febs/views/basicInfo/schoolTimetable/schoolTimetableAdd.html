@@ -18,14 +18,14 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">上课时间：</label>
             <div class="layui-input-block">
-                <input type="date" name="beginDate" lay-verify="beginDate" autocomplete="off" class="layui-input">
+                <input type="datetime-local" name="beginDate" lay-verify="beginDate" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">授课时长：</label>
             <div class="layui-input-block">
-                <input type="text" name="duration" lay-verify="duration" maxlength="50" autocomplete="off"
-                       class="layui-input">
+                <input type="number" name="duration" lay-verify="duration" maxlength="50" autocomplete="off"
+                       class="layui-input" placeholder="请输入数字">
             </div>
         </div>
         <div class="layui-form-item">
@@ -111,6 +111,7 @@
             <label class="layui-form-label febs-form-item-require">上课地点：</label>
             <div class="layui-input-block">
                 <select name="classroomId"
+                        xm-select-radio
                         xm-select-direction="down"
                         xm-select="schoolTimetable-add-classroom"
                         xm-select-skin="default">
