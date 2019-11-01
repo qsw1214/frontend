@@ -42,6 +42,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label febs-form-item-require">属性：</label>
                             <div class="layui-input-block">
+                                <input type="hidden" name="dictId">
                                 <input type="text" name="field" autocomplete="off" class="layui-input"
                                        maxlength="10" lay-verify="range">
                             </div>
@@ -57,6 +58,13 @@
                             <label class="layui-form-label febs-form-item-require">值：</label>
                             <div class="layui-input-block">
                                 <input type="text" name="v" autocomplete="off" class="layui-input"
+                                       maxlength="10" lay-verify="range">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label febs-form-item-require">备注：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="remark" autocomplete="off" class="layui-input"
                                        maxlength="10" lay-verify="range">
                             </div>
                         </div>
@@ -158,8 +166,10 @@
                 $header.text('修改字典');
                 form.val("dict-form", {
                     "field": data.field,
+                    "dictId": data.dictId,
                     "k": data.k,
-                    "v": data.v
+                    "v": data.v,
+                    "remark": data.remark
                 });
             }
             if (layEvent === 'del') {
@@ -194,6 +204,7 @@
                     {field: 'field', title: '字段', minWidth: 120},
                     {field: 'k', title: '键'},
                     {field: 'v', title: '值'},
+                    {field: 'remark', title: '备注'},
                     {title: '操作', toolbar: '#dict-option', width: 100}
                 ]]
             });
@@ -226,7 +237,7 @@
         }
 
         var addOrUpdateDict = function (data) {
-            if (data.dictId && $header.text() === '修改字典') {
+            if (data.dictId  && $header.text() === '修改字典') {
                 febs.post(ctx + 'dict/update', data, function () {
                     febs.alert.success('修改字典成功');
                     $query.trigger('click');
