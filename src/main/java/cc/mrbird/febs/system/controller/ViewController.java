@@ -152,8 +152,8 @@ public class ViewController extends BaseController {
     	List<Dept> list = userDeptService.getDeptByUserId(userId);
     	String userDeptIds = "";
     	for(int i=0; i<list.size(); i++)
-    		userDeptIds = userDeptIds + list.get(i).getDeptId();
-    	model.addAttribute("userDeptIds", userDeptIds);
+    		userDeptIds = userDeptIds + list.get(i).getDeptId() + ",";
+    	model.addAttribute("userDeptIds", userDeptIds.substring(0,userDeptIds.length()-1));
         return FebsUtil.view("system/dept/dept");
     }
 

@@ -264,7 +264,7 @@ public class SchoolController extends BaseController {
         // 判断有无部门权限
         User user = getCurrentUser();
         if(!userDeptService.isPermission(user.getUserId(), deptId)){
-            return new FebsResponse().fail().data("无权限");
+            return new FebsResponse().specialFail().data("无权限");
         }
         IPage<School> p = this.schoolService.findSchoolsByDept(request, school, deptId);
         Map<String, Object> dataTable = getDataTable(p);

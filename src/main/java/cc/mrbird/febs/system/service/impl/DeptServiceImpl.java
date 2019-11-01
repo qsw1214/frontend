@@ -288,6 +288,9 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 	@Override
 	public List<Long> getParentDeptIds(Long deptId) {
 		List<Long> parentIds = new ArrayList<>();
+		if(deptId == null){
+		    return parentIds;
+        }
 		long parentId = deptId;
 		while(parentId != 1 && parentIds.size() < 5){
 			Dept parentDept = this.baseMapper.selectById(parentId);

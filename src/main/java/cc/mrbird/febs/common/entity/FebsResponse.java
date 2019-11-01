@@ -41,6 +41,11 @@ public class FebsResponse extends HashMap<String, Object> {
         return this;
     }
 
+    public FebsResponse specialFail() {
+        this.put("code",0);
+        return this;
+    }
+
     @Override
     public FebsResponse put(String key, Object value) {
         super.put(key, value);

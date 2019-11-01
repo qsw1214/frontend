@@ -21,8 +21,8 @@
         d.dept_grade deptGrade,
         d.create_time createTime,
         d.modify_time modifyTime
-        FROM t_user_dept ud 
-        LEFT JOIN t_dept d ON (ud.dept_id = d.dept_id)
+        FROM  t_dept d
+        LEFT JOIN t_user_dept ud ON (ud.dept_id = d.dept_id)
         WHERE ud.user_id = #{userId}
         ORDER BY d.dept_grade
     </select>
