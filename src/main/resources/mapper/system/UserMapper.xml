@@ -28,13 +28,15 @@
         u.jobnumber,
         u.school_id schoolId,
         GROUP_CONCAT(r.role_id) roleId,
-        GROUP_CONCAT(r.ROLE_NAME) roleName,
-        GROUP_CONCAT(ud.dept_id) deptIds
+        GROUP_CONCAT(distinct r.ROLE_NAME) roleName,
+        GROUP_CONCAT(distinct ud.dept_id) deptIds,
+        GROUP_CONCAT(distinct td.dept_name) deptName
         FROM
         t_user u
         LEFT JOIN t_user_role ur ON (u.user_id = ur.user_id)
         LEFT JOIN t_role r ON r.role_id = ur.role_id
         LEFT JOIN t_user_dept ud ON (u.user_id = ud.user_id)
+        LEFT JOIN t_dept td ON (td.dept_id = ud.dept_id)
         WHERE 1 = 1
         <if test="user.deptId != null">
             AND ud.dept_id = #{user.deptId}
