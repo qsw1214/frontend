@@ -42,6 +42,7 @@ public class ApprovalServiceImpl implements IApprovalService{
         Date finishTime = dingFormVO.getFinish_time();
 
         School school = new School();
+        school.setSchoolType("主校");
         for (Form_component_values formObjValue:formValuesList){
             String name = formObjValue.getName();
             switch (name){
@@ -55,7 +56,13 @@ public class ApprovalServiceImpl implements IApprovalService{
                     school.setLinkPhone(formObjValue.getValue());
                     break;
                 case"学校类别":
-                    school.setSchoolType(formObjValue.getValue());
+                    school.setSchoolCategory(formObjValue.getValue());
+                    break;
+                case"详细地址":
+                    school.setAddress(formObjValue.getValue());
+                    break;
+                case"学校简介":
+                    school.setIntroduce(formObjValue.getValue());
                     break;
             }
         }
