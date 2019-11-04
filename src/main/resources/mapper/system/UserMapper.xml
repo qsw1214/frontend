@@ -121,7 +121,7 @@
     </select>
 
     <!--删除离职用户-->
-    <delete id="deleteUser" parameterType="long">
+    <delete id="deleteUser" parameterType="string">
         delete from t_user where user_id=#{userid}
     </delete>
 
@@ -166,7 +166,7 @@
         GROUP BY u.user_id
     </select>
 
-    <select id="getUserInfo" parameterType="java.lang.Long" resultType="cc.mrbird.febs.system.entity.User">
+    <select id="getUserInfo" parameterType="string" resultType="cc.mrbird.febs.system.entity.User">
         SELECT
         u.user_id userId,
         u.username,

@@ -239,11 +239,11 @@ public class OrgController {
                 bizLogger.info("通讯录用户增加: " + plainText);
                 //调取用户详情接口
                 UserInfoVO userInfoVO = gson.fromJson(plainText, UserInfoVO.class);
-                List<Long> userIds=userInfoVO.getUserId();
+                List<String> userIds = userInfoVO.getUserId();
                 User user=new User();
-                for(long userid:userIds) {//遍历json数组内容  
+                for(String userid:userIds) {//遍历json数组内容  
                     UserInfoDetailVO userInfoDetailVO = AddressListUtil.userMess(userid);
-                    List<Long> deptIds = userInfoDetailVO.getDepartment();
+                    List<String> deptIds = userInfoDetailVO.getDepartment();
 
                     UserInfoDetailVO map = AddressListUtil.userMess(userid);
 
@@ -268,7 +268,7 @@ public class OrgController {
                     }
 
                     userDeptMapper.deleteUserDept(userid);//先删用户部门表
-                    for (long deptId : deptIds) {
+                    for (String deptId : deptIds) {
                         userDeptMapper.insertUserDept(userid, deptId);//插入用户部门数据
                     }
 
@@ -277,7 +277,7 @@ public class OrgController {
                     Role role = new Role();
                     if (roles == null) {//如果没有角色 那就是普通用户
                         userRole.setUserId(userid);
-                        userRole.setRoleId(2L);
+                        userRole.setRoleId(1L);
                         userRoleService.insertUserRole(userRole);
                     } else {
                         for (int i = 0; i < roles.size(); i++) {
@@ -297,9 +297,9 @@ public class OrgController {
             }else if(USER_MODIFY_ORG.equals(eventType)){
                 bizLogger.info("通讯录用户更改: " + plainText);
                 UserInfoVO userInfoVO = gson.fromJson(plainText,UserInfoVO.class);
-                List<Long> userIds=userInfoVO.getUserId();
+                List<String> userIds = userInfoVO.getUserId();
                 User user = new User();
-                for(long userId:userIds) {//遍历json数组内容 
+                for(String userId:userIds) {//遍历json数组内容 
                     UserInfoDetailVO map = AddressListUtil.userMess(userId);
                     user.setUserId(userId);
                     user.setUsername(map.getName());
@@ -327,8 +327,8 @@ public class OrgController {
             }else if(USER_LEAVE_ORG.equals(eventType)){
                 bizLogger.info("通讯录用户离职: " + plainText);
                 UserInfoVO userInfoVO = gson.fromJson(plainText,UserInfoVO.class);
-                List<Long> userIds=userInfoVO.getUserId();
-                for(long userId:userIds){
+                List<String> userIds = userInfoVO.getUserId();
+                for(String userId:userIds){
                     userDeptMapper.deleteUserDept(userId);//先删除用户部门关系
                     userRoleService.deleteUserRole(userId);//删除用户角色关系
                     userService.deleteUser(userId);//删除用户
@@ -340,8 +340,8 @@ public class OrgController {
             }else if(LABEL_USER_CHANGE.equals(eventType)){
                 bizLogger.info("员工角色信息发生变更: " + plainText);
                 UserInfoVO userInfoVO = gson.fromJson(plainText,UserInfoVO.class);
-                List<Long> userIds=userInfoVO.getUserIdList();
-                for(long userid:userIds) {//遍历json数组内容 
+                List<String> userIds = userInfoVO.getUserIdList();
+                for(String userid:userIds) {//遍历json数组内容 
                     UserInfoDetailVO map = AddressListUtil.userMess(userid);
                     List<RolesInfoVO> roles=map.getRoles();
                     UserRole userRole=new UserRole();
@@ -365,9 +365,9 @@ public class OrgController {
                                 roleService.save(role);
                             }
                         }
-                        List<Long> deptIds = map.getDepartment();
+                        List<String> deptIds = map.getDepartment();
                         userDeptMapper.deleteUserDept(userid);
-                        for (long deptId : deptIds) {
+                        for (String deptId : deptIds) {
                             userDeptMapper.insertUserDept(userid, deptId);
                         }
                     }

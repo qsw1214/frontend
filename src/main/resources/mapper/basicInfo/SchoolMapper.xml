@@ -65,7 +65,11 @@
             mainSchool.school_name as belongSchool,
             pronDept.DEPT_NAME as province,
             cityDept.DEPT_NAME as city,
-            counttyDept.DEPT_NAME as country
+            counttyDept.DEPT_NAME as country,
+            info.province_dept_id,
+            info.city_dept_id,
+            info.country_dept_id,
+            info.picture
             from jcc_school_info info
             LEFT JOIN t_dept pronDept ON info.province_dept_id = pronDept.DEPT_ID
             LEFT JOIN t_dept cityDept ON info.city_dept_id = cityDept.DEPT_ID

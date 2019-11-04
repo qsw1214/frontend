@@ -30,7 +30,7 @@ public interface IDeptService extends IService<Dept> {
     /**
      * 获取部门列表（树形列表）
      */
-    List<DeptTree<Dept>> getLimitDeptTree(Long userId);
+    List<DeptTree<Dept>> getLimitDeptTree(String userId);
 
     /**
      * 获取部门树（供Excel导出）
@@ -74,7 +74,7 @@ public interface IDeptService extends IService<Dept> {
      * @param userId
      * @return
      */
-    List<List<Dept>> getAllParentDept(Long userId);
+    List<List<Dept>> getAllParentDept(String userId);
 
     List<Dept> getAllCityData();
 

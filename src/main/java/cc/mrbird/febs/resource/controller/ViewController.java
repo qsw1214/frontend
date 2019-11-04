@@ -89,7 +89,7 @@ public class ViewController extends BaseController{
     @GetMapping(FebsConstant.VIEW_PREFIX + "resource/resource/add")
     @RequiresPermissions("resource:add")
     public String resourceAdd(Model model) {
-    	Long userId = super.getCurrentUser().getUserId();
+    	String userId = super.getCurrentUser().getUserId();
     	List<Dept> depts = userDeptService.getDeptByUserId(userId);
     	List<Dict> grades = dictService.findDictsByField("grade");
     	List<Dict> subjects = dictService.findDictsByField("subject");
@@ -105,7 +105,7 @@ public class ViewController extends BaseController{
     @RequiresPermissions("resource:update")
     public String resourceUpdate(@PathVariable String resourceId, Model model) {
     	Resource resource = resourceService.getById(resourceId);
-    	Long userId = super.getCurrentUser().getUserId();
+    	String userId = super.getCurrentUser().getUserId();
     	List<Dept> depts = userDeptService.getDeptByUserId(userId);
     	List<Dict> grades = dictService.findDictsByField("grade");
     	List<Dict> subjects = dictService.findDictsByField("subject");

@@ -37,7 +37,7 @@ public class DeptController extends BaseController {
 	private IUserDeptService userDeptService;
 	
 	@GetMapping("parents")
-	public List<List<Dept>> getParents(@RequestParam Long userId) throws FebsException {
+	public List<List<Dept>> getParents(@RequestParam String userId) throws FebsException {
 		try {
 			return this.deptService.getAllParentDept(userId);
 		} catch (Exception e) {
@@ -48,7 +48,7 @@ public class DeptController extends BaseController {
 	}
 	
 	@GetMapping("userDepts")
-	public List<Dept> getUserDepts(@RequestParam Long userId) throws FebsException {
+	public List<Dept> getUserDepts(@RequestParam String userId) throws FebsException {
 		try {
 			return this.userDeptService.getDeptByUserId(userId);
 		} catch (Exception e) {
@@ -83,7 +83,7 @@ public class DeptController extends BaseController {
 	@GetMapping("tree")
 	public FebsResponse getLimitDeptTree() throws FebsException {
 		try {		
-			Long userId = super.getCurrentUser().getUserId();
+			String userId = super.getCurrentUser().getUserId();
 			List<DeptTree<Dept>> depts = this.deptService.getLimitDeptTree(userId);
 			return new FebsResponse().success().data(depts);
 		} catch (Exception e) {

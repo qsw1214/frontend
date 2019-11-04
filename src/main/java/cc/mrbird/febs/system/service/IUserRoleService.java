@@ -33,5 +33,5 @@ public interface IUserRoleService extends IService<UserRole> {
     /*
     * 删除
     * */
-    void deleteUserRole(Long userid);
+    void deleteUserRole(String userid);
 }

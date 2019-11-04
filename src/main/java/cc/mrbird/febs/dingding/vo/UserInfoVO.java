@@ -8,7 +8,7 @@ import java.util.List;
 public class UserInfoVO {
     private String CorpId;
     private String EventType;
-    private List<Long> UserId;
+    private List<String> UserId;
     private String TimeStamp;
-    private List<Long> UserIdList;
+    private List<String> UserIdList;
 }

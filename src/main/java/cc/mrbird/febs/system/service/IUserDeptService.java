@@ -59,7 +59,7 @@ public interface IUserDeptService extends IService<UserDept> {
 	 * @param userId
 	 * 
 	 */
-    List<Dept> getDeptByUserId(Long userId);
+    List<Dept> getDeptByUserId(String userId);
     
     /**
 	 * 根据userId和deptId获取部门
@@ -73,6 +73,6 @@ public interface IUserDeptService extends IService<UserDept> {
      * @param deptId
      * @return
      */
-    boolean isPermission(Long userId, Long deptId);
+    boolean isPermission(String userId, Long deptId);
     
 }

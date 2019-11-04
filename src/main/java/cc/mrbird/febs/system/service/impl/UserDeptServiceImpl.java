@@ -67,7 +67,7 @@ public class UserDeptServiceImpl extends ServiceImpl<UserDeptMapper, UserDept> i
 	}
 
 	@Override
-	public List<Dept> getDeptByUserId(Long userId) {
+	public List<Dept> getDeptByUserId(String userId) {
 		return this.baseMapper.getDeptByUserId(userId);
 	}
 	
@@ -77,7 +77,7 @@ public class UserDeptServiceImpl extends ServiceImpl<UserDeptMapper, UserDept> i
 	}
 
 	@Override
-	public boolean isPermission(Long userId, Long deptId) {
+	public boolean isPermission(String userId, Long deptId) {
 		List<Long> parentDeptIds = deptService.getParentDeptIds(deptId);
 		if(parentDeptIds.isEmpty())
 			return false;

@@ -81,5 +81,8 @@
         <if test="classroomInfo.state != null">
             AND jci.state = #{classroomInfo.state}
         </if>
+        <if test="classroomInfo.schoolId != null">
+            AND jci.school_id = #{classroomInfo.schoolId}
+        </if>
     </select>
 </mapper>

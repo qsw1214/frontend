@@ -35,7 +35,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
     }
 
     @Override
-    public void deleteUserRole(Long userid) {
+    public void deleteUserRole(String userid) {
         this.baseMapper.delete(new QueryWrapper<UserRole>().lambda().in(UserRole::getUserId,userid));
     }
 

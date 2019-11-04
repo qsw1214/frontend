@@ -2,6 +2,7 @@ package cc.mrbird.febs.system.entity;
 
 import cc.mrbird.febs.common.annotation.IsMobile;
 import cc.mrbird.febs.common.converter.TimeConverter;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -55,9 +56,9 @@ public class User implements Serializable {
     /**
      * 用户 ID
      */
-    @TableId(value = "USER_ID")
+    @TableId(value = "USER_ID",type = IdType.ID_WORKER_STR)
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long userId;
+    private String userId;
 
     /**
      * 用户名
@@ -186,9 +187,7 @@ public class User implements Serializable {
     @TableField(exist = false)
     private String roleName;
 
-    public Long getId() {
-        return userId;
-    }
+
 
     @TableField("UNIONID")
     private String unionid;
@@ -229,4 +228,9 @@ public class User implements Serializable {
     
     @TableField(exist = false)
     private String deptIds;
+
+    public String getId() {
+        return userId;
+    }
+
 }

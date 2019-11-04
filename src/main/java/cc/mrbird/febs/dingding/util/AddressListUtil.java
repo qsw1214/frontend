@@ -85,11 +85,11 @@ public class AddressListUtil {
     }*/
 
     //获取用户详情
-    public static UserInfoDetailVO userMess(Long userId)throws RuntimeException {
+    public static UserInfoDetailVO userMess(String userId)throws RuntimeException {
         try {
             DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/user/get");
             OapiUserGetRequest request = new OapiUserGetRequest();
-            request.setUserid(userId.toString());
+            request.setUserid(userId);
             request.setHttpMethod("GET");
             OapiUserGetResponse response = client.execute(request, AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET));
             String userBody = response.getBody();

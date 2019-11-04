@@ -148,7 +148,7 @@ public class ViewController extends BaseController {
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/dept")
     @RequiresPermissions("dept:view")
     public String systemDept(Model model) {
-    	Long userId = super.getCurrentUser().getUserId();
+    	String userId = super.getCurrentUser().getUserId();
     	List<Dept> list = userDeptService.getDeptByUserId(userId);
     	String userDeptIds = "";
     	for(int i=0; i<list.size(); i++)

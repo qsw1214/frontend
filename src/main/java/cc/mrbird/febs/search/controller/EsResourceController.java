@@ -114,7 +114,7 @@ public class EsResourceController extends BaseController{
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public FebsResponse detail(@PathVariable Long id) {   	
+    public FebsResponse detail(@RequestParam(required = true)  Long id) {
     	EsResource r = esResourceService.get(id);
     	//获取整小时
     	Date date =new Date(System.currentTimeMillis()); 

@@ -32,6 +32,6 @@ public class UserInfoDetailVO {
     private String jobnumber;
     private String name;
     private String position;
-    private List<Long> department;
+    private List<String> department;
     private List<RolesInfoVO> roles;
 }

@@ -112,10 +112,10 @@ public interface IUserService extends IService<User> {
     void updateProfile(User user);
 
     /*删除离职用户*/
-    void deleteUser(Long userId);
+    void deleteUser(String userId);
 
     /*根据id显示用户详情*/
-    User getUserInfo(Long userId);
+    User getUserInfo(String userId);
 
     IPage<User> getTeacherListBySchoolId(Integer schoolId, QueryRequest request);
 

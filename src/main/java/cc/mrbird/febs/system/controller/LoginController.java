@@ -110,7 +110,7 @@ public class LoginController extends BaseController {
                 loginLog.setSystemBrowserInfo();
                 this.loginLogService.saveLoginLog(loginLog);
                 
-                return new FebsResponse().success();
+                return new FebsResponse().success().data(token);
             } catch (UnknownAccountException | IncorrectCredentialsException | LockedAccountException e) {
                 throw new FebsException("用户信息验证失败！请联系管理员");
             } catch (AuthenticationException e) {

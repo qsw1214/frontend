@@ -8,11 +8,11 @@
 
 
     <!--删除用户部门关系-->
-    <delete id="deleteUserDept" parameterType="java.lang.Long">
+    <delete id="deleteUserDept" parameterType="string">
         delete from t_user_dept where user_id=#{userid}
     </delete>
     
-    <select id="getDeptByUserId" parameterType="long" resultType="dept">
+    <select id="getDeptByUserId" parameterType="string" resultType="dept">
         SELECT 
         d.dept_id deptId,
         d.parent_id parentId,

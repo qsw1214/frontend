@@ -18,7 +18,7 @@ public class UserRole implements Serializable {
      * 用户ID
      */
     @TableField("USER_ID")
-    private Long userId;
+    private String userId;
 
     /**
      * 角色ID

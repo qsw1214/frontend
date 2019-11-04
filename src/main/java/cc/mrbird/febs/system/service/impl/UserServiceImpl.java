@@ -8,6 +8,7 @@ import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.common.utils.MD5Util;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.entity.User;
+import cc.mrbird.febs.system.entity.UserDept;
 import cc.mrbird.febs.system.entity.UserRole;
 import cc.mrbird.febs.system.mapper.UserMapper;
 import cc.mrbird.febs.system.service.IDeptService;
@@ -83,6 +84,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // 保存用户角色
         String[] roles = user.getRoleId().split(StringPool.COMMA);
         setUserRoles(user, roles);
+        //保存用户部门
+        String[] deptIds = user.getDeptIds().split(StringPool.COMMA);
+        setUserDepts(user, deptIds);
     }
 
     @Override
@@ -200,7 +204,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void deleteUser(Long userId) {
+    public void deleteUser(String userId) {
         baseMapper.deleteById(userId);
     }
 
@@ -215,12 +219,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         userRoleService.saveBatch(userRoles);
     }
 
+    private void setUserDepts(User user, String[] depts) {
+        List<UserDept> userDepts = new ArrayList<>();
+        Arrays.stream(depts).forEach(deptId -> {
+            UserDept ud = new UserDept();
+            ud.setUserId(user.getUserId());
+            ud.setDeptId(Long.valueOf(deptId));
+            userDepts.add(ud);
+        });
+        userDeptService.saveBatch(userDepts);
+    }
+
+
     private void setbulkUserRoles(User user, String[] roles) {
         String[] userIds = user.getUserIds().split(StringPool.COMMA);
         //循环选中的用户id,一一保存
         for(int i = 0;i < userIds.length;i++){
             String userIdDemo = userIds[i];
-            Long userId = Long.parseLong(userIdDemo);
+            String userId = userIdDemo;
             List<UserRole> userRoles = new ArrayList<>();
             Arrays.stream(roles).forEach(roleId -> {
                 UserRole ur = new UserRole();
@@ -235,7 +251,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
 
-    public User getUserInfo(Long userId){
+    public User getUserInfo(String userId){
         User users=this.baseMapper.getUserInfo(userId);
         String[] roleNames=users.getRoleName().split(",");
         String[] deptIds= users.getDeptIds().split(",");

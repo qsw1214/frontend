@@ -66,7 +66,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     }
 
     @Override
-    public List<DeptTree<Dept>> getLimitDeptTree(Long userId) {
+    public List<DeptTree<Dept>> getLimitDeptTree(String userId) {
 //    	 获取所有父部门
 //    	String arrays = AddressListUtil.getUserParentDepts(userId);
 //    	if(arrays == null)
@@ -248,7 +248,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     }
     
     @Override
-	public List<List<Dept>> getAllParentDept(Long userId) {
+	public List<List<Dept>> getAllParentDept(String userId) {
 		List<List<Dept>> result = new ArrayList<>();
 		List<Dept> list = this.userDeptService.getDeptByUserId(userId);
 		Long parentId;
