@@ -58,6 +58,9 @@ public class ApprovalServiceImpl implements IApprovalService{
                 case"学校类别":
                     school.setSchoolCategory(formObjValue.getValue());
                     break;
+                case"邮编":
+                    school.setPostCode(formObjValue.getValue());
+                    break;
                 case"详细地址":
                     school.setAddress(formObjValue.getValue());
                     break;
