@@ -348,17 +348,19 @@ public class OrgController {
                     userRoleService.deleteUserRole(userid);//删除用户角色
                     if(roles==null){
                         userRole.setUserId(userid);
-                        userRole.setRoleId(2L);
+                        userRole.setRoleId(1L);
                         userRoleService.insertUserRole(userRole);
                     }else {
                         for (int i = 0; i < roles.size(); i++) {
-                            userRole.setRoleId(roles.get(i).getId());
+                            //userRole.setRoleId(roles.get(i).getId());
+                            userRole.setRoleId(1L);
                             userRole.setUserId(userid);
                             userRoleService.insertUserRole(userRole);//插入用户角色
 
                             if (roleService.getById(userRole.getRoleId()) == null) {
                                 Role role = new Role();
-                                role.setRoleId(roles.get(i).getId());
+                                userRole.setRoleId(1L);
+                                //role.setRoleId(roles.get(i).getId());
                                 role.setRoleName(roles.get(i).getName());
                                 role.setCreateTime(new Date());
                                 role.setModifyTime(new Date());
