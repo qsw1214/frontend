@@ -2,7 +2,6 @@ package cc.mrbird.febs.resource.service.impl;
 
 import cc.mrbird.febs.common.authentication.ShiroRealm;
 import cc.mrbird.febs.common.entity.MenuTree;
-import cc.mrbird.febs.common.entity.MenuTree;
 import cc.mrbird.febs.common.utils.TreeUtil;
 import cc.mrbird.febs.resource.entity.Category;
 import cc.mrbird.febs.resource.mapper.CategoryMapper;

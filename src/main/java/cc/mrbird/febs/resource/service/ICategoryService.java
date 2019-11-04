@@ -1,6 +1,5 @@
 package cc.mrbird.febs.resource.service;
 
-import cc.mrbird.febs.common.entity.DeptTree;
 import cc.mrbird.febs.common.entity.MenuTree;
 import cc.mrbird.febs.resource.entity.Category;
 import com.baomidou.mybatisplus.extension.service.IService;

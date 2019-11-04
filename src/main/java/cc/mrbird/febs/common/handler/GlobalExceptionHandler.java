@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     public FebsResponse handleException(Exception e) {
         log.error("系统内部异常，异常信息", e);
-        return new FebsResponse().code(HttpStatus.INTERNAL_SERVER_ERROR).message("系统内部异常");
+        return new FebsResponse().code(HttpStatus.INTERNAL_SERVER_ERROR).message("请求失败");
     }
 
     @ExceptionHandler(value = FebsException.class)
