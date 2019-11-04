@@ -72,7 +72,7 @@ public class UserDeptServiceImpl extends ServiceImpl<UserDeptMapper, UserDept> i
 	}
 	
 	@Override
-	public Dept getDeptByUserIdAndDeptId(Long userId, Long deptId) {
+	public Dept getDeptByUserIdAndDeptId(String userId, Long deptId) {
 		return this.baseMapper.getDeptByUserIdAndDeptId(userId, deptId);
 	}
 

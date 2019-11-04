@@ -11,7 +11,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 public interface UserDeptMapper extends BaseMapper<UserDept> {
 
-    void insertUserDept(String userid,String deptId);
+    void insertUserDept(@Param("userId") String userId,@Param("deptId") String deptId);
 
 
     void deleteUserDept(String userid);
@@ -26,5 +26,5 @@ public interface UserDeptMapper extends BaseMapper<UserDept> {
 	 * 根据用户id和部门id获取部门
 	 * @param userId
 	 */
-	Dept getDeptByUserIdAndDeptId(@Param("userId") Long userId, @Param("deptId") Long deptId);
+	Dept getDeptByUserIdAndDeptId(@Param("userId") String userId, @Param("deptId") Long deptId);
 }
