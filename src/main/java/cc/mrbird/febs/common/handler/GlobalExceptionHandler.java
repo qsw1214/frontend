@@ -34,13 +34,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     public FebsResponse handleException(Exception e) {
         log.error("系统内部异常，异常信息", e);
-        return new FebsResponse().code(HttpStatus.INTERNAL_SERVER_ERROR).message("请求失败");
+        return new FebsResponse().code(HttpStatus.BAD_REQUEST).message("请求失败");
     }
 
     @ExceptionHandler(value = FebsException.class)
     public FebsResponse handleFebsException(FebsException e) {
         log.error("系统错误", e);
-        return new FebsResponse().code(HttpStatus.INTERNAL_SERVER_ERROR).message(e.getMessage());
+        return new FebsResponse().code(HttpStatus.BAD_REQUEST).message("请求失败");
     }
 
     /**
