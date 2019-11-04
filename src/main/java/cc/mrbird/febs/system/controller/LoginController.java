@@ -73,7 +73,12 @@ public class LoginController extends BaseController {
                 String department = mapDepartment.substring(1, mapDepartment.length() - 1);
                 userInfMap.put("department", department);
                 //获取roleMap
-                List<Map<String,Object>> roleMapList = getRolesMap(userInfMap);
+
+                List<Map<String,Object>> roleMapList = new ArrayList<Map<String,Object>>();
+                //免登不需要权限
+                if(!"1".equals(freeLogin)){
+                    roleMapList = getRolesMap(userInfMap);
+                }
                 //123456代替密码实现登录
                 //加密密码
                 //password = MD5Util.encrypt(String.valueOf(userInfMap.get("name")), String.valueOf(userInfMap.get("unionId")));
