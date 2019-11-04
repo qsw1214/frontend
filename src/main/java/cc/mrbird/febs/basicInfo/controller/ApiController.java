@@ -42,7 +42,7 @@ import java.util.*;
  */
 @Slf4j
 @RestController
-@RequestMapping("api")
+@RequestMapping("yunPanInter")
 public class ApiController extends BaseController {
 
     @Autowired
