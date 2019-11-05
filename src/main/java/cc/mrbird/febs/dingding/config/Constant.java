@@ -62,7 +62,7 @@ public class Constant {
     /**
      * 第三方应用申请接入审批标识
      */
-    public static final String APP_ABUTMENT_CALLBACK_URL_HOST = "PROC-B23A2A20-14A0-4549-8C9F-CD5C583DC0DD";
+    public static final String APP_ABUTMENT_CALLBACK_URL_HOST = "PROC-26F70284-0844-4AD8-83A7-9E14FD8EBD58";
 
     /**
      * 审批结果
