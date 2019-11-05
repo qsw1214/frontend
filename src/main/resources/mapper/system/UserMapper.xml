@@ -162,7 +162,8 @@
         LEFT JOIN t_user_role ur ON (u.user_id = ur.user_id)
         LEFT JOIN t_role r ON r.role_id = ur.role_id
         LEFT JOIN t_user_dept ud ON (u.user_id = ud.user_id)
-        WHERE  u.school_id = #{schoolId} and r.role_name = '老师'
+        WHERE  ud.dept_id = (select dept_id from jcc_school_info WHERE SCHOOL_ID = #{schoolId})
+        and r.role_name = '老师'
         GROUP BY u.user_id
     </select>
 
