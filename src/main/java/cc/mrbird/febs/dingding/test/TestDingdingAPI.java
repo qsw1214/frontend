@@ -40,7 +40,7 @@ public class TestDingdingAPI {
         requestOapiChat.setShowHistoryType(1L);
         OapiChatCreateResponse chatCreateResponse = null;
         try{
-            chatCreateResponse = client.execute(requestOapiChat,"5e30e557a73d3014976b754a27f84ef0");
+            chatCreateResponse = client.execute(requestOapiChat,response.getAccessToken());
             System.out.println(chatCreateResponse.getChatid());
         }catch(Exception e){
         }
@@ -57,7 +57,7 @@ public class TestDingdingAPI {
             msg.setText(text);
             chatRequest.setMsg(msg);
             try{
-                OapiChatSendResponse sendResponse = client.execute(chatRequest, "5e30e557a73d3014976b754a27f84ef0");
+                OapiChatSendResponse sendResponse = client.execute(chatRequest, response.getAccessToken());
                 System.out.println(sendResponse.getMessageId());
             }catch(Exception e){
 

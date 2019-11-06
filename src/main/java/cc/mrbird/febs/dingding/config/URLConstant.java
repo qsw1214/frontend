@@ -56,4 +56,9 @@ public class URLConstant {
      */
     public static final String URL_CALENDAR_CREATE = "https://oapi.dingtalk.com/topapi/calendar/create";
 
+    /**
+     * 创建ding群组的接口url
+     */
+    public static final String URL_CHAT_CREATE = "https://oapi.dingtalk.com/chat/create";
+
 }

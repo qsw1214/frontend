@@ -7,6 +7,8 @@ import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.utils.*;
+import cc.mrbird.febs.dingding.config.Constant;
+import cc.mrbird.febs.dingding.config.URLConstant;
 import cc.mrbird.febs.resource.entity.Comment;
 import cc.mrbird.febs.resource.entity.Resource;
 import cc.mrbird.febs.resource.entity.Subject;
@@ -23,6 +25,11 @@ import cc.mrbird.febs.system.vo.AreaDataCountVO;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.dingtalk.api.DefaultDingTalkClient;
+import com.dingtalk.api.request.OapiChatCreateRequest;
+import com.dingtalk.api.request.OapiGettokenRequest;
+import com.dingtalk.api.response.OapiChatCreateResponse;
+import com.dingtalk.api.response.OapiGettokenResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -80,6 +87,9 @@ public class ApiController extends BaseController {
 
     @Autowired
     private IDeptService deptService;
+
+    @Autowired
+    private IDingChatService dingChatService;
 
     /**
      * 根据查询条件获取设备列表
@@ -671,4 +681,62 @@ public class ApiController extends BaseController {
         countVo.setStudentCountList(studentCountLists);
         return new FebsResponse().data(countVo).success();
     }
+
+    /**
+     * 创建钉群接口
+     * @param request
+     * @param chatName
+     * @return
+     */
+    @GetMapping("createDingChat")
+//    @RequiresPermissions("add:createDingChat")
+    public FebsResponse createDingChat(QueryRequest request, String chatName){
+
+        DefaultDingTalkClient client = null;
+        client = new DefaultDingTalkClient(URLConstant.URL_GET_TOKKEN);
+        OapiGettokenRequest gettokenRequest = new OapiGettokenRequest();
+        gettokenRequest.setAppkey(Constant.APPKEY);
+        gettokenRequest.setAppsecret(Constant.APPSECRET);
+        gettokenRequest.setHttpMethod("GET");
+        OapiGettokenResponse response = null;
+        try{
+            response = client.execute(gettokenRequest);
+//            System.out.println(response.getAccessToken());
+        }catch(Exception e){
+
+        }
+
+        client = new DefaultDingTalkClient(URLConstant.URL_CHAT_CREATE);
+        OapiChatCreateRequest requestOapiChat = new OapiChatCreateRequest();
+        requestOapiChat.setName(chatName);
+        User user = this.getCurrentUser();
+        requestOapiChat.setOwner(user.getUserId());
+        requestOapiChat.setUseridlist(Arrays.asList(user.getUserId()));
+        requestOapiChat.setShowHistoryType(1L);
+        OapiChatCreateResponse chatCreateResponse = null;
+        try{
+            chatCreateResponse = client.execute(requestOapiChat,response.getAccessToken());
+            System.out.println(chatCreateResponse.getChatid());
+            DingChat chat = new DingChat();
+            chat.setChatId(chatCreateResponse.getChatid());
+            chat.setChatName(chatName);
+            chat.setUserId(user.getUserId());
+            chat.setUserCount(1);
+            this.dingChatService.createDingChat(chat);
+        }catch(Exception e){
+        }
+        return new FebsResponse().success();
+    }
+
+    /**
+     * 获取用户所在的钉钉群组列表
+     */
+    @GetMapping("getDingChatList")
+//    @RequiresPermissions("list:getDingChatList")
+    public FebsResponse getDingChatList(QueryRequest request) {
+        //User user = this.getCurrentUser();
+        List<DingChat> chatList = this.dingChatService.getDingChatList();
+        return new FebsResponse().data(chatList).success();
+    }
+
 }

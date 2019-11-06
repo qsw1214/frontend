@@ -19,6 +19,8 @@ public class Constant {
      */
     //public static final String APPSECRET = "kitLl5P_cxpgt04Ztm-6QpdraF9Tkie1GJ2ivwELkWjxRJVie4XVVWWyy1TNuC15";
     public static final String APPSECRET = "LPZOM7ttqsP6mIpGgL1j3JZ9iJ_SmKiyRZ_tRhgFXNZ-KJ_FRtw4Kb16zJFKT6CD";
+
+    public static final String ACCESS_TOKEN = "5e30e557a73d3014976b754a27f84ef0";
     /**
      * 登录的ACCESSKEY
      */
