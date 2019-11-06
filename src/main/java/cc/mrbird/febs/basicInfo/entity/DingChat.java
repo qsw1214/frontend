@@ -19,4 +19,7 @@ public class DingChat {
 
     @TableId(value = "user_id")
     public String userId;
+
+    @TableId(value = "icon")
+    public String icon;
 }

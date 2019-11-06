@@ -61,4 +61,8 @@ public class URLConstant {
      */
     public static final String URL_CHAT_CREATE = "https://oapi.dingtalk.com/chat/create";
 
+    public static final String URL_CHAT_GET = "https://oapi.dingtalk.com/chat/get";
+
+    public static final String URL_CHAT_UPDATE = "https://oapi.dingtalk.com/chat/update";
+
 }

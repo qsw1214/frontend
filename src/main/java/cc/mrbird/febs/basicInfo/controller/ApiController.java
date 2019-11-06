@@ -9,6 +9,7 @@ import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.utils.*;
 import cc.mrbird.febs.dingding.config.Constant;
 import cc.mrbird.febs.dingding.config.URLConstant;
+import cc.mrbird.febs.dingding.util.AccessTokenUtil;
 import cc.mrbird.febs.resource.entity.Comment;
 import cc.mrbird.febs.resource.entity.Resource;
 import cc.mrbird.febs.resource.entity.Subject;
@@ -26,9 +27,14 @@ import cc.mrbird.febs.system.vo.AreaDataCountVO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.dingtalk.api.DefaultDingTalkClient;
+import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiChatCreateRequest;
+import com.dingtalk.api.request.OapiChatGetRequest;
+import com.dingtalk.api.request.OapiChatUpdateRequest;
 import com.dingtalk.api.request.OapiGettokenRequest;
 import com.dingtalk.api.response.OapiChatCreateResponse;
+import com.dingtalk.api.response.OapiChatGetResponse;
+import com.dingtalk.api.response.OapiChatUpdateResponse;
 import com.dingtalk.api.response.OapiGettokenResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -43,6 +49,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 import java.util.*;
+
+import static cc.mrbird.febs.dingding.config.URLConstant.URL_CHAT_GET;
 
 /**
  * 前端对接API接口
@@ -693,18 +701,7 @@ public class ApiController extends BaseController {
     public FebsResponse createDingChat(QueryRequest request, String chatName){
 
         DefaultDingTalkClient client = null;
-        client = new DefaultDingTalkClient(URLConstant.URL_GET_TOKKEN);
-        OapiGettokenRequest gettokenRequest = new OapiGettokenRequest();
-        gettokenRequest.setAppkey(Constant.APPKEY);
-        gettokenRequest.setAppsecret(Constant.APPSECRET);
-        gettokenRequest.setHttpMethod("GET");
-        OapiGettokenResponse response = null;
-        try{
-            response = client.execute(gettokenRequest);
-//            System.out.println(response.getAccessToken());
-        }catch(Exception e){
-
-        }
+        String token = AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET);
 
         client = new DefaultDingTalkClient(URLConstant.URL_CHAT_CREATE);
         OapiChatCreateRequest requestOapiChat = new OapiChatCreateRequest();
@@ -715,17 +712,27 @@ public class ApiController extends BaseController {
         requestOapiChat.setShowHistoryType(1L);
         OapiChatCreateResponse chatCreateResponse = null;
         try{
-            chatCreateResponse = client.execute(requestOapiChat,response.getAccessToken());
+            chatCreateResponse = client.execute(requestOapiChat,token);
             System.out.println(chatCreateResponse.getChatid());
+
+            client = new DefaultDingTalkClient(URLConstant.URL_CHAT_GET);
+            OapiChatGetRequest chatGetRequest = new OapiChatGetRequest();
+            chatGetRequest.setHttpMethod("GET");
+            chatGetRequest.setChatid(chatCreateResponse.getChatid());
+            OapiChatGetResponse getResponse = client.execute(chatGetRequest, token);
+            String chatIcon = getResponse.getChatInfo().getIcon();
+
             DingChat chat = new DingChat();
             chat.setChatId(chatCreateResponse.getChatid());
             chat.setChatName(chatName);
             chat.setUserId(user.getUserId());
             chat.setUserCount(1);
+            chat.setIcon(chatIcon);
             this.dingChatService.createDingChat(chat);
         }catch(Exception e){
+            return new FebsResponse().message("创建群失败，请重试！").fail();
         }
-        return new FebsResponse().success();
+        return new FebsResponse().message("创建群成功！").success();
     }
 
     /**
@@ -739,4 +746,33 @@ public class ApiController extends BaseController {
         return new FebsResponse().data(chatList).success();
     }
 
+    /**
+     * 修改钉钉群名称
+     */
+    @GetMapping("uptDingChat")
+    //    @RequiresPermissions("update:uptDingChat")
+    public FebsResponse uptDingChat(QueryRequest request,String chatId,String chatName) {
+        User user = this.getCurrentUser();
+        DingChat dingChat = this.dingChatService.getById(chatId);
+        if(dingChat != null && user.getUserId().equals(dingChat.getUserId())){
+            //当前用户为群主，可修改群名
+            dingChat.setChatName(chatName);
+            String token = AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET);
+            DingTalkClient client = new DefaultDingTalkClient(URLConstant.URL_CHAT_UPDATE);
+            OapiChatUpdateRequest updateRequest = new OapiChatUpdateRequest();
+            updateRequest.setChatid(chatId);
+            updateRequest.setName(chatName);
+            updateRequest.setOwner(dingChat.getUserId());
+            try{
+                OapiChatUpdateResponse response = client.execute(updateRequest, token);
+                if(response.getErrmsg().equals("ok")){
+                    this.dingChatService.updateById(dingChat);
+                }
+                return new FebsResponse().message("修改成功").success();
+            }catch (Exception e){
+                return new FebsResponse().message("修改失败").fail();
+            }
+        }
+        return new FebsResponse().message("操作失败！").fail();
+    }
 }
