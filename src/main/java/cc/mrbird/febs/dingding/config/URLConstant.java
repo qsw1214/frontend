@@ -65,4 +65,9 @@ public class URLConstant {
 
     public static final String URL_CHAT_UPDATE = "https://oapi.dingtalk.com/chat/update";
 
+    /**
+     * 获取jsapi_ticket的url
+     */
+    public static final String URL_JSAPITICKET_URL = "https://oapi.dingtalk.com/get_jsapi_ticket";
+
 }

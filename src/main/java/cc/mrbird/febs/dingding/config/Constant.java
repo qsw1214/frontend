@@ -67,6 +67,11 @@ public class Constant {
     public static final String APP_ABUTMENT_CALLBACK_URL_HOST = "PROC-26F70284-0844-4AD8-83A7-9E14FD8EBD58";
 
     /**
+     * sso
+     */
+    public static final String SSO_Secret = "";
+
+    /**
      * 审批结果
      */
     public static class APPROVE_RESULT{
