@@ -31,12 +31,13 @@
         </div>
         <div class="layui-form-item" style="text-align: right">
             <button class="layui-btn" lay-submit="" lay-filter="classInfo-update-form-submit" id="submit">提交</button>
-            <button class="layui-btn layui-btn-primary" id="remove">取消</button>
+            <button class="layui-btn layui-btn-primary" type="button" id="remove">取消</button>
         </div>
     </form>
 </div>
 <script src="./mods/layarea.js"></script>
 <script data-th-inline="javascript">
+
 
     layui.use(['febs', 'form', 'formSelects', 'laydate','validate', 'treeSelect'], function () {
         var $ = layui.$,
