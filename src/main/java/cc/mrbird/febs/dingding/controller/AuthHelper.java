@@ -21,6 +21,8 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import static cc.mrbird.febs.dingding.util.requestUtil.$params;
+
 /**
  * AccessToken和jsticket的获取封装
  */
@@ -123,15 +125,16 @@ public class AuthHelper {
     @RequestMapping(value = "dingChat",method = RequestMethod.GET)
     public static String getConfig(HttpServletRequest request,String urlString) throws UnsupportedEncodingException {
         //String urlString = request.getRequestURL().toString();
-        String queryString = request.getQueryString();
+        Map params = $params(request);
+        String queryString = String.valueOf(params.get("urlString"));
+
 
         String queryStringEncode = null;
         String url;
         if (queryString != null) {
-            queryStringEncode = URLDecoder.decode(queryString,"utf-8");
-            url = urlString + "?" + queryStringEncode;
+            url = URLDecoder.decode(queryString,"utf-8");
         } else {
-            url = urlString;
+            url = URLDecoder.decode(queryString,"utf-8");
         }
         /**
          * 确认url与配置的应用首页地址一致
