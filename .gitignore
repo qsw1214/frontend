@@ -8,4 +8,4 @@ target/
 .project
 .factorypath
 /bin/
-
+pom.xml
