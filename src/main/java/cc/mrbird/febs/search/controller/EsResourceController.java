@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +56,7 @@ public class EsResourceController extends BaseController{
 	@RequestMapping(value = "/detail/visit", method = RequestMethod.GET)
     @ResponseBody
     public FebsResponse getApiVisit() {
-		Map<String, String> map = new HashMap<>();
+		Map<String, String> map = new TreeMap<>();
 		for(int i=0; i<24; i++){
 			String key = ""+i;
 			if(i<10)
