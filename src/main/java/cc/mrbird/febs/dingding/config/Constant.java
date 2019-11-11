@@ -13,12 +13,12 @@ public class Constant {
      * 应用的AppKey，登录开发者后台，点击应用管理，进入应用详情可见
      */
     //public static final String APPKEY = "dingrw665wtcg7e4brqi";
-    public static final String APPKEY = "dinghc1uxguqxxzxs6ee";
+    public static final String APPKEY = "ding60ni18cfggf5ppss";
     /**
      * 应用的AppSecret，登录开发者后台，点击应用管理，进入应用详情可见
      */
     //public static final String APPSECRET = "kitLl5P_cxpgt04Ztm-6QpdraF9Tkie1GJ2ivwELkWjxRJVie4XVVWWyy1TNuC15";
-    public static final String APPSECRET = "irpGhViuHSUA5mNrYcUGN-VuTGkr-3thscsuRQy7fffi9m8jedPJeKuj3HYF30OE";
+    public static final String APPSECRET = "7XfMyuRTtkHV6hxC-Ze74pmfhwNoHtg-6lVs0WdcNiH5tA98_ae31W8_y4i4Zca6";
 
     public static final String ACCESS_TOKEN = "5e30e557a73d3014976b754a27f84ef0";
     /**
@@ -45,7 +45,7 @@ public class Constant {
      * 应用的agentdId，登录开发者后台可查看
      */
     //public static final Long AGENTID = (long)301835083;
-    public static final Long AGENTID = (long)311883217;
+    public static final Long AGENTID = (long)316438650;
     /**
      * 审批模板唯一标识，可以在审批管理后台找到
      */
