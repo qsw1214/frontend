@@ -368,11 +368,11 @@ public class OrgController {
                                 roleService.save(role);
                             }
                         }
-                        List<String> deptIds = map.getDepartment();
-                        userDeptMapper.deleteUserDept(userid);
-                        for (String deptId : deptIds) {
-                            userDeptMapper.insertUserDept(userid, deptId);
-                        }
+                    }
+                    List<String> deptIds = map.getDepartment();
+                    userDeptMapper.deleteUserDept(userid);
+                    for (String deptId : deptIds) {
+                        userDeptMapper.insertUserDept(userid, deptId);
                     }
                 }
             }else if(LABEL_CONF_ADD.equals(eventType)){
