@@ -250,7 +250,8 @@ public class OrgController {
                     if(userService.getById(userid)==null){
                         user.setUserId(userid);
                         user.setUsername(map.getName());
-                        user.setPassword(MD5Util.encrypt("", "123456"));
+                        String password=MD5Util.encrypt(map.getName().toLowerCase(), "123456");
+                        user.setPassword(password);
                         user.setAvatar(map.getAvatar());
                         user.setMobile(map.getMobile());
                         user.setBoss(map.isBoss());
