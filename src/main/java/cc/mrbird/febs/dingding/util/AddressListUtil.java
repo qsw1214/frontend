@@ -1,6 +1,7 @@
 package cc.mrbird.febs.dingding.util;
 
 import cc.mrbird.febs.dingding.config.Constant;
+import cc.mrbird.febs.dingding.controller.AuthHelper;
 import cc.mrbird.febs.dingding.vo.DepartmentListIFVO;
 import cc.mrbird.febs.dingding.vo.DeptInfoDetailVO;
 import cc.mrbird.febs.dingding.vo.UserInfoDetailVO;
@@ -27,13 +28,13 @@ public class AddressListUtil {
 
     private static Gson gson = new Gson();
     //获取部门详情
-    public static DeptInfoDetailVO departmentMess(long deptId) throws RuntimeException{
+    public static DeptInfoDetailVO departmentMess(String deptId) throws RuntimeException{
         try {
             DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/department/get");
             OapiDepartmentGetRequest request = new OapiDepartmentGetRequest();
             request.setId(deptId + "");
             request.setHttpMethod("GET");
-            OapiDepartmentGetResponse response = client.execute(request, AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET));
+            OapiDepartmentGetResponse response = client.execute(request, AuthHelper.getAccessToken(Constant.APPKEY,Constant.APPSECRET));
             String deptBody = response.getBody();
             DeptInfoDetailVO deptInfoDetailVO = gson.fromJson(deptBody,DeptInfoDetailVO.class);
             return deptInfoDetailVO;
@@ -50,7 +51,7 @@ public class AddressListUtil {
             OapiDepartmentListParentDeptsRequest request = new OapiDepartmentListParentDeptsRequest();
             request.setUserId(userId.toString());
             request.setHttpMethod("GET");
-            OapiDepartmentListParentDeptsResponse response = client.execute(request, AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET));
+            OapiDepartmentListParentDeptsResponse response = client.execute(request, AuthHelper.getAccessToken(Constant.APPKEY,Constant.APPSECRET));
             return response.getDepartment();
         } catch (ApiException e) {
             bizLogger.error("getUserParentDepts failed", e);
@@ -91,7 +92,7 @@ public class AddressListUtil {
             OapiUserGetRequest request = new OapiUserGetRequest();
             request.setUserid(userId);
             request.setHttpMethod("GET");
-            OapiUserGetResponse response = client.execute(request, AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET));
+            OapiUserGetResponse response = client.execute(request, AuthHelper.getAccessToken(Constant.APPKEY,Constant.APPSECRET));
             String userBody = response.getBody();
             UserInfoDetailVO userInfoDetailVO = gson.fromJson(userBody,UserInfoDetailVO.class);
             return userInfoDetailVO;
@@ -106,7 +107,7 @@ public class AddressListUtil {
             DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/department/list");
             OapiDepartmentGetRequest request = new OapiDepartmentGetRequest();
             request.setHttpMethod("GET");
-            OapiDepartmentGetResponse response = client.execute(request, AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET));
+            OapiDepartmentGetResponse response = client.execute(request, AuthHelper.getAccessToken(Constant.APPKEY,Constant.APPSECRET));
             String body = response.getBody();
             DepartmentListIFVO departmentListIFVO = gson.fromJson(body,DepartmentListIFVO.class);
             return departmentListIFVO;

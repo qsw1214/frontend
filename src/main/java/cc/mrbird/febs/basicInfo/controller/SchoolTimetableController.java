@@ -203,7 +203,7 @@ public class SchoolTimetableController extends BaseController {
 	@ResponseBody
 	@RequiresPermissions("schoolTimetable:view")
 	public FebsResponse getDeptSchoolTimetableList(QueryRequest request, SchoolTimetable schoolTimetable,
-			@RequestParam(required = true) Long deptId) {
+			@RequestParam(required = true) String deptId) {
 		// 判断有无权限
 		User user = getCurrentUser();
 		if (!userDeptService.isPermission(user.getUserId(), deptId)) {

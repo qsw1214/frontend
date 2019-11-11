@@ -29,14 +29,14 @@ public class Dept implements Serializable {
     /**
      * 部门 ID
      */
-    @TableId(value = "DEPT_ID")
-    private Long deptId;
+    @TableId(value = "DEPT_ID",type = IdType.ID_WORKER_STR)
+    private String deptId;
 
     /**
      * 上级部门 ID
      */
     @TableField("PARENT_ID")
-    private Long parentId;
+    private String parentId;
 
     /**
      * 部门名称
@@ -51,7 +51,7 @@ public class Dept implements Serializable {
      * 排序
      */
     @TableField("ORDER_NUM")
-    private Long orderNum;
+    private String orderNum;
 
     /**
      * 创建时间

@@ -66,8 +66,8 @@ public interface IClassroomInfoService extends IService<ClassroomInfo> {
     /**
      * 按部门查询（分页）
      * @param request QueryRequest
-     * @param school school
+     * @param
      * @return IPage<School>
      */
-    IPage<ClassroomInfo> findClassroomInfosByDept(QueryRequest request, ClassroomInfo classroomInfo, Long deptId);
+    IPage<ClassroomInfo> findClassroomInfosByDept(QueryRequest request, ClassroomInfo classroomInfo, String deptId);
 }

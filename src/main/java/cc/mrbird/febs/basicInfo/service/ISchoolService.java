@@ -74,10 +74,10 @@ public interface ISchoolService extends IService<School> {
      * @param school school
      * @return IPage<School>
      */
-    IPage<School> findSchoolsByDept(QueryRequest request, School school, Long deptId);
+    IPage<School> findSchoolsByDept(QueryRequest request, School school, String deptId);
 
-    Integer getSchoolCount(Integer provinceId, Integer cityDeptId, Integer countryDeptId);
+    Integer getSchoolCount(String provinceId, String cityDeptId, String countryDeptId);
 
-    Map<String,Object>  getLast12MonthSchoolCount(Integer provinceId, Integer cityDeptId, Integer countryDeptId);
+    Map<String,Object>  getLast12MonthSchoolCount(String provinceId, String cityDeptId, String countryDeptId);
 
 }

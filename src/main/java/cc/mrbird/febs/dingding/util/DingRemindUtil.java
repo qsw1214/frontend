@@ -2,6 +2,7 @@ package cc.mrbird.febs.dingding.util;
 
 import cc.mrbird.febs.dingding.config.Constant;
 import cc.mrbird.febs.dingding.config.URLConstant;
+import cc.mrbird.febs.dingding.controller.AuthHelper;
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiCalendarCreateRequest;
@@ -67,7 +68,7 @@ public class DingRemindUtil {
             //创建日程实体
             request.setCreateVo(creatVo);
             //这里调用的ACCESS_TOKEN是企业内部应用的ACCESS_TOKEN
-            OapiCalendarCreateResponse response = client.execute(request, AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET));
+            OapiCalendarCreateResponse response = client.execute(request, AuthHelper.getAccessToken(Constant.APPKEY,Constant.APPSECRET));
             if(response.isSuccess()){
                 System.out.println("日程创建成功");
             }
@@ -130,7 +131,7 @@ public class DingRemindUtil {
             //创建日程实体
             request.setCreateVo(creatVo);
             //这里调用的ACCESS_TOKEN是企业内部应用的ACCESS_TOKEN
-            OapiCalendarCreateResponse response = client.execute(request, AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET));
+            OapiCalendarCreateResponse response = client.execute(request, AuthHelper.getAccessToken(Constant.APPKEY,Constant.APPSECRET));
             if(response.isSuccess()){
                 System.out.println("日程创建成功");
             }

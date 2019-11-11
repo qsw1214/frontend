@@ -138,21 +138,21 @@ public class OrgController {
     @Autowired
     private AppAbutmentService appAbutmentService;
 
-    public long checkSynchParentDeptInfo(long deptId){
+    public long checkSynchParentDeptInfo(String deptId){
         Dept dept = deptService.getById(deptId);
         if(dept == null){
             dept = new Dept();
             //本地数据库没有父级部门，需要先行同步父级部门数据
             DeptInfoDetailVO deptDetailVO = AddressListUtil.departmentMess(deptId);
-            long parentId = deptDetailVO.getParentid();
+            String parentId = deptDetailVO.getParentid();
             dept.setDeptId(deptDetailVO.getId());
             dept.setCreateTime(DateUtil.getNowDateTime());
             dept.setModifyTime(DateUtil.getNowDateTime());
             dept.setDeptName(deptDetailVO.getName());
             dept.setOrderNum(deptDetailVO.getOrder());
-            if(parentId == 1){    //如果父级id为1，为固定第一级
+            if("1".equals(parentId)){    //如果父级id为1，为固定第一级
                 dept.setDeptGrade(1l);
-                dept.setParentId(1l);
+                dept.setParentId("1");
                 this.deptService.saveOrUpdate(dept);
                 return 1l;
             }else{
@@ -190,9 +190,9 @@ public class OrgController {
             if (ORG_DEPT_CREATE.equals(eventType) || ORG_DEPT_MODIFY.equals(eventType)) {
                 bizLogger.info("通讯录企业部门创建或修改: " + plainText);
                 DeptInfoVO deptInfoVO = gson.fromJson(plainText,DeptInfoVO.class);
-                List<Long> deptIds = deptInfoVO.getDeptId();
+                List<String> deptIds = deptInfoVO.getDeptId();
                 Dept dept = null;
-                for (long deptId:deptIds) {
+                for (String deptId:deptIds) {
                     DeptInfoDetailVO deptInfoDetailVO = AddressListUtil.departmentMess(deptId);
                     String deptName = deptInfoDetailVO.getName();
                     dept = this.deptService.getById(deptId);
@@ -200,7 +200,7 @@ public class OrgController {
                         dept = new Dept();
                         dept.setCreateTime(DateUtil.getNowDateTime());
                     }
-                    long parentId = deptInfoDetailVO.getParentid();
+                    String parentId = deptInfoDetailVO.getParentid();
                     long parentDeptGrade = checkSynchParentDeptInfo(parentId);
                     dept.setParentId(parentId);
                     dept.setDeptId(deptInfoDetailVO.getId());
@@ -214,11 +214,11 @@ public class OrgController {
                         //同步省市区编号到学校信息表
                         List<School> schools = this.schoolService.findSchoolsByName(deptName);
                         if(schools != null && schools.size() == 1){
-                            long countryDeptId = parentId;
+                            String countryDeptId = parentId;
                             Dept countryDept = this.deptService.getById(countryDeptId);
-                            long cityDeptId = countryDept.getParentId();
+                            String cityDeptId = countryDept.getParentId();
                             Dept cityDept = this.deptService.getById(cityDeptId);
-                            long provinceDeptId = cityDept.getParentId();
+                            String provinceDeptId = cityDept.getParentId();
                             School school = schools.get(0);
                             school.setCountryDeptId(countryDeptId);
                             school.setCityDeptId(cityDeptId);
@@ -231,8 +231,8 @@ public class OrgController {
             }else if(ORG_DEPT_RMOVE.equals(eventType)){
                 bizLogger.info("通讯录企业部门删除: " + plainText);
                 DeptInfoVO deptInfoVO = gson.fromJson(plainText,DeptInfoVO.class);
-                List<Long> deptIds = deptInfoVO.getDeptId();
-                for (long deptId:deptIds) {
+                List<String> deptIds = deptInfoVO.getDeptId();
+                for (String deptId:deptIds) {
                     this.deptService.removeById(deptId);
                 }
             }else if(USER_ADD_ORG.equals(eventType)){
@@ -304,7 +304,8 @@ public class OrgController {
                     UserInfoDetailVO map = AddressListUtil.userMess(userId);
                     user.setUserId(userId);
                     user.setUsername(map.getName());
-                    user.setPassword(MD5Util.encrypt("", "123456"));
+                    String password=MD5Util.encrypt(map.getName().toLowerCase(), "123456");
+                    user.setPassword(password);
                     user.setAvatar(map.getAvatar());
                     user.setMobile(map.getMobile());
                     user.setBoss(map.isBoss());

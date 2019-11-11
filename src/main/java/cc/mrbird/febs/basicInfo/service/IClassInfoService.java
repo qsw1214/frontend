@@ -65,6 +65,6 @@ public interface IClassInfoService extends IService<ClassInfo> {
      * @param school school
      * @return IPage<School>
      */
-    IPage<ClassInfo> findClassInfosByDept(QueryRequest request, ClassInfo classInfo, Long deptId);
+    IPage<ClassInfo> findClassInfosByDept(QueryRequest request, ClassInfo classInfo, String deptId);
     
 }

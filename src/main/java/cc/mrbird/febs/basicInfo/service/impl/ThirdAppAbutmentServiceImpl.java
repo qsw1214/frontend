@@ -34,10 +34,10 @@ public class ThirdAppAbutmentServiceImpl extends ServiceImpl<ThirdAppAbutmentMap
         	queryWrapper.eq(Abutment::getId, abutment.getId());
         }
         if (StringUtils.isNotBlank(abutment.getAppName())) {
-       	queryWrapper.eq(Abutment::getAppName, abutment.getAppName());
+       	queryWrapper.like(Abutment::getAppName, abutment.getAppName());
         }
         if (StringUtils.isNotBlank(abutment.getApplySchool())) {
-            queryWrapper.eq(Abutment::getApplySchool, abutment.getApplySchool());
+            queryWrapper.like(Abutment::getApplySchool, abutment.getApplySchool());
         }
 
         Page<Abutment> page = new Page<>(request.getPageNum(), request.getPageSize());

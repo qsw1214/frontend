@@ -176,7 +176,7 @@ public class SchoolTimetableServiceImpl extends ServiceImpl<SchoolTimetableMappe
 
 	@Override
 	public IPage<SchoolTimetable> findSchoolTimetableByDept(QueryRequest request, SchoolTimetable schoolTimetable,
-			Long deptId) {
+			String deptId) {
 		Page<SchoolTimetable> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.baseMapper.findSchoolTimetableByDept(page, schoolTimetable, deptId);
 	}

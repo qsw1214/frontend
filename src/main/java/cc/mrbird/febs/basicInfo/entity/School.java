@@ -39,7 +39,7 @@ public class School {
      * 部门id
      */
     @TableField("dept_id")
-    private Long deptId;
+    private String deptId;
 
     /**
      * 介绍
@@ -113,21 +113,21 @@ public class School {
      */
     @TableField("province_dept_id")
     //@NotBlank(message = "{required}")
-    private Long provinceDeptId;
+    private String provinceDeptId;
 
     /**
      * 市
      */
     @TableField("city_dept_id")
     //@NotBlank(message = "{required}")
-    private Long cityDeptId;
+    private String cityDeptId;
 
     /**
      * 县
      */
     @TableField("country_dept_id")
     //@NotBlank(message = "{required}")
-    private Long countryDeptId;
+    private String countryDeptId;
 
     /**
      * 学校图片

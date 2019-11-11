@@ -63,7 +63,7 @@ public interface ISchoolTimetableService extends IService<SchoolTimetable> {
      * 按部门查询课程表
      */
     IPage<SchoolTimetable> findSchoolTimetableByDept(QueryRequest request, 
-    		SchoolTimetable schoolTimetable, Long deptId);
+    		SchoolTimetable schoolTimetable, String deptId);
 
     /**
      * 查询所有的课程信息

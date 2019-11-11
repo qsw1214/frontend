@@ -37,5 +37,5 @@ public interface DeviceInfoMapper extends BaseMapper<DeviceInfo> {
 	 * @return
 	 */
 	IPage<DeviceInfo> findDeviceInfosByDept(Page<?> page, @Param("deviceInfo") DeviceInfo deviceInfo, 
-			@Param("deptId") Long deptId);
+			@Param("deptId") String deptId);
 }

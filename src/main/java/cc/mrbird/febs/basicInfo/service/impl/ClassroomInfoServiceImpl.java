@@ -127,7 +127,7 @@ public class ClassroomInfoServiceImpl extends ServiceImpl<ClassroomInfoMapper, C
     }
 
 	@Override
-	public IPage<ClassroomInfo> findClassroomInfosByDept(QueryRequest request, ClassroomInfo classroomInfo, Long deptId) {
+	public IPage<ClassroomInfo> findClassroomInfosByDept(QueryRequest request, ClassroomInfo classroomInfo, String deptId) {
 		Page<ClassroomInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.baseMapper.findClassroomInfosByDept(page, classroomInfo, deptId);
 	}

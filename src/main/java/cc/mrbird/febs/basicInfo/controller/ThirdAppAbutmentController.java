@@ -45,7 +45,6 @@ public class ThirdAppAbutmentController extends BaseController {
     public FebsResponse abutmentList(QueryRequest request, Abutment abutment) throws FebsException {
 //    	User currentUser = getCurrentUser();
 //    	school.setSchoolId(currentUser.getSchoolId());
-        System.out.println("1232");
         try {
             Map<String, Object> dataTable = getDataTable(this.thirdAppAbutmentService.selectAbutments(request, abutment));
             return new FebsResponse().success().data(dataTable);

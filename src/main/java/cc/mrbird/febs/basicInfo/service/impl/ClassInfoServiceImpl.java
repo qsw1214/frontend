@@ -34,7 +34,7 @@ public class ClassInfoServiceImpl extends ServiceImpl<ClassInfoMapper, ClassInfo
     public IPage<ClassInfo> findClassInfos(QueryRequest request, ClassInfo classInfo) {
         LambdaQueryWrapper<ClassInfo> queryWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotBlank(classInfo.getClassName())) {
-            queryWrapper.eq(ClassInfo::getClassName, classInfo.getClassName());
+            queryWrapper.like(ClassInfo::getClassName, classInfo.getClassName());
         }
         if (StringUtils.isNotBlank(classInfo.getGrade())) {
             queryWrapper.eq(ClassInfo::getGrade, classInfo.getGrade());
@@ -50,7 +50,7 @@ public class ClassInfoServiceImpl extends ServiceImpl<ClassInfoMapper, ClassInfo
     public List<ClassInfo> findClassInfos(ClassInfo classInfo) {
 	    LambdaQueryWrapper<ClassInfo> queryWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotBlank(classInfo.getClassName())) {
-            queryWrapper.eq(ClassInfo::getClassName, classInfo.getClassName());
+            queryWrapper.like(ClassInfo::getClassName, classInfo.getClassName());
         }
         if (StringUtils.isNotBlank(classInfo.getGrade())) {
             queryWrapper.eq(ClassInfo::getGrade, classInfo.getGrade());
@@ -90,7 +90,7 @@ public class ClassInfoServiceImpl extends ServiceImpl<ClassInfoMapper, ClassInfo
 	}
 
 	@Override
-	public IPage<ClassInfo> findClassInfosByDept(QueryRequest request, ClassInfo classInfo, Long deptId) {
+	public IPage<ClassInfo> findClassInfosByDept(QueryRequest request, ClassInfo classInfo, String deptId) {
 		Page<ClassroomInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.baseMapper.findClassInfosByDept(page, classInfo, deptId);
 	}

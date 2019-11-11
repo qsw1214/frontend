@@ -91,8 +91,8 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     	
 		// 获取用户所属部门    	
 		List<Dept> userDepts = userDeptService.getDeptByUserId(userId);
-		List<Long> deptIds1 = new ArrayList<>(); // 一级部门id
-		List<Long> deptIds2 = new ArrayList<>(); // 二级部门id
+		List<String> deptIds1 = new ArrayList<>(); // 一级部门id
+		List<String> deptIds2 = new ArrayList<>(); // 二级部门id
 		long deptGrade;
 		for(int i=0; i<userDepts.size(); i++){
 			deptGrade = userDepts.get(i).getDeptGrade();
@@ -152,9 +152,9 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     @Override
     @Transactional
     public void createDept(Dept dept) {
-        Long parentId = dept.getParentId();
+        String parentId = dept.getParentId();
         if (parentId == null)
-            dept.setParentId(0L);      
+            dept.setParentId("0");
         dept.setCreateTime(new Date());
         this.save(dept);
     }
@@ -223,10 +223,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
         // 设置部门级别值
         for (int i = 0 ; i < departments.size(); i++) {
             Department department = departments.get(i);
-            long deptId = department.getId();
+            String deptId = department.getId();
             long deptGrade = 0;
-            long parentId = department.getParentid();
-            if(parentId != 0){
+            String parentId = department.getParentid();
+            if(!"0".equals(parentId)){
                 long parentDeptGrade = checkSynchParentDeptInfo(parentId);
                 Dept dept = new Dept();
                 dept.setDeptId(department.getId());
@@ -236,10 +236,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
         }
     }
 
-    public long checkSynchParentDeptInfo(long deptId){
+    public long checkSynchParentDeptInfo(String deptId){
         Dept dept = this.getById(deptId);
-        long parentId = dept.getParentId();
-        if(parentId == 0){ //网络联校部门
+        String parentId = dept.getParentId();
+        if("0".equals(parentId)){ //网络联校部门
             return 0l;
         }else{
             long parentDeptGrade = checkSynchParentDeptInfo(parentId);
@@ -251,12 +251,12 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 	public List<List<Dept>> getAllParentDept(String userId) {
 		List<List<Dept>> result = new ArrayList<>();
 		List<Dept> list = this.userDeptService.getDeptByUserId(userId);
-		Long parentId;
+		String parentId;
 		for(Dept dept: list){
 			List<Dept> parents = new ArrayList<>();
 			parents.add(dept);
 			parentId = dept.getParentId();
-			while(parentId != 1 && parents.size() < 5){
+			while(!"1".equals(parentId) && parents.size() < 5){
 				Dept parentDept = this.baseMapper.selectById(parentId);
 				parents.add(parentDept);
 				parentId = parentDept.getParentId();
@@ -276,7 +276,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 
 
     @Override
-    public Dept getNameByDeptId(Long deptId){
+    public Dept getNameByDeptId(String deptId){
        /* List<Dept> d=this.deptMapper.getNameByDeptId(provinceDeptId,cityDeptId,countryDeptId);
         return d;*/
        return this.baseMapper.selectById(deptId);
@@ -286,16 +286,19 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
      * 获取一个部门的所有父部门id,包括当前部门id
      */
 	@Override
-	public List<Long> getParentDeptIds(Long deptId) {
-		List<Long> parentIds = new ArrayList<>();
+	public List<String> getParentDeptIds(String deptId) {
+		List<String> parentIds = new ArrayList<>();
 		if(deptId == null){
 		    return parentIds;
         }
-		long parentId = deptId;
-		while(parentId != 1 && parentIds.size() < 5){
+		String parentId = deptId;
+		while(!"1".equals(parentId) && parentIds.size() < 5){
 			Dept parentDept = this.baseMapper.selectById(parentId);
-			parentIds.add(parentDept.getDeptId());
-			parentId = parentDept.getParentId();
+			if(parentDept != null){
+                parentIds.add(parentDept.getDeptId());
+                parentId = parentDept.getParentId();
+            }
+
 		}
 		return parentIds;
 	}

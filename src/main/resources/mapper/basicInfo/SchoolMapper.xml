@@ -41,13 +41,13 @@
                       jcc_school_info pi
                   WHERE
                       DATE_FORMAT(pi.create_time, '%Y-%m') > DATE_FORMAT(date_sub(curdate(), INTERVAL 12 MONTH),'%Y-%m')
-                    <if test="school.provinceDeptId != null">
+                    <if test="school.provinceDeptId != null and school.provinceDeptId != ''">
                         AND pi.province_dept_id = #{school.provinceDeptId}
                     </if>
-                    <if test="school.cityDeptId != null">
+                    <if test="school.cityDeptId != null and school.cityDeptId != ''">
                         AND pi.city_dept_id = #{school.cityDeptId}
                     </if>
-                    <if test="school.countryDeptId != null">
+                    <if test="school.countryDeptId != null and school.countryDeptId != ''">
                         AND pi.country_dept_id = #{school.countryDeptId}
                     </if>
                   GROUP BY

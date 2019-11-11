@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class Department {
-    private long id;
+    private String id;
     private String name;
-    private long parentid;
+    private String parentid;
     private boolean createDeptGroup;
     private boolean autoAddUser;
 }

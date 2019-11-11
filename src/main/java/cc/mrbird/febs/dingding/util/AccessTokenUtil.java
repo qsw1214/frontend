@@ -13,7 +13,10 @@ import static cc.mrbird.febs.dingding.config.URLConstant.URL_GET_TOKKEN;
 
 
 /**
+ *
  * 获取企业内部应用access_token工具类
+ * 获取accessToken
+ *【注意】正常情况下access_token有效期为7200秒，有效期内重复获取返回相同结果，并自动续期。
  */
 public class AccessTokenUtil {
     private static final Logger bizLogger = LoggerFactory.getLogger(AccessTokenUtil.class);

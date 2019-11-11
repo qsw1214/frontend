@@ -3,6 +3,7 @@ package cc.mrbird.febs.dingding.util;
 import cc.mrbird.febs.dingding.config.Constant;
 import cc.mrbird.febs.dingding.config.URLConstant;
 
+import cc.mrbird.febs.dingding.controller.AuthHelper;
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
@@ -26,7 +27,7 @@ public class MessageUtil {
             OapiProcessinstanceGetRequest request = new OapiProcessinstanceGetRequest();
             //审批实例id
             request.setProcessInstanceId(processInstanceId);
-            OapiProcessinstanceGetResponse response = client.execute(request, AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET));
+            OapiProcessinstanceGetResponse response = client.execute(request, AuthHelper.getAccessToken(Constant.APPKEY,Constant.APPSECRET));
             //发起人,接受人
             String recieverUserId = response.getProcessInstance().getOriginatorUserid();
 
@@ -43,7 +44,7 @@ public class MessageUtil {
             msg.getText().setContent("代换课申请通过了!!!");
             messageRequest.setMsg(msg);
 
-            OapiMessageCorpconversationAsyncsendV2Response rsp = client.execute(messageRequest,AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET));
+            OapiMessageCorpconversationAsyncsendV2Response rsp = client.execute(messageRequest,AuthHelper.getAccessToken(Constant.APPKEY,Constant.APPSECRET));
         } catch (ApiException e) {
             bizLogger.error("send message failed", e);
             throw new RuntimeException();

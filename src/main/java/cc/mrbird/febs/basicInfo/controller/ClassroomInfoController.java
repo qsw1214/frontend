@@ -165,7 +165,7 @@ public class ClassroomInfoController extends BaseController {
 	@ResponseBody
 	@RequiresPermissions("classroomInfo:view")
 	public FebsResponse getDeptClassroomInfoList(QueryRequest request, ClassroomInfo classroomInfo,
-			@RequestParam(required = true) Long deptId) {
+			@RequestParam(required = true) String deptId) {
     	// 判断有无权限
 		User user = getCurrentUser();		
 		if(!userDeptService.isPermission(user.getUserId(), deptId)){

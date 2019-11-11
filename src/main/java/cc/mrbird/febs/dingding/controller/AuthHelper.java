@@ -46,17 +46,15 @@ public class AuthHelper {
      * 注：jsapi_ticket是在前端页面JSAPI做权限验证配置的时候需要使用的
      * 具体信息请查看开发者文档--权限验证配置
      */
-    public static String getAccessToken() throws OApiException {
+    public static String getAccessToken(String appKey,String appSecret) {
         long curTime = System.currentTimeMillis();
         JSONObject accessTokenValue = (JSONObject) FileUtils.getValue("accesstoken", Constant.APPKEY);
         String accToken = "";
         JSONObject jsontemp = new JSONObject();
         if (accessTokenValue == null || curTime - accessTokenValue.getLong("begin_time") >= cacheTime) {
-            System.out.println(1);
             try {
-                System.out.println(2);
                 //获取AccessToken
-                accToken = AccessTokenUtil.getToken(Constant.APPKEY, Constant.APPSECRET);
+                accToken = AccessTokenUtil.getToken(appKey, appSecret);
                 // save accessToken
                 JSONObject jsonAccess = new JSONObject();
                 jsontemp.clear();
@@ -65,7 +63,6 @@ public class AuthHelper {
                 jsonAccess.put(Constant.APPKEY, jsontemp);
                 //真实项目中最好保存到数据库中
                 FileUtils.write2File(jsonAccess, "accesstoken");
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -152,9 +149,10 @@ public class AuthHelper {
         String signature = null;
 
         try {
-            accessToken = AuthHelper.getAccessToken();
+            accessToken = AuthHelper.getAccessToken(Constant.APPKEY,Constant.APPSECRET);
 
             ticket = AuthHelper.getJsapiTicket(accessToken);
+            System.out.println("ticket="+ticket);
             signature = AuthHelper.sign(ticket, nonceStr, timeStamp, signedUrl);
 
         } catch (OApiException e) {

@@ -199,7 +199,11 @@
                         schoolCategory.append('<option value="'+""+'">'+""+'</option>');
                     }else{
                         for (var i=0;i<items.length;i++) {
-                            $('#schoolCate').append('<option value=' + items[i].v + '>' + items[i].v + '</option>');
+                            if (items[i].v===school.schoolCategory){
+                                $('#schoolCate').append('<option value=' + items[i].v + ' selected="selected">' + items[i].v + '</option>');
+                            }else{
+                                $('#schoolCate').append('<option value=' + items[i].v + '>' + items[i].v + '</option>');
+                            }
                         }
                     }
                     form.render('select');
@@ -282,6 +286,7 @@
                 "provinceDeptId":school.provinceDeptId,
                 "cityDeptId":school.cityDeptId,
                 "countryDeptId":school.countryDeptId,
+                "schoolCategory":school.schoolCategory,
                 "deptId":school.deptId
             });
         }

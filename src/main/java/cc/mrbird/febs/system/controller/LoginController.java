@@ -217,9 +217,11 @@ public class LoginController extends BaseController {
      */
     public static List<Map<String, Object>> getRolesMap(Map userInfMap)  {
         String mapRoles = String.valueOf(userInfMap.get("roles"));
-        //String roles = mapRoles.substring(1, mapRoles.length() - 1);
-        List<Map> list = JSONArray.parseArray(mapRoles,Map.class);
+        List<Map> list = new ArrayList<Map>();
         List<Map<String,Object>> roleList = new ArrayList<Map<String,Object>>();
+        if(mapRoles != null && mapRoles != "" && !"null".equals(mapRoles)){
+            list = JSONArray.parseArray(mapRoles,Map.class);
+        }
         for(Map map:list){
             if("角色".equals(String.valueOf(map.get("groupName")))){
                 roleList.add(map);

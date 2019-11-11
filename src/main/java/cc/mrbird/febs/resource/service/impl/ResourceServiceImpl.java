@@ -186,12 +186,12 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
      * 根据省市区统计资源总量
      */
     @Override
-    public int getResourceCount(Integer deptId){
+    public int getResourceCount(String deptId){
         return this.baseMapper.getResourceCount(deptId, null);
     }
 
 	@Override
-	public Map<String, Integer> getResourceCountEveryMonth(Integer deptId) {
+	public Map<String, Integer> getResourceCountEveryMonth(String deptId) {
 		Map<String, Integer> map = new TreeMap<String, Integer>();
 		Calendar cale = Calendar.getInstance();  	
         int year = cale.get(Calendar.YEAR);  

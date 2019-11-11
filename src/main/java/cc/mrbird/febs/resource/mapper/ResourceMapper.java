@@ -45,5 +45,5 @@ public interface ResourceMapper extends BaseMapper<Resource> {
 	 */
 	void increaseReadCount(@Param("resourceId") Long resourceId, @Param("num") Integer num);
 
-	public Integer getResourceCount(@Param("deptId")Integer deptId, @Param("timeTo") String timeTo);
+	public Integer getResourceCount(@Param("deptId")String deptId, @Param("timeTo") String timeTo);
 }

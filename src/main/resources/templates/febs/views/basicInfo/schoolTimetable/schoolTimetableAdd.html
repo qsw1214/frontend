@@ -18,13 +18,13 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">上课时间：</label>
             <div class="layui-input-block">
-                <input type="datetime-local" name="beginDate" lay-verify="beginDate" autocomplete="off" class="layui-input">
+                <input type="time" name="beginDate" lay-verify="beginDate" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">授课时长：</label>
             <div class="layui-input-block">
-                <input type="number" name="duration" lay-verify="duration" maxlength="50" autocomplete="off"
+                <input type="number" name="duration"  lay-verify="number" maxlength="50" autocomplete="off"
                        class="layui-input" placeholder="请输入数字">
             </div>
         </div>
@@ -62,7 +62,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">节次：</label>
             <div class="layui-input-block">
-                <input type="text" name="section" lay-verify="section" maxlength="1" autocomplete="off"
+                <input type="number" name="section" lay-verify="number" maxlength="1" autocomplete="off"
                        class="layui-input" placeholder="请输入1-9的数字">
             </div>
         </div>

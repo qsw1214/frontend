@@ -83,8 +83,8 @@ public interface IDeptService extends IService<Dept> {
      * @param deptId
      * @return
      */
-    List<Long> getParentDeptIds(Long deptId);
+    List<String> getParentDeptIds(String deptId);
 
-    Dept getNameByDeptId(Long deptId);
+    Dept getNameByDeptId(String deptId);
 
 }

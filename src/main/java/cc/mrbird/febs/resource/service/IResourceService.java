@@ -101,11 +101,11 @@ public interface IResourceService extends IService<Resource> {
 	
 	int updateStatus(List<String> resourceIds, Integer status);
 
-	int getResourceCount(Integer deptId);
+	int getResourceCount(String deptId);
 	
 	/**
 	 * 获取每个月1号的资源总数
 	 * @return
 	 */
-	Map<String, Integer> getResourceCountEveryMonth(Integer deptId);
+	Map<String, Integer> getResourceCountEveryMonth(String deptId);
 }

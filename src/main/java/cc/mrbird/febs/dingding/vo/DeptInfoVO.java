@@ -12,6 +12,6 @@ public class DeptInfoVO {
 
     private String CorpId;
     private String EventType;
-    private List<Long> DeptId;
+    private List<String> DeptId;
     private String TimeStamp;
 }

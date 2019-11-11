@@ -2,6 +2,7 @@ package cc.mrbird.febs.dingding.util;
 
 import cc.mrbird.febs.dingding.config.Constant;
 import cc.mrbird.febs.dingding.config.URLConstant;
+import cc.mrbird.febs.dingding.controller.AuthHelper;
 import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
@@ -84,7 +85,7 @@ public class UserInfTest {
             JSONObject jo = JSONObject.parseObject(new String(s));
             //获取access_token
             //String accessToken = String.valueOf(jo.get("access_token"));
-            String accessToken = AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET);
+            String accessToken = AuthHelper.getAccessToken(Constant.APPKEY,Constant.APPSECRET);
             //通过access_token和unionId获取userId
             DingTalkClient clientUserId = new DefaultDingTalkClient(URLConstant.URL_GET_USERID_BY_UNIONID);
             OapiUserGetUseridByUnionidRequest requestUserId = new OapiUserGetUseridByUnionidRequest();

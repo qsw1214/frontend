@@ -1,18 +1,29 @@
 package cc.mrbird.febs.dingding.controller;
 
 import cc.mrbird.febs.basicInfo.entity.SchoolTimetable;
+import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
+import cc.mrbird.febs.common.utils.MD5Util;
 import cc.mrbird.febs.dingding.config.Constant;
+import cc.mrbird.febs.dingding.config.Env;
 import cc.mrbird.febs.dingding.service.AppAbutmentService;
 import cc.mrbird.febs.dingding.service.IApprovalService;
-import cc.mrbird.febs.dingding.util.ApprovalInfUtil;
-import cc.mrbird.febs.dingding.util.MessageUtil;
+import cc.mrbird.febs.dingding.util.*;
+import cc.mrbird.febs.monitor.entity.LoginLog;
+import cc.mrbird.febs.monitor.service.ILoginLogService;
+import cc.mrbird.febs.monitor.service.impl.LoginLogServiceImpl;
+import cc.mrbird.febs.system.controller.LoginController;
+import cc.mrbird.febs.system.entity.User;
+import cc.mrbird.febs.system.service.LoginService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.dingtalk.api.request.OapiSnsGetuserinfoBycodeRequest;
 import com.dingtalk.oapi.lib.aes.Utils;
 import io.micrometer.core.instrument.util.JsonUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.springframework.ui.Model;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +34,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dingtalk.oapi.lib.aes.DingTalkEncryptor;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import static cc.mrbird.febs.dingding.util.requestUtil.$params;
 
@@ -40,7 +54,7 @@ import static cc.mrbird.febs.dingding.util.requestUtil.$params;
 @Validated
 @RestController
 @RequestMapping("approval")
-public class ApprovalController {
+public class ApprovalController extends BaseController {
     private static final Logger bizLogger = LoggerFactory.getLogger("BIZ_CALLBACKCONTROLLER");
     private static final Logger mainLogger = LoggerFactory.getLogger(ApprovalController.class);
 
@@ -69,6 +83,12 @@ public class ApprovalController {
 
     @Autowired
     private AppAbutmentService appAbutmentService;
+
+    @Autowired
+    private LoginService loginService;
+
+    @Autowired
+    private ILoginLogService loginLogService;
 
     
     @RequestMapping(value = "/callback")
@@ -163,11 +183,102 @@ public class ApprovalController {
             log.error(message, e);
             throw new FebsException(message);
         }
-
-
-
     }
 
+    /**
+     * 免登通过code获取用户详情接口
+     * 实现免登
+     * @param request
+     * @param model
+     * @return
+     */
+    @GetMapping("index")
+    public Object index(HttpServletRequest request,Model model) {
+        //获取参数
+        Map params = $params(request);
+        String tmpAuthCode = String.valueOf(params.get("tmpAuthCode"));
+        Map userInfMap = getUserInf(tmpAuthCode);
+        //截取掉department
+        String mapDepartment = String.valueOf(userInfMap.get("department"));
+        String department = mapDepartment.substring(1, mapDepartment.length() - 1);
+        userInfMap.put("department", department);
+        //获取roleMap
+        List<Map<String,Object>> roleMapList = LoginController.getRolesMap(userInfMap);
+        //123456代替密码实现登录
+        //加密密码
+        String password = MD5Util.encrypt(String.valueOf(userInfMap.get("name")), "123456");
+        //1.判断是否第一次登陆,第一次登陆需要将用户信息和权限添加到相应的表中
+        User isExistUser = loginService.selectIsExistUser(userInfMap);
+        UsernamePasswordToken token;
+        if (isExistUser == null) {
+            userInfMap.put("password", password);
+            loginService.insertUserInf(userInfMap);
+            //获取钉钉登录的权限名字,并从t_role表拿到role_id,一个用户可能有多个角色
+            for(Map map : roleMapList){
+                Map roleIdMap = loginService.selectRoleId(map);
+                userInfMap.put("roleId", roleIdMap.get("roleId"));
+                //新增的用户权限与钉钉的绑定
+                loginService.insertUserRole(userInfMap);
+            }
+
+            token = new UsernamePasswordToken(String.valueOf(userInfMap.get("name")), password, false);
+        } else {
+            token = new UsernamePasswordToken(isExistUser.getUsername(), isExistUser.getPassword(), false);
+        }
+        super.login(token);
+
+        // 保存登录日志
+        LoginLog loginLog = new LoginLog();
+        loginLog.setUsername(String.valueOf(userInfMap.get("name")));
+        loginLog.setSystemBrowserInfo();
+        this.loginLogService.saveLoginLog(loginLog);
+
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("index");
+        return mav;
+    }
+
+    /**
+     * 获取鉴权数据的接口
+     * @param ，response
+     * @return
+     * @throws RuntimeException
+     */
+    /*@RequestMapping(value = "/authentication")
+    @ResponseBody
+    public String authentication(HttpServletRequest request,HttpServletResponse response){
+        String config = AuthHelper.getConfig(request);
+        return config;
+    }*/
 
 
+    public static Map getUserInf(String tmpAuthCode) throws RuntimeException {
+        try {
+            OapiSnsGetuserinfoBycodeRequest req = new OapiSnsGetuserinfoBycodeRequest();
+            req.setTmpAuthCode(tmpAuthCode);
+            String unionId = UnionIdUtil.getUnionId(req, Env.ACCESSKEY,Env.ACCESSSECRET);
+             /* 获取accessToken
+            【注意】正常情况下access_token有效期为7200秒，有效期内重复获取返回相同结果，并自动续期。
+            */
+            //获取access_token
+            String accessToken = AuthHelper.getAccessToken(Env.APP_KEY,Env.APP_SECRET);
+            //通过access_token和unionId获取userId
+            String userId = UserIdUtil.getUserId(unionId,accessToken);
+            //通过userId获取用户详情
+            JSONObject jsonObject = UserInfUtil.getUserInf(userId,accessToken);
+            Iterator<String> it = jsonObject.keySet().iterator();
+            Map userMap = new HashMap();
+            while(it.hasNext()){
+                // 获得key
+                String key = it.next();
+                String value = jsonObject.getString(key);
+                userMap.put(key,value);
+            }
+            return userMap;
+        } catch (Exception e) {
+            bizLogger.error("getUserInf failed", e);
+            throw new RuntimeException();
+        }
+
+    }
 }

@@ -72,7 +72,7 @@ public interface IDeviceInfoService extends IService<DeviceInfo> {
 	 * @param deptId
 	 * @return
 	 */
-	IPage<DeviceInfo> findDeviceInfosByDept(QueryRequest request, DeviceInfo deviceInfo, Long deptId);
+	IPage<DeviceInfo> findDeviceInfosByDept(QueryRequest request, DeviceInfo deviceInfo, String deptId);
 
     /**
      * 导入Excel信息

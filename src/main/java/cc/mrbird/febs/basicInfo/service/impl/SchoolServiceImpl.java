@@ -127,13 +127,13 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         if (school.getBelongId() != null) {
             queryWrapper.eq(School::getBelongId, school.getBelongId());
         }
-        if(school.getProvinceDeptId()!=null){
+        if(school.getProvinceDeptId() != null && school.getProvinceDeptId() != ""){
             queryWrapper.eq(School::getProvinceDeptId, school.getProvinceDeptId());
         }
-        if(school.getCityDeptId()!=null){
+        if(school.getCityDeptId() != null && school.getCityDeptId() != ""){
             queryWrapper.eq(School::getCityDeptId, school.getCityDeptId());
         }
-        if(school.getCountryDeptId()!=null){
+        if(school.getCountryDeptId() != null && school.getCountryDeptId() != ""){
             queryWrapper.eq(School::getCountryDeptId, school.getCountryDeptId());
         }
 		return this.baseMapper.selectList(queryWrapper);
@@ -205,7 +205,7 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     }
 
 	@Override
-	public IPage<School> findSchoolsByDept(QueryRequest request, School school, Long deptId) {
+	public IPage<School> findSchoolsByDept(QueryRequest request, School school, String deptId) {
 		User user = (User) SecurityUtils.getSubject().getPrincipal();		
 		if(!userDeptService.isPermission(user.getUserId(), deptId)){
 			return new Page<School>();
@@ -229,25 +229,25 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
 	}
 
 	@Override
-	public Integer getSchoolCount(Integer provinceId,Integer cityDeptId,Integer countryDeptId){
+	public Integer getSchoolCount(String provinceId,String cityDeptId,String countryDeptId){
         LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
-        if (provinceId != null) {
+        if (provinceId != null && provinceId != "") {
             queryWrapper.eq(School::getProvinceDeptId, provinceId);
         }
-        if (cityDeptId != null) {
+        if (cityDeptId != null && cityDeptId != "") {
             queryWrapper.eq(School::getCityDeptId, cityDeptId);
         }
-        if (countryDeptId != null) {
+        if (countryDeptId != null && countryDeptId != "") {
             queryWrapper.eq(School::getCountryDeptId, countryDeptId);
         }
         return this.baseMapper.selectCount(queryWrapper);
     }
 
-    public Map<String,Object> getLast12MonthSchoolCount(Integer provinceId, Integer cityDeptId, Integer countryDeptId){
+    public Map<String,Object> getLast12MonthSchoolCount(String provinceId, String cityDeptId, String countryDeptId){
         School school = new School();
-        school.setProvinceDeptId(provinceId == null ? null:provinceId.longValue());
-        school.setCityDeptId(cityDeptId == null ? null:cityDeptId.longValue());
-        school.setCountryDeptId(countryDeptId == null ? null : countryDeptId.longValue());
+        school.setProvinceDeptId(provinceId == null ? null:provinceId);
+        school.setCityDeptId(cityDeptId == null ? null:cityDeptId);
+        school.setCountryDeptId(countryDeptId == null ? null : countryDeptId);
         List<HashMap<String,Object>> result = this.baseMapper.getLast12MonthSchoolCount(school);
         Map<String,Object> mapResult = new HashMap<String,Object>();
         for (int i = 0 ; i < result.size(); i++){

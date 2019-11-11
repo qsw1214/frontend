@@ -1,5 +1,6 @@
 package cc.mrbird.febs.basicInfo.entity;
 
+import java.sql.Time;
 import java.util.Date;
 
 import com.wuwenze.poi.annotation.Excel;
@@ -29,9 +30,9 @@ public class SchoolTimetable {
     /**
      * 开课时间
      */
-    @ExcelField(value = "开课时间",maxLength = 255,dateFormat = "yyyy-MM-dd HH:mm:SS")
+    @ExcelField(value = "开课时间",maxLength = 255)
     @TableField("begin_date")
-    private Date beginDate;
+    private Time beginDate;
 
     /**
      * 

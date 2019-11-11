@@ -35,9 +35,9 @@ public class OperateServiceImpl extends ServiceImpl<OperateMapper, Operate> impl
         QueryWrapper<Operate> queryWrapper = new QueryWrapper<>();
         // TODO 设置查询条件
         if (StringUtils.isNotBlank(operate.getAuthor()))
-            queryWrapper.lambda().eq(Operate::getAuthor, operate.getAuthor());
+            queryWrapper.lambda().like(Operate::getAuthor, operate.getAuthor());
         if (StringUtils.isNotBlank(operate.getTitle()))
-            queryWrapper.lambda().eq(Operate::getTitle, operate.getTitle());
+            queryWrapper.lambda().like(Operate::getTitle, operate.getTitle());
         Page<Operate> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.page(page, queryWrapper);
     }

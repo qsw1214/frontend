@@ -66,13 +66,13 @@ public interface IUserDeptService extends IService<UserDept> {
 	 * @param userId
 	 * @param deptId
 	 */
-    Dept getDeptByUserIdAndDeptId(String userId, Long deptId);
+    Dept getDeptByUserIdAndDeptId(String userId, String deptId);
     
     /**
      * 判断用户对部门有无权限
      * @param deptId
      * @return
      */
-    boolean isPermission(String userId, Long deptId);
+    boolean isPermission(String userId, String deptId);
     
 }

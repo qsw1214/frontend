@@ -24,7 +24,7 @@ public interface SchoolTimetableMapper extends BaseMapper<SchoolTimetable> {
 	 * 按部门查询
 	 */
 	IPage<SchoolTimetable> findSchoolTimetableByDept(Page<?> page,
-			@Param("schoolTimetable") SchoolTimetable schoolTimetable, @Param("deptId") Long deptId);
+			@Param("schoolTimetable") SchoolTimetable schoolTimetable, @Param("deptId") String deptId);
 
 	/**
 	 * 查询所有的课程信息

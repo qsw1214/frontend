@@ -22,5 +22,5 @@ public interface ClassInfoMapper extends BaseMapper<ClassInfo> {
 	 * @return
 	 */
 	IPage<ClassInfo> findClassInfosByDept(Page<?> page, @Param("classInfo") ClassInfo classInfo, 
-			@Param("deptId") Long deptId);
+			@Param("deptId") String deptId);
 }

@@ -69,7 +69,6 @@ public class ClassInfoController extends BaseController {
 	@ResponseBody
 	@RequiresPermissions("classInfo:add")
 	public FebsResponse addClassInfo(@Valid ClassInfo classInfo) throws FebsException {
-		System.out.println(classInfo);
 		try {
 			this.classInfoService.createClassInfo(classInfo);
 			return new FebsResponse().success();
@@ -142,7 +141,7 @@ public class ClassInfoController extends BaseController {
 	@ResponseBody
 	@RequiresPermissions("classInfo:view")
 	public FebsResponse getDeptClassInfoList(QueryRequest request, ClassInfo classInfo,
-			@RequestParam(required = true) Long deptId) {
+			@RequestParam(required = true) String deptId) {
 		// 判断有无权限
 		User user = getCurrentUser();		
 		if(!userDeptService.isPermission(user.getUserId(), deptId)){

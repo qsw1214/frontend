@@ -191,7 +191,7 @@ public class DeviceInfoController extends BaseController {
 	@ResponseBody
 	@RequiresPermissions("deviceInfo:view")
 	public FebsResponse getDeptClassroomInfoList(QueryRequest request, DeviceInfo deviceInfo,
-			@RequestParam(required = true) Long deptId) {
+			@RequestParam(required = true) String deptId) {
     	// 判断有无权限
 		User user = getCurrentUser();		
 		if(!userDeptService.isPermission(user.getUserId(), deptId)){

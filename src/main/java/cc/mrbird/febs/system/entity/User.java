@@ -169,7 +169,7 @@ public class User implements Serializable {
     private String createTimeTo;
 
     @TableField(exist = false)
-    private Long deptId;
+    private String deptId;
     /**
      * 角色 ID
      */

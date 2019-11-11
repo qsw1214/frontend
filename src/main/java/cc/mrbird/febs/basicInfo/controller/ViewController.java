@@ -282,7 +282,7 @@ public class ViewController extends BaseController {
         SchoolTimetable schoolTimetable = schoolTimetableService.selectSchooltimetableInfo(courseId);
         model.addAttribute("schoolTimetable", schoolTimetable);
         if (schoolTimetable.getBeginDate() != null)
-            model.addAttribute("beginDate", DateUtil.getDateFormat(schoolTimetable.getBeginDate(), DateUtil.FULL_TIME_SPLIT_HOUR_PATTERN));
+            model.addAttribute("beginDate", schoolTimetable.getBeginDate());
     }
 
     private void resolveSchoolrModel(Long schoolId, Model model, Boolean transform) {

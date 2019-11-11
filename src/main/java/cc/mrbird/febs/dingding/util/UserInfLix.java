@@ -2,6 +2,7 @@ package cc.mrbird.febs.dingding.util;
 
 import cc.mrbird.febs.dingding.config.Constant;
 import cc.mrbird.febs.dingding.config.URLConstant;
+import cc.mrbird.febs.dingding.controller.AuthHelper;
 import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
@@ -34,7 +35,7 @@ public class UserInfLix {
               /*获取accessToken
             【注意】正常情况下access_token有效期为7200秒，有效期内重复获取返回相同结果，并自动续期。*/
             //获取access_token
-            String accessToken = AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET);
+            String accessToken = AuthHelper.getAccessToken(Constant.APPKEY,Constant.APPSECRET);
             //通过access_token和unionId获取userId
             String userId = UserIdUtil.getUserId(unionId,accessToken);
             //通过userId获取用户详情
@@ -67,7 +68,7 @@ public class UserInfLix {
             OapiUserGetuserinfoRequest request = new OapiUserGetuserinfoRequest();
             request.setCode(tmpAuthCode);
             request.setHttpMethod("GET");
-            String accessToken = AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET);
+            String accessToken = AuthHelper.getAccessToken(Constant.APPKEY,Constant.APPSECRET);
             OapiUserGetuserinfoResponse response = client.execute(request, accessToken);
             String userId = response.getUserid();
             //通过userId获取用户详情

@@ -173,7 +173,7 @@ public class DeptController extends BaseController {
 		}
 	}*/
 	@GetMapping("get")
-	public FebsResponse get( Long deptId) throws FebsException {
+	public FebsResponse get( String deptId) throws FebsException {
 		try {
 			return new FebsResponse().success().data(deptService.getNameByDeptId(deptId));
 		}catch(Exception e){

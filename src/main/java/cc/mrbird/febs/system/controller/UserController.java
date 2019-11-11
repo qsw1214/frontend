@@ -248,7 +248,7 @@ public class UserController extends BaseController {
 	@ResponseBody
 	@RequiresPermissions("user:view")
 	public FebsResponse getDeptUserList(QueryRequest request, User user,
-			@RequestParam(required = true) Long deptId) {
+			@RequestParam(required = true) String deptId) {
 		// 判断有无权限
 		User currentuser = getCurrentUser();		
 		if(!userDeptService.isPermission(currentuser.getUserId(), deptId)){

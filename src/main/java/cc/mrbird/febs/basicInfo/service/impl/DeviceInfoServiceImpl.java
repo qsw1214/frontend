@@ -88,7 +88,7 @@ public class DeviceInfoServiceImpl extends ServiceImpl<DeviceInfoMapper, DeviceI
     }
 
 	@Override
-	public IPage<DeviceInfo> findDeviceInfosByDept(QueryRequest request, DeviceInfo deviceInfo, Long deptId) {
+	public IPage<DeviceInfo> findDeviceInfosByDept(QueryRequest request, DeviceInfo deviceInfo, String deptId) {
 		Page<DeviceInfo> page = new Page<>(request.getPageNum(), request.getPageSize());
         return this.baseMapper.findDeviceInfosByDept(page, deviceInfo, deptId);
 	}

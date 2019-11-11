@@ -222,7 +222,7 @@ public class SchoolController extends BaseController {
             if(oldSchool == null)
                 return new FebsResponse().fail().data("没有该学校");
             if(oldSchool.getDeptId() != null){ // 如果设置了部门id，则判断用户有无修改权限
-                List<Long> parendDeptIds = deptService.getParentDeptIds(school.getDeptId());
+                List<String> parendDeptIds = deptService.getParentDeptIds(school.getDeptId());
                 List<Dept> depts = userDeptService.getDeptByUserId(user.getUserId());
                 boolean flag = false;
                 for(Dept dept: depts){
@@ -260,7 +260,7 @@ public class SchoolController extends BaseController {
     @GetMapping("school/bydept/list")
     @ResponseBody
     @RequiresPermissions("school:view")
-    public FebsResponse schoolListByDept(QueryRequest request, School school, Long deptId) {
+    public FebsResponse schoolListByDept(QueryRequest request, School school, String deptId) {
         // 判断有无部门权限
         User user = getCurrentUser();
         if(!userDeptService.isPermission(user.getUserId(), deptId)){

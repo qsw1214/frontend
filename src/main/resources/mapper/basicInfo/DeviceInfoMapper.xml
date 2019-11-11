@@ -32,7 +32,7 @@
         LEFT JOIN jcc_school_info s ON (s.school_id = d.school_id)
         WHERE 1 = 1
         <if test="deviceInfo.deviceName != null and deviceInfo.deviceName != ''">
-            AND d.device_name = #{deviceInfo.deviceName}
+            AND d.device_name like concat('%',#{deviceInfo.deviceName},'%')
         </if>
         <if test="deviceInfo.schoolName != null and deviceInfo.schoolName != ''">
             AND s.school_name like CONCAT('%','${deviceInfo.schoolName}','%')

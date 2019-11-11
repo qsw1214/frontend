@@ -9,6 +9,7 @@ import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.utils.*;
 import cc.mrbird.febs.dingding.config.Constant;
 import cc.mrbird.febs.dingding.config.URLConstant;
+import cc.mrbird.febs.dingding.controller.AuthHelper;
 import cc.mrbird.febs.dingding.util.AccessTokenUtil;
 import cc.mrbird.febs.resource.entity.Comment;
 import cc.mrbird.febs.resource.entity.Resource;
@@ -487,13 +488,13 @@ public class ApiController extends BaseController {
      */
     @GetMapping("resourceCount")
 //    @RequiresPermissions("count:resourceCount")
-    public FebsResponse getResourceCount(QueryRequest request, Integer provinceId,Integer cityDeptId,Integer countryDeptId) {
-        Integer deptId = 0;
-        if(countryDeptId != null){
+    public FebsResponse getResourceCount(QueryRequest request, String provinceId,String cityDeptId,String countryDeptId) {
+        String deptId = "0";
+        if(countryDeptId != null && countryDeptId != ""){
             deptId = countryDeptId;
-        }else if(cityDeptId != null){
+        }else if(cityDeptId != null && cityDeptId != ""){
             deptId = cityDeptId;
-        }else if(provinceId != null){
+        }else if(provinceId != null && provinceId != ""){
             deptId = provinceId;
         }
         Integer count = this.resourceService.getResourceCount(deptId);
@@ -505,14 +506,14 @@ public class ApiController extends BaseController {
      */
     @GetMapping("schoolCount")
 //    @RequiresPermissions("count:schoolCount")
-    public FebsResponse getSchoolCount(QueryRequest request, Integer provinceId, Integer cityDeptId, Integer countryDeptId) {
+    public FebsResponse getSchoolCount(QueryRequest request, String provinceId, String cityDeptId, String countryDeptId) {
         Integer count = this.schoolService.getSchoolCount(provinceId, cityDeptId, countryDeptId);
         return new FebsResponse().num(count).success();
     }
 
     @GetMapping("teacherCount")
 //    @RequiresPermissions("count:teacherCount")
-    public FebsResponse getTeacherCount(QueryRequest request, Long provinceId, Long cityDeptId, Long countryDeptId,Integer schoolDeptId) {
+    public FebsResponse getTeacherCount(QueryRequest request, String provinceId, String cityDeptId, String countryDeptId,Integer schoolDeptId) {
 //        Integer count = 1000;
         //根据省市区条件判断其下有多少所学校，再统计学校的对应教师的人数；
         Integer count = 0;
@@ -536,7 +537,7 @@ public class ApiController extends BaseController {
      */
     @GetMapping("studentCount")
 //    @RequiresPermissions("count:studentCount")
-    public FebsResponse getStudentCount(QueryRequest request, Long provinceId, Long cityDeptId, Long countryDeptId,Integer schoolDeptId) {
+    public FebsResponse getStudentCount(QueryRequest request, String provinceId, String cityDeptId, String countryDeptId,Integer schoolDeptId) {
         Integer count = 0;
         if(schoolDeptId != null && schoolDeptId != 0){
             count = this.userService.getUserCountOfSchool(schoolDeptId,CommonConstant.ROLE_NAME_STUDENT);
@@ -674,7 +675,7 @@ public class ApiController extends BaseController {
             count = Integer.valueOf(new Random().nextInt(10000));
             netCountLists.add(count);
             //统计每个市区的资源数统计 -- 暂时没有统计包括市级下面的区县的资源数据
-            Integer resourceCount = this.resourceService.getResourceCount(cityDatas.get(i).getDeptId().intValue());
+            Integer resourceCount = this.resourceService.getResourceCount(cityDatas.get(i).getDeptId());
             resourceCountLists.add(resourceCount);
             //统计每个市区的学生数  —— 暂时以随机数代替
             Integer studentCount = Integer.valueOf(new Random().nextInt(10000));
@@ -701,7 +702,7 @@ public class ApiController extends BaseController {
     public FebsResponse createDingChat(QueryRequest request, String chatName){
 
         DefaultDingTalkClient client = null;
-        String token = AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET);
+        String token = AuthHelper.getAccessToken(Constant.APPKEY,Constant.APPSECRET);
 
         client = new DefaultDingTalkClient(URLConstant.URL_CHAT_CREATE);
         OapiChatCreateRequest requestOapiChat = new OapiChatCreateRequest();
@@ -757,7 +758,7 @@ public class ApiController extends BaseController {
         if(dingChat != null && user.getUserId().equals(dingChat.getUserId())){
             //当前用户为群主，可修改群名
             dingChat.setChatName(chatName);
-            String token = AccessTokenUtil.getToken(Constant.APPKEY,Constant.APPSECRET);
+            String token = AuthHelper.getAccessToken(Constant.APPKEY,Constant.APPSECRET);
             DingTalkClient client = new DefaultDingTalkClient(URLConstant.URL_CHAT_UPDATE);
             OapiChatUpdateRequest updateRequest = new OapiChatUpdateRequest();
             updateRequest.setChatid(chatId);
