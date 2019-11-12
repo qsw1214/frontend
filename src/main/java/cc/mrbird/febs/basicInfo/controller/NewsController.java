@@ -31,7 +31,8 @@ public class NewsController extends BaseController {
 
     @GetMapping("listImg")
     //@RequiresPermissions("news:listImg")
-    public FebsResponse listImg(News news, QueryRequest request) {
+    public FebsResponse listImg(QueryRequest request) {
+        News news = new News();
         news.setClassify("pic");
         IPage<News> newsLists = this.newsService.findNews(request, news);
         Map<String, Object> dataTable = getDataTable(newsLists);
@@ -40,7 +41,8 @@ public class NewsController extends BaseController {
 
     @GetMapping("listJyxw")
     //@RequiresPermissions("news:listJyxw")
-    public FebsResponse listJyxw(News news, QueryRequest request) {
+    public FebsResponse listJyxw(QueryRequest request) {
+        News news = new News();
         news.setClassify("gzdt");
         Map<String, Object> dataTable = getDataTable(this.newsService.findNews(request,news));
         return new FebsResponse().success().data(dataTable);
@@ -48,7 +50,8 @@ public class NewsController extends BaseController {
 
     @GetMapping("listZcjd")
     //@RequiresPermissions("news:listZcjd")
-    public FebsResponse newsList(News news, QueryRequest request) {
+    public FebsResponse newsList(QueryRequest request) {
+        News news = new News();
         news.setClassify("zcjd");
         Map<String, Object> dataTable = getDataTable(this.newsService.findNews(request,news));
         return new FebsResponse().success().data(dataTable);
