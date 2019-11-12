@@ -74,35 +74,20 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
             }
         }
         return pageList;
-    	/*LambdaQueryWrapper<School> queryWrapper = new LambdaQueryWrapper<>();
-        // TODO 设置查询条件   
-        if (StringUtils.isNotBlank(school.getSchoolName())) {
-            //queryWrapper.eq(School::getSchoolName, school.getSchoolName());
-            queryWrapper.like(School::getSchoolName, school.getSchoolName());
+    }
+
+    @Override
+    public IPage<School> findSchoolByMap(QueryRequest request, School school,Map<String, Object> params) {
+        Page<SchoolTimetable> page = new Page<>(request.getPageNum(), request.getPageSize());
+        IPage<School> pageList = this.baseMapper.findSchoolByMap(page,school, params);
+        List<School> list = pageList.getRecords();
+        for (int i = 0 ; i < list.size(); i++){
+            School temp = list.get(i);
+            if(temp.getSchoolName().equals(temp.getBelongSchool())){
+                temp.setBelongSchool("");
+            }
         }
-        if (StringUtils.isNotBlank(school.getSchoolType())) {
-            queryWrapper.eq(School::getSchoolType, school.getSchoolType());
-        }
-        if (StringUtils.isNotBlank(school.getSchoolCategory())) {
-            queryWrapper.eq(School::getSchoolCategory, school.getSchoolCategory());
-        }
-        if (school.getState() != null) {
-            queryWrapper.eq(School::getState, school.getState());
-        }
-        if (school.getBelongId() != null) {
-            queryWrapper.eq(School::getBelongId, school.getBelongId());
-        }
-        if(school.getProvinceDeptId()!=null){
-            queryWrapper.eq(School::getProvinceDeptId, school.getProvinceDeptId());
-        }
-        if(school.getCityDeptId()!=null){
-            queryWrapper.eq(School::getCityDeptId, school.getCityDeptId());
-        }
-        if(school.getCountryDeptId()!=null){
-            queryWrapper.eq(School::getCountryDeptId, school.getCountryDeptId());
-        }
-        Page<School> page = new Page<>(request.getPageNum(), request.getPageSize());
-        return this.page(page, queryWrapper);*/
+        return pageList;
     }
 
     @Override

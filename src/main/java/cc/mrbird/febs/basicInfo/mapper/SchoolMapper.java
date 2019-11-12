@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 学校表 Mapper
@@ -21,4 +22,5 @@ public interface SchoolMapper extends BaseMapper<School> {
 
     IPage<School> findSchool(Page page, @Param("school") School school);
 
+    IPage<School> findSchoolByMap(Page page,@Param("school") School school, @Param("params") Map<String, Object> params);
 }

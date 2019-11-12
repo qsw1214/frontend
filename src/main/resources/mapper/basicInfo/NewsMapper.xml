@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.basicInfo.mapper.AreaMapper">
+
+    <resultMap id="news" type="cc.mrbird.febs.basicInfo.entity.News">
+        <id column="nid" jdbcType="VARCHAR" property="nid"/>
+        <result column="link" jdbcType="VARCHAR" property="link"/>
+        <result column="classify" jdbcType="VARCHAR" property="classify"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="pic" jdbcType="VARCHAR" property="pic"/>
+        <result column="date" jdbcType="VARCHAR" property="date"/>
+    </resultMap>
+</mapper>

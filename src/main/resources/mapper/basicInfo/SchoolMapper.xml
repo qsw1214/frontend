@@ -60,22 +60,17 @@
     </select>
 
     <select id="findSchool" parameterType="cc.mrbird.febs.basicInfo.entity.School" resultMap="school">
-        SELECT info.school_id,info.school_name,info.school_type,info.school_category,info.link_man,
-            info.link_phone,info.post_code,info.address,
-            mainSchool.school_name as belongSchool,
-            pronDept.DEPT_NAME as province,
-            cityDept.DEPT_NAME as city,
-            counttyDept.DEPT_NAME as country,
-            info.province_dept_id,
-            info.city_dept_id,
-            info.country_dept_id,
-            info.picture
-            from jcc_school_info info
-            LEFT JOIN t_dept pronDept ON info.province_dept_id = pronDept.DEPT_ID
-            LEFT JOIN t_dept cityDept ON info.city_dept_id = cityDept.DEPT_ID
-            LEFT JOIN t_dept counttyDept ON info.country_dept_id = counttyDept.DEPT_ID
-            LEFT JOIN jcc_school_info mainSchool ON info.belongId = mainSchool.school_id
-            where 1 = 1
+        select * from (SELECT
+        info.school_id,info.school_name,info.school_type,info.school_category,info.link_man,info.link_phone,info.post_code,info.address,
+        mainSchool.school_name as belongSchool,
+        pronDept.DEPT_NAME as province,cityDept.DEPT_NAME as city,counttyDept.DEPT_NAME as country,
+        info.province_dept_id,info.city_dept_id,info.country_dept_id,info.dept_id, info.picture
+        from jcc_school_info info
+        LEFT JOIN t_dept pronDept ON info.province_dept_id = pronDept.DEPT_ID
+        LEFT JOIN t_dept cityDept ON info.city_dept_id = cityDept.DEPT_ID
+        LEFT JOIN t_dept counttyDept ON info.country_dept_id = counttyDept.DEPT_ID
+        LEFT JOIN jcc_school_info mainSchool ON info.belongId = mainSchool.school_id
+        where 1 = 1
             <if test="school.schoolName != null and school.schoolName != ''">
                 AND info.school_name like CONCAT('%','${school.schoolName}','%')
             </if>
@@ -97,6 +92,63 @@
             <if test="school.province != null and school.province != ''">
                 AND pronDept.dept_name = #{school.province}
             </if>
+        )  temp_tab
+    </select>
+
+    <select id="findSchoolByMap"  resultMap="school">
+        select * from (SELECT
+        info.school_id,info.school_name,info.school_type,info.school_category,info.link_man,info.link_phone,info.post_code,info.address,
+        mainSchool.school_name as belongSchool,
+        pronDept.DEPT_NAME as province,cityDept.DEPT_NAME as city,counttyDept.DEPT_NAME as country,
+        info.province_dept_id,info.city_dept_id,info.country_dept_id,info.dept_id, info.picture
+        from jcc_school_info info
+        LEFT JOIN t_dept pronDept ON info.province_dept_id = pronDept.DEPT_ID
+        LEFT JOIN t_dept cityDept ON info.city_dept_id = cityDept.DEPT_ID
+        LEFT JOIN t_dept counttyDept ON info.country_dept_id = counttyDept.DEPT_ID
+        LEFT JOIN jcc_school_info mainSchool ON info.belongId = mainSchool.school_id
+        where 1 = 1
+            <if test="school.schoolName != null and school.schoolName != ''">
+                AND info.school_name like CONCAT('%','${school.schoolName}','%')
+            </if>
+            <if test="school.schoolType != null and school.schoolType != ''">
+                AND info.school_type = #{school.schoolType}
+            </if>
+            <if test="school.schoolCategory != null and school.schoolCategory != ''">
+                AND info.school_category = #{school.schoolCategory}
+            </if>
+            <if test="school.provinceDeptId != null and school.provinceDeptId != ''">
+                AND info.province_dept_id = #{school.provinceDeptId}
+            </if>
+            <if test="school.cityDeptId != null and school.cityDeptId != ''">
+                AND info.city_dept_id = #{school.cityDeptId}
+            </if>
+            <if test="school.countryDeptId != null and school.countryDeptId != ''">
+                AND info.country_dept_id = #{school.countryDeptId}
+            </if>
+            <if test="school.province != null and school.province != ''">
+                AND pronDept.dept_name = #{school.province}
+            </if>
+        )  temp_tab
+                <where>
+                <if test="params.param1 != null">
+                    city_dept_id in
+                    <foreach item="city" index="index" collection="params.param1" open="(" separator="," close=")">
+                        #{city}
+                    </foreach>
+                </if>
+                <if test="params.param2 != null">
+                     or country_dept_id in
+                    <foreach item="country" index="index" collection="params.param2"  open="(" separator="," close=")">
+                        #{country}
+                    </foreach>
+                </if>
+                <if test="params.param3 != null">
+                    or dept_id in
+                    <foreach item="schoolTem" index="index" collection="params.param3" open="(" separator="," close=")">
+                        #{schoolTem}
+                    </foreach>
+                </if>
+                </where>
     </select>
 
 </mapper>

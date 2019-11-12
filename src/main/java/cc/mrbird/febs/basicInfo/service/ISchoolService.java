@@ -28,6 +28,8 @@ public interface ISchoolService extends IService<School> {
      */
     IPage<School> findSchools(QueryRequest request, School school);
 
+    IPage<School> findSchoolByMap(QueryRequest request,School school, Map<String, Object> params);
+
     /**
      * 查询（所有）
      *

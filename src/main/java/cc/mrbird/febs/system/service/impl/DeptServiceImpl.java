@@ -145,6 +145,8 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 
         if (StringUtils.isNotBlank(dept.getDeptName()))
             queryWrapper.lambda().eq(Dept::getDeptName, dept.getDeptName());
+        if (StringUtils.isNotBlank(dept.getParentId()))
+            queryWrapper.lambda().eq(Dept::getParentId, dept.getParentId());
         SortUtil.handleWrapperSort(request, queryWrapper, "orderNum", FebsConstant.ORDER_ASC, true);
         return this.baseMapper.selectList(queryWrapper);
     }

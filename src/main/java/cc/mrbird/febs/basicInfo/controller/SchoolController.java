@@ -91,12 +91,16 @@ public class SchoolController extends BaseController {
         return new FebsResponse().success().data(schoolList);
     }
 
+    /**
+     * 前端接口
+     * @param request
+     * @param school
+     * @return
+     */
     @GetMapping("school/list")
     @ResponseBody
     @RequiresPermissions("school:view")
     public FebsResponse schoolList(QueryRequest request, School school) {
-//    	User currentUser = getCurrentUser();
-//    	school.setSchoolId(currentUser.getSchoolId());
         IPage<School>  schoolPages = this.schoolService.findSchools(request, school);
         List<School> schoolList = schoolPages.getRecords();
         for (int i = 0 ; i < schoolList.size() ; i++){
@@ -112,29 +116,53 @@ public class SchoolController extends BaseController {
         return new FebsResponse().success().data(dataTable);
     }
 
-    /*    @Log("新增School")
-        @PostMapping("school")
-        @ResponseBody
-        @RequiresPermissions("school:add")
-        public FebsResponse addSchool(@Valid School school, @RequestParam(required=false,value="file") MultipartFile file) throws FebsException {
-            try {
-                if (file != null) {
-                    String path = Tools.saveFile(file, "school");
-                    System.out.println(path);
-                    school.setPicture(path);
-                }
-                School s = this.schoolService.createSchool(school);
-                if(s.getBelongId()==null){
-                    s.setBelongId(s.getSchoolId());
-                    this.schoolService.updateSchool(s);
-                }
-                return new FebsResponse().success();
-            } catch (Exception e) {
-                String message = "新增School失败";
-                log.error(message, e);
-                throw new FebsException(message);
+    /**
+     * 后端系统使用
+     * @param request
+     * @param school
+     * @return
+     */
+    @GetMapping("school/web/list")
+    @ResponseBody
+    @RequiresPermissions("school:view")
+    public FebsResponse schoolWebList(QueryRequest request, School school) {
+        User currentUser = getCurrentUser();
+        List<Dept> depts = this.userDeptService.getDeptByUserId(currentUser.getUserId().toString());
+        List<String> cityList = new ArrayList<String>();
+        List<String> countryList = new ArrayList<String>();
+        List<String> schoolTemList = new ArrayList<String>();
+        for (int i = 0 ; i < depts.size(); i++){
+            Dept dept = depts.get(i);
+            if(dept.getDeptGrade() == 1){
+                school.setProvince(dept.getDeptName());
+                break;
+            }else if(dept.getDeptGrade() == 2){
+                cityList.add(dept.getDeptId());
+            }else if(dept.getDeptGrade() == 3){
+                countryList.add(dept.getDeptId());
+            }else if(dept.getDeptGrade() == 4){
+                schoolTemList.add(dept.getDeptId());
             }
+        }
+        Map<String, Object> params = new HashMap<String, Object>(2);
+        params.put("param1", cityList.size() > 0 ? cityList : null);
+        params.put("param2", countryList.size() > 0 ? countryList : null);
+        params.put("param3", schoolTemList.size() > 0 ? schoolTemList : null);
+        IPage<School>  schoolPages = this.schoolService.findSchoolByMap(request, school,params);
+        /*List<School> schoolList = schoolPages.getRecords();
+        for (int i = 0 ; i < schoolList.size() ; i++){
+            School schoolTemp = schoolList.get(i);
+            Integer teacherCount = this.userService.getUserCountOfSchool(schoolTemp.getSchoolId(), CommonConstant.ROLE_NAME_TEACHER);
+            Integer studentCount = this.userService.getUserCountOfSchool(schoolTemp.getSchoolId(), CommonConstant.ROLE_NAME_STUDENT);
+            Integer classroomCount = this.classroomInfoService.findClassroomByMainSchoolId(schoolTemp.getSchoolId()).size();
+            schoolTemp.setTeacherCount(teacherCount);
+            schoolTemp.setStudentCount(studentCount);
+            schoolTemp.setClassroomCount(classroomCount);
         }*/
+        Map<String, Object> dataTable = getDataTable(schoolPages);
+        return new FebsResponse().success().data(dataTable);
+    }
+
     @Log("新增School")
     @PostMapping("school")
     @ResponseBody
