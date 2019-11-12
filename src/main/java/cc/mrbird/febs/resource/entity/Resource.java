@@ -66,7 +66,7 @@ public class Resource {
      */
     @TableField("dept_id")
     @ExcelField(value="部门id")
-    private Integer deptId;
+    private String deptId;
 
     /**
      * 年级

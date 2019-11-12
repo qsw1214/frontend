@@ -48,7 +48,7 @@ public class EsResource {
      * 部门
      */
 	@Field(type = FieldType.Integer)
-    private Integer deptId;
+    private String deptId;
 
     /**
      * 年级

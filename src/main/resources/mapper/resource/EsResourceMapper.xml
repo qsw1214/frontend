@@ -5,7 +5,7 @@
         <id column="resource_id" jdbcType="DECIMAL" property="resourceId"/>
         <result column="resource_name" jdbcType="VARCHAR" property="resourceName"/>
         <result column="creator" jdbcType="VARCHAR" property="creator"/>
-        <result column="dept_id" jdbcType="INTEGER" property="deptId"/>
+        <result column="dept_id" jdbcType="VARCHAR" property="deptId"/>
         <result column="grade_id" jdbcType="INTEGER" property="gradeId"/>
         <result column="subject_id" jdbcType="INTEGER" property="subjectId"/>
         <result column="category_id" jdbcType="INTEGER" property="categoryId"/>
