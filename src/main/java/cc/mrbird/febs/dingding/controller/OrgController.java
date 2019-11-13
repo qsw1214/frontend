@@ -149,7 +149,7 @@ public class OrgController {
             dept.setCreateTime(DateUtil.getNowDateTime());
             dept.setModifyTime(DateUtil.getNowDateTime());
             dept.setDeptName(deptDetailVO.getName());
-            dept.setOrderNum(deptDetailVO.getOrder());
+            dept.setOrderNum(Integer.valueOf(deptDetailVO.getOrder()));
             if("1".equals(parentId)){    //如果父级id为1，为固定第一级
                 dept.setDeptGrade(1l);
                 dept.setParentId("1");
@@ -207,7 +207,7 @@ public class OrgController {
                     dept.setDeptGrade(parentDeptGrade + 1l);
                     dept.setModifyTime(new Date());
                     dept.setDeptName(deptName);
-                    dept.setOrderNum(deptInfoDetailVO.getOrder());
+                    dept.setOrderNum(Integer.valueOf(deptInfoDetailVO.getOrder()));
                     this.deptService.saveOrUpdate(dept);
 
                     if(dept.getDeptGrade() == 4) { // 级别为4的 是代表学校部门
