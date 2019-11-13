@@ -6,6 +6,7 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.DateUtil;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.common.utils.TreeUtil;
+import cc.mrbird.febs.dingding.config.Constant;
 import cc.mrbird.febs.dingding.util.AddressListUtil;
 import cc.mrbird.febs.dingding.vo.Department;
 import cc.mrbird.febs.dingding.vo.DepartmentListIFVO;
@@ -32,9 +33,7 @@ import java.util.*;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements IDeptService {
 
-    @Autowired
-    private DeptMapper deptMapper;
-    
+
     @Autowired
 	private IUserDeptService userDeptService;
 
@@ -110,17 +109,34 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 			queryWrapper = new LambdaQueryWrapper<>();
 			queryWrapper.in(Dept::getParentId, deptIds1);
 			queryWrapper.orderByAsc(Dept::getOrderNum);
-			depts2 = this.baseMapper.selectList(queryWrapper);
-			for(int i=0; i<depts2.size(); i++)
+
+            Dept tempDept = new Dept();
+            tempDept.setDeptId(Constant.CITY_ALL_SELECT_DEPT_ID);
+            tempDept.setDeptName("全部");
+            tempDept.setParentId(deptIds1.get(0));
+            depts2.add(tempDept);
+
+			depts2.addAll(this.baseMapper.selectList(queryWrapper));
+
+
+			for(int i = 0; i < depts2.size(); i++)
 				if(!deptIds2.contains(depts2.get(i).getDeptId()))
 					deptIds2.add(depts2.get(i).getDeptId());
-		}	
+		}
 		// 获取三级部门
 		if(!deptIds2.isEmpty()){
 			queryWrapper = new LambdaQueryWrapper<>();
 			queryWrapper.in(Dept::getParentId, deptIds2);
 			queryWrapper.orderByAsc(Dept::getOrderNum);
 			depts3 = this.baseMapper.selectList(queryWrapper);
+
+			for(int i = 0 ; i < deptIds2.size(); i++){
+                Dept tempDept = new Dept();
+                tempDept.setDeptId(Constant.COUNTRY_ALL_SELECT_DEPT_ID);
+                tempDept.setDeptName("全部");
+                tempDept.setParentId(deptIds2.get(i));
+                depts2.add(tempDept);
+            }
 		}
 		
 		// 合并所有部门
@@ -202,7 +218,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 
     public long findGradeByParentId(long parentId){
 
-        return this.deptMapper.findGradeByParentId(parentId);
+        return this.baseMapper.findGradeByParentId(parentId);
     }
 
     /**
