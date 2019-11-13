@@ -94,7 +94,7 @@
                 AND pronDept.dept_name = #{school.province}
             </if>
             <if test="school.fuRong != null and school.fuRong != ''">
-                AND pronDept.fuRong = #{school.fuRong}
+                AND info.fuRong = #{school.fuRong}
             </if>
         )  temp_tab
     </select>
