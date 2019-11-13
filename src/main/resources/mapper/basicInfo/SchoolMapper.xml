@@ -26,6 +26,7 @@
         <result column="picture" jdbcType="VARCHAR" property="picture"/>
         <result column="state" jdbcType="INTEGER" property="picture"/>
         <result column="belongId" jdbcType="INTEGER" property="belongId"/>
+        <result column="fuRong" jdbcType="VARCHAR" property="fuRong"/>
     </resultMap>
 
     <select id="getLast12MonthSchoolCount" parameterType="cc.mrbird.febs.basicInfo.entity.School" resultType="java.util.HashMap">
@@ -91,6 +92,9 @@
             </if>
             <if test="school.province != null and school.province != ''">
                 AND pronDept.dept_name = #{school.province}
+            </if>
+            <if test="school.fuRong != null and school.fuRong != ''">
+                AND pronDept.fuRong = #{school.fuRong}
             </if>
         )  temp_tab
     </select>

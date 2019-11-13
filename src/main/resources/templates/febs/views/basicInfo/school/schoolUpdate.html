@@ -44,6 +44,13 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">是否是芙蓉学校：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="fuRong"  value="1" title="是" >
+                <input type="radio" name="fuRong"  value="0" title="否" >
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">所属主校：</label>
             <div class="layui-input-block">
                 <select name="belongId"
@@ -116,9 +123,10 @@
             <div class="layui-upload-list" id="demo2"></div>
 
             <input type="text" id="imgUrls" name="imgUrls" style="display: none;" class="layui-input">
-        <div class="layui-form-item" style="text-align: right">
-            <button class="layui-btn" lay-submit="" lay-filter="school-update-form-submit" id="submit">提交</button>
-            <button class="layui-btn layui-btn-primary" type="button" id="remove">取消</button>
+            <div class="layui-form-item" style="text-align: right">
+                <button class="layui-btn" lay-submit="" lay-filter="school-update-form-submit" id="submit">提交</button>
+                <button class="layui-btn layui-btn-primary" type="button" id="remove">取消</button>
+            </div>
         </div>
     </form>
 </div>
@@ -275,6 +283,7 @@
                 "schoolName": school.schoolName,
                 "introduce": school.introduce,
                 "schoolType": school.schoolType,
+                "fuRong":school.fuRong,
                 "belongId":school.belongId,
                 "linkMan": school.linkMan,
                 "linkPhone": school.linkPhone,

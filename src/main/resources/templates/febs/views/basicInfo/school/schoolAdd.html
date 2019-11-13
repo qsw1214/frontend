@@ -29,6 +29,13 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">是否是芙蓉学校：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="fuRong"  value="1" title="是" checked lay-filter="fuRong" >
+                <input type="radio" name="fuRong"  value="0" title="否" lay-filter="fuRong" >
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">学校类别：</label>
             <div class="layui-input-block"  style="width: 180px;">
                 <select name="schoolCategory" id="schoolCate">
@@ -262,6 +269,7 @@
             $("#submit").addClass("layui-btn layui-btn-radius layui-btn-disabled").prop("disabled",true);
             var formData = new FormData();
             formData.append('schoolName',data.field.schoolName);
+            formData.append('fuRong',data.field.fuRong);
             formData.append('introduce',data.field.introduce);
             formData.append('schoolType',data.field.schoolType);
             formData.append('schoolCategory',data.field.schoolCategory);

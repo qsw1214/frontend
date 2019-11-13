@@ -171,6 +171,12 @@ public class School {
     @TableField( "belongId")
     private Integer belongId;
 
+    /**
+     * 是否是芙蓉学校-》0：是 1：否
+     */
+    @TableField( "fuRong")
+    private String fuRong;
+
     @ExcelField(value = "教师总数")
     @TableField(exist = false)
     private Integer teacherCount;
