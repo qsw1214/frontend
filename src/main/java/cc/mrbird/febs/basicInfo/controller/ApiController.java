@@ -447,10 +447,18 @@ public class ApiController extends BaseController {
      */
     @GetMapping("netCLassCount")
 //    @RequiresPermissions("count:netClassCount")
-    public FebsResponse getNetClassCount(QueryRequest request, Integer provinceId, Integer cityDeptId, Integer countryDeptId) {
+    public FebsResponse getNetClassCount(QueryRequest request, String provinceId, String cityDeptId, String countryDeptId) {
         //1、根据省市区条件获取所有符合条件的学校列表
         //2、学校关联教室，获取其所有的教室列表对应的URL地址
         //3、以2019-10-01为起始时间，至当前时间，作为查询条件，统计其推流次数即开课数量统计
+        if(countryDeptId.equals(Constant.COUNTRY_ALL_SELECT_DEPT_ID)){
+            countryDeptId=null;
+        }
+
+        if(cityDeptId.equals(Constant.CITY_ALL_SELECT_DEPT_ID)){
+            cityDeptId=null;
+        }
+
         List<ClassroomInfo> classroomLists = this.classroomInfoService.getClassroomInfoByCityCountry(provinceId, cityDeptId, countryDeptId);
         Integer count = new Random().nextInt(1000);
         /*for (int i = 0; i < classroomLists.size(); i++) {
@@ -476,7 +484,14 @@ public class ApiController extends BaseController {
      */
     @GetMapping("classroomCount")
 //    @RequiresPermissions("count:classroomCount")
-    public FebsResponse getClassroomCount(QueryRequest request, Integer provinceId, Integer cityDeptId, Integer countryDeptId) {
+    public FebsResponse getClassroomCount(QueryRequest request, String provinceId, String cityDeptId, String countryDeptId) {
+        if(countryDeptId.equals(Constant.COUNTRY_ALL_SELECT_DEPT_ID)){
+            countryDeptId=null;
+        }
+
+        if(cityDeptId.equals(Constant.CITY_ALL_SELECT_DEPT_ID)){
+            cityDeptId=null;
+        }
         Integer count = this.classroomInfoService.getClassroomCount(provinceId, cityDeptId, countryDeptId);
         return new FebsResponse().num(count).success();
     }
@@ -489,10 +504,10 @@ public class ApiController extends BaseController {
     @GetMapping("resourceCount")
 //    @RequiresPermissions("count:resourceCount")
     public FebsResponse getResourceCount(QueryRequest request, String provinceId,String cityDeptId,String countryDeptId) {
-        String deptId = "0";
-        if(countryDeptId != null && countryDeptId != ""){
+        String deptId = null;
+        if(countryDeptId != Constant.COUNTRY_ALL_SELECT_DEPT_ID){
             deptId = countryDeptId;
-        }else if(cityDeptId != null && cityDeptId != ""){
+        }else if(cityDeptId != Constant.CITY_ALL_SELECT_DEPT_ID){
             deptId = cityDeptId;
         }else if(provinceId != null && provinceId != ""){
             deptId = provinceId;
@@ -507,6 +522,13 @@ public class ApiController extends BaseController {
     @GetMapping("schoolCount")
 //    @RequiresPermissions("count:schoolCount")
     public FebsResponse getSchoolCount(QueryRequest request, String provinceId, String cityDeptId, String countryDeptId) {
+        if(countryDeptId.equals(Constant.COUNTRY_ALL_SELECT_DEPT_ID)){//区/
+            countryDeptId=null;
+        }
+
+        if(cityDeptId.equals(Constant.CITY_ALL_SELECT_DEPT_ID)){
+            cityDeptId=null;
+        }
         Integer count = this.schoolService.getSchoolCount(provinceId, cityDeptId, countryDeptId);
         return new FebsResponse().num(count).success();
     }
@@ -520,6 +542,13 @@ public class ApiController extends BaseController {
         if(schoolDeptId != null && schoolDeptId != 0){
            count = this.userService.getUserCountOfSchool(schoolDeptId,CommonConstant.ROLE_NAME_TEACHER);
         }else{
+            if(countryDeptId.equals(Constant.COUNTRY_ALL_SELECT_DEPT_ID)){
+                countryDeptId=null;
+            }
+
+            if(cityDeptId.equals(Constant.CITY_ALL_SELECT_DEPT_ID)){
+                cityDeptId=null;
+            }
             School school = new School();
             school.setProvinceDeptId(provinceId);
             school.setCityDeptId(cityDeptId);
@@ -542,6 +571,13 @@ public class ApiController extends BaseController {
         if(schoolDeptId != null && schoolDeptId != 0){
             count = this.userService.getUserCountOfSchool(schoolDeptId,CommonConstant.ROLE_NAME_STUDENT);
         }else{
+            if(countryDeptId.equals(Constant.COUNTRY_ALL_SELECT_DEPT_ID)){
+                countryDeptId=null;
+            }
+
+            if(cityDeptId.equals(Constant.CITY_ALL_SELECT_DEPT_ID)){
+                cityDeptId=null;
+            }
             School school = new School();
             school.setProvinceDeptId(provinceId);
             school.setCityDeptId(cityDeptId);

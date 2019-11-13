@@ -57,9 +57,9 @@ public interface IClassroomInfoService extends IService<ClassroomInfo> {
      */
     void deleteClassroomInfosByschoolId(List<String> schoolIds);
 
-    List<ClassroomInfo> getClassroomInfoByCityCountry(Integer provinceId,Integer cityDeptId,Integer countryDeptId);
+    List<ClassroomInfo> getClassroomInfoByCityCountry(String provinceId,String cityDeptId,String countryDeptId);
 
-    Integer getClassroomCount(Integer provinceId,Integer cityDeptId,Integer countryDeptId);
+    Integer getClassroomCount(String provinceId,String cityDeptId,String countryDeptId);
 
     public List<ClassroomInfo> findClassroomByMainSchoolId(Integer mainSchoolId);
     

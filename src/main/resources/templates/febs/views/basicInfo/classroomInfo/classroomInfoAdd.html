@@ -89,7 +89,7 @@
         }
 
         function getSchool() {
-            febs.get(ctx+'school/list',null,function (res) {
+            febs.get(ctx+'school/web/list',null,function (res) {
                 var items=res.data;
                 if (items.total==0){
                     school.append('<option value="'+""+'">'+""+'</option>');

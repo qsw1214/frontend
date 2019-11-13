@@ -106,16 +106,16 @@ public class ClassroomInfoServiceImpl extends ServiceImpl<ClassroomInfoMapper, C
 			this.baseMapper.delete(new QueryWrapper<ClassroomInfo>().lambda().in(ClassroomInfo::getSchoolId, schoolIds));
 	}
 
-    public List<ClassroomInfo> getClassroomInfoByCityCountry(Integer provinceId,Integer cityDeptId,Integer countryDeptId){
-        Map<String,Integer> map = new HashMap<String,Integer>();
+    public List<ClassroomInfo> getClassroomInfoByCityCountry(String provinceId,String cityDeptId,String countryDeptId){
+        Map<String,String> map = new HashMap<String,String>();
         map.put("provinceDeptId",provinceId);
         map.put("cityDeptId",cityDeptId);
         map.put("countryDeptId",countryDeptId);
         return this.baseMapper.getClassroomInfoByCityCountry(map);
     }
 
-    public Integer getClassroomCount(Integer provinceId,Integer cityDeptId,Integer countryDeptId){
-        Map<String,Integer> map = new HashMap<String,Integer>();
+    public Integer getClassroomCount(String provinceId,String cityDeptId,String countryDeptId){
+        Map<String,String> map = new HashMap<String,String>();
         map.put("provinceDeptId",provinceId);
         map.put("cityDeptId",cityDeptId);
         map.put("countryDeptId",countryDeptId);

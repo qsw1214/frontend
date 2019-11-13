@@ -19,9 +19,9 @@ import java.util.Map;
  */
 public interface ClassroomInfoMapper extends BaseMapper<ClassroomInfo> {
 
-	public List<ClassroomInfo> getClassroomInfoByCityCountry(@Param("map") Map<String, Integer> map);
+	public List<ClassroomInfo> getClassroomInfoByCityCountry(@Param("map") Map<String, String> map);
 
-	public Integer getClassroomCount(@Param("map") Map<String, Integer> map);
+	public Integer getClassroomCount(@Param("map") Map<String, String> map);
 
 	public List<ClassroomInfo> findClassroomByMainSchoolId(@Param("schoolId") Integer schoolId);
 

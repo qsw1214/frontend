@@ -86,6 +86,6 @@ public class Constant {
     public static final String CALLBACK_URL_ORG = "http://47.97.74.226:8080/org";
 
 
-    public static String CITY_ALL_SELECT_DEPT_ID = "01";
-    public static String COUNTRY_ALL_SELECT_DEPT_ID = "001";
+    public static String CITY_ALL_SELECT_DEPT_ID = "111";
+    public static String COUNTRY_ALL_SELECT_DEPT_ID = "222";
 }

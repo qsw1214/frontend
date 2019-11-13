@@ -14,6 +14,7 @@ import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.basicInfo.entity.School;
 import cc.mrbird.febs.basicInfo.entity.SchoolTimetable;
 import cc.mrbird.febs.basicInfo.service.ISchoolService;
+import cc.mrbird.febs.dingding.config.Constant;
 import cc.mrbird.febs.system.entity.Dept;
 import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IDeptService;
@@ -101,6 +102,14 @@ public class SchoolController extends BaseController {
     @ResponseBody
     @RequiresPermissions("school:view")
     public FebsResponse schoolList(QueryRequest request, School school) {
+        if(school.getCountryDeptId().equals(Constant.COUNTRY_ALL_SELECT_DEPT_ID)){
+            school.setCountryDeptId(null);
+        }
+
+        if(school.getCityDeptId().equals(Constant.CITY_ALL_SELECT_DEPT_ID)){
+            school.setCityDeptId(null);
+        }
+
         IPage<School>  schoolPages = this.schoolService.findSchools(request, school);
         List<School> schoolList = schoolPages.getRecords();
         for (int i = 0 ; i < schoolList.size() ; i++){
