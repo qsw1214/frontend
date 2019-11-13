@@ -51,7 +51,7 @@ public class Dept implements Serializable {
      * 排序
      */
     @TableField("ORDER_NUM")
-    private String orderNum;
+    private Integer orderNum;
 
     /**
      * 创建时间

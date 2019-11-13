@@ -233,22 +233,22 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
             dept.setDeptId(department.getId());
             dept.setDeptName(department.getName());
             dept.setParentId(department.getParentid());
-            dept.setOrderNum(department.getId());
             dept.setModifyTime(DateUtil.getNowDateTime());
             dept.setDeptGrade(0l);
             this.saveOrUpdate(dept);
         }
         // 设置部门级别值
-        for (int i = 0 ; i < departments.size(); i++) {
+         for (int i = 0 ; i < departments.size(); i++) {
             Department department = departments.get(i);
             String deptId = department.getId();
             long deptGrade = 0;
             String parentId = department.getParentid();
-            if(!"0".equals(parentId)){
+            if(!"0".equals(parentId) && StringUtils.isNotEmpty(parentId)){   //过滤掉企业的部门节点数据
                 long parentDeptGrade = checkSynchParentDeptInfo(parentId);
                 Dept dept = new Dept();
                 dept.setDeptId(department.getId());
                 dept.setDeptGrade(parentDeptGrade + 1l);
+                dept.setOrderNum(i + 1);
                 this.saveOrUpdate(dept);
             }
         }
@@ -257,7 +257,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     public long checkSynchParentDeptInfo(String deptId){
         Dept dept = this.getById(deptId);
         String parentId = dept.getParentId();
-        if("0".equals(parentId)){ //网络联校部门
+        if("0".equals(parentId)){ //网络联校部门  企业部门节点
             return 0l;
         }else{
             long parentDeptGrade = checkSynchParentDeptInfo(parentId);
